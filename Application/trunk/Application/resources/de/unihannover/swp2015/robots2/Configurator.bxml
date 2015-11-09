@@ -1,10 +1,24 @@
 <windows:Configurator title="Configurator" maximized="false"
-	xmlns:bxml="http://pivot.apache.org/bxml"
+	xmlns:bxml="http://pivot.apache.org/bxml"    
+	xmlns:content="org.apache.pivot.wtk.content"
     xmlns:windows="de.unihannover.swp2015.robots2.windows"
     xmlns="org.apache.pivot.wtk">
     <Border styles="{color:'#000000'}">
-		<FillPane>
-			<PushButton bxml:id="startGame" styles="{font:{size:16}, color:'#FFFFFF', backgroundColor:'#505050'}" buttonData="Start"/>
-		</FillPane>
+		<TabPane bxml:id="tabs" styles="{backgroundColor:'#505050', borderColor:'#000000', activeTabColor:'#505050'}">
+			<corner>
+			</corner>
+			
+			<BoxPane styles="{horizontalAlignment:'center', verticalAlignment:'center', backgroundColor:'#303030'}">
+				<TabPane.tabData styles="{font:{size:16}, backgroundColor:'#303030', font:{size:16}}">
+					<content:ButtonData text="Bell"/>
+				</TabPane.tabData>
+				
+				<Border styles="{padding:0, backgroundColor:'#303030'}">
+					<Label text="240x180" preferredWidth="240" preferredHeight="180"
+						styles="{horizontalAlignment:'center', verticalAlignment:'center'}"/>
+				</Border>
+			</BoxPane>
+			
+		</TabPane>
 	</Border>
 </windows:Configurator>
