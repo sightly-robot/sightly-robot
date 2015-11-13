@@ -13,5 +13,5 @@ public interface IController {
 	 * 
 	 * @return
 	 */
-	public abstract IGame getGame();
+	public IGame getGame();
 }

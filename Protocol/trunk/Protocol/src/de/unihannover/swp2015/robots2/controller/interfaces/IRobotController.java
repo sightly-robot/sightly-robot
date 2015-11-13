@@ -15,25 +15,25 @@ public interface IRobotController extends IController {
 	 * @param y
 	 * @param orientation
 	 */
-	public abstract void updatePosition(int x, int y, IPosition.Orientation orientation);
+	public void updatePosition(int x, int y, IPosition.Orientation orientation);
 	
 	/**
 	 * 
 	 * @param progress
 	 */
-	public abstract void updatePositionProgress(int progress);
+	public void updatePositionProgress(int progress);
 	
 	/**
 	 * 
 	 * @param x
 	 * @param y
 	 */
-	public abstract void requestField(int x, int y);
+	public void requestField(int x, int y);
 	
 	/**
 	 * 
 	 * @param x
 	 * @param y
 	 */
-	public abstract void releaseField(int x, int y);
+	public void releaseField(int x, int y);
 }
