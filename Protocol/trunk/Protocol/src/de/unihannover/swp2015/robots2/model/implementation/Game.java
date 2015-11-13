@@ -32,8 +32,8 @@ public class Game extends AbstractModel implements IGame, IGameWriteable {
 	}
 
 	@Override
-	public void addRobot(String id, IRobotWriteable robot) {
-		this.robots.put(id, robot);
+	public void addRobot(IRobotWriteable robot) {
+		this.robots.put(robot.getId(), robot);
 	}
 
 	@Override

@@ -117,4 +117,9 @@ public class Robot extends AbstractModel implements IRobot, IRobotWriteable {
 		return this.errorState;
 	}
 
+	@Override
+	public void setErrorState(boolean errorState) {
+		this.errorState = errorState;		
+	}
+
 }

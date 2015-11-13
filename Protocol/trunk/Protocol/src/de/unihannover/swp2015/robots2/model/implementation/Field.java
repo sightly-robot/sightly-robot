@@ -96,9 +96,10 @@ public class Field extends AbstractModel implements IField, IFieldWriteable {
 		}
 	}
 	
-	public void incrementFood() {
+	public int incrementFood() {
 		synchronized (this.foodLock) {
 			this.food++;
+			return this.food;
 		}
 	}
 
