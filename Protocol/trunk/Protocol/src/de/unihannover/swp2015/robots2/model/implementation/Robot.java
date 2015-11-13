@@ -50,13 +50,6 @@ public class Robot extends AbstractModel implements IRobot, IRobotWriteable {
 	}
 
 	@Override
-	public void addScore(int score) {
-		synchronized (this.scoreLock) {
-			this.score += score;			
-		}
-	}
-
-	@Override
 	public void setSetupState(boolean setupState) {
 		this.setupState = setupState;
 	}
@@ -83,12 +76,24 @@ public class Robot extends AbstractModel implements IRobot, IRobotWriteable {
 
 	@Override
 	public int getScore() {
-		return this.score;
+		synchronized (this.scoreLock) {
+			return this.score;
+		}
 	}
 	
 	@Override
-	public void resetScore() {
-		this.score = 0;
+	public void setScore(int score) {
+		synchronized (this.scoreLock) {
+			this.score = score;
+		}
+	}
+
+	@Override
+	public int addScore(int score) {
+		synchronized (this.scoreLock) {
+			this.score += score;
+			return this.score;
+		}
 	}
 
 	@Override

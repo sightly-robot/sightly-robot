@@ -26,7 +26,13 @@ public class Stage extends AbstractModel implements IStage, IStageWriteable {
 
 	@Override
 	public IFieldWriteable getFieldWriteable(int x, int y) {
-		return this.fields.get(y).get(x);
+		this.fieldsLock.readLock().lock();
+
+		try {
+			return this.fields.get(y).get(x);
+		} finally {
+			this.fieldsLock.readLock().unlock();
+		}
 	}
 
 	@Override

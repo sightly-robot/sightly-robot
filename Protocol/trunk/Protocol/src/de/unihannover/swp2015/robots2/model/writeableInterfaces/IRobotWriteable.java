@@ -28,9 +28,9 @@ public interface IRobotWriteable extends IRobot, IAbstractModelWriteable {
 	 * 
 	 * @param score
 	 */
-	public void addScore(int score);
+	public int addScore(int score);
 	
-	public void resetScore();
+	public void setScore(int score);
 
 	/**
 	 * 
