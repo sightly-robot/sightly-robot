@@ -1,7 +1,8 @@
 package de.unihannover.swp2015.robots2.controller.interfaces;
 
-import de.unihannover.swp2015.robots2.external.implementation.Position.Orientation;
-import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
+import java.util.List;
+
+import de.unihannover.swp2015.robots2.model.interfaces.*;
 
 /**
  * 
@@ -13,7 +14,11 @@ public interface IGuiController extends IController {
 	/**
 	 * 
 	 */
-	public abstract void setMetaMap();
+	public void sendFood(List<List<Integer>> food);
+	
+	public void sendGrowingRates(List<List<Integer>> growingRates);
+	
+	public void sendGameParameters(float robotSpeed, int hesitationTime);
 	
 	/**
 	 * 
@@ -22,45 +27,45 @@ public interface IGuiController extends IController {
 	 * @param robot
 	 * @param orientation
 	 */
-	public abstract void setRobotPosition(int x, int y, IRobot robot, Orientation orientation);
+	public void setRobotPosition(int x, int y, IRobot robot, IPosition.Orientation orientation);
 	
 	/**
 	 * 
 	 */
-	public abstract void startGame();
+	public void startGame();
 	
 	/**
 	 * 
 	 */
-	public abstract void stopGame();
+	public void stopGame();
 	
 	/**
 	 * 
 	 */
-	public abstract void resetGame();
+	public void resetGame();
 	
 	/**
 	 * 
 	 * @param id
 	 * @param value
 	 */
-	public abstract void setRobotSettings(String id, String value);
+	public void setRobotSettings(String id, String value);
 	
 	/**
 	 * 
 	 * @param id
 	 */
-	public abstract void getRobotSettings(String id);
+	public void getRobotSettings(String id);
 	
 	/**
 	 * 
 	 * @param value
 	 */
-	public abstract void setVisualizationSettings(String value);
+	public void setVisualizationSettings(String value);
 	
 	/**
 	 * 
 	 */
-	public abstract void getVisualizationSettings();
+	public void getVisualizationSettings();
 	
 }

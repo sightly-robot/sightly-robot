@@ -1,6 +1,6 @@
 package de.unihannover.swp2015.robots2.controller.interfaces;
 
-import de.unihannover.swp2015.robots2.external.implementation.Position.Orientation;
+import de.unihannover.swp2015.robots2.model.interfaces.*;
 
 /**
  * 
@@ -15,7 +15,7 @@ public interface IRobotController extends IController {
 	 * @param y
 	 * @param orientation
 	 */
-	public abstract void updatePosition(int x, int y, Orientation orientation);
+	public abstract void updatePosition(int x, int y, IPosition.Orientation orientation);
 	
 	/**
 	 * 

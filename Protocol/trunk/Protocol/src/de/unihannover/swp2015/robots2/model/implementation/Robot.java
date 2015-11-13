@@ -2,11 +2,10 @@ package de.unihannover.swp2015.robots2.model.implementation;
 
 import java.awt.Color;
 
-import de.unihannover.swp2015.robots2.external.implementation.Position.Orientation;
-import de.unihannover.swp2015.robots2.external.interfaces.IModelObserver;
-import de.unihannover.swp2015.robots2.external.interfaces.IPosition;
-import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
-import de.unihannover.swp2015.robots2.model.writeableInterfaces.IRobotWriteable;
+import de.unihannover.swp2015.robots2.model.interfaces.*;
+import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
+import de.unihannover.swp2015.robots2.model.writeableInterfaces.IPositionWritable;
+import de.unihannover.swp2015.robots2.model.writeableInterfaces.IRobotWriteable;;
 
 /**
  * 
@@ -15,30 +14,34 @@ import de.unihannover.swp2015.robots2.model.writeableInterfaces.IRobotWriteable;
  */
 public class Robot extends AbstractModel implements IRobot, IRobotWriteable {
 
-	private String id;
+	private final String id;
 	private String name;
-	private boolean hardwareRobot;
-	private IPosition position;
+	private final boolean hardwareRobot;
+	private final IPositionWritable position;
 	private int score;
-	private boolean setupState;
-	private boolean myself;
-	private Color color;
+	private final Object scoreLock;
+	private volatile boolean setupState;
+	private volatile boolean errorState;
+	private final boolean myself;
 	
-	@Override
-	public void observe(IModelObserver observer) {
-		// TODO Auto-generated method stub
+	public Robot(String id, boolean hardwareRobot, boolean myself) {
+		super();
 		
+		this.id = id;
+		this.myself = myself;
+		this.hardwareRobot = hardwareRobot;
+		this.position = new Position(0, 0, Orientation.NORTH);
+		this.scoreLock = new Object();
+	}
+	
+	public Robot(String id, boolean hardwareRobot) {
+		this(id,hardwareRobot,false);
 	}
 
 	@Override
-	public void emitEvent() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void setPosition(int x, int y, Orientation orientation) {
-		// TODO Auto-generated method stub
+	public void setPosition(int x, int y, IPosition.Orientation orientation) {
+		this.position.setPosition(x, y);
+		this.position.setOrientation(orientation);
 	}
 
 	@Override
@@ -47,18 +50,15 @@ public class Robot extends AbstractModel implements IRobot, IRobotWriteable {
 	}
 
 	@Override
-	public void setScore(int score) {
-		this.score = score;
+	public void addScore(int score) {
+		synchronized (this.scoreLock) {
+			this.score += score;			
+		}
 	}
 
 	@Override
 	public void setSetupState(boolean setupState) {
 		this.setupState = setupState;
-	}
-
-	@Override
-	public void setColor(Color color) {
-		this.color = color;
 	}
 
 	@Override
@@ -85,6 +85,11 @@ public class Robot extends AbstractModel implements IRobot, IRobotWriteable {
 	public int getScore() {
 		return this.score;
 	}
+	
+	@Override
+	public void resetScore() {
+		this.score = 0;
+	}
 
 	@Override
 	public boolean isSetupState() {
@@ -98,7 +103,13 @@ public class Robot extends AbstractModel implements IRobot, IRobotWriteable {
 
 	@Override
 	public Color getColor() {
-		return this.color;
+		// TODO get color from ID hash.
+		return Color.black;
+	}
+
+	@Override
+	public boolean isErrorState() {
+		return this.errorState;
 	}
 
 }

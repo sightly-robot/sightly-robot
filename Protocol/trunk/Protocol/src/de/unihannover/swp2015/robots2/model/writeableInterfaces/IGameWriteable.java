@@ -15,31 +15,35 @@ public interface IGameWriteable extends IGame, IAbstractModelWriteable {
 	 * 
 	 * @return
 	 */
-	public abstract IMapWriteable getMapWriteable();
+	public IStageWriteable getStageWriteable();
 	
 	/**
 	 * 
 	 * @param id
 	 * @param robot
 	 */
-	public abstract void addRobot(String id, IRobotWriteable robot);
+	public void addRobot(String id, IRobotWriteable robot);
 	
 	/**
 	 * 
 	 * @param id
 	 */
-	public abstract void removeRobot(String id);
+	public void removeRobot(String id);
 	
 	/**
 	 * 
 	 * @param running
 	 */
-	public abstract void setRunning(boolean running);
+	public void setRunning(boolean running);
+	
+	public void setVRobotSpeed(float vRobotSpeed);
+	
+	public void setHesitationTime(int hesitationTime);
 	
 	/**
 	 * 
 	 * @return
 	 */
-	public abstract Map<String, IRobotWriteable> getRobotsWriteable();
+	public Map<String,IRobotWriteable> getRobotsWriteable();
 	
 }

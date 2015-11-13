@@ -1,5 +1,6 @@
 package de.unihannover.swp2015.robots2.model.writeableInterfaces;
 
+import de.unihannover.swp2015.robots2.model.implementation.Event;
 import de.unihannover.swp2015.robots2.model.interfaces.IAbstractModel;;
 
 /**
@@ -11,6 +12,6 @@ public interface IAbstractModelWriteable extends IAbstractModel {
 	/**
 	 * 
 	 */
-	public abstract void emitEvent();
+	public void emitEvent(Event.UpdateType type);
 	
 }

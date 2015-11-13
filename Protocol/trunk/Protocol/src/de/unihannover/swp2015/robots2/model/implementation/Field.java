@@ -1,40 +1,33 @@
 package de.unihannover.swp2015.robots2.model.implementation;
 
-import de.unihannover.swp2015.robots2.external.implementation.Position;
-import de.unihannover.swp2015.robots2.external.interfaces.IModelObserver;
-import de.unihannover.swp2015.robots2.model.interfaces.IField;
-import de.unihannover.swp2015.robots2.model.writeableInterfaces.IFieldWriteable;
+import de.unihannover.swp2015.robots2.model.interfaces.*;
+import de.unihannover.swp2015.robots2.model.writeableInterfaces.*;
 
 /**
  * 
  * @version 0.1
  * @author Patrick Kawczynski
  */
-public class Field implements IField, IFieldWriteable {
-	
-	private int x;
-	private int y;
-	private boolean northWall;
-	private boolean eastWall;
-	private boolean southWall;
-	private boolean westWall;
-	private int food;
-	private State state;
-	private String lockedBy;
-	
-	/**
-	 * 
-	 * @version 0.1
-	 * @author Patrick Kawczynski
-	 */
-	public enum State {
-		FREE, LOCKED, OCCUPIED, OURS, LOCK_WAIT, RANDOM_WAIT
-	}
+public class Field extends AbstractModel implements IField, IFieldWriteable {
 
-	@Override
-	public void observe(IModelObserver observer) {
-		// TODO Auto-generated method stub
+	private final int x;
+	private final int y;
+	private volatile boolean northWall;
+	private volatile boolean eastWall;
+	private volatile boolean southWall;
+	private volatile boolean westWall;
+	private int food;
+	private final Object foodLock;
+	private volatile State state;
+	private volatile String lockedBy;
+	private volatile int growingRate;
+	
+	public Field(int x, int y) {
+		super();
 		
+		this.x = x;
+		this.y = y;
+		this.foodLock = new Object();
 	}
 
 	@Override
@@ -48,18 +41,18 @@ public class Field implements IField, IFieldWriteable {
 	}
 
 	@Override
-	public boolean isWall(Position.Orientation orientation) {
-		switch(orientation) {
-			case NORTH:
-				return this.northWall;
-			case EAST:
-				return this.eastWall;
-			case SOUTH:
-				return this.southWall;
-			case WEST:
-				return this.westWall;
-			default:
-				return false;
+	public boolean isWall(IPosition.Orientation orientation) {
+		switch (orientation) {
+		case NORTH:
+			return this.northWall;
+		case EAST:
+			return this.eastWall;
+		case SOUTH:
+			return this.southWall;
+		case WEST:
+			return this.westWall;
+		default:
+			return false;
 		}
 	}
 
@@ -79,32 +72,34 @@ public class Field implements IField, IFieldWriteable {
 	}
 
 	@Override
-	public void emitEvent() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void setWall(Position.Orientation orientation, boolean wall) {
-		switch(orientation) {
-			case NORTH:
-				this.northWall = wall;
-				break;
-			case EAST:
-				this.eastWall = wall;
-				break;
-			case SOUTH:
-				this.southWall = wall;
-				break;
-			case WEST:
-				this.westWall = wall;
-				break;
+	public void setWall(IPosition.Orientation orientation, boolean wall) {
+		switch (orientation) {
+		case NORTH:
+			this.northWall = wall;
+			break;
+		case EAST:
+			this.eastWall = wall;
+			break;
+		case SOUTH:
+			this.southWall = wall;
+			break;
+		case WEST:
+			this.westWall = wall;
+			break;
 		}
 	}
 
 	@Override
 	public void setFood(int food) {
-		this.food = food;
+		synchronized (this.foodLock) {
+			this.food = food;
+		}
+	}
+	
+	public void incrementFood() {
+		synchronized (this.foodLock) {
+			this.food++;
+		}
 	}
 
 	@Override
@@ -115,6 +110,16 @@ public class Field implements IField, IFieldWriteable {
 	@Override
 	public void setLockedBy(String lockedBy) {
 		this.lockedBy = lockedBy;
+	}
+
+	@Override
+	public void setGrowingRate(int growingRate) {
+		this.growingRate = growingRate;
+	}
+
+	@Override
+	public int getGrowingRate() {
+		return this.growingRate;
 	}
 
 }

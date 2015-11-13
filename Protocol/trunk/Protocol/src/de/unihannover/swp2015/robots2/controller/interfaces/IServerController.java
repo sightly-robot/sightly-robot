@@ -12,7 +12,7 @@ public interface IServerController extends IController {
 	 * @param robotId
 	 * @param score
 	 */
-	public abstract void updateScore(String robotId, int score);
+	public void updateScore(String robotId, int score);
 	
 	/**
 	 * 
@@ -20,5 +20,5 @@ public interface IServerController extends IController {
 	 * @param y
 	 * @param value
 	 */
-	public abstract void updateFood(int x, int y, int value);
+	public void updateFood(int x, int y, int value);
 }

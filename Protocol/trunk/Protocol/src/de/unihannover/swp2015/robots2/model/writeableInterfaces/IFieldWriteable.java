@@ -1,8 +1,6 @@
 package de.unihannover.swp2015.robots2.model.writeableInterfaces;
 
-import de.unihannover.swp2015.robots2.model.interfaces.IField;
-import de.unihannover.swp2015.robots2.external.implementation.Position.Orientation;
-import de.unihannover.swp2015.robots2.model.implementation.Field;
+import de.unihannover.swp2015.robots2.model.interfaces.*;
 
 /**
  * 
@@ -10,29 +8,33 @@ import de.unihannover.swp2015.robots2.model.implementation.Field;
  * @author Patrick Kawczynski
  */
 public interface IFieldWriteable extends IField, IAbstractModelWriteable {
-	
+
 	/**
 	 * 
 	 * @param orientation
 	 * @param wall
 	 */
-	public abstract void setWall( Orientation orientation, boolean wall );
-	
+	public void setWall(IPosition.Orientation orientation, boolean wall);
+
 	/**
 	 * 
 	 * @param food
 	 */
-	public abstract void setFood( int food );
+	public void setFood(int food);
 	
+	public void incrementFood();
+
 	/**
 	 * 
 	 * @param state
 	 */
-	public abstract void setState( Field.State state );
-	
+	public void setState(State state);
+
 	/**
 	 * 
 	 * @param lockedBy
 	 */
-	public abstract void setLockedBy( String lockedBy );
+	public void setLockedBy(String lockedBy);
+	
+	public void setGrowingRate(int growingRate);
 }

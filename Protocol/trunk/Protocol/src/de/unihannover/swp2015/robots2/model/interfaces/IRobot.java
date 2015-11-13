@@ -2,7 +2,7 @@ package de.unihannover.swp2015.robots2.model.interfaces;
 
 import java.awt.Color;
 
-import de.unihannover.swp2015.robots2.external.interfaces.IPosition;
+import de.unihannover.swp2015.robots2.model.interfaces.IPosition;
 
 /**
  * 
@@ -15,48 +15,50 @@ public interface IRobot extends IAbstractModel {
 	 * 
 	 * @return
 	 */
-	public abstract String getId();
+	public String getId();
 	
 	/**
 	 * 
 	 * @return
 	 */
-	public abstract String getName();
+	public String getName();
 	
 	/**
 	 * 
 	 * @return
 	 */
-	public abstract boolean isHardwareRobot();
+	public boolean isHardwareRobot();
 	
 	/**
 	 * 
 	 * @return
 	 */
-	public abstract IPosition getPosition();
+	public IPosition getPosition();
 	
 	/**
 	 * 
 	 * @return
 	 */
-	public abstract int getScore();
+	public int getScore();
 	
 	/**
 	 * 
 	 * @return
 	 */
-	public abstract boolean isSetupState();
+	public boolean isSetupState();
 	
 	/**
 	 * 
 	 * @return
 	 */
-	public abstract boolean isMyself();
+	public boolean isMyself();
 	
 	/**
 	 * 
 	 * @return
 	 */
-	public abstract Color getColor();
+	public Color getColor();
+	
+	public boolean isErrorState();
 
 }

@@ -1,8 +1,5 @@
 package de.unihannover.swp2015.robots2.model.interfaces;
 
-import de.unihannover.swp2015.robots2.external.implementation.Position.Orientation;
-import de.unihannover.swp2015.robots2.model.implementation.Field;
-
 /**
  * Read-only interface of a Labyrinth-Field
  * 
@@ -10,42 +7,58 @@ import de.unihannover.swp2015.robots2.model.implementation.Field;
  * @author Patrick Kawczynski
  */
 public interface IField extends IAbstractModel {
-	
+
+	/**
+	 * 
+	 * @version 0.1
+	 * @author Patrick Kawczynski
+	 */
+	public enum State {
+		FREE, LOCKED, OCCUPIED, OURS, LOCK_WAIT, RANDOM_WAIT
+	}
+
 	/**
 	 * 
 	 * @return
 	 */
-	public abstract int getX();
-	
+	public int getX();
+
 	/**
 	 * 
 	 * @return
 	 */
-	public abstract int getY();
-	
+	public int getY();
+
 	/**
 	 * 
 	 * @param orientation
-	 * @return 
+	 * @return
 	 */
-	public abstract boolean isWall( Orientation orientation );
-	
+	public boolean isWall(IPosition.Orientation orientation);
+
 	/**
 	 * 
 	 * @return [0-10]
 	 */
-	public abstract int getFood();
-	
+	public int getFood();
+
 	/**
 	 * 
-	 * @return 
+	 * @return
 	 */
-	public abstract Field.State getState();
-	
+	public State getState();
+
 	/**
 	 * Returns the id of the robot, who is locked the field.
 	 * 
 	 * @return robot-id
 	 */
-	public abstract String getLockedBy();
+	public String getLockedBy();
+	
+	/**
+	 * Only available on Server and GUI!
+	 * 
+	 * @return
+	 */
+	public int getGrowingRate();
 }

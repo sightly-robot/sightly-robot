@@ -8,23 +8,27 @@ import java.util.Map;
  * @author Patrick Kawczynski
  */
 public interface IGame extends IAbstractModel {
-	
+
 	/**
 	 * 
 	 * @return
 	 */
-	public abstract IMap getMap();
-	
+	public IStage getStage();
+
 	/**
 	 * 
 	 * @return
 	 */
-	public abstract boolean isRunning();
-	
+	public boolean isRunning();
+
+	public float getVRobotSpeed();
+
+	public int getHesitationTime();
+
 	/**
 	 * 
 	 * @return
 	 */
-	public abstract Map<String, IRobot> getRobots();
+	public Map<String, ? extends IRobot> getRobots();
 
 }

@@ -1,6 +1,6 @@
 package de.unihannover.swp2015.robots2.model.interfaces;
 
-import de.unihannover.swp2015.robots2.external.interfaces.IModelObserver;
+import de.unihannover.swp2015.robots2.model.externalInterfaces.IModelObserver;
 
 /**
  * 
@@ -8,10 +8,10 @@ import de.unihannover.swp2015.robots2.external.interfaces.IModelObserver;
  * @author Patrick Kawczynski
  */
 public interface IAbstractModel {
-	
+
 	/**
 	 * 
 	 * @param observer
 	 */
-	public abstract void observe( IModelObserver observer );
+	public void observe(IModelObserver observer);
 }

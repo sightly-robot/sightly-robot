@@ -1,14 +1,10 @@
 package de.unihannover.swp2015.robots2.model.implementation;
 
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
-import de.unihannover.swp2015.robots2.external.interfaces.IModelObserver;
-import de.unihannover.swp2015.robots2.model.interfaces.IGame;
-import de.unihannover.swp2015.robots2.model.interfaces.IMap;
-import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
-import de.unihannover.swp2015.robots2.model.writeableInterfaces.IGameWriteable;
-import de.unihannover.swp2015.robots2.model.writeableInterfaces.IMapWriteable;
-import de.unihannover.swp2015.robots2.model.writeableInterfaces.IRobotWriteable;
+import de.unihannover.swp2015.robots2.model.interfaces.*;
+import de.unihannover.swp2015.robots2.model.writeableInterfaces.*;
 
 /**
  * 
@@ -16,62 +12,78 @@ import de.unihannover.swp2015.robots2.model.writeableInterfaces.IRobotWriteable;
  * @author Patrick Kawczynski
  */
 public class Game extends AbstractModel implements IGame, IGameWriteable {
-	
-	private IMapWriteable map;
-	private Map<String, IRobotWriteable> robots;
-	private boolean running;
-	
-	@Override
-	public void observe(IModelObserver observer) {
-		// TODO Auto-generated method stub
-		
+
+	private final IStageWriteable stage;
+	private final Map<String, IRobotWriteable> robots;
+	private volatile boolean running;
+	private volatile float vRobotSpeed;
+	private volatile int hesitationTime;
+
+	public Game() {
+		super();
+
+		this.stage = new Stage();
+		this.robots = new ConcurrentHashMap<String, IRobotWriteable>();
 	}
+
 	@Override
-	public void emitEvent() {
-		// TODO Auto-generated method stub
-		
+	public IStageWriteable getStageWriteable() {
+		return this.stage;
 	}
-	
-	@Override
-	public IMapWriteable getMapWriteable() {
-		return this.map;
-	}
-	
+
 	@Override
 	public void addRobot(String id, IRobotWriteable robot) {
 		this.robots.put(id, robot);
 	}
-	
+
 	@Override
 	public void removeRobot(String id) {
 		this.robots.remove(id);
 	}
-	
+
 	@Override
 	public void setRunning(boolean running) {
 		this.running = running;
 	}
-	
+
 	@Override
 	public Map<String, IRobotWriteable> getRobotsWriteable() {
 		return this.robots;
 	}
-	
+
 	@Override
-	public IMap getMap() {
-		return this.map;
+	public IStage getStage() {
+		return this.stage;
 	}
-	
+
 	@Override
 	public boolean isRunning() {
 		return this.running;
 	}
-	
+
 	@Override
-	public Map<String, IRobot> getRobots() {
-		// TODO Auto-generated method stub
-		return null;
+	public Map<String, ? extends IRobot> getRobots() {
+		return this.robots;
 	}
-	
-	
+
+	@Override
+	public void setVRobotSpeed(float vRobotSpeed) {
+		this.vRobotSpeed = vRobotSpeed;
+	}
+
+	@Override
+	public void setHesitationTime(int hesitationTime) {
+		this.hesitationTime = hesitationTime;
+	}
+
+	@Override
+	public float getVRobotSpeed() {
+		return this.vRobotSpeed;
+	}
+
+	@Override
+	public int getHesitationTime() {
+		return this.hesitationTime;
+	}
+
 }
