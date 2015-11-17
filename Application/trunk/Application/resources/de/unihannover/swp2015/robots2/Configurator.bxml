@@ -3,22 +3,27 @@
 	xmlns:content="org.apache.pivot.wtk.content"
     xmlns:windows="de.unihannover.swp2015.robots2.windows"
     xmlns="org.apache.pivot.wtk">
-    <Border styles="{color:'#000000'}">
-		<TabPane bxml:id="tabs" styles="{backgroundColor:'#505050', borderColor:'#000000', activeTabColor:'#505050'}">
-			<corner>
-			</corner>
-			
-			<BoxPane styles="{horizontalAlignment:'center', verticalAlignment:'center', backgroundColor:'#303030'}">
-				<TabPane.tabData styles="{font:{size:16}, backgroundColor:'#303030', font:{size:16}}">
-					<content:ButtonData text="Bell"/>
-				</TabPane.tabData>
+	<FillPane>
+		<Border styles="{color:'#000000'}">
+			<TabPane bxml:id="tabs" styles="{backgroundColor:'#505050', borderColor:'#000000', activeTabColor:'#505050', buttonColor:'#FFFFFF'}">			
 				
-				<Border styles="{padding:0, backgroundColor:'#303030'}">
-					<Label text="240x180" preferredWidth="240" preferredHeight="180"
-						styles="{horizontalAlignment:'center', verticalAlignment:'center'}"/>
-				</Border>
-			</BoxPane>
-			
-		</TabPane>
-	</Border>
+				<FillPane styles="{backgroundColor:'#303030'}">
+					<TabPane.tabData styles="{backgroundColor:'#303030'}">
+						<content:ButtonData text="Allgemeine Optionen"/>
+					</TabPane.tabData>
+					
+					<bxml:include src="GeneralOptions.bxml"/>
+				</FillPane>
+				
+				<FillPane styles="{backgroundColor:'#303030'}">
+					<TabPane.tabData styles="{backgroundColor:'#303030'}">
+						<content:ButtonData text="Visualisierungsoptionen"/>
+					</TabPane.tabData>
+					
+					<bxml:include src="VisualizationOptions.bxml"/>
+				</FillPane>
+				
+			</TabPane>
+		</Border>
+	</FillPane>
 </windows:Configurator>

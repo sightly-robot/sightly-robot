@@ -24,6 +24,10 @@ import org.apache.pivot.wtk.DesktopApplicationContext;
 import org.apache.pivot.wtk.Display;
 
 public class ControlPanel extends Window implements Bindable {
+	// Constants
+	final private Integer initialWidth = 800;
+	final private Integer initialHeight = 600;
+	
 	// All buttons
 	@BXML private PushButton loadMap;
 	@BXML private PushButton startGame;
@@ -86,15 +90,16 @@ public class ControlPanel extends Window implements Bindable {
 	private ButtonPressListener openConfigurator = new ButtonPressListener() {
 		@Override
 		public void buttonPressed(Button button) {
-	        DesktopApplicationContext.createDisplay(800, 
-	        														  600, 
-	        														  300, 
-	        														  300, 
-	        														  false, 
-	        														  true, 
-	        														  false, 
-	        														  getDisplay().getHostWindow(), 
-	        														  new DesktopApplicationContext.DisplayListener() {
+	        DesktopApplicationContext.createDisplay(initialWidth + 15, 
+	        									    initialHeight + 39, 
+												    100, 
+												    100, 
+												    false, 
+												    true, 
+												    false, 
+												    getDisplay().getHostWindow(), 
+												    new DesktopApplicationContext.DisplayListener() 
+	        {
 				@Override
 				public void hostWindowClosed(Display display) {		
 					configurator.close();
@@ -104,8 +109,8 @@ public class ControlPanel extends Window implements Bindable {
 					try {
 						BXMLSerializer bxmlSerializer = new BXMLSerializer();
 				        bxmlSerializer.getNamespace().put("application", this);
-						configurator = (Configurator)bxmlSerializer.readObject(getClass().getResource("/de/unihannover/swp2015/robots2/Configurator.bxml"));
-						configurator.setPreferredSize(1000, 800);
+				        configurator = (Configurator)bxmlSerializer.readObject(getClass().getResource("/de/unihannover/swp2015/robots2/Configurator.bxml"));
+						configurator.setPreferredSize(initialWidth, initialHeight);
 						configurator.open(display);		
 					} catch (IOException e) {
 						e.printStackTrace();
@@ -115,7 +120,11 @@ public class ControlPanel extends Window implements Bindable {
 						e.printStackTrace();
 						Alert.alert(MessageType.INFO, "Could not parse: \n" + e.getMessage(), ControlPanel.this);
 						return;
-					}					
+					} catch (Exception e) {
+						e.printStackTrace();
+						Alert.alert(MessageType.INFO, "Other exception: \n" + e.getMessage(), ControlPanel.this);
+						return;
+					}
 				}	        	
 	        });        			
 		}		
