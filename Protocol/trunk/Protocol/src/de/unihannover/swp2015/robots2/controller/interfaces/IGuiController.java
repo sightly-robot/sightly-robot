@@ -2,6 +2,8 @@ package de.unihannover.swp2015.robots2.controller.interfaces;
 
 import java.util.List;
 
+import de.unihannover.swp2015.robots2.controller.externalInterfaces.IHardwareRobotControl;
+import de.unihannover.swp2015.robots2.controller.externalInterfaces.IVisualizationControl;
 import de.unihannover.swp2015.robots2.model.interfaces.*;
 
 /**
@@ -68,4 +70,10 @@ public interface IGuiController extends IController {
 	 */
 	public void getVisualizationSettings();
 	
+	
+	public void letRobotBlink(String id);
+	
+	public void registerVisualizationControl(IVisualizationControl control);
+	
+	public void registerHardwareRobotControl(IHardwareRobotControl control);
 }

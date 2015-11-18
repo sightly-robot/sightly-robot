@@ -14,4 +14,6 @@ public interface IController {
 	 * @return
 	 */
 	public IGame getGame();
+	
+	public void sendInfoMessage(String topic, String message);
 }

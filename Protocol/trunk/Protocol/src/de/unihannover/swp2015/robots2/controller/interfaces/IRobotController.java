@@ -36,4 +36,8 @@ public interface IRobotController extends IController {
 	 * @param y
 	 */
 	public void releaseField(int x, int y);
+	
+	public void setRobotReady();
+	
+	public IRobot getMyself();
 }
