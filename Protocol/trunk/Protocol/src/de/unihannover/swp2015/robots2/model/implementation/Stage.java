@@ -9,14 +9,39 @@ import de.unihannover.swp2015.robots2.model.interfaces.*;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
 import de.unihannover.swp2015.robots2.model.writeableInterfaces.*;
 
+/**
+ * Basic implementation of the interfaces IStageWritable, containing a two
+ * dimensional list of Fields.
+ * 
+ * All properties are protected by suitable locking mechanisms, providing
+ * multithread safety.
+ * 
+ * @version 0.1
+ * @author Patrick Kawczynski and Michael Thies
+ */
 public class Stage extends AbstractModel implements IStage, IStageWriteable {
 
+	/** Width of the Stage as number of Fields. */
 	private int width;
+	/** Height of the Stage as number of Fields */
 	private int height;
+	/** List of the Fields of this Stage */
 	private List<List<IFieldWriteable>> fields;
+	/**
+	 * Lock object to prohibit multiple concurrent write operations and
+	 * concurrent write and read operations on the fields list.
+	 */
 	private ReadWriteLock fieldsLock;
+	/**
+	 * A list of start positions. This list is meant to be used in the game
+	 * server program and may be empty in other environments.
+	 */
 	private List<IPosition> startPositions;
 
+	/**
+	 * Construct a new stage of size 0x0 Fields. The fields list will be
+	 * initialized but empty.
+	 */
 	public Stage() {
 		super();
 

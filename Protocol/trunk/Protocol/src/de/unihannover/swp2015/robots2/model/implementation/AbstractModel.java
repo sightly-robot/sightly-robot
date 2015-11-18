@@ -9,12 +9,17 @@ import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
 import de.unihannover.swp2015.robots2.model.writeableInterfaces.IAbstractModelWriteable;
 
 /**
+ * Basic implementation of the interface IAbstractModelWritable (including
+ * IAbstractModel).
  * 
- * @version 0.1
- * @author Patrick Kawczynski
+ * Implements the observable poart of the custom observer pattern and is meant
+ * to be used as parent class for any kind of observable model.
+ * 
+ * @version 0.2
+ * @author Patrick Kawczynski and Michael Thies
  */
-public abstract class AbstractModel implements IAbstractModel,
-		IAbstractModelWriteable {
+public abstract class AbstractModel implements IAbstractModel, IAbstractModelWriteable {
+	/** List of observers of this model object. */
 	private List<IModelObserver> observers;
 
 	public AbstractModel() {

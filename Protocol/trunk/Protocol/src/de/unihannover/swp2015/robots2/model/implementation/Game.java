@@ -7,18 +7,37 @@ import de.unihannover.swp2015.robots2.model.interfaces.*;
 import de.unihannover.swp2015.robots2.model.writeableInterfaces.*;
 
 /**
+ * Basic implmentation of the interface IGameWirtable, hence a wrapper for all
+ * the parts of the shared data model: A Stage, a map of Robots and some game
+ * parameters.
  * 
- * @version 0.1
- * @author Patrick Kawczynski
+ * @version 0.2
+ * @author Patrick Kawczynski and Michael Thies
  */
 public class Game extends AbstractModel implements IGame, IGameWriteable {
 
+	/** The Stage of this Game. Contains a number of Fields. */
 	private final IStageWriteable stage;
+	/**
+	 * A collection of Robots participating in this Game. Implemented as Map for
+	 * quick reference using a Robot's id.
+	 */
 	private final Map<String, IRobotWriteable> robots;
+	/**
+	 * True if the Game is running. (Robots are allowed to move, food grows and
+	 * scores are occasionally increased.)
+	 */
 	private volatile boolean running;
+	/** Maximum speed of virtual robots in seconds / field. */
 	private volatile float vRobotSpeed;
+	/** Maximum allowed hesitation time of a robot on a field. */
 	private volatile int hesitationTime;
 
+	/**
+	 * Constructs a new game.
+	 * 
+	 * A basic Stage will be constructed and inserted by default.
+	 */
 	public Game() {
 		super();
 

@@ -32,12 +32,12 @@ public interface IFieldWriteable extends IField, IAbstractModelWriteable {
 	 * This operation is thread safe.
 	 * 
 	 * @param food
-	 *            The food's state: 0 = no food, 10 = full food
+	 *            The food's state: 0 = no food, 10 = fully grown food
 	 */
 	public void setFood(int food);
 
 	/**
-	 * Increase the food on this Field by one state.
+	 * Increase the food on this Field by one unit.
 	 * 
 	 * This operation is thread safe.
 	 * 
