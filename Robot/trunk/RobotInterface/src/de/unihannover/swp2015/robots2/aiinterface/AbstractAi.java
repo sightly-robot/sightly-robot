@@ -1,6 +1,6 @@
 package de.unihannover.swp2015.robots2.aiinterface;
 
-import de.unihannover.swp2015.robots2.model.interfaces.IGame;
+import de.unihannover.swp2015.robots2.controller.interfaces.IRobotController;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
 
 /**
@@ -9,10 +9,11 @@ import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
  */
 public abstract class AbstractAi {
 
-	AiEventObserver aiEventObserver;
+	private AiEventObserver aiEventObserver;
+	protected IRobotController iRobotController;
 	
-	public AbstractAi(IGame iGame) {
-		
+	public AbstractAi(IRobotController iRobotController) {
+		this.iRobotController = iRobotController;
 	}
 	
 	/**
