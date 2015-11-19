@@ -5,6 +5,12 @@ import java.util.concurrent.BlockingQueue;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttException;
 
+/**
+ * Worker thread for sending MQTT messages. Sequentially reads the messages from
+ * the given BlockingQueue and publishes them via the given MQTT client.
+ * 
+ * @author Michael Thies
+ */
 public class MqttSender implements Runnable {
 	private final BlockingQueue<MqttFullMessage> queue;
 	private final MqttClient client;
@@ -22,7 +28,7 @@ public class MqttSender implements Runnable {
 				client.publish(message.getTopic(), message.getMessage());
 			} catch (InterruptedException | MqttException e) {
 				e.printStackTrace();
-			}	
+			}
 		}
 	}
 }
