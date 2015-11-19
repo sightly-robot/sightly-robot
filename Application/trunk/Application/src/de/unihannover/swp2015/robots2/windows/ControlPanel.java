@@ -1,6 +1,7 @@
 package de.unihannover.swp2015.robots2.windows;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 
@@ -20,6 +21,11 @@ import org.apache.pivot.wtk.Sheet;
 import org.apache.pivot.wtk.SheetCloseListener;
 import org.apache.pivot.wtk.TableView;
 import org.apache.pivot.wtk.Window;
+import org.json.JSONException;
+
+import de.unihannover.swp2015.robots2.MapReader;
+import de.unihannover.swp2015.robots2.GameMap;
+
 import org.apache.pivot.wtk.DesktopApplicationContext;
 import org.apache.pivot.wtk.Display;
 
@@ -43,8 +49,17 @@ public class ControlPanel extends Window implements Bindable {
 	// Configurator Window
 	private Configurator configurator = null; 
 	
+	/**
+	 * initialize is called by pivot after creating the object.
+	 * 
+	 * @param namespace An apache pivot object.
+	 * @param location The bxml file this class stems from.
+	 * @param resources resources.
+	 */
 	@Override
 	public void initialize(Map<String, Object> namespace, URL location, Resources resources) {
+		System.out.println(location);
+		
 		loadMap.getButtonPressListeners().add(loadMapAction);
 		closeVisualization.getButtonPressListeners().add(closeApp);
 		openConfiguration.getButtonPressListeners().add(openConfigurator);
@@ -57,14 +72,22 @@ public class ControlPanel extends Window implements Bindable {
 	private ButtonPressListener loadMapAction = new ButtonPressListener() {
 		@Override
 		public void buttonPressed(Button button) {
-			final FileBrowserSheet fileBrowserSheet = new FileBrowserSheet();
-			fileBrowserSheet.setMode(FileBrowserSheet.Mode.valueOf("OPEN"));
+			final FileBrowserSheet fileBrowserSheet = new FileBrowserSheet(
+				FileBrowserSheet.Mode.valueOf("OPEN"),
+				System.getProperty("user.dir")
+			);
 			
 			fileBrowserSheet.open(ControlPanel.this, new SheetCloseListener() {
 				@Override
                 public void sheetClosed(Sheet sheet) {
 					if (sheet.getResult()) {
 						File file = fileBrowserSheet.getSelectedFile();
+						try {
+							GameMap map = MapReader.readFromFile(file.getAbsolutePath());
+						} catch (JSONException | FileNotFoundException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 						
 						Alert.alert(MessageType.INFO, file.getAbsolutePath(), ControlPanel.this);
 					}

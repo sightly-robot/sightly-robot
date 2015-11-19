@@ -9,5 +9,6 @@
 	<classpathentry kind="lib" path="D:/Development/SWP/roboter-labyrinth2/Application/trunk/Application/lib/pivot-web-server-2.0.4.jar"/>
 	<classpathentry kind="lib" path="D:/Development/SWP/roboter-labyrinth2/Application/trunk/Application/lib/pivot-wtk-2.0.4.jar"/>
 	<classpathentry kind="lib" path="D:/Development/SWP/roboter-labyrinth2/Application/trunk/Application/lib/pivot-wtk-terra-2.0.4.jar"/>
+	<classpathentry kind="lib" path="D:/Development/SWP/roboter-labyrinth2/Application/trunk/Application/lib/json-org.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
