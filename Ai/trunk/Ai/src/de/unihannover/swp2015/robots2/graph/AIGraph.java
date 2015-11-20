@@ -10,25 +10,39 @@ public class AIGraph {
 	private int dimX, dimY; //x and y dimensions
 		
 	private class Node {
-		private List<Node> neighbors;
+		private List<Edge> neighbors;
 		private int food;
 		private boolean robot; //true, if a robot is currently on this Field (potentially redundant)
 		private Robot robot; //robot, who is on the field or null, if there isn't one
+		private int x;
+		private int y;
 		//private double foodGrowth; // per Second, maybe later
 		//private double weight; //used later
 	
 		public Node() {
-			this.neighbors = new ArrayList<Node>();
+			this.neighbors = new ArrayList<Edge>();
 		}
 		
 		//adds Node to list of neighbors
-		public void addNeighbor(Node node) {
-			this.neighbors.add(node);
+		public void addNeighbor(Edge edge) {
+			this.neighbors.add(edge);
 		}
 		
 		
-		public List<Node> getNeighbors() {
+		public List<Edge> getNeighbors() {
 			return this.neighbors;
+		}
+	}
+
+	private class Edge {
+		private Node source; // Ggf. redundant
+		private Node target;
+		private Orientation direction;
+
+		public Edge(Node source, Node target, Orientation dir) {
+			this.source = source;
+			this.target = target;
+			this.direction = dir;
 		}
 	}
 	
