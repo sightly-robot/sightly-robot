@@ -1,5 +1,10 @@
 package de.unihannover.swp2015.robots2.visual.entity;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+
+import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
+
 /**
  * An entity used for the visualization of resources
  * 
@@ -26,5 +31,17 @@ public class Resource extends Entity {
 	public void updateStage(int stage){	
 		this.stage=stage;
 		this.texture = new Texture(Gdx.files.internal("resource"+stage+".png")); //Dateinamen ggf noch anpassen
+	}
+
+	@Override
+	public void render() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onModelUpdate(IEvent event) {
+		// TODO Auto-generated method stub
+		
 	}
 }

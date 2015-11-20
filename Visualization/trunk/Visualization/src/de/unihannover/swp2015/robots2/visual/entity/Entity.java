@@ -1,5 +1,9 @@
 package de.unihannover.swp2015.robots2.visual.entity;
 
+import com.badlogic.gdx.graphics.Texture;
+
+import de.unihannover.swp2015.robots2.visual.core.IGameHandler;
+
 /**
  * The base class of all objects displayed at the (beamer) visualization
  *
@@ -10,10 +14,10 @@ package de.unihannover.swp2015.robots2.visual.entity;
  */
 public abstract class Entity implements IEntity {
 
-	private Texture texture;
-    private float renderX, renderY; 
-    private IGameHandler gameHandler;
-    private boolean isVisible; //Optional
+	protected Texture texture;
+    protected float renderX, renderY; 
+    protected IGameHandler gameHandler;
+    protected boolean isVisible; //Optional
     
     public abstract void setPosition(int x, int y);
     

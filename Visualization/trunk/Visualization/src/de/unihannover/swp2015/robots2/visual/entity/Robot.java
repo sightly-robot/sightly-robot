@@ -3,6 +3,8 @@ package de.unihannover.swp2015.robots2.visual.entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 
+import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
+
 /**
  * An entity used for the visualization of robots
  * 
@@ -28,6 +30,18 @@ public class Robot extends Entity {
 		
 		public void hide(){
 			//TODO Optional
+		}
+
+		@Override
+		public void render() {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void onModelUpdate(IEvent event) {
+			// TODO Auto-generated method stub
+			
 		}
 
 }
