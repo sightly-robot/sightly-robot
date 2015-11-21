@@ -13,35 +13,44 @@ import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
  */
 public class Resource extends Entity {
 
-	private int stage = 10; //default? ggf noch ändern
+	private int stage = 10; //default
+	
+	public Resource(int stage){
+		this.stage=stage;
+		this.texture = new Texture(Gdx.files.internal("resource"+stage+".png")); //Dateinamen ggf noch anpassen
+	}
 	
 	public Resource(){
 		this.texture = new Texture(Gdx.files.internal("resource10.png")); //Dateinamen ggf noch anpassen
 	}
 	
+	@Override
 	public void setPosition(int x, int y){ //oder gleich beim Erstellen die Position mitgeben?
 		this.renderX=x;
 		this.renderY=y;
 	}
 	
+	@Override
 	public void hide(){
 		//TODO Optional
-	}
-	
-	public void updateStage(int stage){	
-		this.stage=stage;
-		this.texture = new Texture(Gdx.files.internal("resource"+stage+".png")); //Dateinamen ggf noch anpassen
 	}
 
 	@Override
 	public void render() {
-		// TODO Auto-generated method stub
-		
+		RobotGameHandler.spriteBatch.begin();
+		RobotGameHandler.spriteBatch.draw(texture, x, y);
+		RobotGameHandler.spriteBatch.end();		
 	}
 
 	@Override
 	public void onModelUpdate(IEvent event) {
-		// TODO Auto-generated method stub
-		
+		// TODO ?
+		if(event.getType() == FIELD_FOOD){
+			if(stage<10){
+				stage++;
+				this.texture = new Texture(Gdx.files.internal("resource"+stage+".png")); //Dateinamen ggf noch anpassen
+				render();
+			}
+		}
 	}
 }

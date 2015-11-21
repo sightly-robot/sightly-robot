@@ -11,28 +11,26 @@ import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
 public class Map extends Entity {
 
 	@Override
+	public void setPosition(int x, int y) {
+		this.renderX=x;
+		this.renderY=y;
+	}
+
+	@Override
+	public void hide() {
+		// TODO Optional
+	}
+	
+	@Override
 	public void render() {
-		// TODO Auto-generated method stub
-		
+		RobotGameHandler.spriteBatch.begin();
+		RobotGameHandler.spriteBatch.draw(texture, x, y);
+		RobotGameHandler.spriteBatch.end();		
 	}
 
 	@Override
 	public void onModelUpdate(IEvent event) {
 		// TODO Auto-generated method stub
-		
 	}
-
-	@Override
-	public void setPosition(int x, int y) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void hide() {
-		// TODO Auto-generated method stub
-		
-	}
-
 
 }
