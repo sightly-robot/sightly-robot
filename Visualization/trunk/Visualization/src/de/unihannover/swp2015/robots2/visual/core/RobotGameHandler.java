@@ -1,7 +1,6 @@
 package de.unihannover.swp2015.robots2.visual.core;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;

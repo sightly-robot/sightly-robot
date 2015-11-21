@@ -9,7 +9,7 @@ import de.unihannover.swp2015.robots2.visual.entity.IEntity;
 public class EntityUtil {
 	
 	/**
-	 * Should be called, after you have added an entity to {@link RobotGameHandler.renderUnits}. As alternative you can call {@link RobotGameHandler.addEntity} 
+	 * Should be called, after you have added an entity to {@link RobotGameHandler.renderUnits}. As alternative you can call {@link EntityUtil.addEntitySorted} 
 	 * to add a new entity. 
 	 */
 	public static void sortEntities(final List<IEntity> entityList) {
