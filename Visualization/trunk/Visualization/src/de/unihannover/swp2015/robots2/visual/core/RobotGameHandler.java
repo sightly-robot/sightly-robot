@@ -8,7 +8,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
 import de.unihannover.swp2015.robots2.model.interfaces.IGame;
-import de.unihannover.swp2015.robots2.visual.entity.modifier.IEntityModifier;
+import de.unihannover.swp2015.robots2.visual.entity.IEntity;
+import de.unihannover.swp2015.robots2.visual.entity.modifier.base.IEntityModifier;
 import de.unihannover.swp2015.robots2.visual.resource.IResourceHandler;
 import de.unihannover.swp2015.robots2.visual.resource.ResourceHandler;
 
@@ -91,7 +92,7 @@ public class RobotGameHandler implements IGameHandler {
 	}
 
 	@Override
-	public void dispatchEvent(final IEvent event) {
+	public void dispatchEvent(final IEvent event, final IEntity source) {
 		// TODO Auto-generated method stub
 		
 	}

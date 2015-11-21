@@ -2,6 +2,7 @@ package de.unihannover.swp2015.robots2.visual.core;
 
 import de.unihannover.swp2015.robots2.model.externalInterfaces.IModelObserver;
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
+import de.unihannover.swp2015.robots2.visual.entity.IEntity;
 import de.unihannover.swp2015.robots2.visual.resource.ResourceHandler;
 
 /**
@@ -24,7 +25,7 @@ public interface IGameHandler extends IUpdateable, IModelObserver, IRenderable {
 	 * 
 	 * @param event {@link de.unihannover.swp2015.robots2.model.interfaces.IEvent}
 	 */
-	void dispatchEvent(final IEvent event);
+	void dispatchEvent(final IEvent event, final IEntity source);
 	
 	/**
 	 * Deallocates all native resources.
