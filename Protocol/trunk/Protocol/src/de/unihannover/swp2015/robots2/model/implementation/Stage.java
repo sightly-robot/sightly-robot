@@ -17,7 +17,8 @@ import de.unihannover.swp2015.robots2.model.writeableInterfaces.*;
  * multithread safety.
  * 
  * @version 0.1
- * @author Patrick Kawczynski and Michael Thies
+ * @author Patrick Kawczynski
+ * @author Michael Thies
  */
 public class Stage extends AbstractModel implements IStage, IStageWriteable {
 

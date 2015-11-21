@@ -9,7 +9,8 @@ import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
  * Implements a wrapper for an UpdateType and and object pointer.
  * 
  * @version 0.2
- * @author Patrick Kawczynski and Michael Thies
+ * @author Patrick Kawczynski
+ * @author Michael Thies
  */
 public class Event implements IEvent {
 

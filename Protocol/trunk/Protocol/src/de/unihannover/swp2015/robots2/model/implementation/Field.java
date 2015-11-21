@@ -9,7 +9,8 @@ import de.unihannover.swp2015.robots2.model.writeableInterfaces.*;
  * Implementation of a Field model, representing a single position on the Stage.
  * 
  * @version 0.2
- * @author Patrick Kawczynski and Michael Thies
+ * @author Patrick Kawczynski
+ * @author Michael Thies
  */
 public class Field extends AbstractModel implements IField, IFieldWriteable {
 

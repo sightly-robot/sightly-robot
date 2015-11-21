@@ -9,7 +9,8 @@ import de.unihannover.swp2015.robots2.model.interfaces.*;
  * A Robot objects represents any kind of Robot that takes part in the game.
  * 
  * @version 0.2
- * @author Patrick Kawczynski and Michael Thies
+ * @author Patrick Kawczynski
+ * @author Michael Thies
  */
 public interface IRobotWriteable extends IRobot, IAbstractModelWriteable {
 

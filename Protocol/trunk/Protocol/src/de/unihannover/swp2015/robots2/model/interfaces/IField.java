@@ -1,14 +1,17 @@
 package de.unihannover.swp2015.robots2.model.interfaces;
 
 /**
- * Read-only interface of a Labyrinth-Field
+ * Read-only interface of a Labyrinth-Field, which represents a single position
+ * on the Stage.
  * 
  * @version 0.1
  * @author Patrick Kawczynski
+ * @author Michael Thies
  */
 public interface IField extends IAbstractModel {
 
 	/**
+	 * This enumeration defines all possible states, the field can get.
 	 * 
 	 * @version 0.1
 	 * @author Patrick Kawczynski
@@ -18,47 +21,56 @@ public interface IField extends IAbstractModel {
 	}
 
 	/**
+	 * Returns the x-coordinate of the field.
 	 * 
-	 * @return
+	 * @return The x-coordinate
 	 */
 	public int getX();
 
 	/**
+	 * Returns the y-coordinate of the field.
 	 * 
-	 * @return
+	 * @return The y-coordinate
 	 */
 	public int getY();
 
 	/**
+	 * Returns true, if a wall blocks the way in the given direction (represents
+	 * by an orientation).
 	 * 
 	 * @param orientation
-	 * @return
+	 *            The direction, where you want to check the wall.
+	 * @return true: if there is a wall; false: else
 	 */
 	public boolean isWall(IPosition.Orientation orientation);
 
 	/**
+	 * Returns the current amount of food on the field.
 	 * 
-	 * @return [0-10]
+	 * @return The current amount of food [0-10]
 	 */
 	public int getFood();
 
 	/**
+	 * Returns the current state of the field.
 	 * 
-	 * @return
+	 * @return The field state
 	 */
 	public State getState();
 
 	/**
 	 * Returns the id of the robot, who is locked the field.
 	 * 
-	 * @return robot-id
+	 * 
+	 * @return The robot-id of the robot, who locked the field.
 	 */
 	public String getLockedBy();
-	
+
 	/**
-	 * Only available on Server and GUI!
+	 * Returns the growing rate of the food on the field. Only available on
+	 * Server and GUI!
 	 * 
-	 * @return
+	 * @return The growing rate in seconds per level.
 	 */
 	public int getGrowingRate();
 }

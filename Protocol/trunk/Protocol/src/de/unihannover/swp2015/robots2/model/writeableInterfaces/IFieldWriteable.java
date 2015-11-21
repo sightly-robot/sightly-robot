@@ -9,7 +9,8 @@ import de.unihannover.swp2015.robots2.model.interfaces.*;
  * and food may grow.
  * 
  * @version 0.2
- * @author Patrick Kawczynski and Michael Thies
+ * @author Patrick Kawczynski
+ * @author Michael Thies
  */
 public interface IFieldWriteable extends IField, IAbstractModelWriteable {
 
