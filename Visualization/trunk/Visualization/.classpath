@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="libs/gdx-1.7.1.jar" sourcepath="libs/src/gdx-1.7.1-sources.jar"/>
 	<classpathentry kind="lib" path="libs/gdx-backend-gwt-1.7.1.jar"/>
@@ -20,5 +21,6 @@
 	<classpathentry kind="lib" path="libs/lwjgl-platform-2.9.2-natives-osx.jar"/>
 	<classpathentry kind="lib" path="libs/lwjgl-platform-2.9.2-natives-windows.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Protocol"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

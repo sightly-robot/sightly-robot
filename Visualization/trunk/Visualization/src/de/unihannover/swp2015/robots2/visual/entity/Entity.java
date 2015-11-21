@@ -18,9 +18,24 @@ public abstract class Entity implements IEntity {
     protected float renderX, renderY; 
     protected IGameHandler gameHandler;
     protected boolean isVisible; //Optional
-    
-    public abstract void setPosition(int x, int y);
-    
-    public abstract void hide(); //Optional
+    protected int zIndex = 0;
 
+    public abstract void setPosition(int x, int y);
+    public abstract void hide(); //Optional
+    
+    @Override
+    public int getZIndex() {
+    	return zIndex;
+    }
+    
+    @Override
+    public void setZIndex(final int zIndex) {
+    	this.zIndex = zIndex;
+    }
+    
+	@Override
+	public int compareTo(IEntity o) {
+		return this.zIndex - o.getZIndex();
+	}
+    
 }
