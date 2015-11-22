@@ -1,6 +1,12 @@
 package de.unihannover.swp2015.robots2.visual.entity;
 
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
+import de.unihannover.swp2015.robots2.visual.core.IGameHandler;
+import de.unihannover.swp2015.robots2.visual.resource.IResourceHandler;
+import de.unihannover.swp2015.robots2.visual.util.pref.IPreferences;
+import de.unihannover.swp2015.robots2.visual.util.pref.observer.PreferencesObservable;
 
 /**
  * An entity used for the visualization of 
@@ -10,27 +16,26 @@ import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
  */
 public class Map extends Entity {
 
-	@Override
-	public void setPosition(int x, int y) {
-		this.renderX=x;
-		this.renderY=y;
+	public Map(SpriteBatch batch, IGameHandler gameHandler, IPreferences prefs, IResourceHandler resHandler) {
+		super(batch, gameHandler, prefs, resHandler);
 	}
 
 	@Override
-	public void hide() {
-		// TODO Optional
-	}
-	
-	@Override
 	public void render() {
-		RobotGameHandler.spriteBatch.begin();
-		RobotGameHandler.spriteBatch.draw(texture, x, y);
-		RobotGameHandler.spriteBatch.end();		
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
 	public void onModelUpdate(IEvent event) {
 		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onUpdatePreferences(PreferencesObservable o, String updatedKey) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

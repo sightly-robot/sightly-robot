@@ -2,8 +2,16 @@ package de.unihannover.swp2015.robots2.visual.entity;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
+import de.unihannover.swp2015.robots2.model.interfaces.IField;
+import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
+import de.unihannover.swp2015.robots2.visual.core.IGameHandler;
+import de.unihannover.swp2015.robots2.visual.resource.IResourceHandler;
+import de.unihannover.swp2015.robots2.visual.util.pref.IPreferences;
+import de.unihannover.swp2015.robots2.visual.util.pref.observer.PreferencesObservable;
 
 /**
  * An entity used for the visualization of robots
@@ -12,64 +20,40 @@ import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
  * @author Daphne Schössow
  */
 public class Robot extends Entity {
-		//private boolean isVirtual; //TODO Einbauen
-		private int direction=0; //0=NORTH, 1=EAST, 2=SOUTH, 3=WEST
 		
-		public Robot(int direction){
-			this.direction=direction;
-			this.texture = new Texture(Gdx.files.internal("robot.png")); //Dateinamen ggf noch anpassen
-		}
+	//private boolean isVirtual; //TODO Einbauen
+	private final IRobot model;
+	private final TextureRegion tex;
+	
+	//TODO perhaps we have to remember the old position to choose the correct animation
+	private int oldX;
+	private int oldY;
+	
+	public Robot(final IRobot robMode, SpriteBatch batch, IGameHandler gameHandler, IPreferences prefs, IResourceHandler resHandler) {
+		super(batch, gameHandler, prefs, resHandler);
 		
-		public Robot(){
-			this.texture = new Texture(Gdx.files.internal("robot.png")); //Dateinamen ggf noch anpassen
-		}
+		this.model = robMode;
+		this.tex = resHandler.getRegion(""); //TODO key
+	}
+			
+	@Override
+	public void render() {
+		batch.begin();
 		
-		private void changeDirection(int dir){ //TODO
-			switch(dir){
-				/*case 1:
-					RobotGameHandler.spriteBatch.draw(texture, x, y, ???);//90°
-					break;
-				case 2:
-					RobotGameHandler.spriteBatch.draw(texture, x, y, ???);//180°
-					break;
-				case 3:
-					RobotGameHandler.spriteBatch.draw(texture, x, y, ???);//270°
-					break;*/
-				default:
-					RobotGameHandler.spriteBatch.draw(texture, x, y);//keine Rotation	
-					break;
-			}
-		}
-		
-		@Override
-		public void setPosition(int x, int y){
-			this.renderX=x;
-			this.renderY=y;
-		}
-		
-		@Override
-		public void hide(){
-			//TODO Optional
-		}
+		batch.end();
+	}
 
-		@Override
-		public void render() {
-			RobotGameHandler.spriteBatch.begin();
-			changeDirection();//RobotGameHandler.spriteBatch.draw(texture, x, y);
-			RobotGameHandler.spriteBatch.end();		
+	@Override
+	public void onModelUpdate(IEvent event) {
+		if(event.getType() == IEvent.UpdateType.ROBOT_POSITION){ //wie zieh ich die Information da raus?
+			//TODO animation stuff
 		}
+	}
 
-		@Override
-		public void onModelUpdate(IEvent event) {
-			// TODO Auto-generated method stub
-			/*if(event == Robo_change_direction){//wie heißt das richtig? wie zieh ich die Information da raus?
-				//TODO
-				changeDirection();
-			}*/
-			if(event.getType() == ROBOT_POSITION){ //wie zieh ich die Information da raus?
-				setPosition(x,y);
-				render();
-			}
-		}
+	@Override
+	public void onUpdatePreferences(PreferencesObservable o, String updatedKey) {
+		// TODO Auto-generated method stub
+		
+	}
 
 }

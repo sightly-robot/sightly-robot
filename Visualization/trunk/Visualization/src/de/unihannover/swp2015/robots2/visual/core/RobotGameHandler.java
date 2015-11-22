@@ -12,6 +12,7 @@ import de.unihannover.swp2015.robots2.visual.entity.IEntity;
 import de.unihannover.swp2015.robots2.visual.entity.modifier.base.IEntityModifier;
 import de.unihannover.swp2015.robots2.visual.resource.IResourceHandler;
 import de.unihannover.swp2015.robots2.visual.resource.ResourceHandler;
+import de.unihannover.swp2015.robots2.visual.util.pref.IPreferences;
 
 /**
  * It handles all entities, resources and update processes of the RobotGame.
@@ -49,6 +50,8 @@ public class RobotGameHandler implements IGameHandler {
 	 * Main camera
 	 */
 	protected OrthographicCamera cam;
+	
+	protected IPreferences prefer;
 	
 	/**
 	 * Construct a new RobotGameHandler and connects this handler (means it will directly observe the model) to the given mode <code>game</code>
@@ -101,6 +104,11 @@ public class RobotGameHandler implements IGameHandler {
 	public void dispose() {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public IPreferences getPreferences() {
+		return prefer;
 	}
 
 }

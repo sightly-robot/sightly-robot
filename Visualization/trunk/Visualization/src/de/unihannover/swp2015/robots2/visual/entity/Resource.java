@@ -1,9 +1,12 @@
 package de.unihannover.swp2015.robots2.visual.entity;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
+import de.unihannover.swp2015.robots2.visual.core.IGameHandler;
+import de.unihannover.swp2015.robots2.visual.resource.IResourceHandler;
+import de.unihannover.swp2015.robots2.visual.util.pref.IPreferences;
+import de.unihannover.swp2015.robots2.visual.util.pref.observer.PreferencesObservable;
 
 /**
  * An entity used for the visualization of resources
@@ -13,44 +16,26 @@ import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
  */
 public class Resource extends Entity {
 
-	private int stage = 10; //default
-	
-	public Resource(int stage){
-		this.stage=stage;
-		this.texture = new Texture(Gdx.files.internal("resource"+stage+".png")); //Dateinamen ggf noch anpassen
-	}
-	
-	public Resource(){
-		this.texture = new Texture(Gdx.files.internal("resource10.png")); //Dateinamen ggf noch anpassen
-	}
-	
-	@Override
-	public void setPosition(int x, int y){ //oder gleich beim Erstellen die Position mitgeben?
-		this.renderX=x;
-		this.renderY=y;
-	}
-	
-	@Override
-	public void hide(){
-		//TODO Optional
+	public Resource(SpriteBatch batch, IGameHandler gameHandler, IPreferences prefs, IResourceHandler resHandler) {
+		super(batch, gameHandler, prefs, resHandler);
 	}
 
 	@Override
 	public void render() {
-		RobotGameHandler.spriteBatch.begin();
-		RobotGameHandler.spriteBatch.draw(texture, x, y);
-		RobotGameHandler.spriteBatch.end();		
+		batch.begin();
+		batch.end();
 	}
 
 	@Override
 	public void onModelUpdate(IEvent event) {
-		// TODO ?
-		if(event.getType() == FIELD_FOOD){
-			if(stage<10){
-				stage++;
-				this.texture = new Texture(Gdx.files.internal("resource"+stage+".png")); //Dateinamen ggf noch anpassen
-				render();
-			}
+		if(event.getType() == IEvent.UpdateType.FIELD_FOOD){
+			// some animation stuff
 		}
+	}
+
+	@Override
+	public void onUpdatePreferences(PreferencesObservable o, String updatedKey) {
+		// TODO Auto-generated method stub
+		
 	}
 }
