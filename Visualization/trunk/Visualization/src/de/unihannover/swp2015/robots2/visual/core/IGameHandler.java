@@ -1,5 +1,7 @@
 package de.unihannover.swp2015.robots2.visual.core;
 
+import com.badlogic.gdx.graphics.Texture;
+
 import de.unihannover.swp2015.robots2.model.externalInterfaces.IModelObserver;
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
 import de.unihannover.swp2015.robots2.visual.entity.IEntity;
@@ -42,4 +44,6 @@ public interface IGameHandler extends IUpdateable, IModelObserver, IRenderable {
 	 */
 	IPreferences getPreferences();
 	
+	
+	Texture getTexture();
 }

@@ -3,7 +3,9 @@ package de.unihannover.swp2015.robots2.visual.core;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
@@ -47,6 +49,11 @@ public class RobotGameHandler implements IGameHandler {
 	protected SpriteBatch spriteBatch;
 	
 	/**
+	 * Texture file
+	 */
+	protected Texture texture;
+	
+	/**
 	 * Main camera
 	 */
 	protected OrthographicCamera cam;
@@ -65,9 +72,15 @@ public class RobotGameHandler implements IGameHandler {
 		this.resourceHandler = resourceHandler;
 		this.spriteBatch = new SpriteBatch();
 		this.spriteBatch.setProjectionMatrix(cam.combined);
+		this.texture = new Texture(Gdx.files.internal("simplistic_textures_map.png")); //TODO später schöne Texturdatei nehmen
 		this.cam = cam;
 
 		//this.game.observe(this);
+	}
+	
+	@Override
+	public Texture getTexture(){
+		return texture;
 	}
 	
 	@Override
