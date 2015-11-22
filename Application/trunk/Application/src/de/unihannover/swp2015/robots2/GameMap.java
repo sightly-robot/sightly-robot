@@ -29,6 +29,14 @@ public class GameMap {
 	}
 	
 	/**
+	 * Does not initialize the map. Must load a map before use.
+	 */
+	public GameMap()
+	{
+		
+	}
+	
+	/**
 	 * Reads a json file that contains a "map" object.
 	 * Does automatic validation checks and throws on failure.
 	 * 
@@ -68,11 +76,11 @@ public class GameMap {
 				
 				if (fieldObject.has("growthRate"))
 					field.setGrowthRate(fieldObject.getDouble("growthRate"));
-				else if (fieldObject.has("initialResources"))
+				if (fieldObject.has("initialResources"))
 					field.setResources(fieldObject.getInt("initialResources"));
-				else if (fieldObject.has("possibleDirections"))
+				if (fieldObject.has("possibleDirections"))
 					field.setPassableDirections(fieldObject.getString("possibleDirections"));
-				else if (fieldObject.has("startPosition")) {
+				if (fieldObject.has("startPosition")) {
 					String dir = fieldObject.getString("startPosition");
 					if (!dir.isEmpty())
 						field.setStartDirection(dir.charAt(0));
@@ -155,6 +163,10 @@ public class GameMap {
 	public int getHeight()
 	{
 		return fields.size();
+	}
+
+	public List<List<Field>> getFields() {
+		return fields;
 	}
 
 	public GameParameters getGameParameters() {

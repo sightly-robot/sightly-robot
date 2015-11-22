@@ -24,6 +24,7 @@ import org.apache.pivot.wtk.Window;
 import org.json.JSONException;
 
 import de.unihannover.swp2015.robots2.GameMap;
+import de.unihannover.swp2015.robots2.GameState;
 import de.unihannover.swp2015.robots2.InvalidMapFile;
 import de.unihannover.swp2015.robots2.components.StrategicVisualization;
 
@@ -88,6 +89,9 @@ public class ControlPanel extends Window implements Bindable {
 						File file = fileBrowserSheet.getSelectedFile();
 						try {
 							GameMap map = new GameMap(file.getAbsolutePath());
+							GameState.getInstance().setMap(map);
+							visualization.loadState(GameState.getInstance());
+							visualization.repaint();
 						} catch (JSONException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();

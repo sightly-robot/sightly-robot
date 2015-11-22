@@ -2,7 +2,6 @@ package de.unihannover.swp2015.robots2;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.lang.IllegalArgumentException;
 
 /**
  * A holder for field information.

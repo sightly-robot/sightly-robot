@@ -9,7 +9,7 @@
 				   styles="{backgroundColor:'#505050'}">
 			<left>
 				<Border styles="{backgroundColor:'#303030', padding:0}">			
-					<components:StrategicVisualization/>
+					<components:StrategicVisualization bxml:id="visualization"/>
 				</Border>
 			</left>
 			<right>

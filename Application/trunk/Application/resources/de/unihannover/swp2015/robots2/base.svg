@@ -1,0 +1,11 @@
+ <svg width="1000" height="1000">
+	<g id="content">
+		<g id="staticContent">
+			<rect width="1000" height="1000" style="fill:rgb(0,0,0);" />
+		</g>
+		<g id="dynamicContent">
+			<g id="resources"/>
+			<g id="walls"/>
+		</g>
+	</g>
+</svg> 

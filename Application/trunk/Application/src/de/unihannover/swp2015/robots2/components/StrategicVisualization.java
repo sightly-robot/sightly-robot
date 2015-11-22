@@ -3,25 +3,15 @@ package de.unihannover.swp2015.robots2.components;
 import java.awt.Graphics2D;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Reader;
-import java.io.StringReader;
 import java.lang.ClassLoader;
-import java.net.URI;
-
 import org.apache.pivot.wtk.Panel;
 import org.apache.pivot.wtk.media.Drawing;
 import org.apache.pivot.wtk.media.SVGDiagramSerializer;
 
-import com.kitfox.svg.Circle;
-import com.kitfox.svg.Group;
 import com.kitfox.svg.SVGDiagram;
-import com.kitfox.svg.SVGElementException;
-import com.kitfox.svg.SVGException;
-import com.kitfox.svg.SVGRoot;
-import com.kitfox.svg.SVGUniverse;
-import com.kitfox.svg.animation.AnimationElement;
 
 import de.unihannover.swp2015.robots2.GameState;
+import de.unihannover.swp2015.robots2.SvgConstructor;
 
 /**
  * An apache pivot component for displaying a game. 
@@ -30,8 +20,7 @@ import de.unihannover.swp2015.robots2.GameState;
 public class StrategicVisualization extends Panel {
 	private Drawing drawing; // svg drawing
 	private GameState state;
-	private SVGUniverse universe;
-	private URI svgUri; 
+	private SvgConstructor svgConstructor;
 	
 	/**
 	 * Constructor loads default svg.
@@ -41,11 +30,6 @@ public class StrategicVisualization extends Panel {
 		super();
 		
 		state = null;
-		universe = new SVGUniverse();
-		
-		// create the svg stub
-		Reader rd = new StringReader("<svg width=\"1000\" height=\"1000\"><g id=\"mainGroup\"><rect width=\"1000\" height=\"1000\" style=\"fill:rgb(255,255,255);\"/></g></svg>");
-		svgUri = universe.loadSVG(rd, "/visualization");
 		
 		// load default svg
 		loadDefault();
@@ -57,6 +41,7 @@ public class StrategicVisualization extends Panel {
 	 */
 	public void loadState(GameState state) {
 		this.state = state;
+		svgConstructor = new SvgConstructor(state);
 	}
 	
 	/**
@@ -79,18 +64,11 @@ public class StrategicVisualization extends Panel {
 		if (state == null)
 			return;
 		
-		SVGDiagram diagram = this.universe.getDiagram(svgUri);
-		Group mainGroup = (Group)diagram.getElement("mainGroup");
+		svgConstructor.resetSvg();
+		svgConstructor.drawResources();
+		svgConstructor.drawWalls();
 		
-		/*
-		try {
-			//mainGroup.loaderAddChild(null, circle);
-			//mainGroup.updateTime(0.);
-		} catch (SVGException e) {
-			e.printStackTrace();
-		}
-		*/
-		
+		SVGDiagram diagram = svgConstructor.getDiagram();
 		drawing = new Drawing(diagram);
 	}
 
