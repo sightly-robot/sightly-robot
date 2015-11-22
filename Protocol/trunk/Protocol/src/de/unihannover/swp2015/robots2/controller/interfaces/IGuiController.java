@@ -18,8 +18,17 @@ public interface IGuiController extends IController {
 	 */
 	public void sendFood(List<List<Integer>> food);
 	
+	/**
+	 * 
+	 * @param growingRates
+	 */
 	public void sendGrowingRates(List<List<Integer>> growingRates);
 	
+	/**
+	 * 
+	 * @param robotSpeed
+	 * @param hesitationTime
+	 */
 	public void sendGameParameters(float robotSpeed, int hesitationTime);
 	
 	/**
@@ -32,17 +41,17 @@ public interface IGuiController extends IController {
 	public void setRobotPosition(int x, int y, IRobot robot, IPosition.Orientation orientation);
 	
 	/**
-	 * 
+	 * This method starts the game.
 	 */
 	public void startGame();
 	
 	/**
-	 * 
+	 * This method stops the game.
 	 */
 	public void stopGame();
 	
 	/**
-	 * 
+	 * This method reset all game values.
 	 */
 	public void resetGame();
 	
@@ -70,10 +79,21 @@ public interface IGuiController extends IController {
 	 */
 	public void getVisualizationSettings();
 	
-	
+	/**
+	 * 
+	 * @param id
+	 */
 	public void letRobotBlink(String id);
 	
+	/**
+	 * 
+	 * @param control
+	 */
 	public void registerVisualizationControl(IVisualizationControl control);
 	
+	/**
+	 * 
+	 * @param control
+	 */
 	public void registerHardwareRobotControl(IHardwareRobotControl control);
 }

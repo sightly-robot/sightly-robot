@@ -16,28 +16,36 @@ public interface IRobotController extends IController {
 	 * @param orientation
 	 */
 	public void updatePosition(int x, int y, IPosition.Orientation orientation);
-	
+
 	/**
 	 * 
 	 * @param progress
 	 */
 	public void updatePositionProgress(int progress);
-	
+
 	/**
 	 * 
 	 * @param x
 	 * @param y
 	 */
 	public void requestField(int x, int y);
-	
+
 	/**
 	 * 
 	 * @param x
 	 * @param y
 	 */
 	public void releaseField(int x, int y);
-	
+
+	/**
+	 * 
+	 */
 	public void setRobotReady();
-	
+
+	/**
+	 * Returns an Robot instance of the robot on which this thread is running..
+	 * 
+	 * @return The Robot-instance.
+	 */
 	public IRobot getMyself();
 }
