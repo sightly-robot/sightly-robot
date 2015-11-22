@@ -64,4 +64,19 @@ public class AIGraph {
 			}
 		}
 	}
+
+	/**
+	 * Transforms given map data to an AIGraph object
+	 * @param map Map data object
+	 */
+	public void mapToGraph(GameMap map) {
+		/*
+		Maybe use this(x,y) and make method static instead of initializing new graph
+		 */
+		AIGraph graph = new AIGraph(map.getWidth(), map.getHeight());
+
+		for(Field field : map.getFields()) {
+			// ...
+		}
+	}
 }
