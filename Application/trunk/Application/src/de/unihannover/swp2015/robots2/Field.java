@@ -1,8 +1,17 @@
 package de.unihannover.swp2015.robots2;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.lang.IllegalArgumentException;
 
+/**
+ * A holder for field information.
+ * It contains a growthRate (for resources), the amount of resources it currently possesses,
+ * a list of directions a roboter can go to from there, and a field which tells the starting direction
+ * of a roboter if set. The last one is only set for starting fields.
+ * 
+ * @author Tim
+ */
 public class Field {
 	private double growthRate;
 	private int resources;
@@ -21,6 +30,7 @@ public class Field {
 	{
 		this.growthRate = growthRate;
 		this.resources = initialResources;
+		this.passableDirections = new HashSet <CardinalDirection>();
 		
 		setPassableDirections(passableDirections);
 		setStartDirection(startingDirection);		
@@ -82,6 +92,14 @@ public class Field {
 		else if (directions.contains("w"))
 			this.passableDirections.add(CardinalDirection.WEST);
 		// else nothing
+	}
+	
+	/**
+	 * Removes one direction from the set.
+	 * @param direction A direction to remove from the set.
+	 */
+	public void removePassableDirection(CardinalDirection direction) {
+		passableDirections.remove(direction);
 	}
 	
 	/**

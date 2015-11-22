@@ -1,5 +1,10 @@
 package de.unihannover.swp2015.robots2;
 
+/**
+ * A holder for game paramters (loaded from the map).
+ *  
+ * @author Tim
+ */
 public class GameParameters {
 	private double movementSpeed = 0.; // in ?
 	private int maxStayTime = 0; // in milliseconds
