@@ -23,7 +23,6 @@ import org.apache.pivot.wtk.TableView;
 import org.apache.pivot.wtk.Window;
 import org.json.JSONException;
 
-import de.unihannover.swp2015.robots2.MapReader;
 import de.unihannover.swp2015.robots2.GameMap;
 
 import org.apache.pivot.wtk.DesktopApplicationContext;
@@ -83,7 +82,7 @@ public class ControlPanel extends Window implements Bindable {
 					if (sheet.getResult()) {
 						File file = fileBrowserSheet.getSelectedFile();
 						try {
-							GameMap map = MapReader.readFromFile(file.getAbsolutePath());
+							GameMap map = new GameMap(file.getAbsolutePath());
 						} catch (JSONException | FileNotFoundException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
