@@ -1,0 +1,514 @@
+{
+	"map": {
+		"version": 1,
+		"width": 10,
+		"height": 10,
+		"fields": [[
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "es"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "esw",
+			"startPosition": "e"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "esw",
+			"startPosition": "e"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "esw"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "esw"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "esw"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "esw"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "esw"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "esw"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "sw"
+		}], [
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "nes"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "nesw"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "nesw"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "nesw"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "nesw"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "nesw"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "nesw"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "nesw"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "nesw"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "nsw"
+		}], [
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "nes"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "nesw"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "nesw"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "nesw"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "nesw"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "nesw"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "nesw"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "nesw"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "nesw"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "nsw"
+		}], [
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "nes"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "nesw"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "nesw"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "nesw"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "nesw"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "nesw"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "nesw"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "nesw"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "nesw"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "nsw"
+		}], [
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "nes"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "nesw"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "nesw"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "nesw"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "nesw"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "nesw"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "nesw"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "nesw"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "nesw"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "nsw"
+		}], [
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "nes"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "nesw"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "nesw"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "nesw"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "nesw"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "nesw"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "nesw"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "nesw"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "nesw"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "nsw"
+		}], [
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "nes"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "nesw"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "nesw"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "nesw"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "nesw"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "nesw"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "nesw"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "nesw"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "nesw"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "nsw"
+		}], [
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "nes"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "nesw"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "nesw"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "nesw"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "nesw"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "nesw"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "nesw"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "nesw"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "nesw"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "nsw"
+		}], [
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "nes"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "nesw"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "nesw"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "nesw"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "nesw"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "nesw"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "nesw"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "nesw"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "nesw"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "nsw"
+		}], [
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "ne"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "new"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "new"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "new"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "new"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "new"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "new"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "new"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "new"
+		}, 
+		{
+			"growthRate": 1.2,
+			"initialResources": 10,
+			"possibleDirections": "nw"
+		}]],
+		"gameParameters": {
+			"movementSpeed": 0,
+			"maxStayTime": 0
+		}
+	}
+}

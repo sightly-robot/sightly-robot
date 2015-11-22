@@ -84,15 +84,19 @@ public class ControlPanel extends Window implements Bindable {
 						File file = fileBrowserSheet.getSelectedFile();
 						try {
 							GameMap map = new GameMap(file.getAbsolutePath());
-						} catch (JSONException | FileNotFoundException e) {
+						} catch (JSONException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
+							Alert.alert(MessageType.ERROR, "The json file is not valid json!\n" + e.getMessage(), ControlPanel.this);
 						} catch (InvalidMapFile e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
+							Alert.alert(MessageType.ERROR, e.getMessage(), ControlPanel.this);
+						} catch (FileNotFoundException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+							Alert.alert(MessageType.ERROR, e.getMessage(), ControlPanel.this);
 						}
-						
-						Alert.alert(MessageType.INFO, file.getAbsolutePath(), ControlPanel.this);
 					}
 				}
 			});
