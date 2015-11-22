@@ -84,11 +84,11 @@ public class Field {
 	public void setPassableDirections(String directions) {
 		if (directions.contains("n"))
 			this.passableDirections.add(CardinalDirection.NORTH);
-		else if (directions.contains("e"))
+		if (directions.contains("e"))
 			this.passableDirections.add(CardinalDirection.EAST);
-		else if (directions.contains("s"))
+		if (directions.contains("s"))
 			this.passableDirections.add(CardinalDirection.SOUTH);
-		else if (directions.contains("w"))
+		if (directions.contains("w"))
 			this.passableDirections.add(CardinalDirection.WEST);
 		// else nothing
 	}
@@ -183,5 +183,23 @@ public class Field {
 	 */
 	public Set<CardinalDirection> getPassableDirections() {
 		return passableDirections;
-	}	
+	}
+	
+	/**
+	 * Gets walls instead of anti-walls / passableDirections.
+	 * @return Walls
+	 */
+	public Set<CardinalDirection> getWalls() {
+		Set<CardinalDirection> walls = new HashSet<>();
+		if (!passableDirections.contains(CardinalDirection.NORTH))
+			walls.add(CardinalDirection.NORTH);
+		if (!passableDirections.contains(CardinalDirection.SOUTH))
+			walls.add(CardinalDirection.SOUTH);
+		if (!passableDirections.contains(CardinalDirection.EAST))
+			walls.add(CardinalDirection.EAST);
+		if (!passableDirections.contains(CardinalDirection.WEST))
+			walls.add(CardinalDirection.WEST);
+		
+		return walls;
+	}
 }

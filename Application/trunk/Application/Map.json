@@ -87,12 +87,12 @@
 		{
 			"growthRate": 1.2,
 			"initialResources": 2,
-			"possibleDirections": "nesw"
+			"possibleDirections": "nsw"
 		}, 
 		{
 			"growthRate": 1.2,
 			"initialResources": 0,
-			"possibleDirections": "nesw"
+			"possibleDirections": "nsw"
 		}, 
 		{
 			"growthRate": 1.2,
@@ -127,17 +127,17 @@
 		{
 			"growthRate": 1.2,
 			"initialResources": 1,
-			"possibleDirections": "nesw"
+			"possibleDirections": "ne"
 		}, 
 		{
 			"growthRate": 1.2,
 			"initialResources": 10,
-			"possibleDirections": "nesw"
+			"possibleDirections": "new"
 		}, 
 		{
 			"growthRate": 1.2,
 			"initialResources": 10,
-			"possibleDirections": "nesw"
+			"possibleDirections": "new"
 		}, 
 		{
 			"growthRate": 1.2,
@@ -177,7 +177,7 @@
 		{
 			"growthRate": 1.2,
 			"initialResources": 0,
-			"possibleDirections": "nesw"
+			"possibleDirections": "nes"
 		}, 
 		{
 			"growthRate": 1.2,
@@ -412,22 +412,22 @@
 		{
 			"growthRate": 1.2,
 			"initialResources": 7,
-			"possibleDirections": "nesw"
+			"possibleDirections": "new"
 		}, 
 		{
 			"growthRate": 1.2,
 			"initialResources": 6,
-			"possibleDirections": "nesw"
+			"possibleDirections": "new"
 		}, 
 		{
 			"growthRate": 1.2,
 			"initialResources": 6,
-			"possibleDirections": "nesw"
+			"possibleDirections": "new"
 		}, 
 		{
 			"growthRate": 1.2,
 			"initialResources": 7,
-			"possibleDirections": "nesw"
+			"possibleDirections": "new"
 		}, 
 		{
 			"growthRate": 1.2,

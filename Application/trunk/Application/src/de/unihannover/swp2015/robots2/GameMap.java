@@ -53,8 +53,7 @@ public class GameMap {
 		JSONTokener tokenizer = new JSONTokener(new FileInputStream(fileName));
 		JSONObject mapObject = new JSONObject(tokenizer).getJSONObject("map"); 
 		
-		int version = mapObject.getInt("version");
-		System.out.print(version);
+		// int version = mapObject.getInt("version");
 		
 		// load game parameters, which are map dependent.
 		this.gameParameters = new GameParameters (
@@ -96,7 +95,7 @@ public class GameMap {
 		if (fields.get(0).size() != mapObject.getInt("width") || fields.get(0).isEmpty())
 			throw new InvalidMapFile("The field width is inconsistent with the array, or zero");
 		
-		fixBorders();
+		//fixBorders();
 	}
 	
 	/**

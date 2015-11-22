@@ -5,6 +5,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URI;
 import java.util.List;
+import java.util.Set;
 
 import com.kitfox.svg.Group;
 import com.kitfox.svg.Line;
@@ -52,7 +53,6 @@ public class SvgConstructor {
 	 * Draws resources to svg. Before calling it again, you must call reset svg.
 	 */
 	public void drawResources() {
-		Group content = (Group)diagram.getElement("content");
 		Group resources = (Group)diagram.getElement("resources");
 		
 		final class colorStyleBuilder {
@@ -95,7 +95,7 @@ public class SvgConstructor {
 			}
 
 			//resources.updateTime(0.);
-			content.updateTime(0.);
+			diagram.updateTime(0.);
 		} catch (SVGException e) {
 			// ignore
 			e.printStackTrace();
@@ -121,24 +121,30 @@ public class SvgConstructor {
 				for (int x = 0; x < row.size(); ++x) {
 					Field field = row.get(x);
 					
-					int Ax = x * fieldWidth;
-					int Ay = y * fieldHeight;
-					int x1 = Ax + (field.getPassableDirections().contains(CardinalDirection.EAST) ? fieldWidth : 0);
-					int x2 = Ax + (field.getPassableDirections().contains(CardinalDirection.WEST) ? 0 : fieldWidth);
-					int y1 = Ay + (field.getPassableDirections().contains(CardinalDirection.SOUTH) ? fieldHeight : 0);
-					int y2 = Ay + (field.getPassableDirections().contains(CardinalDirection.NORTH) ? 0 : fieldHeight);
+					Set<CardinalDirection> fieldWalls = field.getWalls();
 					
-					Line line = new Line();
-					line.addAttribute("x1", AnimationElement.AT_XML, Integer.toString(x1));
-					line.addAttribute("x2", AnimationElement.AT_XML, Integer.toString(x2));
-					line.addAttribute("y1", AnimationElement.AT_XML, Integer.toString(y1));
-					line.addAttribute("y2", AnimationElement.AT_XML, Integer.toString(y2));
-					line.addAttribute("style", AnimationElement.AT_CSS, "stroke:rgb(255,0,0);stroke-width:2");
-					walls.loaderAddChild(null, line);
+					for (CardinalDirection wall : fieldWalls) {
+						int Ax = x * fieldWidth;
+						int Ay = y * fieldHeight;
+						int x1 = Ax + (wall == CardinalDirection.EAST ? fieldWidth : 0);
+						int x2 = Ax + (wall == CardinalDirection.WEST ? 0 : fieldWidth);
+						int y1 = Ay + (wall == CardinalDirection.SOUTH ? fieldHeight : 0);
+						int y2 = Ay + (wall == CardinalDirection.NORTH ? 0 : fieldHeight);
+						
+						Line line = new Line();
+						line.addAttribute("x1", AnimationElement.AT_XML, Integer.toString(x1));
+						line.addAttribute("x2", AnimationElement.AT_XML, Integer.toString(x2));
+						line.addAttribute("y1", AnimationElement.AT_XML, Integer.toString(y1));
+						line.addAttribute("y2", AnimationElement.AT_XML, Integer.toString(y2));
+						line.addAttribute("stroke", AnimationElement.AT_XML, "rgb(0,0,0)");
+						line.addAttribute("stroke-width", AnimationElement.AT_XML, Integer.toString(svgWidth / 200));
+						line.addAttribute("stroke-linecap", AnimationElement.AT_XML, "round");
+						walls.loaderAddChild(null, line);
+					}				
 				}
 			}
 			
-			walls.updateTime(0.);
+			diagram.updateTime(0.);
 		} catch (SVGException e) {
 			// ignore
 			e.printStackTrace();

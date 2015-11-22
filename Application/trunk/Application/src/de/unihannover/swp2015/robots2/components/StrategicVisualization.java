@@ -42,6 +42,8 @@ public class StrategicVisualization extends Panel {
 	public void loadState(GameState state) {
 		this.state = state;
 		svgConstructor = new SvgConstructor(state);
+		update();
+		generateDrawing();
 	}
 	
 	/**
@@ -64,12 +66,17 @@ public class StrategicVisualization extends Panel {
 		if (state == null)
 			return;
 		
+		SVGDiagram diagram = svgConstructor.getDiagram();
+		drawing = new Drawing(diagram);
+	}
+	
+	/**
+	 * Reconstructs the svg. Warning! Expensive!
+	 */
+	public void update() {
 		svgConstructor.resetSvg();
 		svgConstructor.drawResources();
 		svgConstructor.drawWalls();
-		
-		SVGDiagram diagram = svgConstructor.getDiagram();
-		drawing = new Drawing(diagram);
 	}
 
 	/**
@@ -81,7 +88,6 @@ public class StrategicVisualization extends Panel {
 		graphics.scale((double)getWidth() / (double)drawing.getWidth(), (double)getHeight() / (double)drawing.getHeight());
 		
 		// reconstruct the svg from state.
-		generateDrawing();
 		if (drawing != null)	
 			drawing.paint(graphics);
 		
