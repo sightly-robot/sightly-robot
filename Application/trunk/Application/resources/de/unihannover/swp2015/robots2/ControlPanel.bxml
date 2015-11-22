@@ -1,14 +1,15 @@
 <windows:ControlPanel title="Control Panel" maximized="true"
     xmlns:bxml="http://pivot.apache.org/bxml"
     xmlns:windows="de.unihannover.swp2015.robots2.windows"
+	xmlns:components="de.unihannover.swp2015.robots2.components"
     xmlns="org.apache.pivot.wtk">
 	<Border
 	styles="{color:'#000000'}">
 		<SplitPane orientation="horizontal" splitRatio="0.6" 
 				   styles="{backgroundColor:'#505050'}">
 			<left>
-				<Border styles="{backgroundColor:'#303030', padding:6}">
-					<Panorama styles="{backgroundColor:'#303030'}"/>
+				<Border styles="{backgroundColor:'#303030', padding:0}">			
+					<components:StrategicVisualization/>
 				</Border>
 			</left>
 			<right>

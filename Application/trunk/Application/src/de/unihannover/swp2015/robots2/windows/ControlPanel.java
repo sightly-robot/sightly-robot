@@ -25,6 +25,7 @@ import org.json.JSONException;
 
 import de.unihannover.swp2015.robots2.GameMap;
 import de.unihannover.swp2015.robots2.InvalidMapFile;
+import de.unihannover.swp2015.robots2.components.StrategicVisualization;
 
 import org.apache.pivot.wtk.DesktopApplicationContext;
 import org.apache.pivot.wtk.Display;
@@ -44,10 +45,13 @@ public class ControlPanel extends Window implements Bindable {
 	@BXML private PushButton closeVisualization;
 
 	// Participants table
-	@BXML private TableView participantTable;
+	@BXML private TableView participantTable; 
+	
+	// Visualization
+	@BXML private StrategicVisualization visualization;
 	
 	// Configurator Window
-	private Configurator configurator = null; 
+	private Configurator configurator = null;
 	
 	/**
 	 * initialize is called by pivot after creating the object.
