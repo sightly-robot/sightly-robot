@@ -86,7 +86,8 @@ public class GameMap {
 	 */
 	public void resetMap()
 	{
-		fields.clear();
+		if (fields != null)
+			fields.clear();
 	}
 	
 	/**

@@ -73,13 +73,13 @@ public class Field {
 	 * @param directions A string containing any of nesw standing for the four cardinal directions.
 	 */
 	public void setPassableDirections(String directions) {
-		if (passableDirections.contains("n"))
+		if (directions.contains("n"))
 			this.passableDirections.add(CardinalDirection.NORTH);
-		else if (passableDirections.contains("e"))
+		else if (directions.contains("e"))
 			this.passableDirections.add(CardinalDirection.EAST);
-		else if (passableDirections.contains("s"))
+		else if (directions.contains("s"))
 			this.passableDirections.add(CardinalDirection.SOUTH);
-		else if (passableDirections.contains("w"))
+		else if (directions.contains("w"))
 			this.passableDirections.add(CardinalDirection.WEST);
 		// else nothing
 	}
