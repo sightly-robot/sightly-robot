@@ -51,7 +51,7 @@ public class StrategicVisualization extends Panel {
 	 * @throws IOException Throws if the svg is invalid.
 	 */
 	private void loadDefault() throws IOException {
-		InputStream stream = ClassLoader.class.getResourceAsStream("/de/unihannover/swp2015/robots2/loadMap.svg");
+		InputStream stream = ClassLoader.class.getResourceAsStream("/de/unihannover/swp2015/robots2/LoadMap.svg");
 		
 		SVGDiagramSerializer serializer = new SVGDiagramSerializer();
 		SVGDiagram diagram;
@@ -77,6 +77,7 @@ public class StrategicVisualization extends Panel {
 		svgConstructor.resetSvg();
 		svgConstructor.drawResources();
 		svgConstructor.drawWalls();
+		svgConstructor.drawStartPositions();
 	}
 
 	/**

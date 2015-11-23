@@ -95,7 +95,7 @@ public class GameMap {
 		if (fields.get(0).size() != mapObject.getInt("width") || fields.get(0).isEmpty())
 			throw new InvalidMapFile("The field width is inconsistent with the array, or zero");
 		
-		//fixBorders();
+		fixBorders();
 	}
 	
 	/**
@@ -130,6 +130,24 @@ public class GameMap {
 				list.get(list.size() - 1).removePassableDirection(CardinalDirection.EAST);
 			}
 		}
+	}
+	
+	public List <Position> getStartPositions() {
+		List <Position> positions = new ArrayList <>();
+		
+		for (int y = 0; y < fields.size(); ++y) {
+			List <Field> row = fields.get(y);
+			for (int x = 0; x < row.size(); ++x) {
+				Field field = row.get(x);
+				
+				if (field.isStartPosition()) {
+					field.getStartPosition();
+					positions.add(new Position(x, y, field.getStartPosition()));
+				}
+			}
+		}
+		
+		return positions;
 	}
 	
 	/**

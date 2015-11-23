@@ -6,6 +6,7 @@
 		<g id="dynamicContent">
 			<g id="resources"/>
 			<g id="walls"/>
+			<g id="startPositions"/>
 		</g>
 	</g>
 </svg> 

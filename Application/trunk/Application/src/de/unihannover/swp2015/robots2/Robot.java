@@ -7,7 +7,7 @@ package de.unihannover.swp2015.robots2;
  */
 public class Robot {
 	private CardinalDirection faceingDirection;
-	private Coordinate position;
+	private Position position;
 	private boolean virtual;
 	
 	public CardinalDirection getFaceingDirection() {
@@ -16,10 +16,10 @@ public class Robot {
 	public void setFaceingDirection(CardinalDirection faceingDirection) {
 		this.faceingDirection = faceingDirection;
 	}
-	public Coordinate getPosition() {
+	public Position getPosition() {
 		return position;
 	}
-	public void setPosition(Coordinate position) {
+	public void setPosition(Position position) {
 		this.position = position;
 	}	
 	public boolean isVirtual() {
