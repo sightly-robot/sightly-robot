@@ -1,5 +1,7 @@
 package de.unihannover.swp2015.robots2.model.writeableInterfaces;
 
+import java.util.Timer;
+
 import de.unihannover.swp2015.robots2.model.interfaces.*;
 
 /**
@@ -77,4 +79,12 @@ public interface IFieldWriteable extends IField, IAbstractModelWriteable {
 	 *            change
 	 */
 	public void setGrowingRate(int growingRate);
+
+	/**
+	 * Returns the Timer associated with this Field and used for timing changes
+	 * of field state.
+	 * 
+	 * @return The Timer
+	 */
+	public Timer getStateTimer();
 }

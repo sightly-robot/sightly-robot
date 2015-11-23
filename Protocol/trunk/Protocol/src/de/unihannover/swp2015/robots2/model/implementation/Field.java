@@ -1,5 +1,7 @@
 package de.unihannover.swp2015.robots2.model.implementation;
 
+import java.util.Timer;
+
 import de.unihannover.swp2015.robots2.model.interfaces.*;
 import de.unihannover.swp2015.robots2.model.writeableInterfaces.*;
 
@@ -57,6 +59,8 @@ public class Field extends AbstractModel implements IField, IFieldWriteable {
 	 * the server program and may be zero in other parts of the software.
 	 */
 	private volatile int growingRate;
+	/** Timer used for scheduling timed state changes */
+	private Timer stateTimer;
 
 	/**
 	 * Constructs a new Field object.
@@ -169,6 +173,11 @@ public class Field extends AbstractModel implements IField, IFieldWriteable {
 	@Override
 	public int getGrowingRate() {
 		return this.growingRate;
+	}
+
+	@Override
+	public Timer getStateTimer() {
+		return this.stateTimer;
 	}
 
 }

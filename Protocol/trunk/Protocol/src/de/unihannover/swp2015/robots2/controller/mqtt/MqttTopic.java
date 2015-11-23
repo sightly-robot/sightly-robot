@@ -7,15 +7,37 @@ package de.unihannover.swp2015.robots2.controller.mqtt;
  */
 public enum MqttTopic {
 
-	ROBOT_DISCOVER("robot/discover"), ROBOT_NEW("robot/new"), ROBOT_TYPE(
-			"robot/type/+"), ROBOT_POSITION("robot/position/+"), ROBOT_SETPOSITION(
-			"robot/setposition/+"), ROBOT_VIRTUALSPEED("robot/virtualspeed"), MAP_WALLS(
-			"map/walls"), MAP_FOOD("map/food"), FIELD_FOOD("map/food/+"), FIELD_OCCUPIED_LOCK(
-			"map/occupied/lock/+"), FIELD_OCCUPIED_SET("map/occupied/set/+"), FIELD_OCCUPIED_RELEASE(
-			"map/occupied/release/+"), CONTROL_STATE("control/state"), EVENT_ERROR_SERVER_CONNECTION(
-			"event/error/server/connection"), EVENT_ERROR_ROBOT_CONNECTION(
-			"event/error/robot/+/connection"), EVENT_ERROR_ROBOT_ROBOTICS(
-			"event/error/robot/+/robotics");
+	ROBOT_DISCOVER("robot/discover"),
+
+	ROBOT_NEW("robot/new"),
+
+	ROBOT_TYPE("robot/type/+"),
+
+	ROBOT_POSITION("robot/position/+"),
+
+	ROBOT_SETPOSITION("robot/setposition/+"),
+
+	ROBOT_VIRTUALSPEED("robot/virtualspeed"),
+
+	MAP_WALLS("map/walls"),
+
+	MAP_FOOD("map/food"),
+
+	FIELD_FOOD("map/food/+"),
+
+	FIELD_OCCUPIED_LOCK("map/occupied/lock/+"),
+
+	FIELD_OCCUPIED_SET("map/occupied/set/+"),
+
+	FIELD_OCCUPIED_RELEASE("map/occupied/release/+"),
+
+	CONTROL_STATE("control/state"),
+
+	EVENT_ERROR_SERVER_CONNECTION("event/error/server/connection"),
+
+	EVENT_ERROR_ROBOT_CONNECTION("event/error/robot/+/connection"),
+
+	EVENT_ERROR_ROBOT_ROBOTICS("event/error/robot/+/robotics");
 
 	private final String topic;
 
