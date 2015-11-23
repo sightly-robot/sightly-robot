@@ -9,7 +9,7 @@ import de.unihannover.swp2015.robots2.controller.interfaces.IRobotController;
  */
 public class AbstractRobot {
 
-	protected IRobotController iRobotController;
+	protected IRobotController robotController;
 	
 	protected AbstractAi abstractAi;
 	

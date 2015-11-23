@@ -1,6 +1,10 @@
 package de.unihannover.swp2015.robots2.hardwarerobot;
 
 import de.unihannover.swp2015.robots2.abstractrobot.AbstractRobot;
+import de.unihannover.swp2015.robots2.hardwarerobot.automate.Automate;
+import de.unihannover.swp2015.robots2.hardwarerobot.pi2gocontroller.LEDAndServoController;
+import de.unihannover.swp2015.robots2.hardwarerobot.pi2gocontroller.MotorController;
+import de.unihannover.swp2015.robots2.hardwarerobot.pi2gocontroller.Pi2GoGPIOController;
 
 /**
  * HardwareRobot is a child of {@link AbstractRobot}.
@@ -10,14 +14,22 @@ import de.unihannover.swp2015.robots2.abstractrobot.AbstractRobot;
  */
 public class HardwareRobot extends AbstractRobot{
 	
-//	Automate automate;
+	Automate automate;
 	
 	public HardwareRobot() {
-		
 		super();
 		
-//		automate = new Automate();
+		//PreInitialize Controller Instances:
+		LEDAndServoController.getInstance();
+		MotorController.getInstance();
+		Pi2GoGPIOController.getInstance();
+//		SoundController.getInstance();
+//		ColorSensorController.getInstance();
+//		CompassController.getInstance();
 		
-//		abstractAi.setAiEventObserver(automate);
+		
+		automate = new Automate(robotController);
+		
+		abstractAi.setAiEventObserver(automate);
 	}
 }

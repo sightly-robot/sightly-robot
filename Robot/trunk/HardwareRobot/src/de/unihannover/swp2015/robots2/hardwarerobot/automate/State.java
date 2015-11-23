@@ -2,7 +2,6 @@ package de.unihannover.swp2015.robots2.hardwarerobot.automate;
 
 public enum State {
 	
-	SHUTDOWN_STATE(-2),
 	PAUSE_STATE(-1),
 	LINE_FOLLOW_STATE(0),
 	DRIVE_ON_CELL_STATE(1),
@@ -21,6 +20,11 @@ public enum State {
 	private State(int id)
 	{
 		this.id = id;
+	}
+
+	public State getNextState() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
