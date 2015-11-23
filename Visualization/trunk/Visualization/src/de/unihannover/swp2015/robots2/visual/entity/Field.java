@@ -22,10 +22,7 @@ import de.unihannover.swp2015.robots2.visual.util.pref.observer.PreferencesObser
 public class Field extends Entity {
 	
 	private final IField model;
-	private final TextureRegion texWallN;
-	private final TextureRegion texWallE;
-	private final TextureRegion texWallS;
-	private final TextureRegion texWallW;
+	private final TextureRegion[] texWall;
 	private final TextureRegion field;
 	
 	public Field(final IField model, final SpriteBatch renderer, final IGameHandler gameHandler, final IPreferences prefs, final IResourceHandler resHandler){
@@ -34,17 +31,11 @@ public class Field extends Entity {
 		this.model = model;
 		this.model.observe(this);
 		
-		//this.texWallN = resHandler.getRegion(ResourceConstants.DEFAULT_WALL_H); 
-		//this.texWallE = resHandler.getRegion(ResourceConstants.DEFAULT_WALL_V); 
-		this.texWallN = new TextureRegion(gameHandler.getTexture()).split(256, 256)[0][3]; 
-		this.texWallE = new TextureRegion(gameHandler.getTexture()).split(256, 256)[1][3]; 
-		this.texWallS = new TextureRegion(gameHandler.getTexture()).split(256, 256)[2][3]; 
-		this.texWallW = new TextureRegion(gameHandler.getTexture()).split(256, 256)[3][3]; 
-		this.field = new TextureRegion(gameHandler.getTexture()).split(256, 256)[4][2]; 
-		//this.renderX = model.getX() * prefs.getInt(PreferencesConstants.FIELD_WIDTH_KEY, 100);
-		//this.renderY = model.getY() * prefs.getInt(PreferencesConstants.FIELD_HEIGHT_KEY, 100);
-		this.renderX = model.getX();
-		this.renderY = model.getY();
+		this.texWall = resHandler.getRegion(ResourceConstants.DEFAULT_WALL_H, ResourceConstants.DEFAULT_WALL_V); 
+		this.field = resHandler.getRegion(ResourceConstants.DEFAULT_FIELD); 
+		
+		this.renderX = model.getX() * prefs.getInt(PreferencesConstants.FIELD_WIDTH_KEY, 100);
+		this.renderY = model.getY() * prefs.getInt(PreferencesConstants.FIELD_HEIGHT_KEY, 100);
 	}
 
 	@Override
@@ -52,13 +43,16 @@ public class Field extends Entity {
 		batch.begin();
 		batch.draw(field, renderX, renderY);
 		if(model.isWall(IPosition.Orientation.NORTH))
-			batch.draw(texWallN, renderX, renderY);
+			batch.draw(texWall[0], renderX, renderY);
+		
 		if(model.isWall(IPosition.Orientation.EAST))
-			batch.draw(texWallE, renderX, renderY);
+			batch.draw(texWall[1], renderX, renderY);
+		
 		if(model.isWall(IPosition.Orientation.SOUTH))
-			batch.draw(texWallS, renderX, renderY);
+			batch.draw(texWall[0], renderX, renderY);
+		
 		if(model.isWall(IPosition.Orientation.WEST))
-			batch.draw(texWallW, renderX, renderY);
+			batch.draw(texWall[1], renderX, renderY);
 		batch.end();
 	}
 

@@ -1,6 +1,6 @@
 package de.unihannover.swp2015.robots2.visual.core;
 
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.utils.Disposable;
 
 import de.unihannover.swp2015.robots2.model.externalInterfaces.IModelObserver;
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
@@ -14,7 +14,7 @@ import de.unihannover.swp2015.robots2.visual.util.pref.IPreferences;
  * 
  * @author Rico Schrage
  */
-public interface IGameHandler extends IUpdateable, IModelObserver, IRenderable {
+public interface IGameHandler extends IUpdateable, IModelObserver, IRenderable, Disposable {
 
 	/**
 	 * Sets the connected {@link ResourceHandler}.
@@ -31,19 +31,10 @@ public interface IGameHandler extends IUpdateable, IModelObserver, IRenderable {
 	void dispatchEvent(final IEvent event, final IEntity source);
 	
 	/**
-	 * Deallocates all native resources.
-	 * 
-	 * {@link com.badlogic.gdx.ApplicationListener.dispose}
-	 */
-	void dispose();
-	
-	/**
 	 * {@link IPreferences}
 	 * 
 	 * @return preferences object
 	 */
 	IPreferences getPreferences();
 	
-	
-	Texture getTexture();
 }

@@ -3,9 +3,7 @@ package de.unihannover.swp2015.robots2.visual.core;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
@@ -47,40 +45,33 @@ public class RobotGameHandler implements IGameHandler {
 	 * SpriteBatch for rendering textures.
 	 */
 	protected SpriteBatch spriteBatch;
-	
-	/**
-	 * Texture file
-	 */
-	protected Texture texture;
-	
+		
 	/**
 	 * Main camera
 	 */
 	protected OrthographicCamera cam;
 	
-	protected IPreferences prefer;
+	/**
+	 * Settings received via MQTT
+	 */
+	protected IPreferences prefs;
 	
 	/**
 	 * Construct a new RobotGameHandler and connects this handler (means it will directly observe the model) to the given mode <code>game</code>
 	 * @param game root of the model
 	 * @param resourceHandler {@link IResourceHandler}
 	 */
-	public RobotGameHandler(final IGame game, final IResourceHandler resourceHandler, final OrthographicCamera cam) {
+	public RobotGameHandler(final IGame game, final IResourceHandler resourceHandler, final OrthographicCamera cam, final IPreferences prefs) {
 		this.modifierList = new ArrayList<>();
 		this.renderUnits = new ArrayList<>();
 		this.game = game;
 		this.resourceHandler = resourceHandler;
 		this.spriteBatch = new SpriteBatch();
 		this.spriteBatch.setProjectionMatrix(cam.combined);
-		this.texture = new Texture(Gdx.files.internal("simplistic_textures_map.png")); //TODO später schöne Texturdatei nehmen
 		this.cam = cam;
-
+		this.prefs = prefs;
+		
 		//this.game.observe(this);
-	}
-	
-	@Override
-	public Texture getTexture(){
-		return texture;
 	}
 	
 	@Override
@@ -115,13 +106,13 @@ public class RobotGameHandler implements IGameHandler {
 
 	@Override
 	public void dispose() {
-		// TODO Auto-generated method stub
-		
+		this.spriteBatch.dispose();
+		this.resourceHandler.dispose();
 	}
 
 	@Override
 	public IPreferences getPreferences() {
-		return prefer;
+		return prefs;
 	}
 
 }
