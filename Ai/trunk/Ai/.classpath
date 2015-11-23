@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="src" path="/Application"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/AbstractRobot"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/AiInterface"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/HardwareRobot"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/MockUp_DesktopControl"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/MockUp_Robot"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/pi4jexamples"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/Protocol"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/Server"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/SoftwareRobot"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/Utils"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/Visualisierung-Prototype"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/Visualization"/>
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry exported="true" kind="src" path="/Application"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/AbstractRobot"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/AiInterface"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/HardwareRobot"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/MockUp_DesktopControl"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/MockUp_Robot"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/pi4jexamples"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/Protocol"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/Server"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/SoftwareRobot"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/Utils"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/Visualisierung-Prototype"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/Visualization"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
