@@ -62,7 +62,11 @@ public class Automate implements AiEventObserver, Runnable {
 				//Update Only Position:
 				robotController.updatePosition(nextPosition.x, nextPosition.y, robot.getPosition().getOrientation());
 			}
-			state = tempState;
+			
+			if (state != tempState) {
+				state = tempState;
+			}
+			
 			
 			try {
 				automation.wait(LOOP_WAIT_MS);
