@@ -13,6 +13,7 @@ import de.unihannover.swp2015.robots2.visual.core.RobotGameHandler;
 import de.unihannover.swp2015.robots2.visual.resource.IResourceHandler;
 import de.unihannover.swp2015.robots2.visual.resource.ResourceConstants;
 import de.unihannover.swp2015.robots2.visual.resource.ResourceHandler;
+import de.unihannover.swp2015.robots2.visual.util.TestUtil;
 import de.unihannover.swp2015.robots2.visual.util.pref.IPreferences;
 import de.unihannover.swp2015.robots2.visual.util.pref.Preferences;
 
@@ -57,12 +58,12 @@ public class Visualization extends ApplicationAdapter {
 		int appHeight = Gdx.graphics.getHeight();
 
 		this.cam = new OrthographicCamera();
-		// TODO investigate which coordinate-system the model will use
-		this.cam.setToOrtho(false, appWidth, appHeight);
+		// !important! (0,0) is at the top-left corner
+		this.cam.setToOrtho(true, appWidth, appHeight);
 
 		// TODO create RobotGameHandler properly
 		final IResourceHandler resHandler = new ResourceHandler(ResourceConstants.ATLAS_PATH + ResourceConstants.ATLAS_NAME + ".atlas");
-		this.gameHandlerList.add(new RobotGameHandler(null, resHandler, cam, prefs));
+		this.gameHandlerList.add(new RobotGameHandler(TestUtil.createRandomTestGame(2, 12, 9), resHandler, cam, prefs));
 	}
 
 	@Override
@@ -76,7 +77,7 @@ public class Visualization extends ApplicationAdapter {
 	public void render() {
 
 		// sets the clear color to rgba(0, 0, 0, 1)
-		Gdx.gl.glClearColor(1, 1, 1, 1);
+		Gdx.gl.glClearColor(0, 0, 0, 1);
 		// clears the scene
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -86,6 +87,13 @@ public class Visualization extends ApplicationAdapter {
 
 		for (int i = 0; i < gameHandlerList.size(); ++i) {
 			gameHandlerList.get(i).render();
+		}
+	}
+	
+	@Override
+	public void resize(final int width, final int height) {
+		for (int i = 0; i < gameHandlerList.size(); ++i) {
+			gameHandlerList.get(i).resize(width, height);
 		}
 	}
 

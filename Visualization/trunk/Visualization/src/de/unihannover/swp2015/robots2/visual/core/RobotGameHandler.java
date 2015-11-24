@@ -3,12 +3,17 @@ package de.unihannover.swp2015.robots2.visual.core;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
 import de.unihannover.swp2015.robots2.model.interfaces.IGame;
+import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
+import de.unihannover.swp2015.robots2.model.interfaces.IStage;
 import de.unihannover.swp2015.robots2.visual.entity.IEntity;
+import de.unihannover.swp2015.robots2.visual.entity.Map;
+import de.unihannover.swp2015.robots2.visual.entity.Robot;
 import de.unihannover.swp2015.robots2.visual.entity.modifier.base.IEntityModifier;
 import de.unihannover.swp2015.robots2.visual.resource.IResourceHandler;
 import de.unihannover.swp2015.robots2.visual.resource.ResourceHandler;
@@ -57,7 +62,7 @@ public class RobotGameHandler implements IGameHandler {
 	protected IPreferences prefs;
 	
 	/**
-	 * Construct a new RobotGameHandler and connects this handler (means it will directly observe the model) to the given mode <code>game</code>
+	 * Construct a new RobotGameHandler and connects this handler (means it will directly observe the model) to the given model <code>game</code>
 	 * @param game root of the model
 	 * @param resourceHandler {@link IResourceHandler}
 	 */
@@ -70,8 +75,30 @@ public class RobotGameHandler implements IGameHandler {
 		this.spriteBatch.setProjectionMatrix(cam.combined);
 		this.cam = cam;
 		this.prefs = prefs;
+		this.game.observe(this);
 		
-		//this.game.observe(this);
+		this.init();
+	}
+	
+	/**
+	 * Will create all entities based on the game object.
+	 */
+	private void init() {
+		final IStage stage = game.getStage();
+
+		//set preferences !have to happen before creating entities!
+		this.prefs.putInt(PreferencesConstants.WALL_THICK_KEY, 2);
+		this.prefs.putInt(PreferencesConstants.MAP_ROWS_KEY, stage.getWidth());
+		this.prefs.putInt(PreferencesConstants.MAP_COLS_KEY, stage.getHeight());
+		this.prefs.putInt(PreferencesConstants.FIELD_WIDTH_KEY, Gdx.graphics.getWidth() / stage.getWidth());
+		this.prefs.putInt(PreferencesConstants.FIELD_HEIGHT_KEY, Gdx.graphics.getHeight() / stage.getHeight());
+
+		//create entites
+		for (final IRobot robot : game.getRobots().values()) {
+			this.renderUnits.add(new Robot(robot, spriteBatch, this, prefs, resourceHandler));
+		}
+		this.renderUnits.add(new Map(stage, spriteBatch, this, prefs, resourceHandler));
+
 	}
 	
 	@Override
@@ -113,6 +140,19 @@ public class RobotGameHandler implements IGameHandler {
 	@Override
 	public IPreferences getPreferences() {
 		return prefs;
+	}
+
+	@Override
+	public void resize(int width, int height) {
+		
+		final int rows = prefs.getInt(PreferencesConstants.MAP_ROWS_KEY, 12);
+		final int cols = prefs.getInt(PreferencesConstants.MAP_COLS_KEY, 9);
+		
+		if (rows == 0 || cols == 0)
+			return;
+		
+		this.prefs.putInt(PreferencesConstants.FIELD_WIDTH_KEY, Gdx.graphics.getWidth() / rows);
+		this.prefs.putInt(PreferencesConstants.FIELD_HEIGHT_KEY, Gdx.graphics.getHeight() / cols);
 	}
 
 }

@@ -4,11 +4,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
-import de.unihannover.swp2015.robots2.model.interfaces.IField;
-import de.unihannover.swp2015.robots2.model.interfaces.IPosition;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
 import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
 import de.unihannover.swp2015.robots2.visual.core.IGameHandler;
+import de.unihannover.swp2015.robots2.visual.core.PreferencesConstants;
 import de.unihannover.swp2015.robots2.visual.resource.IResourceHandler;
 import de.unihannover.swp2015.robots2.visual.resource.ResourceConstants;
 import de.unihannover.swp2015.robots2.visual.util.pref.IPreferences;
@@ -27,37 +26,41 @@ public class Robot extends Entity {
 	// private final TextureRegion tex;
 	private final TextureRegion[] roboTex;
 
-	// TODO perhaps we have to remember the old position to choose the correct
-	// animation
-	private int oldX;
-	private int oldY;
-
-	public Robot(final IRobot robMode, SpriteBatch batch, IGameHandler gameHandler, IPreferences prefs, IResourceHandler resHandler) {
+	public Robot(final IRobot robModel, SpriteBatch batch, IGameHandler gameHandler, IPreferences prefs, IResourceHandler resHandler) {
 		super(batch, gameHandler, prefs, resHandler);
 
-		this.model = robMode;
+		this.model = robModel;
 
 		this.roboTex = resHandler.getRegion(ResourceConstants.DEFAULT_ROBO_SOUTH, ResourceConstants.DEFAULT_ROBO_NORTH,
 				ResourceConstants.DEFAULT_ROBO_WEST, ResourceConstants.DEFAULT_ROBO_EAST);
 
-		this.renderX = model.getPosition().getX();
-		this.renderY = model.getPosition().getY();
+		this.renderX = model.getPosition().getX() * prefs.getInt(PreferencesConstants.FIELD_WIDTH_KEY, 42);
+		this.renderY = model.getPosition().getY() * prefs.getInt(PreferencesConstants.FIELD_HEIGHT_KEY, 42);
+		System.out.println(model.getPosition().getX());
 	}
 
 	@Override
 	public void render() {
 		
 		Orientation orientation = model.getPosition().getOrientation();
-				
+		final float fieldWidth = prefs.getInt(PreferencesConstants.FIELD_WIDTH_KEY, 10);
+		final float fieldHeight = prefs.getInt(PreferencesConstants.FIELD_HEIGHT_KEY, 10);
+		
 		batch.begin();
-		if (orientation == IPosition.Orientation.NORTH)
-			batch.draw(roboTex[1], renderX, renderY);
-		else if (orientation == IPosition.Orientation.EAST)
-			batch.draw(roboTex[3], renderX, renderY);
-		else if (orientation == IPosition.Orientation.SOUTH)
-			batch.draw(roboTex[0], renderX, renderY);
-		else if (orientation == IPosition.Orientation.WEST)
-			batch.draw(roboTex[2], renderX, renderY);
+		switch (orientation) {
+		case SOUTH:
+			batch.draw(roboTex[0], renderX, renderY, fieldWidth, fieldHeight);
+			break;
+		case NORTH:
+			batch.draw(roboTex[1], renderX, renderY, fieldWidth, fieldHeight);
+			break;
+		case WEST:
+			batch.draw(roboTex[2], renderX, renderY, fieldWidth, fieldHeight);
+			break;
+		case EAST:
+			batch.draw(roboTex[3], renderX, renderY, fieldWidth, fieldHeight);
+			break;
+		}
 		batch.end();
 	}
 

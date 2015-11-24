@@ -37,6 +37,29 @@ public class ResourceHandler implements IResourceHandler {
 	private void createRegions() {
 		final TextureRegion someRegion = texAtlas.findRegion("simplistic_textures_map");
 		this.texMap.put(ResourceConstants.DEFAULT_MAP, someRegion);
+		
+		final TextureRegion wallHRegion = texAtlas.findRegion("wall_h");
+		this.texMap.put(ResourceConstants.DEFAULT_WALL_H, wallHRegion);
+		
+		final TextureRegion wallVRegion = texAtlas.findRegion("wall_v");
+		this.texMap.put(ResourceConstants.DEFAULT_WALL_V, wallVRegion);
+		
+		final TextureRegion circle = texAtlas.findRegion("circle");
+		this.texMap.put(ResourceConstants.DEFAULT_ROBO_EAST, circle);
+		this.texMap.put(ResourceConstants.DEFAULT_ROBO_NORTH, circle);
+		this.texMap.put(ResourceConstants.DEFAULT_ROBO_WEST, circle);
+		this.texMap.put(ResourceConstants.DEFAULT_ROBO_SOUTH, circle);
+		this.texMap.put(ResourceConstants.DEFAULT_RES_0, circle);
+		this.texMap.put(ResourceConstants.DEFAULT_RES_1, circle);
+		this.texMap.put(ResourceConstants.DEFAULT_RES_2, circle);
+		this.texMap.put(ResourceConstants.DEFAULT_RES_3, circle);
+		this.texMap.put(ResourceConstants.DEFAULT_RES_4, circle);
+		this.texMap.put(ResourceConstants.DEFAULT_RES_5, circle);
+		this.texMap.put(ResourceConstants.DEFAULT_RES_6, circle);
+		this.texMap.put(ResourceConstants.DEFAULT_RES_7, circle);
+		this.texMap.put(ResourceConstants.DEFAULT_RES_8, circle);
+		this.texMap.put(ResourceConstants.DEFAULT_RES_9, circle);
+		this.texMap.put(ResourceConstants.DEFAULT_RES_10, circle);
 		//TODO finish this
 	}
 	

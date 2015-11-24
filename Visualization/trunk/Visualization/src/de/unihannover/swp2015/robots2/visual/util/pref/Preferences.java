@@ -1,55 +1,74 @@
 package de.unihannover.swp2015.robots2.visual.util.pref;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import de.unihannover.swp2015.robots2.visual.util.pref.observer.PreferencesObservable;
 
 public class Preferences extends PreferencesObservable implements IPreferences {
 
+	final Map<String, String> stringMap;
+	final Map<String, Boolean> booleanMap;
+	final Map<String, Integer> integerMap;
+	final Map<String, Float> floatMap; 
+	
+	public Preferences() {
+		this.stringMap = new HashMap<>();
+		this.booleanMap = new HashMap<>();
+		this.integerMap = new HashMap<>();
+		this.floatMap = new HashMap<>();
+	}
+	
 	@Override
 	public boolean getBoolean(String key, boolean def) {
-		// TODO Auto-generated method stub
-		return false;
+		Boolean result = booleanMap.get(key);
+		if (result == null)
+			return def;
+		return result;
 	}
 
 	@Override
 	public float getFloat(String key, float def) {
-		// TODO Auto-generated method stub
-		return 0;
+		Float result = floatMap.get(key);
+		if (result == null)
+			return def;
+		return result;
 	}
 
 	@Override
 	public int getInt(String key, int def) {
-		// TODO Auto-generated method stub
-		return 0;
+		Integer result = integerMap.get(key);
+		if (result == null)
+			return def;
+		return result;
 	}
 
 	@Override
 	public String getString(String key, String def) {
-		// TODO Auto-generated method stub
-		return null;
+		String result = stringMap.get(key);
+		if (result == null)
+			return def;
+		return result;
 	}
 
 	@Override
-	public boolean putBoolean(String key, boolean value) {
-		// TODO Auto-generated method stub
-		return false;
+	public void putBoolean(String key, boolean value) {
+		this.booleanMap.put(key, value);
 	}
 
 	@Override
-	public float putFloat(String key, float value) {
-		// TODO Auto-generated method stub
-		return 0;
+	public void putFloat(String key, float value) {
+		this.floatMap.put(key, value);
 	}
 
 	@Override
-	public int putInt(String key, int value) {
-		// TODO Auto-generated method stub
-		return 0;
+	public void putInt(String key, int value) {
+		this.integerMap.put(key, value);
 	}
 
 	@Override
-	public String putString(String key, String value) {
-		// TODO Auto-generated method stub
-		return null;
+	public void putString(String key, String value) {
+		this.stringMap.put(key, value);
 	}
 
 }

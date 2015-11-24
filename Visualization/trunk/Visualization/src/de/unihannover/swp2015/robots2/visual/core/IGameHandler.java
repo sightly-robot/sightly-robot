@@ -37,4 +37,9 @@ public interface IGameHandler extends IUpdateable, IModelObserver, IRenderable, 
 	 */
 	IPreferences getPreferences();
 	
+	/**
+	 * Defines what happens on resize.
+	 */
+	void resize(final int width, final int height);
+	
 }

@@ -9,9 +9,9 @@ public interface IPreferences extends IPreferencesObservable {
 	int getInt(final String key, final int def);
 	String getString(final String key, final String def);
 	
-	boolean putBoolean(final String key, final boolean value);
-	float putFloat(final String key, final float value);
-	int putInt(final String key, final int value);
-	String putString(final String key, final String value);
+	void putBoolean(final String key, final boolean value);
+	void putFloat(final String key, final float value);
+	void putInt(final String key, final int value);
+	void putString(final String key, final String value);
 	
 }

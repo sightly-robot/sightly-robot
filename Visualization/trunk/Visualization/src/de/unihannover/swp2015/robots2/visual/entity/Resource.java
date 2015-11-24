@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
 import de.unihannover.swp2015.robots2.model.interfaces.IField;
 import de.unihannover.swp2015.robots2.visual.core.IGameHandler;
+import de.unihannover.swp2015.robots2.visual.core.PreferencesConstants;
 import de.unihannover.swp2015.robots2.visual.resource.IResourceHandler;
 import de.unihannover.swp2015.robots2.visual.resource.ResourceConstants;
 import de.unihannover.swp2015.robots2.visual.util.pref.IPreferences;
@@ -37,8 +38,12 @@ public class Resource extends Entity {
 
 	@Override
 	public void render() {
+
+		final float fieldWidth = prefs.getInt(PreferencesConstants.FIELD_WIDTH_KEY, 10);
+		final float fieldHeight = prefs.getInt(PreferencesConstants.FIELD_HEIGHT_KEY, 10);
+		
 		batch.begin();
-		batch.draw(tex[model.getFood()], renderX, renderY);
+		batch.draw(tex[model.getFood()], renderX, renderY, fieldWidth/2, fieldHeight/2);
 		batch.end();
 	}
 

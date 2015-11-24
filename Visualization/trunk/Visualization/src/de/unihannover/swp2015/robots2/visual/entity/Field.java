@@ -33,26 +33,34 @@ public class Field extends Entity {
 		
 		this.texWall = resHandler.getRegion(ResourceConstants.DEFAULT_WALL_H, ResourceConstants.DEFAULT_WALL_V); 
 		this.field = resHandler.getRegion(ResourceConstants.DEFAULT_FIELD); 
+
+		final float fieldWidth = prefs.getInt(PreferencesConstants.FIELD_WIDTH_KEY, 10);
+		final float fieldHeight = prefs.getInt(PreferencesConstants.FIELD_HEIGHT_KEY, 10);
 		
-		this.renderX = model.getX() * prefs.getInt(PreferencesConstants.FIELD_WIDTH_KEY, 100);
-		this.renderY = model.getY() * prefs.getInt(PreferencesConstants.FIELD_HEIGHT_KEY, 100);
+		this.renderX = model.getX() * fieldWidth;
+		this.renderY = model.getY() * fieldHeight;
 	}
 
 	@Override
 	public void render() {
+		
+		final float fieldWidth = prefs.getInt(PreferencesConstants.FIELD_WIDTH_KEY, 10);
+		final float fieldHeight = prefs.getInt(PreferencesConstants.FIELD_HEIGHT_KEY, 10);
+		final float wallThickness = prefs.getInt(PreferencesConstants.WALL_THICK_KEY, 10);
+
 		batch.begin();
-		batch.draw(field, renderX, renderY);
+		//TODO render field
 		if(model.isWall(IPosition.Orientation.NORTH))
-			batch.draw(texWall[0], renderX, renderY);
+			batch.draw(texWall[0], renderX, renderY, fieldWidth, wallThickness);
 		
 		if(model.isWall(IPosition.Orientation.EAST))
-			batch.draw(texWall[1], renderX, renderY);
+			batch.draw(texWall[1], renderX + fieldWidth, renderY, wallThickness, fieldHeight);
 		
 		if(model.isWall(IPosition.Orientation.SOUTH))
-			batch.draw(texWall[0], renderX, renderY);
+			batch.draw(texWall[0], renderX, renderY + fieldHeight, fieldWidth, wallThickness);
 		
 		if(model.isWall(IPosition.Orientation.WEST))
-			batch.draw(texWall[1], renderX, renderY);
+			batch.draw(texWall[1], renderX, renderY, wallThickness, fieldHeight);
 		batch.end();
 	}
 
