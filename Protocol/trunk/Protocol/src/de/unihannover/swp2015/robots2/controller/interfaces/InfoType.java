@@ -7,5 +7,17 @@ package de.unihannover.swp2015.robots2.controller.interfaces;
  * @author Patrick Kawczynski
  */
 public enum InfoType {
-	DEBUG, INFO, WARNING, ERROR, FATAL
+	DEBUG("debug"), INFO("info"), WARNING("warning"), ERROR("error");
+	
+
+	private final String mqttName;
+	
+	private InfoType (String mqttName) {
+		this.mqttName = mqttName;
+	}
+	
+	@Override
+	public String toString() {
+		return this.mqttName;
+	}
 }

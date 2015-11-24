@@ -1,8 +1,11 @@
 package de.unihannover.swp2015.robots2.controller.main;
 
-import java.util.List;
+import java.util.Arrays;
+
+import org.eclipse.paho.client.mqttv3.MqttException;
 
 import de.unihannover.swp2015.robots2.controller.interfaces.IServerController;
+import de.unihannover.swp2015.robots2.controller.mqtt.MqttController;
 
 /**
  * 
@@ -13,13 +16,28 @@ public class ServerMainController extends AbstractMainController implements ISer
 
 	public ServerMainController() {
 		super();
+		
+		this.infoComponent = "server";
 	}
 	
 	@Override
-	public void sendInfoMessage(String topic, String message) {
-		if( this.mqttController != null ) {
-			this.mqttController.sendMessage("event/info/server/"+topic, message);
-		}	
+	public boolean startMqtt(String brokerUrl) {
+		if (this.mqttController == null) {
+			String clientId = "server";
+			// TODO subscription list
+			String[] subscribeTopics = {};
+
+			try {
+				this.mqttController = new MqttController(brokerUrl, clientId,
+						this, Arrays.asList(subscribeTopics));
+				return true;
+			} catch (MqttException e) {
+				e.printStackTrace();
+				return false;
+			}
+		} else {
+			return true;
+		}
 	}
 
 	@Override
@@ -38,11 +56,5 @@ public class ServerMainController extends AbstractMainController implements ISer
 		for( int i=0; i<value; i++ ) {
 			this.game.getStageWriteable().getFieldWriteable(x, y).incrementFood();
 		}
-	}
-
-	@Override
-	protected List<String> getMqttSubscribeTopics() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 }
