@@ -8,8 +8,6 @@ import com.pi4j.wiringpi.SoftPwm;
  * 
  * Code mainly from Prof. Dr. Joel Greenyer.
  * 
- * TODO Speed Funcitonality, Stop function
- * 
  * @author Lenard Spiecker
  *
  */
@@ -32,10 +30,10 @@ public class EngineController {
 
 	// sonar = 8 pi4j: 15
 
-	static final int pinleftFwd = 11;
-	static final int pinLeftBwd = 10;
-	static final int pinRightFwd = 12;
-	static final int pinRightBwd = 13;
+	private static final int PIN_LEFT_FWD = 11;
+	private static final int PIN_LEFT_BWD = 10;
+	private static final int PIN_RIGHT_FWD = 12;
+	private static final int PIN_RIGHT_BWD = 13;
 
 	private int rightSpeed;
 	private int leftSpeed;
@@ -44,16 +42,14 @@ public class EngineController {
 		// initialize wiringPi library
 		Gpio.wiringPiSetup();
 		
-		SoftPwm.softPwmCreate(pinleftFwd, 0, 100);
-		SoftPwm.softPwmCreate(pinLeftBwd, 0, 100);
-		SoftPwm.softPwmCreate(pinRightFwd, 0, 100);
-		SoftPwm.softPwmCreate(pinRightBwd, 0, 100);
+		SoftPwm.softPwmCreate(PIN_LEFT_FWD, 0, 100);
+		SoftPwm.softPwmCreate(PIN_LEFT_BWD, 0, 100);
+		SoftPwm.softPwmCreate(PIN_RIGHT_FWD, 0, 100);
+		SoftPwm.softPwmCreate(PIN_RIGHT_BWD, 0, 100);
 	}
 	
-	public static EngineController getInstance()
-	{
-		if(instance == null)
-		{
+	public static EngineController getInstance() {
+		if (instance == null) {
 			instance = new EngineController();
 		}
 		return instance;
@@ -72,6 +68,9 @@ public class EngineController {
 		setRightSpeed(speed);
 	}
 	
+	/**
+	 * Sets the speed of both engines to zero.
+	 */
 	public void stop() {
 		go(0);
 	}
@@ -94,20 +93,22 @@ public class EngineController {
 	/**
 	 * Sets the speed of the left wheel
 	 * 
-	 * @param speed
-	 *            -100 <= speed <= 100
+	 * @param speed -100 <= speed <= 100
 	 */
 	private void setLeftSpeed(int speed) {
-		if (speed < -100)
+		if (speed < -100) {
 			throw new IllegalArgumentException("Parameter 'speed' must not be smaller than -100.");
-		if (speed < -100 || speed > 100)
+		}
+		if (speed < -100 || speed > 100) {
 			throw new IllegalArgumentException("Parameter 'speed' must not be greater than 100.");
+		}
 		if (speed > 0) {
-			SoftPwm.softPwmWrite(pinLeftBwd, 0);
-			SoftPwm.softPwmWrite(pinleftFwd, speed);
-		} else {
-			SoftPwm.softPwmWrite(pinleftFwd, 0);
-			SoftPwm.softPwmWrite(pinLeftBwd, -speed);
+			SoftPwm.softPwmWrite(PIN_LEFT_BWD, 0);
+			SoftPwm.softPwmWrite(PIN_LEFT_FWD, speed);
+		}
+		else {
+			SoftPwm.softPwmWrite(PIN_LEFT_FWD, 0);
+			SoftPwm.softPwmWrite(PIN_LEFT_BWD, -speed);
 		}
 		leftSpeed = speed;
 		// System.out.println("set left speed to : " + speed);
@@ -120,16 +121,19 @@ public class EngineController {
 	 *            -100 <= speed <= 100
 	 */
 	private void setRightSpeed(int speed) throws IllegalArgumentException {
-		if (speed < -100)
+		if (speed < -100) {
 			throw new IllegalArgumentException("Parameter 'speed' must not be smaller than -100.");
-		if (speed < -100 || speed > 100)
+		}
+		if (speed < -100 || speed > 100) {
 			throw new IllegalArgumentException("Parameter 'speed' must not be greater than 100.");
+		}
 		if (speed > 0) {
-			SoftPwm.softPwmWrite(pinRightBwd, 0);
-			SoftPwm.softPwmWrite(pinRightFwd, speed);
-		} else {
-			SoftPwm.softPwmWrite(pinRightFwd, 0);
-			SoftPwm.softPwmWrite(pinRightBwd, -speed);
+			SoftPwm.softPwmWrite(PIN_RIGHT_BWD, 0);
+			SoftPwm.softPwmWrite(PIN_RIGHT_FWD, speed);
+		}
+		else {
+			SoftPwm.softPwmWrite(PIN_RIGHT_FWD, 0);
+			SoftPwm.softPwmWrite(PIN_RIGHT_BWD, -speed);
 		}
 		rightSpeed = speed;
 		// System.out.println("set right speed to : " + speed);
