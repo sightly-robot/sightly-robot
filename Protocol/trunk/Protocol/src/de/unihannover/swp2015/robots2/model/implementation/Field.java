@@ -1,9 +1,10 @@
 package de.unihannover.swp2015.robots2.model.implementation;
 
-import java.util.Timer;
+import java.util.concurrent.Future;
 
-import de.unihannover.swp2015.robots2.model.interfaces.*;
-import de.unihannover.swp2015.robots2.model.writeableInterfaces.*;
+import de.unihannover.swp2015.robots2.model.interfaces.IField;
+import de.unihannover.swp2015.robots2.model.interfaces.IPosition;
+import de.unihannover.swp2015.robots2.model.writeableInterfaces.IFieldWriteable;
 
 /**
  * Basic implementation of the interface IField resp. IFieldWritable.
@@ -60,7 +61,7 @@ public class Field extends AbstractModel implements IField, IFieldWriteable {
 	 */
 	private volatile int growingRate;
 	/** Timer used for scheduling timed state changes */
-	private Timer stateTimer;
+	private Future<Object> stateTimerFuture;
 
 	/**
 	 * Constructs a new Field object.
@@ -79,6 +80,7 @@ public class Field extends AbstractModel implements IField, IFieldWriteable {
 		this.x = x;
 		this.y = y;
 		this.foodLock = new Object();
+		this.state = State.FREE;
 	}
 
 	@Override
@@ -176,8 +178,14 @@ public class Field extends AbstractModel implements IField, IFieldWriteable {
 	}
 
 	@Override
-	public Timer getStateTimer() {
-		return this.stateTimer;
+	public void setStateTimerFuture(Future<Object> stateTimerFuture) {
+		this.stateTimerFuture = stateTimerFuture;
+	}
+
+	@Override
+	public void cancelStateTimer() {
+		this.stateTimerFuture.cancel(true);
+		this.stateTimerFuture = null;
 	}
 
 }

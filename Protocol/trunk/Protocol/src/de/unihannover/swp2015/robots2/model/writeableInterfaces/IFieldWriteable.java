@@ -1,8 +1,9 @@
 package de.unihannover.swp2015.robots2.model.writeableInterfaces;
 
-import java.util.Timer;
+import java.util.concurrent.Future;
 
-import de.unihannover.swp2015.robots2.model.interfaces.*;
+import de.unihannover.swp2015.robots2.model.interfaces.IField;
+import de.unihannover.swp2015.robots2.model.interfaces.IPosition;
 
 /**
  * Interface providing the write methods to a Field.
@@ -81,10 +82,18 @@ public interface IFieldWriteable extends IField, IAbstractModelWriteable {
 	public void setGrowingRate(int growingRate);
 
 	/**
-	 * Returns the Timer associated with this Field and used for timing changes
-	 * of field state.
+	 * Register a Future that is associated with a timer task to change the
+	 * field state. It may be cancelled with cancelStateTimer.
 	 * 
-	 * @return The Timer
+	 * @param The
+	 *            new stateTimerFuture
 	 */
-	public Timer getStateTimer();
+	public void setStateTimerFuture(Future<Object> stateTimerFuture);
+
+	/**
+	 * Cancel the current timer task that was destined to update the field state
+	 * via its Future. The Future will be removed from this Field.
+	 * 
+	 */
+	public void cancelStateTimer();
 }

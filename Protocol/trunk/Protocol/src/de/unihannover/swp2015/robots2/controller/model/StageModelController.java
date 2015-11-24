@@ -1,5 +1,11 @@
 package de.unihannover.swp2015.robots2.controller.model;
 
+import java.awt.image.ImageFilter;
+import java.util.concurrent.Future;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+
+import de.unihannover.swp2015.robots2.controller.main.IFieldTimerController;
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent.UpdateType;
 import de.unihannover.swp2015.robots2.model.interfaces.IField.State;
 import de.unihannover.swp2015.robots2.model.writeableInterfaces.IFieldWriteable;
@@ -8,9 +14,27 @@ import de.unihannover.swp2015.robots2.model.writeableInterfaces.IStageWriteable;
 public class StageModelController implements IModelController {
 
 	private final IStageWriteable stage;
+	private final ScheduledThreadPoolExecutor timer;
+	private IFieldTimerController fieldTimerCallback = null;
 
 	public StageModelController(IStageWriteable stage) {
 		this.stage = stage;
+
+		this.timer = new ScheduledThreadPoolExecutor(20);
+		this.timer.setRemoveOnCancelPolicy(true);
+	}
+
+	/**
+	 * Set a callback handler that is informed when a field state timer expires.
+	 * Depending on the state of the field one of the methods of this callback
+	 * handler will be called to initiate a new lock-try or occupation of the
+	 * field.
+	 * 
+	 * @param timerCallback
+	 *            The callback handler for all new timers
+	 */
+	public void setFieldTimerCallback(IFieldTimerController fieldTimerCallback) {
+		this.fieldTimerCallback = fieldTimerCallback;
 	}
 
 	@Override
@@ -38,21 +62,31 @@ public class StageModelController implements IModelController {
 
 		switch (f.getState()) {
 		case FREE:
+		case RANDOM_WAIT: {
+			f.cancelStateTimer();
 			f.setState(State.LOCKED);
 			f.setLockedBy(message);
+
+			Future<Object> newTimer = this.timer.schedule(new FieldTimerTask(f,
+					null), 3000, TimeUnit.MILLISECONDS);
+			f.setStateTimerFuture(newTimer);
+
 			f.emitEvent(UpdateType.FIELD_STATE);
 			break;
+		}
 
-		case LOCK_WAIT:
-			// TODO check if lock is from us and start random timer if not
-			break;
+		case LOCK_WAIT: {
+			f.cancelStateTimer();
+			f.setState(State.RANDOM_WAIT);
 
-		case RANDOM_WAIT:
-			f.getStateTimer().cancel();
-			f.setState(State.LOCKED);
-			f.setLockedBy(message);
+			// TODO generate random wait
+			Future<Object> newTimer = this.timer.schedule(new FieldTimerTask(f,
+					this.fieldTimerCallback), 1000, TimeUnit.MILLISECONDS);
+			f.setStateTimerFuture(newTimer);
+
 			f.emitEvent(UpdateType.FIELD_STATE);
 			break;
+		}
 
 		default:
 			break;
@@ -77,6 +111,7 @@ public class StageModelController implements IModelController {
 				coordinates[1]);
 
 		if (f.getState() != State.OURS) {
+			f.cancelStateTimer();
 			f.setState(State.OCCUPIED);
 			f.setLockedBy(message);
 			f.emitEvent(UpdateType.FIELD_STATE);
@@ -103,6 +138,7 @@ public class StageModelController implements IModelController {
 		switch (f.getState()) {
 		case LOCKED:
 		case OCCUPIED:
+			f.cancelStateTimer();
 			f.setState(State.FREE);
 			f.setLockedBy("");
 			f.emitEvent(UpdateType.FIELD_STATE);
@@ -110,6 +146,65 @@ public class StageModelController implements IModelController {
 		default:
 			break;
 		}
+	}
+
+	/**
+	 * Set the state of the field at the given coordinates to LOCK_WAIT and
+	 * start the timer for occupation.
+	 * 
+	 * You must proof that the current field state == FREE and send a lock
+	 * message before calling this method!
+	 * 
+	 * @param x
+	 *            x coordinate of the field
+	 * @param y
+	 *            y coordinate of the field
+	 */
+	public void setFieldLock(int x, int y) {
+		IFieldWriteable f = this.stage.getFieldWriteable(x, y);
+		f.setState(State.LOCK_WAIT);
+
+		Future<Object> newTimer = this.timer.schedule(new FieldTimerTask(f,
+				this.fieldTimerCallback), 1000, TimeUnit.MILLISECONDS);
+		f.setStateTimerFuture(newTimer);
+
+		f.emitEvent(UpdateType.FIELD_STATE);
+	}
+
+	/**
+	 * Set the state of the field at the given coordinates to OURS.
+	 * 
+	 * You must send a lock message before calling this method!
+	 * 
+	 * @param x
+	 *            x coordinate of the field
+	 * @param y
+	 *            y coordinate of the field
+	 */
+	public void setFieldOccupy(int x, int y) {
+		IFieldWriteable f = this.stage.getFieldWriteable(x, y);
+		f.setState(State.OURS);
+
+		f.emitEvent(UpdateType.FIELD_STATE);
+
+	}
+
+	/**
+	 * Set the state of the field at the given coordinates to FREE after it has
+	 * been OURS.
+	 * 
+	 * You must send a lock message before calling this method!
+	 * 
+	 * @param x
+	 *            x coordinate of the field
+	 * @param y
+	 *            y coordinate of the field
+	 */
+	public void setFieldRelease(int x, int y) {
+		IFieldWriteable f = this.stage.getFieldWriteable(x, y);
+
+		f.setState(State.FREE);
+		f.emitEvent(UpdateType.FIELD_STATE);
 	}
 
 	/**

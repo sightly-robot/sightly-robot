@@ -6,7 +6,9 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 
 import de.unihannover.swp2015.robots2.controller.interfaces.IRobotController;
 import de.unihannover.swp2015.robots2.controller.mqtt.MqttController;
+import de.unihannover.swp2015.robots2.controller.mqtt.MqttTopic;
 import de.unihannover.swp2015.robots2.model.implementation.Robot;
+import de.unihannover.swp2015.robots2.model.interfaces.IField.State;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
 import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
 import de.unihannover.swp2015.robots2.model.writeableInterfaces.IRobotWriteable;
@@ -17,7 +19,7 @@ import de.unihannover.swp2015.robots2.model.writeableInterfaces.IRobotWriteable;
  * @author Patrick Kawczynski
  */
 public class RobotMainController extends AbstractMainController implements
-		IRobotController {
+		IRobotController, IFieldTimerController {
 
 	private IRobotWriteable myself;
 
@@ -72,14 +74,17 @@ public class RobotMainController extends AbstractMainController implements
 
 	@Override
 	public void requestField(int x, int y) {
-		// TODO Auto-generated method stub
-
+		if (this.game.getStage().getField(x, y).getState() != State.FREE)
+			return;
+			
+		this.sendMqttMessage(MqttTopic.FIELD_OCCUPIED_LOCK.toString(x + "-" + y), this.myself.getId());
+		this.stageModelController.setFieldLock(x, y);
 	}
 
 	@Override
 	public void releaseField(int x, int y) {
-		// TODO Auto-generated method stub
-
+		this.sendMqttMessage(MqttTopic.FIELD_OCCUPIED_RELEASE.toString(x + "-" + y), this.myself.getId());
+		this.stageModelController.setFieldRelease(x, y);
 	}
 
 	@Override
@@ -92,5 +97,15 @@ public class RobotMainController extends AbstractMainController implements
 	public IRobot getMyself() {
 		return this.myself;
 	}
-
+	
+	@Override
+	public void retryLockField(int x, int y) {
+		this.requestField(x, y);
+	}
+	
+	@Override
+	public void occupyField(int x, int y) {
+		this.sendMqttMessage(MqttTopic.FIELD_OCCUPIED_SET.toString(x + "-" + y), this.myself.getId());
+		this.stageModelController.setFieldOccupy(x, y);
+	}
 }
