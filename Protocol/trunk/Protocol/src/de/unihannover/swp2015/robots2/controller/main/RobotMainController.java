@@ -78,13 +78,13 @@ public class RobotMainController extends AbstractMainController implements
 			return;
 			
 		this.sendMqttMessage(MqttTopic.FIELD_OCCUPIED_LOCK.toString(x + "-" + y), this.myself.getId());
-		this.stageModelController.setFieldLock(x, y);
+		this.fieldStateModelController.setFieldLock(x, y);
 	}
 
 	@Override
 	public void releaseField(int x, int y) {
 		this.sendMqttMessage(MqttTopic.FIELD_OCCUPIED_RELEASE.toString(x + "-" + y), this.myself.getId());
-		this.stageModelController.setFieldRelease(x, y);
+		this.fieldStateModelController.setFieldRelease(x, y);
 	}
 
 	@Override
@@ -106,6 +106,6 @@ public class RobotMainController extends AbstractMainController implements
 	@Override
 	public void occupyField(int x, int y) {
 		this.sendMqttMessage(MqttTopic.FIELD_OCCUPIED_SET.toString(x + "-" + y), this.myself.getId());
-		this.stageModelController.setFieldOccupy(x, y);
+		this.fieldStateModelController.setFieldOccupy(x, y);
 	}
 }

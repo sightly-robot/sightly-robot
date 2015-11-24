@@ -3,12 +3,12 @@ package de.unihannover.swp2015.robots2.controller.main;
 
 import de.unihannover.swp2015.robots2.controller.interfaces.IController;
 import de.unihannover.swp2015.robots2.controller.interfaces.InfoType;
+import de.unihannover.swp2015.robots2.controller.model.FieldStateModelController;
 import de.unihannover.swp2015.robots2.controller.model.GameModelController;
 import de.unihannover.swp2015.robots2.controller.model.RobotModelController;
 import de.unihannover.swp2015.robots2.controller.model.StageModelController;
 import de.unihannover.swp2015.robots2.controller.mqtt.IMqttController;
 import de.unihannover.swp2015.robots2.controller.mqtt.IMqttMessageHandler;
-import de.unihannover.swp2015.robots2.controller.mqtt.MqttTopic;
 import de.unihannover.swp2015.robots2.model.implementation.Game;
 import de.unihannover.swp2015.robots2.model.interfaces.IGame;
 import de.unihannover.swp2015.robots2.model.writeableInterfaces.IGameWriteable;
@@ -20,6 +20,7 @@ public abstract class AbstractMainController implements IController,
 	protected IMqttController mqttController;
 
 	protected final StageModelController stageModelController;
+	protected final FieldStateModelController fieldStateModelController;
 	protected final RobotModelController robotModelController;
 	protected final GameModelController gameModelController;
 
@@ -30,6 +31,8 @@ public abstract class AbstractMainController implements IController,
 		this.game = new Game();
 
 		this.stageModelController = new StageModelController(
+				this.game.getStageWriteable());
+		this.fieldStateModelController = new FieldStateModelController(
 				this.game.getStageWriteable());
 		this.robotModelController = new RobotModelController(
 				this.game.getRobotsWriteable());
