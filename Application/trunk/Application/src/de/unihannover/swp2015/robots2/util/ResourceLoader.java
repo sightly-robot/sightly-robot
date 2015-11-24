@@ -19,6 +19,12 @@ public class ResourceLoader {
 		return new String(Files.readAllBytes(Paths.get(ResourceLoader.class.getResource(path).toURI())));
 	}
 	
+	/**
+	 * Load resource to InputStream
+	 * 
+	 * @param path Resource file path
+	 * @return Resource stream.
+	 */
 	public static InputStream loadResourceAsInputStream(String path) {
 		return ResourceLoader.class.getResourceAsStream(path);	
 	}
