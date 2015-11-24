@@ -1,7 +1,7 @@
 package de.unihannover.swp2015.robots2.hardwarerobot.automate;
 
 import de.unihannover.swp2015.robots2.hardwarerobot.pi2gocontroller.LEDAndServoController;
-import de.unihannover.swp2015.robots2.hardwarerobot.pi2gocontroller.MotorController;
+import de.unihannover.swp2015.robots2.hardwarerobot.pi2gocontroller.EngineController;
 import de.unihannover.swp2015.robots2.hardwarerobot.pi2gocontroller.Pi2GoGPIOController;
 
 /**
@@ -12,22 +12,8 @@ import de.unihannover.swp2015.robots2.hardwarerobot.pi2gocontroller.Pi2GoGPIOCon
  */
 public enum State {
 	
-	/** The robot pauses. */
-	PAUSE_STATE(-1) {
-		@Override
-		public State getNextState() {
-			// TODO
-			this.executeState();
-			return this;
-		}
-
-		@Override
-		protected void executeState() {
-			ENGINE.go(STOP);
-		}
-	},
 	/** The robot follows a line until he reaches the next junction. */
-	LINE_FOLLOW_STATE(0) {
+	LINE_FOLLOW_STATE() {
 		@Override
 		public State getNextState() {
 			if (GPIO.isLineLeft() && GPIO.isLineRight()) {
@@ -51,21 +37,35 @@ public enum State {
 			}
 			else if (right) {
 				LEDS.setServo(LEDAndServoController.S15, 20);
-				ENGINE.setLeftSpeed(FAST);
-				ENGINE.setRightSpeed(SLOW);
+				ENGINE.go(FAST, SLOW);
 			}
 			else if (left) {
 				LEDS.setServo(LEDAndServoController.S15, -20);
-				ENGINE.setLeftSpeed(SLOW);
-				ENGINE.setRightSpeed(FAST);				
+				ENGINE.go(SLOW, FAST);			
 			}
 		}
 	},
 	/** The robot drives fully onto the cell. */
-	DRIVE_ON_CELL_STATE(1) {
+	DRIVE_ON_CELL_STATE() {
+		
+		private long startTime;
+		private static final double DRIVE_DURATION = 250;
+		
 		@Override
 		public State getNextState() {
-			// TODO timer
+			if(getProgress() == 0.0)
+			{
+				startTime = System.currentTimeMillis();
+				setProgress(0.000000001);
+			}else
+			{
+				setProgress(((System.currentTimeMillis()-startTime)/DRIVE_DURATION));
+				if(getProgress() >= 1.0)
+				{
+					WAIT_STATE.executeState();
+					return WAIT_STATE;
+				}
+			}
 			this.executeState();
 			return this;
 		}
@@ -84,19 +84,17 @@ public enum State {
 				LEDS.setServo(LEDAndServoController.S15, 0);
 			}
 			else if (right) {
-				ENGINE.setLeftSpeed(FAST);
-				ENGINE.setRightSpeed(SLOW);
+				ENGINE.go(FAST, SLOW);
 				LEDS.setServo(LEDAndServoController.S15, 20);
 			}
 			else if (left) {
-				ENGINE.setLeftSpeed(SLOW);
-				ENGINE.setRightSpeed(FAST);
+				ENGINE.go(SLOW, FAST);
 				LEDS.setServo(LEDAndServoController.S15, -20);
 			}			
 		}
 	},
 	/** The robot awaits a new command. */
-	WAIT_STATE(2) {
+	WAIT_STATE() {
 		@Override
 		public State getNextState() {
 			this.executeState();
@@ -109,7 +107,7 @@ public enum State {
 		}
 	},
 	/** First part of turning left. */
-	TURN_LEFT_1_STATE(3) {
+	TURN_LEFT_1_STATE() {
 		@Override
 		public State getNextState() {
 			if (GPIO.isLineLeft()) {
@@ -129,7 +127,7 @@ public enum State {
 		}
 	},
 	/** Second part of turning left. */
-	TURN_LEFT_2_STATE(4) {
+	TURN_LEFT_2_STATE() {
 		@Override
 		public State getNextState() {
 			if (!GPIO.isLineLeft()) {
@@ -149,7 +147,7 @@ public enum State {
 		}
 	},
 	/** First part of turning right. */
-	TURN_RIGHT_1_STATE(5) {
+	TURN_RIGHT_1_STATE() {
 		@Override
 		public State getNextState() {
 			if (GPIO.isLineRight()) {
@@ -169,7 +167,7 @@ public enum State {
 		}
 	},
 	/** Second part of turning right. */
-	TURN_RIGHT_2_STATE(6) {
+	TURN_RIGHT_2_STATE() {
 		@Override
 		public State getNextState() {
 			if (!GPIO.isLineRight()) {
@@ -189,7 +187,7 @@ public enum State {
 		}
 	},
 	/** First part of turning 180 degrees. */
-	TURN_180_1_STATE(7) {
+	TURN_180_1_STATE() {
 		@Override
 		public State getNextState() {
 			if (GPIO.isLineLeft()) {
@@ -209,7 +207,7 @@ public enum State {
 		}
 	},
 	/** Second part of turning 180 degrees. */
-	TURN_180_2_STATE(8) {
+	TURN_180_2_STATE() {
 		@Override
 		public State getNextState() {
 			if (!GPIO.isLineLeft()) {
@@ -229,7 +227,7 @@ public enum State {
 		}
 	},
 	/** Third part of turning 180 degrees. */
-	TURN_180_3_STATE(9) {
+	TURN_180_3_STATE() {
 		@Override
 		public State getNextState() {
 			if (!GPIO.isLineRight()) {
@@ -249,7 +247,7 @@ public enum State {
 		}
 	},
 	/** Fourth part of turning 180 degrees. */
-	TURN_180_4_STATE(10) {
+	TURN_180_4_STATE() {
 		@Override
 		public State getNextState() {
 			if (!GPIO.isLineLeft()) {
@@ -278,12 +276,11 @@ public enum State {
 	// Pi2GO controller
 	private final static LEDAndServoController LEDS = LEDAndServoController.getInstance();
 	private final static Pi2GoGPIOController GPIO = Pi2GoGPIOController.getInstance();
-	private final static MotorController ENGINE = MotorController.getInstance();
+	private final static EngineController ENGINE = EngineController.getInstance();
 	
-	public int id = -1;
+	private double progress = 0;
 	
-	private State(int id) {
-		this.id = id;
+	private State() {
 	}
 
 	/**
@@ -297,5 +294,13 @@ public enum State {
 	 * Controls the LEDs and engine according to the current state.
 	 */
 	protected abstract void executeState();
+
+	public double getProgress() {
+		return progress;
+	}
+
+	public void setProgress(double progress) {
+		this.progress = progress;
+	}
 	
 }

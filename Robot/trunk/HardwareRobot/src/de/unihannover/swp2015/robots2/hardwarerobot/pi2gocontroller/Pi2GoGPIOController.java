@@ -42,9 +42,6 @@ public class Pi2GoGPIOController {
 		//Debouncing:
 		rightLineSensor.setDebounce(DEBOUNCE_MS);
 		leftLineSensor.setDebounce(DEBOUNCE_MS);
-		
-		// initialize wiringPi library
-		Gpio.wiringPiSetup(); //TODO should this be done (here)?
 	}
 	
 	public static Pi2GoGPIOController getInstance()
@@ -88,7 +85,4 @@ public class Pi2GoGPIOController {
 	public boolean isButtonPressed() {
 		return buttonSensor.isHigh();
 	}
-
-
-
 }

@@ -1,5 +1,6 @@
 package de.unihannover.swp2015.robots2.hardwarerobot.pi2gocontroller;
 
+import com.pi4j.wiringpi.Gpio;
 import com.pi4j.wiringpi.SoftPwm;
 
 /**
@@ -7,12 +8,14 @@ import com.pi4j.wiringpi.SoftPwm;
  * 
  * Code mainly from Prof. Dr. Joel Greenyer.
  * 
+ * TODO Speed Funcitonality, Stop function
+ * 
  * @author Lenard Spiecker
  *
  */
-public class MotorController {
+public class EngineController {
 
-	private static MotorController instance;
+	private static EngineController instance;
 
 	// L1 = 26 pi4j: 11
 	// L2 = 24 pi4j: 10
@@ -37,18 +40,21 @@ public class MotorController {
 	private int rightSpeed;
 	private int leftSpeed;
 
-	private MotorController() {
+	private EngineController() {
+		// initialize wiringPi library
+		Gpio.wiringPiSetup();
+		
 		SoftPwm.softPwmCreate(pinleftFwd, 0, 100);
 		SoftPwm.softPwmCreate(pinLeftBwd, 0, 100);
 		SoftPwm.softPwmCreate(pinRightFwd, 0, 100);
 		SoftPwm.softPwmCreate(pinRightBwd, 0, 100);
 	}
 	
-	public static MotorController getInstance()
+	public static EngineController getInstance()
 	{
 		if(instance == null)
 		{
-			instance = new MotorController();
+			instance = new EngineController();
 		}
 		return instance;
 	}
@@ -64,6 +70,15 @@ public class MotorController {
 	public void go(int speed) {
 		setLeftSpeed(speed);
 		setRightSpeed(speed);
+	}
+	
+	public void stop() {
+		go(0);
+	}
+	
+	public void go(int speedLeft, int speedRight) {
+		setLeftSpeed(speedLeft);
+		setRightSpeed(speedRight);
 	}
 
 	public void spinLeft(int speed) {
@@ -82,7 +97,7 @@ public class MotorController {
 	 * @param speed
 	 *            -100 <= speed <= 100
 	 */
-	public void setLeftSpeed(int speed) {
+	private void setLeftSpeed(int speed) {
 		if (speed < -100)
 			throw new IllegalArgumentException("Parameter 'speed' must not be smaller than -100.");
 		if (speed < -100 || speed > 100)
@@ -104,7 +119,7 @@ public class MotorController {
 	 * @param speed
 	 *            -100 <= speed <= 100
 	 */
-	public void setRightSpeed(int speed) throws IllegalArgumentException {
+	private void setRightSpeed(int speed) throws IllegalArgumentException {
 		if (speed < -100)
 			throw new IllegalArgumentException("Parameter 'speed' must not be smaller than -100.");
 		if (speed < -100 || speed > 100)
@@ -121,6 +136,6 @@ public class MotorController {
 	}
 
 	public void shutdown() {
-		go(0);
+		stop();
 	}
 }

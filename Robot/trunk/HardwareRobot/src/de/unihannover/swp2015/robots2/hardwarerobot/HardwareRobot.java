@@ -1,9 +1,11 @@
 package de.unihannover.swp2015.robots2.hardwarerobot;
 
+import java.awt.Color;
+
 import de.unihannover.swp2015.robots2.abstractrobot.AbstractRobot;
 import de.unihannover.swp2015.robots2.hardwarerobot.automate.Automate;
 import de.unihannover.swp2015.robots2.hardwarerobot.pi2gocontroller.LEDAndServoController;
-import de.unihannover.swp2015.robots2.hardwarerobot.pi2gocontroller.MotorController;
+import de.unihannover.swp2015.robots2.hardwarerobot.pi2gocontroller.EngineController;
 import de.unihannover.swp2015.robots2.hardwarerobot.pi2gocontroller.Pi2GoGPIOController;
 
 /**
@@ -21,15 +23,22 @@ public class HardwareRobot extends AbstractRobot{
 		
 		//PreInitialize Controller Instances:
 		LEDAndServoController.getInstance();
-		MotorController.getInstance();
 		Pi2GoGPIOController.getInstance();
+		EngineController.getInstance();
 //		SoundController.getInstance();
 //		ColorSensorController.getInstance();
 //		CompassController.getInstance();
 		
+		LEDAndServoController.getInstance().setAllLEDs(Color.CYAN);
+		try {
+			Thread.sleep(200);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		LEDAndServoController.getInstance().setAllLEDs(Color.BLACK);
 		
 		automate = new Automate(robotController);
 		
-		abstractAi.setAiEventObserver(automate);
+		ai.setAiEventObserver(automate);
 	}
 }
