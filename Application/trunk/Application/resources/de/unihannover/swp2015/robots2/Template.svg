@@ -1,4 +1,7 @@
- <svg width="1000" height="1000">
+ <svg width="1000" height="1000" 
+ 	  xmlns="http://www.w3.org/2000/svg" 
+ 	  xmlns:xlink="http://www.w3.org/1999/xlink">
+	  
 	<g id="content">
 		<g id="staticContent">
 			<rect width="1000" height="1000" style="fill:rgb(0,0,0);" />
@@ -7,6 +10,8 @@
 			<g id="resources"/>
 			<g id="walls"/>
 			<g id="startPositions"/>
+			<g id="virtualRobots"/>
+			<g id="robots"/>
 		</g>
 	</g>
 </svg> 
