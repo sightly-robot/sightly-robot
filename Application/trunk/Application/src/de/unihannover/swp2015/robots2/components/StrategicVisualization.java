@@ -4,20 +4,30 @@ import java.awt.Graphics2D;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ClassLoader;
+import java.net.URL;
+
+import org.apache.pivot.collections.Map;
+import org.apache.pivot.util.Resources;
+import org.apache.pivot.wtk.Action;
+import org.apache.pivot.wtk.Component;
+import org.apache.pivot.wtk.Menu;
+import org.apache.pivot.wtk.MenuHandler;
 import org.apache.pivot.wtk.Panel;
+import org.apache.pivot.wtk.Prompt;
 import org.apache.pivot.wtk.media.Drawing;
 import org.apache.pivot.wtk.media.SVGDiagramSerializer;
+import org.apache.pivot.beans.Bindable;
 
 import com.kitfox.svg.SVGDiagram;
 
 import de.unihannover.swp2015.robots2.GameState;
-import de.unihannover.swp2015.robots2.SvgConstructor;
+import de.unihannover.swp2015.robots2.svg.SvgConstructor;
 
 /**
  * An apache pivot component for displaying a game. 
  * @author Tim
  */
-public class StrategicVisualization extends Panel {
+public class StrategicVisualization extends Panel implements Bindable {
 	private Drawing drawing; // svg drawing
 	private GameState state;
 	private SvgConstructor svgConstructor;
@@ -32,8 +42,35 @@ public class StrategicVisualization extends Panel {
 		state = null;
 		
 		// load default svg
-		loadDefault();
+		loadDefault();	
 	}
+	
+	/**
+	 * Context menu for visualization
+	 */
+	private MenuHandler menuHandler = new MenuHandler.Adapter() {
+		@Override
+		public boolean configureContextMenu(Component component, Menu menu, final int x, final int y) {
+			final Component descendant = getDescendantAt(x, y);
+			
+			// Section for field control
+			Menu.Section menuSection = new Menu.Section();
+            menu.getSections().add(menuSection);
+			
+            Menu.Item getCoord = new Menu.Item("Get Coordinate");
+            getCoord.setAction(new Action() {
+                @Override
+                public void perform(Component source) {
+                	System.out.print((int)(state.getMap().getWidth() * (double)x / (double)StrategicVisualization.this.getWidth()));
+                	System.out.print(":");
+                	System.out.println((int)(state.getMap().getWidth() * (double)y / (double)StrategicVisualization.this.getHeight()));
+                }
+            });
+ 
+            menuSection.add(getCoord);
+			return false;
+		}
+	};
 	
 	/**
 	 * Loads GameState, which contains all robots and the map.
@@ -44,6 +81,7 @@ public class StrategicVisualization extends Panel {
 		svgConstructor = new SvgConstructor(state);
 		update();
 		generateDrawing();
+		setMenuHandler(menuHandler);
 	}
 	
 	/**
@@ -77,7 +115,12 @@ public class StrategicVisualization extends Panel {
 		svgConstructor.resetSvg();
 		svgConstructor.drawResources();
 		svgConstructor.drawWalls();
-		svgConstructor.drawStartPositions();
+		
+		if (!state.isRunning())
+			svgConstructor.drawStartPositions();
+		
+		svgConstructor.drawRobots();
+		svgConstructor.drawVirtualRobots();
 	}
 
 	/**
@@ -93,5 +136,13 @@ public class StrategicVisualization extends Panel {
 			drawing.paint(graphics);
 		
 		super.paint(graphics);
+	}
+
+	/**
+	 * Called when panel is created.
+	 * See Apache Pivot documentation.
+	 */
+	@Override
+	public void initialize(Map<String, Object> arg0, URL arg1, Resources arg2) {	
 	}
 }
