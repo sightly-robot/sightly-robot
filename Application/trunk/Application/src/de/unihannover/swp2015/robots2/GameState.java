@@ -47,7 +47,10 @@ public class GameState {
 	public void setRunning(boolean running) {
 		this.running = running;
 	}
-
+	
+	public void addRobot(Robot robot) {
+		robots.add(robot);
+	}
 
 	// Antipattern - Singleton (Eager)
 	private static volatile GameState instance = new GameState();

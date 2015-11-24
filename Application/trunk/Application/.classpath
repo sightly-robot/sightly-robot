@@ -3,13 +3,13 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="resources"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry exported="true" kind="lib" path="/Users/philip/Documents/SWP2015/robots2/Application/trunk/Application/lib/json-org.jar"/>
-	<classpathentry exported="true" kind="lib" path="/Users/philip/Documents/SWP2015/robots2/Application/trunk/Application/lib/pivot-charts-2.0.4.jar"/>
-	<classpathentry exported="true" kind="lib" path="/Users/philip/Documents/SWP2015/robots2/Application/trunk/Application/lib/pivot-core-2.0.4.jar"/>
-	<classpathentry exported="true" kind="lib" path="/Users/philip/Documents/SWP2015/robots2/Application/trunk/Application/lib/pivot-web-2.0.4.jar"/>
-	<classpathentry exported="true" kind="lib" path="/Users/philip/Documents/SWP2015/robots2/Application/trunk/Application/lib/pivot-web-server-2.0.4.jar"/>
-	<classpathentry exported="true" kind="lib" path="/Users/philip/Documents/SWP2015/robots2/Application/trunk/Application/lib/pivot-wtk-2.0.4.jar"/>
-	<classpathentry exported="true" kind="lib" path="/Users/philip/Documents/SWP2015/robots2/Application/trunk/Application/lib/pivot-wtk-terra-2.0.4.jar"/>
-	<classpathentry exported="true" kind="lib" path="/Users/philip/Documents/SWP2015/robots2/Application/trunk/Application/lib/svgSalamander.jar"/>
+	<classpathentry kind="lib" path="D:/Development/SWP/roboter-labyrinth2/Application/trunk/Application/lib/json-org.jar"/>
+	<classpathentry kind="lib" path="D:/Development/SWP/roboter-labyrinth2/Application/trunk/Application/lib/pivot-charts-2.0.4.jar"/>
+	<classpathentry kind="lib" path="D:/Development/SWP/roboter-labyrinth2/Application/trunk/Application/lib/pivot-core-2.0.4.jar"/>
+	<classpathentry kind="lib" path="D:/Development/SWP/roboter-labyrinth2/Application/trunk/Application/lib/pivot-web-2.0.4.jar"/>
+	<classpathentry kind="lib" path="D:/Development/SWP/roboter-labyrinth2/Application/trunk/Application/lib/pivot-web-server-2.0.4.jar"/>
+	<classpathentry kind="lib" path="D:/Development/SWP/roboter-labyrinth2/Application/trunk/Application/lib/pivot-wtk-2.0.4.jar"/>
+	<classpathentry kind="lib" path="D:/Development/SWP/roboter-labyrinth2/Application/trunk/Application/lib/pivot-wtk-terra-2.0.4.jar"/>
+	<classpathentry kind="lib" path="D:/Development/SWP/roboter-labyrinth2/Application/trunk/Application/lib/svgSalamander.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

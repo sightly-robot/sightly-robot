@@ -23,9 +23,11 @@ import org.apache.pivot.wtk.TableView;
 import org.apache.pivot.wtk.Window;
 import org.json.JSONException;
 
+import de.unihannover.swp2015.robots2.CardinalDirection;
 import de.unihannover.swp2015.robots2.GameMap;
 import de.unihannover.swp2015.robots2.GameState;
 import de.unihannover.swp2015.robots2.InvalidMapFile;
+import de.unihannover.swp2015.robots2.Robot;
 import de.unihannover.swp2015.robots2.components.StrategicVisualization;
 
 import org.apache.pivot.wtk.DesktopApplicationContext;
@@ -63,7 +65,7 @@ public class ControlPanel extends Window implements Bindable {
 	 */
 	@Override
 	public void initialize(Map<String, Object> namespace, URL location, Resources resources) {
-		System.out.println(location);
+		//System.out.println(location);
 		
 		loadMap.getButtonPressListeners().add(loadMapAction);
 		closeVisualization.getButtonPressListeners().add(closeApp);
@@ -90,6 +92,16 @@ public class ControlPanel extends Window implements Bindable {
 						try {
 							GameMap map = new GameMap(file.getAbsolutePath());
 							GameState.getInstance().setMap(map);
+							
+							// REMOVE ME START
+							GameState.getInstance().addRobot(new Robot(
+								4, 2, CardinalDirection.EAST, true
+							));
+							GameState.getInstance().addRobot(new Robot(
+								4, 3, CardinalDirection.EAST, false
+							));
+							// REMOVE ME END							
+							
 							visualization.loadState(GameState.getInstance());
 							visualization.repaint();
 						} catch (JSONException e) {
