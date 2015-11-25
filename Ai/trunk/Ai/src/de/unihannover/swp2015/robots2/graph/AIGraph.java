@@ -3,9 +3,9 @@ package de.unihannover.swp2015.robots2.graph;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.unihannover.swp2015.robots2.Field;
-import de.unihannover.swp2015.robots2.GameMap;
+import de.unihannover.swp2015.robots2.model.interfaces.IField;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
+import de.unihannover.swp2015.robots2.model.interfaces.IStage;
 
 public class AIGraph {
 
@@ -147,15 +147,23 @@ public class AIGraph {
 	 * @param map
 	 *            Map data object
 	 */
-	public void mapToGraph(GameMap map) {
+	public void loadFromMap(IStage map) {
 		/*
 		 * Maybe use this(x,y) and make method static instead of initializing
 		 * new graph
 		 */
 		AIGraph graph = new AIGraph(map.getWidth(), map.getHeight());
+		int width = map.getWidth();
+		int height = map.getHeight();
 
-		for (Field field : map.getFields()) {
-			// ...
+		for (int i = 0; i < width; i++) {
+			for (int j = 0; j < height; j++) {
+				IField field = map.getField(i, j);
+				int x = field.getX();
+				int y = field.getY();
+				int food = field.getFood();
+				int growRate = field.getGrowingRate();
+			}
 		}
 	}
 }

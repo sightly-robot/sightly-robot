@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/AbstractRobot"/>
-	<classpathentry kind="lib" path="/LibrariesAndBuilds/pi4j/pi4j-core.jar"/>
-	<classpathentry kind="lib" path="/LibrariesAndBuilds/pi4j/pi4j-device.jar"/>
-	<classpathentry kind="lib" path="/LibrariesAndBuilds/pi4j/pi4j-gpio-extension.jar"/>
-	<classpathentry kind="lib" path="/LibrariesAndBuilds/pi4j/pi4j-service.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/AiInterface"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/Protocol"/>
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/AbstractRobot"/>
+	<classpathentry exported="true" kind="lib" path="/LibrariesAndBuilds/pi4j/pi4j-core.jar"/>
+	<classpathentry exported="true" kind="lib" path="/LibrariesAndBuilds/pi4j/pi4j-device.jar"/>
+	<classpathentry exported="true" kind="lib" path="/LibrariesAndBuilds/pi4j/pi4j-gpio-extension.jar"/>
+	<classpathentry exported="true" kind="lib" path="/LibrariesAndBuilds/pi4j/pi4j-service.jar"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/AiInterface"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/Protocol"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
