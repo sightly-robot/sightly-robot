@@ -1,6 +1,7 @@
 package de.unihannover.swp2015.robots2.controller.main;
 
 import java.util.Arrays;
+import java.util.UUID;
 
 import org.eclipse.paho.client.mqttv3.MqttException;
 
@@ -25,8 +26,7 @@ public class RobotMainController extends AbstractMainController implements IRobo
 	public RobotMainController(boolean hardwareRobot) {
 		super();
 
-		// TODO generate proper ID
-		String id = "TESTID";
+		String id = UUID.randomUUID().toString().substring(0,8);
 		this.myself = new Robot(id, hardwareRobot, true);
 		this.game.addRobot(this.myself);
 

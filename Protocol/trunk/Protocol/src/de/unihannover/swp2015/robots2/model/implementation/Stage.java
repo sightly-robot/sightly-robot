@@ -4,10 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-import de.unihannover.swp2015.robots2.model.interfaces.*;
+import de.unihannover.swp2015.robots2.model.interfaces.IField;
+import de.unihannover.swp2015.robots2.model.interfaces.IPosition;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
-import de.unihannover.swp2015.robots2.model.writeableInterfaces.*;
+import de.unihannover.swp2015.robots2.model.interfaces.IStage;
+import de.unihannover.swp2015.robots2.model.writeableInterfaces.IFieldWriteable;
+import de.unihannover.swp2015.robots2.model.writeableInterfaces.IStageWriteable;
 
 /**
  * Basic implementation of the interfaces IStageWritable, containing a two
@@ -48,6 +52,7 @@ public class Stage extends AbstractModel implements IStage, IStageWriteable {
 
 		this.fields = new ArrayList<List<IFieldWriteable>>();
 		this.startPositions = new Vector<IPosition>();
+		this.fieldsLock = new ReentrantReadWriteLock();
 	}
 
 	@Override
