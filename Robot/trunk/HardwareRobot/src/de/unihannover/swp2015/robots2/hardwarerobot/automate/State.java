@@ -1,6 +1,9 @@
 package de.unihannover.swp2015.robots2.hardwarerobot.automate;
 
 import de.unihannover.swp2015.robots2.hardwarerobot.pi2gocontroller.LEDAndServoController;
+
+import java.awt.Color;
+
 import de.unihannover.swp2015.robots2.hardwarerobot.pi2gocontroller.EngineController;
 import de.unihannover.swp2015.robots2.hardwarerobot.pi2gocontroller.Pi2GoGPIOController;
 
@@ -8,26 +11,25 @@ import de.unihannover.swp2015.robots2.hardwarerobot.pi2gocontroller.Pi2GoGPIOCon
  * The states of the automate of the Pi2Go controls.
  * 
  * @author Philipp Rohde
- *
  */
 public enum State {
 	
 	/** The robot follows a line until he reaches the next junction. */
-	LINE_FOLLOW_STATE() {
+	LINE_FOLLOW_STATE {
 		@Override
 		public State getNextState() {
 			if (GPIO.isLineLeft() && GPIO.isLineRight()) {
-				DRIVE_ON_CELL_STATE.executeState();
+				DRIVE_ON_CELL_STATE.execute();
 				return DRIVE_ON_CELL_STATE;
 			}
 			else {
-				this.executeState();
+				this.execute();
 				return this;
 			}
 		}
 
 		@Override
-		protected void executeState() {
+		protected void execute() {
 			boolean left = GPIO.isLineLeft();
 			boolean right = GPIO.isLineRight();
 			
@@ -44,34 +46,35 @@ public enum State {
 				ENGINE.go(SLOW, FAST);			
 			}
 		}
+
+		@Override
+		public void start() {
+			resetLED();
+			setServo(0);
+			this.execute();
+		}
 	},
 	/** The robot drives fully onto the cell. */
-	DRIVE_ON_CELL_STATE() {
+	DRIVE_ON_CELL_STATE {
 		
 		private long startTime;
-		private static final double DRIVE_DURATION = 250;
+		private static final double DRIVE_DURATION = 320;
 		
 		@Override
 		public State getNextState() {
-			if(getProgress() == 0.0)
-			{
-				startTime = System.currentTimeMillis();
-				setProgress(0.000000001);
-			}else
-			{
-				setProgress(((System.currentTimeMillis()-startTime)/DRIVE_DURATION));
-				if(getProgress() >= 1.0)
-				{
-					WAIT_STATE.executeState();
-					return WAIT_STATE;
-				}
+			setProgress(((System.currentTimeMillis()-startTime)/DRIVE_DURATION));
+			if(getProgress() >= 1.0) {
+				WAIT_STATE.execute();
+				return WAIT_STATE;
 			}
-			this.executeState();
-			return this;
+			else {
+				this.execute();
+				return this;	
+			}
 		}
 
 		@Override
-		protected void executeState() {
+		protected void execute() {
 			boolean left = GPIO.isLineLeft();
 			boolean right = GPIO.isLineRight();
 			
@@ -92,178 +95,252 @@ public enum State {
 				LEDS.setServo(LEDAndServoController.S15, -20);
 			}			
 		}
+
+		@Override
+		public void start() {
+			startTime = System.currentTimeMillis();
+			setLED(LEDS_REAR, COLOR_BREAK);
+			setServo(0);
+			this.execute();
+		}
 	},
 	/** The robot awaits a new command. */
-	WAIT_STATE() {
+	WAIT_STATE {
 		@Override
 		public State getNextState() {
-			this.executeState();
+			this.execute();
 			return this;
 		}
 
 		@Override
-		protected void executeState() {
+		protected void execute() {
 			ENGINE.go(STOP);
+		}
+
+		@Override
+		public void start() {
+			resetLED();
+			this.execute();
 		}
 	},
 	/** First part of turning left. */
-	TURN_LEFT_1_STATE() {
+	TURN_LEFT_1_STATE {
 		@Override
 		public State getNextState() {
 			if (GPIO.isLineLeft()) {
-				this.executeState();
+				this.execute();
 				return this;
 			}
 			else {
-				TURN_LEFT_2_STATE.executeState();
+				TURN_LEFT_2_STATE.execute();
 				return TURN_LEFT_2_STATE;
 			}
 		}
 
 		@Override
-		protected void executeState() {
+		protected void execute() {
 			LEDS.setServo(LEDAndServoController.S15, -50);
 			ENGINE.spinRight(TURN);
 		}
+
+		@Override
+		public void start() {
+			setLED(LEDS_LEFT, COLOR_DEFAULT);
+			setServo(-50);
+			this.execute();
+		}
 	},
 	/** Second part of turning left. */
-	TURN_LEFT_2_STATE() {
+	TURN_LEFT_2_STATE {
 		@Override
 		public State getNextState() {
 			if (!GPIO.isLineLeft()) {
-				this.executeState();
+				this.execute();
 				return this;
 			}
 			else {
-				LINE_FOLLOW_STATE.executeState();
+				LINE_FOLLOW_STATE.execute();
 				return LINE_FOLLOW_STATE;
 			}
 		}
 
 		@Override
-		protected void executeState() {
+		protected void execute() {
 			LEDS.setServo(LEDAndServoController.S15, -50);
 			ENGINE.spinRight(TURN);
 		}
+
+		@Override
+		public void start() {
+			setLED(LEDS_LEFT, COLOR_DEFAULT);
+			setServo(-50);
+			this.execute();	
+		}
 	},
 	/** First part of turning right. */
-	TURN_RIGHT_1_STATE() {
+	TURN_RIGHT_1_STATE {
 		@Override
 		public State getNextState() {
 			if (GPIO.isLineRight()) {
-				this.executeState();
+				this.execute();
 				return this;
 			}
 			else {
-				TURN_RIGHT_2_STATE.executeState();
+				TURN_RIGHT_2_STATE.execute();
 				return TURN_RIGHT_2_STATE;
 			}
 		}
 
 		@Override
-		protected void executeState() {
+		protected void execute() {
 			LEDS.setServo(LEDAndServoController.S15, 50);
 			ENGINE.spinLeft(TURN);
 		}
+
+		@Override
+		public void start() {
+			setLED(LEDS_RIGHT, COLOR_DEFAULT);
+			setServo(50);
+			this.execute();
+		}
 	},
 	/** Second part of turning right. */
-	TURN_RIGHT_2_STATE() {
+	TURN_RIGHT_2_STATE {
 		@Override
 		public State getNextState() {
 			if (!GPIO.isLineRight()) {
-				this.executeState();
+				this.execute();
 				return this;
 			}
 			else {
-				LINE_FOLLOW_STATE.executeState();
+				LINE_FOLLOW_STATE.execute();
 				return LINE_FOLLOW_STATE;
 			}
 		}
 
 		@Override
-		protected void executeState() {
+		protected void execute() {
 			LEDS.setServo(LEDAndServoController.S15, 50);
 			ENGINE.spinLeft(TURN);
 		}
+
+		@Override
+		public void start() {
+			setLED(LEDS_RIGHT, COLOR_DEFAULT);
+			setServo(50);
+			this.execute();
+		}
 	},
 	/** First part of turning 180 degrees. */
-	TURN_180_1_STATE() {
+	TURN_180_1_STATE {
 		@Override
 		public State getNextState() {
 			if (GPIO.isLineLeft()) {
-				this.executeState();
+				this.execute();
 				return this;
 			}
 			else {
-				TURN_180_2_STATE.executeState();
+				TURN_180_2_STATE.execute();
 				return TURN_180_2_STATE;
 			}
 		}
 
 		@Override
-		protected void executeState() {
+		protected void execute() {
 			LEDS.setServo(LEDAndServoController.S15, -50);
 			ENGINE.spinRight(TURN);
 		}
+
+		@Override
+		public void start() {
+			setLED(LEDS_LEFT, COLOR_DEFAULT);
+			setLED(LEDS_REAR, COLOR_BREAK);
+			setServo(-50);
+			this.execute();
+		}
 	},
 	/** Second part of turning 180 degrees. */
-	TURN_180_2_STATE() {
+	TURN_180_2_STATE {
 		@Override
 		public State getNextState() {
 			if (!GPIO.isLineLeft()) {
-				this.executeState();
+				this.execute();
 				return this;
 			}
 			else {
-				TURN_180_3_STATE.executeState();
+				TURN_180_3_STATE.execute();
 				return TURN_180_3_STATE;
 			}
 		}
 
 		@Override
-		protected void executeState() {
+		protected void execute() {
 			LEDS.setServo(LEDAndServoController.S15, -50);
 			ENGINE.spinRight(TURN);
 		}
+
+		@Override
+		public void start() {
+			setLED(LEDS_LEFT, COLOR_DEFAULT);
+			setLED(LEDS_REAR, COLOR_BREAK);
+			setServo(-50);
+			this.execute();			
+		}
 	},
 	/** Third part of turning 180 degrees. */
-	TURN_180_3_STATE() {
+	TURN_180_3_STATE {
 		@Override
 		public State getNextState() {
 			if (!GPIO.isLineRight()) {
-				this.executeState();
+				this.execute();
 				return this;
 			}
 			else {
-				TURN_180_4_STATE.executeState();
+				TURN_180_4_STATE.execute();
 				return TURN_180_4_STATE;
 			}
 		}
 
 		@Override
-		protected void executeState() {
+		protected void execute() {
 			LEDS.setServo(LEDAndServoController.S15, 0);
 			ENGINE.go(-FAST);
 		}
+
+		@Override
+		public void start() {
+			setLED(LEDS_LEFT, COLOR_DEFAULT);
+			setLED(LEDS_REAR, COLOR_BREAK);
+			setServo(0);
+			this.execute();
+		}
 	},
 	/** Fourth part of turning 180 degrees. */
-	TURN_180_4_STATE() {
+	TURN_180_4_STATE {
 		@Override
 		public State getNextState() {
 			if (!GPIO.isLineLeft()) {
-				this.executeState();
+				this.execute();
 				return this;
 			}
 			else {
-				LINE_FOLLOW_STATE.executeState();
+				LINE_FOLLOW_STATE.execute();
 				return LINE_FOLLOW_STATE;
 			}
 		}
 
 		@Override
-		protected void executeState() {
-			LEDS.setServo(LEDAndServoController.S15, -50);
+		protected void execute() {
+			setServo(-50);
 			ENGINE.spinRight(TURN);
+		}
+
+		@Override
+		public void start() {
+			setLED(LEDS_LEFT, COLOR_DEFAULT);
+			setLED(LEDS_REAR, COLOR_BREAK);
+			setServo(-50);
+			this.execute();
 		}
 	};
 	
@@ -278,11 +355,18 @@ public enum State {
 	private final static Pi2GoGPIOController GPIO = Pi2GoGPIOController.getInstance();
 	private final static EngineController ENGINE = EngineController.getInstance();
 	
+	// LEDs
+	private final static int LEDS_FRONT = LEDAndServoController.FRONT;
+	private final static int LEDS_REAR = LEDAndServoController.REAR;
+	private final static int LEDS_LEFT = LEDAndServoController.LEFT;
+	private final static int LEDS_RIGHT = LEDAndServoController.RIGHT;
+	
+	// LED colors
+	private final static Color COLOR_BREAK = Color.RED;
+	private final static Color COLOR_DEFAULT = Color.WHITE;
+	
 	private double progress = 0;
 	
-	private State() {
-	}
-
 	/**
 	 * Gets the next state according to the sensor values.
 	 * 
@@ -293,7 +377,7 @@ public enum State {
 	/**
 	 * Controls the LEDs and engine according to the current state.
 	 */
-	protected abstract void executeState();
+	protected abstract void execute();
 
 	public double getProgress() {
 		return progress;
@@ -301,6 +385,22 @@ public enum State {
 
 	public void setProgress(double progress) {
 		this.progress = progress;
+	}
+	
+	public abstract void start();
+	
+	protected void resetLED() {
+		LEDS.setAllLEDs(Color.BLACK);
+		LEDS.setLED(LEDS_FRONT, Color.WHITE);
+	}
+	
+	protected void setLED(int led, Color color) {
+		resetLED();
+		LEDS.setLED(led, color);
+	}
+	
+	protected void setServo(double degree) {
+		LEDS.setServo(LEDAndServoController.S15, degree);
 	}
 	
 }
