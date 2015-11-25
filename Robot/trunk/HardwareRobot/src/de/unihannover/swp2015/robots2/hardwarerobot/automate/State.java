@@ -20,7 +20,6 @@ public enum State {
 		@Override
 		public State getNextState() {
 			if (GPIO.isLineLeft() && GPIO.isLineRight()) {
-				DRIVE_ON_CELL.execute();
 				return DRIVE_ON_CELL;
 			} else {
 				this.execute();
@@ -58,13 +57,13 @@ public enum State {
 	DRIVE_ON_CELL {
 
 		private long startTime;
-		private static final double DRIVE_DURATION = 320;
+		private static final double DRIVE_DURATION = 310.0;
 
 		@Override
 		public State getNextState() {
-			setProgress(((System.currentTimeMillis() - startTime) / DRIVE_DURATION));
+			long currentTime = System.currentTimeMillis();
+			setProgress((currentTime - startTime) / DRIVE_DURATION);
 			if (getProgress() >= 1.0) {
-				WAIT.execute();
 				return WAIT;
 			} else {
 				this.execute();
@@ -94,9 +93,10 @@ public enum State {
 
 		@Override
 		public void start() {
-			startTime = System.currentTimeMillis();
 			setLED(LEDS_REAR, COLOR_BREAK);
 			setServo(0);
+			setProgress(0.0);
+			startTime = System.currentTimeMillis();
 			this.execute();
 		}
 	},
@@ -131,7 +131,6 @@ public enum State {
 				this.execute();
 				return this;
 			} else {
-				TURN_LEFT_2.execute();
 				return TURN_LEFT_2;
 			}
 		}
@@ -159,7 +158,6 @@ public enum State {
 				this.execute();
 				return this;
 			} else {
-				FOLLOW_LINE.execute();
 				return FOLLOW_LINE;
 			}
 		}
@@ -187,7 +185,6 @@ public enum State {
 				this.execute();
 				return this;
 			} else {
-				TURN_RIGHT_2.execute();
 				return TURN_RIGHT_2;
 			}
 		}
@@ -215,7 +212,6 @@ public enum State {
 				this.execute();
 				return this;
 			} else {
-				FOLLOW_LINE.execute();
 				return FOLLOW_LINE;
 			}
 		}
@@ -243,7 +239,6 @@ public enum State {
 				this.execute();
 				return this;
 			} else {
-				TURN_180_2.execute();
 				return TURN_180_2;
 			}
 		}
@@ -272,7 +267,6 @@ public enum State {
 				this.execute();
 				return this;
 			} else {
-				TURN_180_3.execute();
 				return TURN_180_3;
 			}
 		}
@@ -301,7 +295,6 @@ public enum State {
 				this.execute();
 				return this;
 			} else {
-				TURN_180_4.execute();
 				return TURN_180_4;
 			}
 		}
@@ -330,7 +323,6 @@ public enum State {
 				this.execute();
 				return this;
 			} else {
-				FOLLOW_LINE.execute();
 				return FOLLOW_LINE;
 			}
 		}
