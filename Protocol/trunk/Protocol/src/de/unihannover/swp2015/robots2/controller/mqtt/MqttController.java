@@ -1,5 +1,6 @@
 package de.unihannover.swp2015.robots2.controller.mqtt;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -114,7 +115,7 @@ public class MqttController implements IMqttController {
 	 */
 	@Override
 	public void sendMessage(String topic, String message) {
-		MqttMessage mqttMessage = new MqttMessage(message.getBytes());
+		MqttMessage mqttMessage = new MqttMessage(message.getBytes(StandardCharsets.UTF_8));
 		try {
 			this.sendQueue.put(new MqttFullMessage(topic, mqttMessage));
 		} catch (InterruptedException e) {

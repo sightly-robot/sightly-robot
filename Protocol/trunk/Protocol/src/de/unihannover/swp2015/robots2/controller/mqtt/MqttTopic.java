@@ -3,7 +3,7 @@ package de.unihannover.swp2015.robots2.controller.mqtt;
 /**
  * 
  * @author Patrick Kawczynski
- * @version 0.2
+ * @version 0.3
  */
 public enum MqttTopic {
 
@@ -80,33 +80,6 @@ public enum MqttTopic {
 		return null;
 	}
 
-	/**
-	 * Returns the key in the given topic, which replaced the "+" wildcard of
-	 * the generall-topic.
-	 * 
-	 * @param input
-	 *            the topic which holds the key
-	 * @return the extracted key; or null, if no key was found
-	 */
-	public static String getKey(String input) {
-		MqttTopic topic = MqttTopic.getBy(input);
-
-		if (topic != null) {
-			String[] topicParts = topic.toString().split("/");
-			String[] inputParts = input.split("/");
-
-			if (topicParts.length == inputParts.length) {
-				for (int i = 0; i < topicParts.length; i++) {
-					if (topicParts[i].equals("+")) {
-						return inputParts[i];
-					}
-				}
-			}
-		}
-
-		return null;
-	}
-
 	private MqttTopic(String topic) {
 		this.topic = topic;
 	}
@@ -126,6 +99,29 @@ public enum MqttTopic {
 	 */
 	public String toString(String topicPart) {
 		return this.topic.replace("+", topicPart);
+	}
+	
+
+
+	/**
+	 * Returns the key in the given topic, which replaced the "+" wildcard of
+	 * the general topic.
+	 * 
+	 * @param input
+	 *            the topic which holds the key
+	 * @return the extracted key; or null, if no key was found
+	 */
+	public String getKey(String input) {
+	    int begin = this.topic.indexOf('+');
+	    
+	    if (begin == -1)
+	    	return null;
+	    
+	    int end = input.indexOf('/',begin);
+	    if (end == -1)
+	        return input.substring(begin);
+	    else
+	        return input.substring(begin,end);
 	}
 
 }

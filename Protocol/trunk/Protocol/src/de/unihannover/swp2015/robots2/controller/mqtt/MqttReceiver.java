@@ -1,5 +1,6 @@
 package de.unihannover.swp2015.robots2.controller.mqtt;
 
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.BlockingQueue;
 
 /**
@@ -25,7 +26,7 @@ public class MqttReceiver implements Runnable {
 			try {
 				MqttFullMessage message = this.queue.take();
 				handler.handleMqttMessage(message.getTopic(), new String(
-						message.getMessage().getPayload()));
+						message.getMessage().getPayload(),StandardCharsets.UTF_8));
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

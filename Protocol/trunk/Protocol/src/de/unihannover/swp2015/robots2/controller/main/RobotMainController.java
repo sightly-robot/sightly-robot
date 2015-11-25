@@ -9,7 +9,6 @@ import de.unihannover.swp2015.robots2.controller.interfaces.IRobotController;
 import de.unihannover.swp2015.robots2.controller.mqtt.MqttController;
 import de.unihannover.swp2015.robots2.controller.mqtt.MqttTopic;
 import de.unihannover.swp2015.robots2.model.implementation.Robot;
-import de.unihannover.swp2015.robots2.model.interfaces.IEvent.UpdateType;
 import de.unihannover.swp2015.robots2.model.interfaces.IField.State;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
 import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
@@ -63,7 +62,7 @@ public class RobotMainController extends AbstractMainController implements
 	@Override
 	public void handleMqttMessage(String topic, String message) {
 		MqttTopic mqtttopic = MqttTopic.getBy(topic);
-		String key = MqttTopic.getKey(topic);
+		String key = mqtttopic.getKey(topic);
 
 		switch (mqtttopic) {
 		case ROBOT_DISCOVER:
