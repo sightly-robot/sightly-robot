@@ -1,8 +1,11 @@
 package de.unihannover.swp2015.robots2.controller.mqtt;
 
 /**
+ * An enumeration of all MQTT topics we use, equipped with methods to parse
+ * topic from string and generate string from topic.
  * 
  * @author Patrick Kawczynski
+ * @author Michael Thies
  * @version 0.3
  */
 public enum MqttTopic {
@@ -16,6 +19,14 @@ public enum MqttTopic {
 	ROBOT_POSITION("robot/position/+"),
 
 	ROBOT_SETPOSITION("robot/setposition/+"),
+
+	/**
+	 * Let Robot with given ID (+) blink in given color.
+	 * 
+	 * Message format = <R>,<G>,<B> with R,G,B = [0-255] From standard
+	 * extensions, v1.0
+	 */
+	ROBOT_BLINK("robot/blink/+"),
 
 	ROBOT_VIRTUALSPEED("robot/virtualspeed"),
 
@@ -37,7 +48,25 @@ public enum MqttTopic {
 
 	EVENT_ERROR_ROBOT_CONNECTION("event/error/robot/+/connection"),
 
-	EVENT_ERROR_ROBOT_ROBOTICS("event/error/robot/+/robotics");
+	EVENT_ERROR_ROBOT_ROBOTICS("event/error/robot/+/robotics"),
+
+	/** Get the current hardware settings of the given robot. */
+	SETTINGS_ROBOT_REQUEST("extension/2/settings/robot/+/request"),
+
+	/** Answer of the robot to SETTINGS_ROBOT_REQUEST. */
+	SETTINGS_ROBOT_RESPONSE("extension/2/settings/robot/+/response"),
+
+	/** Set hardware settings of the given robot. */
+	SETTINGS_ROBOT_SET("extension/2/settings/robot/+/set"),
+
+	/**Get the current hardware settings of the given robot. */
+	SETTINGS_VISU_REQUEST("extension/2/settings/visu/request"),
+
+	/** Answer of the robot to SETTINGS_ROBOT_REQUEST. */
+	SETTINGS_VISU_RESPONSE("extension/2/settings/visu/response"),
+
+	/** Set hardware settings of the given robot. */
+	SETTINGS_VISU_SET("extension/2/settings/visu/set");
 
 	private final String topic;
 
@@ -101,8 +130,6 @@ public enum MqttTopic {
 	public String toString(String topicPart) {
 		return this.topic.replace("+", topicPart);
 	}
-	
-
 
 	/**
 	 * Returns the key in the given topic, which replaced the "+" wildcard of
@@ -113,16 +140,16 @@ public enum MqttTopic {
 	 * @return the extracted key; or null, if no key was found
 	 */
 	public String getKey(String input) {
-	    int begin = this.topic.indexOf('+');
-	    
-	    if (begin == -1)
-	    	return null;
-	    
-	    int end = input.indexOf('/',begin);
-	    if (end == -1)
-	        return input.substring(begin);
-	    else
-	        return input.substring(begin,end);
+		int begin = this.topic.indexOf('+');
+
+		if (begin == -1)
+			return null;
+
+		int end = input.indexOf('/', begin);
+		if (end == -1)
+			return input.substring(begin);
+		else
+			return input.substring(begin, end);
 	}
 
 }

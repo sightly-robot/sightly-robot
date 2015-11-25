@@ -11,16 +11,21 @@ import de.unihannover.swp2015.robots2.controller.externalInterfaces.IHardwareRob
 import de.unihannover.swp2015.robots2.controller.externalInterfaces.IVisualizationControl;
 import de.unihannover.swp2015.robots2.controller.interfaces.IGuiController;
 import de.unihannover.swp2015.robots2.controller.mqtt.MqttController;
+import de.unihannover.swp2015.robots2.controller.mqtt.MqttTopic;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
 import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
 
 /**
+ * Main controller specialized for control guis.
  * 
- * @version 0.1
- * @author Patrick Kawczynski
+ * @version 0.2
+ * @author Michael Thies
  */
 public class GuiMainController extends AbstractMainController implements
 		IGuiController {
+
+	IVisualizationControl visualizationControl;
+	IHardwareRobotControl hardwareRobotControl;
 
 	public GuiMainController() {
 		super();
@@ -49,99 +54,112 @@ public class GuiMainController extends AbstractMainController implements
 
 	@Override
 	public void handleMqttMessage(String topic, String message) {
-		// TODO Auto-generated method stub
-		
+		MqttTopic mqtttopic = MqttTopic.getBy(topic);
+		String key = mqtttopic.getKey(topic);
+
+		switch (mqtttopic) {
+
+		// TODO message handling
+
+		case SETTINGS_ROBOT_RESPONSE:
+		case SETTINGS_ROBOT_SET:
+			if (this.hardwareRobotControl != null)
+				this.hardwareRobotControl.receiveSettings(message, key);
+			break;
+
+		case SETTINGS_VISU_RESPONSE:
+		case SETTINGS_VISU_SET:
+			if (this.visualizationControl != null)
+				this.visualizationControl.receiveSettings(message);
+
+		default:
+			break;
+		}
+
 	}
 
 	@Override
 	public void sendWalls(List<List<Set<Orientation>>> walls) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void sendFood(List<List<Integer>> food) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void sendGrowingRates(List<List<Integer>> growingRates) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void sendGameParameters(float robotSpeed, int hesitationTime) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void setRobotPosition(int x, int y, Orientation orientation,
 			IRobot robot) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void startGame() {
-		// TODO Auto-generated method stub
-		
+		// TODO
 	}
 
 	@Override
 	public void stopGame() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void resetGame() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void setRobotSettings(String id, String settings) {
-		// TODO Auto-generated method stub
-		
+		this.sendMqttMessage(MqttTopic.SETTINGS_ROBOT_SET.toString(id),
+				settings);
 	}
 
 	@Override
 	public void getRobotSettings(String id) {
-		// TODO Auto-generated method stub
-		
+		this.sendMqttMessage(MqttTopic.SETTINGS_ROBOT_REQUEST.toString(id), "");
 	}
 
 	@Override
 	public void setVisualizationSettings(String settings) {
-		// TODO Auto-generated method stub
-		
+		this.sendMqttMessage(MqttTopic.SETTINGS_VISU_SET.toString(), settings);
 	}
 
 	@Override
 	public void getVisualizationSettings() {
-		// TODO Auto-generated method stub
-		
+		this.sendMqttMessage(MqttTopic.SETTINGS_VISU_REQUEST.toString(), "");
 	}
 
 	@Override
 	public void letRobotBlink(String id) {
-		// TODO Auto-generated method stub
-		
+		this.sendMqttMessage(MqttTopic.ROBOT_BLINK.toString(id), "");
 	}
 
 	@Override
 	public void registerVisualizationControl(IVisualizationControl control) {
-		// TODO Auto-generated method stub
-		
+		this.visualizationControl = control;
 	}
 
 	@Override
 	public void registerHardwareRobotControl(IHardwareRobotControl control) {
-		// TODO Auto-generated method stub
-		
+		this.hardwareRobotControl = control;
 	}
 
 }
