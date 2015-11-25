@@ -2,6 +2,7 @@ package de.unihannover.swp2015.robots2.controller.main;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import org.eclipse.paho.client.mqttv3.MqttException;
@@ -49,92 +50,98 @@ public class GuiMainController extends AbstractMainController implements
 	@Override
 	public void handleMqttMessage(String topic, String message) {
 		// TODO Auto-generated method stub
+		
+	}
 
+	@Override
+	public void sendWalls(List<List<Set<Orientation>>> walls) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
 	public void sendFood(List<List<Integer>> food) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
 	public void sendGrowingRates(List<List<Integer>> growingRates) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
 	public void sendGameParameters(float robotSpeed, int hesitationTime) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
-	public void setRobotPosition(int x, int y, IRobot robot,
-			Orientation orientation) {
+	public void setRobotPosition(int x, int y, Orientation orientation,
+			IRobot robot) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
 	public void startGame() {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
 	public void stopGame() {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
 	public void resetGame() {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
-	public void setRobotSettings(String id, String value) {
+	public void setRobotSettings(String id, String settings) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
 	public void getRobotSettings(String id) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
-	public void setVisualizationSettings(String value) {
+	public void setVisualizationSettings(String settings) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
 	public void getVisualizationSettings() {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
 	public void letRobotBlink(String id) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
 	public void registerVisualizationControl(IVisualizationControl control) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
 	public void registerHardwareRobotControl(IHardwareRobotControl control) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 }
