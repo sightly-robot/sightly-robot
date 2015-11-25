@@ -30,7 +30,7 @@ public interface IEntityModifier extends IUpdateable {
     public void onFinish();
     
     /**
-     * You can add a {@link IFinishListener}, which will be called in {@link IEntityModifier.onFinish}.
+     * You can add a {@link IFinishListener}, which will be called in {@link IEntityModifier#onFinish()}.
      * @param finishListener {@link IFinishListener}
      */
     public void addFinishListener(final IFinishListener finishListener);

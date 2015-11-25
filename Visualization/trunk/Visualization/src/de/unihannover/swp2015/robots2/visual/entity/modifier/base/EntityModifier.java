@@ -8,7 +8,7 @@ import com.badlogic.gdx.Gdx;
 import de.unihannover.swp2015.robots2.visual.entity.IEntity;
 
 /**
- * Base class for most of the entity-modifier. Contains a standard implementation of {@link IUpdateable.update}.
+ * Base class for most of the entity-modifier. Contains a standard implementation of {@link IUpdateable#update()}.
  * 
  * @author Rico Schrage
  */
