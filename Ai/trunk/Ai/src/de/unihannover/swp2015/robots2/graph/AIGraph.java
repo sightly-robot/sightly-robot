@@ -67,6 +67,10 @@ public class AIGraph {
 		public void setRobot(Robot robot) {
 			this.robot = robot;
 		}
+		
+		public void removeRobot() {
+			this.robot = null;
+		}
 
 		public int getX() {
 			return x;
@@ -141,6 +145,34 @@ public class AIGraph {
 				if (i < fieldX - 1)
 					nodes[i][j].addNeighbor(new Edge(nodes[i][j], nodes[i + 1][j], IPosition.Orientation.East));
 				if (j < fieldY - 1)
+					nodes[i][j].addNeighbor(new Edge(nodes[i][j], nodes[i][j + 1], IPosition.Orientation.South));
+			}
+		}
+	}
+	
+	public AIGraph(IStage stage) {
+		this.dimX = stage.getWidth();
+		this.dimY = stage.getHeight();
+		this.nodes = new Node[this.dimX][this.dimY];
+		
+		for (int i = 0; i < fieldX; i++) {
+			for (int j = 0; j < fieldY; j++) {
+				nodes[i][j] = new Node();
+			}
+		}
+		
+		for (int i = 0; i < width; i++) {
+			for (int j = 0; j < height; j++) {
+				IField field = map.getField(i, j);
+				nodes[i][j].setRessourceValue(field.getFood());
+				//nodes[i][j].setFoodGrowth(field.getGrowingRate()); maybe later
+				if (i > 0 && !field.isWall(IPosition.Orientation.West))
+					nodes[i][j].addNeighbor(new Edge(nodes[i][j], nodes[i - 1][j], IPosition.Orientation.West));
+				if (j > 0 && !field.isWall(IPosition.Orientation.North))
+					nodes[i][j].addNeighbor(new Edge(nodes[i][j], nodes[i][j - 1], IPosition.Orientation.North));
+				if (i < fieldX - 1 && !field.isWall(IPosition.Orientation.East))
+					nodes[i][j].addNeighbor(new Edge(nodes[i][j], nodes[i + 1][j], IPosition.Orientation.East));
+				if (j < fieldY - 1 && !field.isWall(IPosition.Orientation.South))
 					nodes[i][j].addNeighbor(new Edge(nodes[i][j], nodes[i][j + 1], IPosition.Orientation.South));
 			}
 		}
