@@ -9,5 +9,32 @@ public class StageModelController {
 	public StageModelController(IStageWriteable stage) {
 		this.stage = stage;
 	}
+	
+	/**
+	 * Handle a MAP_WALLS message.
+	 * 
+	 * @param message
+	 */
+	public void mqttSetWalls(String message) {
+		// TODO implement method
+	}
+	
+	/**
+	 * Handle a MAP_FOOD message.
+	 * 
+	 * @param message
+	 */
+	public void mqttSetFood(String message) {
+		// TODO implement method
+	}
+	
+	/**
+	 * Handle a FIELD_FOOD message.
+	 * 
+	 * @param message
+	 */
+	public void mqttSetFieldFood(int x, int y, int value) {
+		// TODO implement method
+	}
 
 }
