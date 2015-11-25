@@ -6,6 +6,7 @@ import java.util.List;
 import de.unihannover.swp2015.robots2.model.interfaces.IField;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
 import de.unihannover.swp2015.robots2.model.interfaces.IStage;
+import de.unihannover.swp2015.robots2.model.interfaces.IPosition;
 
 public class AIGraph {
 
@@ -37,6 +38,10 @@ public class AIGraph {
 
 		public void setNeighbors(List<Edge> neighbors) {
 			this.neighbors = neighbors;
+		}
+		
+		public void addNeighbor(Edge edge) {
+			this.neighbors.add(edge);
 		}
 
 		public int getRessourceValue() {
@@ -130,13 +135,13 @@ public class AIGraph {
 		for (int i = 0; i < fieldX; i++) {
 			for (int j = 0; j < fieldY; j++) {
 				if (i > 0)
-					nodes[i][j].addNeighbor(nodes[i - 1][j]);
+					nodes[i][j].addNeighbor(new Edge(nodes[i][j], nodes[i - 1][j], IPosition.Orientation.West));
 				if (j > 0)
-					nodes[i][j].addNeighbor(nodes[i][j - 1]);
+					nodes[i][j].addNeighbor(new Edge(nodes[i][j], nodes[i][j - 1], IPosition.Orientation.North));
 				if (i < fieldX - 1)
-					nodes[i][j].addNeighbor(nodes[i + 1][j]);
+					nodes[i][j].addNeighbor(new Edge(nodes[i][j], nodes[i + 1][j], IPosition.Orientation.East));
 				if (j < fieldY - 1)
-					nodes[i][j].addNeighbor(nodes[i][j + 1]);
+					nodes[i][j].addNeighbor(new Edge(nodes[i][j], nodes[i][j + 1], IPosition.Orientation.South));
 			}
 		}
 	}
@@ -152,7 +157,7 @@ public class AIGraph {
 		 * Maybe use this(x,y) and make method static instead of initializing
 		 * new graph
 		 */
-		AIGraph graph = new AIGraph(map.getWidth(), map.getHeight());
+		//AIGraph graph = new AIGraph(map.getWidth(), map.getHeight());
 		int width = map.getWidth();
 		int height = map.getHeight();
 
