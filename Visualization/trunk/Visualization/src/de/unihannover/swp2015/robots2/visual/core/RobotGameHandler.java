@@ -32,9 +32,9 @@ public class RobotGameHandler implements IGameHandler {
 	protected final List<IEntityModifier> modifierList;
 	
 	/**
-	 * List of renderUnits managed by this game handler.
+	 * List of entities managed by this game handler.
 	 */
-	protected final List<IEntity> renderUnits;
+	protected final List<IEntity> entityList;
 	
 	/**
 	 * Root of the model.
@@ -68,7 +68,7 @@ public class RobotGameHandler implements IGameHandler {
 	 */
 	public RobotGameHandler(final IGame game, final IResourceHandler resourceHandler, final OrthographicCamera cam, final IPreferences prefs) {
 		this.modifierList = new ArrayList<>();
-		this.renderUnits = new ArrayList<>();
+		this.entityList = new ArrayList<>();
 		this.game = game;
 		this.resourceHandler = resourceHandler;
 		this.spriteBatch = new SpriteBatch();
@@ -95,9 +95,9 @@ public class RobotGameHandler implements IGameHandler {
 
 		//create entites
 		for (final IRobot robot : game.getRobots().values()) {
-			this.renderUnits.add(new Robot(robot, spriteBatch, this, prefs, resourceHandler));
+			this.entityList.add(new Robot(robot, spriteBatch, this, prefs, resourceHandler));
 		}
-		this.renderUnits.add(new Map(stage, spriteBatch, this, prefs, resourceHandler));
+		this.entityList.add(new Map(stage, spriteBatch, this, prefs, resourceHandler));
 
 	}
 	
@@ -108,8 +108,8 @@ public class RobotGameHandler implements IGameHandler {
 	
 	@Override
 	public void render() {
-		for (int i = 0; i < renderUnits.size(); ++i) {
-			this.renderUnits.get(i).render();
+		for (int i = 0; i < entityList.size(); ++i) {
+			this.entityList.get(i).render();
 		}
 	}
 

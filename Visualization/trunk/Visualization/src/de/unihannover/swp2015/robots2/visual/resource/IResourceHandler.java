@@ -3,6 +3,8 @@ package de.unihannover.swp2015.robots2.visual.resource;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Disposable;
 
+import de.unihannover.swp2015.robots2.visual.resource.texture.RenderUnit;
+
 /**
  * Handles all resources. Supports the usage of multi-texture-packages.
  *  
@@ -26,5 +28,23 @@ public interface IResourceHandler extends Disposable {
 	 * @return result[i] = null if there is no region mapped to <code>key[i]</code>
 	 */
 	public TextureRegion[] getRegion(final String... key);
+	
+	/**
+	 * Creates render unit, created with the texture region(s), which are mapped to <code>key</code>.
+	 * 
+	 * @param key key of the texture region
+	 * @return RenderUnit
+	 */
+	public RenderUnit createRenderUnit(final String key);
+
+	/**
+	 * @see #getRenderUnit(String)
+	 * @param key key of the texture region
+	 * @return RenderUnit
+	 */
+	public RenderUnit[] createRenderUnit(final String... keys);
+	
+	//optional
+	public void loadTexturePack(final String name);
 	
 }

@@ -3,22 +3,38 @@ package de.unihannover.swp2015.robots2.visual.resource;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.utils.Array;
+
+import de.unihannover.swp2015.robots2.visual.resource.texture.RenderUnit;
 
 public class ResourceHandler implements IResourceHandler {
 
 	/**
-	 * Map key->textureRegion
+	 * Map key->textureRegion.
+	 * <br>
+	 * Hint: <code>frameSetMap.keySet() intersection texMap.keySet() = { }</code>.
+	 * 
 	 * @see {@link ResourceConstants} for available keys
 	 */
 	private final Map<String, TextureRegion> texMap;
 	
 	/**
+	 * Map key->Array of TextureRegion's.
+	 * <br>
+	 * Hint: <code>frameSetMap.keySet() intersection texMap.keySet() = { }</code>.
+	 * 
+	 * @see {@link ResourceConstants} for available keys
+	 */
+	private final Map<String, Array<TextureRegion>> frameSetMap;
+	
+	/**
 	 * Main textureAtlas
 	 */
 	private final TextureAtlas texAtlas;
-	
+		
 	/**
 	 * Will be returned if texMap.get(key) == null
 	 */
@@ -29,8 +45,9 @@ public class ResourceHandler implements IResourceHandler {
 	 */
 	public ResourceHandler(final String pathToAtlas) {
 		this.texMap = new HashMap<>();
+		this.frameSetMap = new HashMap<>();
 		this.texAtlas = new TextureAtlas(pathToAtlas);
-		
+
 		this.createRegions();
 	}
 	
@@ -62,6 +79,41 @@ public class ResourceHandler implements IResourceHandler {
 		this.texMap.put(ResourceConstants.DEFAULT_RES_10, circle);
 		//TODO finish this
 	}
+
+	@Override
+	public RenderUnit createRenderUnit(final String key) {
+		if (texMap.containsKey(key)) {
+			final RenderUnit result = new RenderUnit();
+			result.initAsTexture(texMap.get(key));
+			return result;
+		}
+		else if (frameSetMap.containsKey(key)) {
+			final RenderUnit result = new RenderUnit();
+			//TODO modify for texture-packs (optional)
+			result.initAsAnimation(frameSetMap.get(key), PlayMode.LOOP, 1); 
+			return result;
+		}
+		return null;
+	}
+
+	@Override
+	public RenderUnit[] createRenderUnit(final String... keys) {
+		final RenderUnit[] renderUnits = new RenderUnit[keys.length];
+		for (int i = 0; i < keys.length; ++i) {
+			if (texMap.containsKey(keys[i])) {
+				final RenderUnit result = new RenderUnit();
+				result.initAsTexture(texMap.get(keys[i]));
+				renderUnits[i] = result;
+			}
+			else if (frameSetMap.containsKey(keys[i])) {
+				final RenderUnit result = new RenderUnit();
+				//TODO modify for texture-packs (optional)
+				result.initAsAnimation(frameSetMap.get(keys[i]), PlayMode.LOOP, 1); 
+				renderUnits[i] = result;
+			}
+		}
+		return renderUnits;
+	}
 	
 	@Override
 	public TextureRegion getRegion(final String key) {
@@ -85,6 +137,8 @@ public class ResourceHandler implements IResourceHandler {
 		this.texAtlas.dispose();
 	}
 	
-	
+	public void loadTexturePack(final String name) {
+		//TODO implement (optional)
+	}
 
 }
