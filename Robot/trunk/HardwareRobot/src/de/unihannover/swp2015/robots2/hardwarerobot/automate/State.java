@@ -1,10 +1,9 @@
 package de.unihannover.swp2015.robots2.hardwarerobot.automate;
 
-import de.unihannover.swp2015.robots2.hardwarerobot.pi2gocontroller.LEDAndServoController;
-
 import java.awt.Color;
 
 import de.unihannover.swp2015.robots2.hardwarerobot.pi2gocontroller.EngineController;
+import de.unihannover.swp2015.robots2.hardwarerobot.pi2gocontroller.LEDAndServoController;
 import de.unihannover.swp2015.robots2.hardwarerobot.pi2gocontroller.Pi2GoGPIOController;
 
 /**
@@ -13,7 +12,7 @@ import de.unihannover.swp2015.robots2.hardwarerobot.pi2gocontroller.Pi2GoGPIOCon
  * @author Philipp Rohde
  */
 public enum State {
-	
+
 	/**
 	 * The robot follows a line until he reaches the next junction.
 	 */
@@ -23,8 +22,7 @@ public enum State {
 			if (GPIO.isLineLeft() && GPIO.isLineRight()) {
 				DRIVE_ON_CELL_STATE.execute();
 				return DRIVE_ON_CELL_STATE;
-			}
-			else {
+			} else {
 				this.execute();
 				return this;
 			}
@@ -34,18 +32,16 @@ public enum State {
 		protected void execute() {
 			boolean left = GPIO.isLineLeft();
 			boolean right = GPIO.isLineRight();
-			
+
 			if (!left && !right) {
-				LEDS.setServo(LEDAndServoController.S15, 0);
+				setServo(0);
 				ENGINE.go(FAST);
-			}
-			else if (right) {
-				LEDS.setServo(LEDAndServoController.S15, 20);
+			} else if (right) {
+				setServo(20);
 				ENGINE.go(FAST, SLOW);
-			}
-			else if (left) {
-				LEDS.setServo(LEDAndServoController.S15, -20);
-				ENGINE.go(SLOW, FAST);			
+			} else if (left) {
+				setServo(-20);
+				ENGINE.go(SLOW, FAST);
 			}
 		}
 
@@ -60,20 +56,19 @@ public enum State {
 	 * The robot drives fully onto the cell.
 	 */
 	DRIVE_ON_CELL_STATE {
-		
+
 		private long startTime;
 		private static final double DRIVE_DURATION = 320;
-		
+
 		@Override
 		public State getNextState() {
-			setProgress(((System.currentTimeMillis()-startTime)/DRIVE_DURATION));
-			if(getProgress() >= 1.0) {
+			setProgress(((System.currentTimeMillis() - startTime) / DRIVE_DURATION));
+			if (getProgress() >= 1.0) {
 				WAIT_STATE.execute();
 				return WAIT_STATE;
-			}
-			else {
+			} else {
 				this.execute();
-				return this;	
+				return this;
 			}
 		}
 
@@ -81,23 +76,20 @@ public enum State {
 		protected void execute() {
 			boolean left = GPIO.isLineLeft();
 			boolean right = GPIO.isLineRight();
-			
+
 			if (left && right) {
 				ENGINE.go(FAST);
-				LEDS.setServo(LEDAndServoController.S15, 0);
-			}
-			else if (!right && !left) {
+				setServo(0);
+			} else if (!right && !left) {
 				ENGINE.go(FAST);
-				LEDS.setServo(LEDAndServoController.S15, 0);
-			}
-			else if (right) {
+				setServo(0);
+			} else if (right) {
 				ENGINE.go(FAST, SLOW);
-				LEDS.setServo(LEDAndServoController.S15, 20);
-			}
-			else if (left) {
+				setServo(20);
+			} else if (left) {
 				ENGINE.go(SLOW, FAST);
-				LEDS.setServo(LEDAndServoController.S15, -20);
-			}			
+				setServo(-20);
+			}
 		}
 
 		@Override
@@ -138,8 +130,7 @@ public enum State {
 			if (GPIO.isLineLeft()) {
 				this.execute();
 				return this;
-			}
-			else {
+			} else {
 				TURN_LEFT_2_STATE.execute();
 				return TURN_LEFT_2_STATE;
 			}
@@ -147,7 +138,7 @@ public enum State {
 
 		@Override
 		protected void execute() {
-			LEDS.setServo(LEDAndServoController.S15, -50);
+			setServo(-50);
 			ENGINE.spinRight(TURN);
 		}
 
@@ -167,8 +158,7 @@ public enum State {
 			if (!GPIO.isLineLeft()) {
 				this.execute();
 				return this;
-			}
-			else {
+			} else {
 				LINE_FOLLOW_STATE.execute();
 				return LINE_FOLLOW_STATE;
 			}
@@ -176,7 +166,7 @@ public enum State {
 
 		@Override
 		protected void execute() {
-			LEDS.setServo(LEDAndServoController.S15, -50);
+			setServo(-50);
 			ENGINE.spinRight(TURN);
 		}
 
@@ -184,7 +174,7 @@ public enum State {
 		public void start() {
 			setLED(LEDS_LEFT, COLOR_DEFAULT);
 			setServo(-50);
-			this.execute();	
+			this.execute();
 		}
 	},
 	/**
@@ -196,8 +186,7 @@ public enum State {
 			if (GPIO.isLineRight()) {
 				this.execute();
 				return this;
-			}
-			else {
+			} else {
 				TURN_RIGHT_2_STATE.execute();
 				return TURN_RIGHT_2_STATE;
 			}
@@ -205,7 +194,7 @@ public enum State {
 
 		@Override
 		protected void execute() {
-			LEDS.setServo(LEDAndServoController.S15, 50);
+			setServo(50);
 			ENGINE.spinLeft(TURN);
 		}
 
@@ -225,8 +214,7 @@ public enum State {
 			if (!GPIO.isLineRight()) {
 				this.execute();
 				return this;
-			}
-			else {
+			} else {
 				LINE_FOLLOW_STATE.execute();
 				return LINE_FOLLOW_STATE;
 			}
@@ -234,7 +222,7 @@ public enum State {
 
 		@Override
 		protected void execute() {
-			LEDS.setServo(LEDAndServoController.S15, 50);
+			setServo(50);
 			ENGINE.spinLeft(TURN);
 		}
 
@@ -254,8 +242,7 @@ public enum State {
 			if (GPIO.isLineLeft()) {
 				this.execute();
 				return this;
-			}
-			else {
+			} else {
 				TURN_180_2_STATE.execute();
 				return TURN_180_2_STATE;
 			}
@@ -263,7 +250,7 @@ public enum State {
 
 		@Override
 		protected void execute() {
-			LEDS.setServo(LEDAndServoController.S15, -50);
+			setServo(-50);
 			ENGINE.spinRight(TURN);
 		}
 
@@ -284,8 +271,7 @@ public enum State {
 			if (!GPIO.isLineLeft()) {
 				this.execute();
 				return this;
-			}
-			else {
+			} else {
 				TURN_180_3_STATE.execute();
 				return TURN_180_3_STATE;
 			}
@@ -293,7 +279,7 @@ public enum State {
 
 		@Override
 		protected void execute() {
-			LEDS.setServo(LEDAndServoController.S15, -50);
+			setServo(-50);
 			ENGINE.spinRight(TURN);
 		}
 
@@ -302,7 +288,7 @@ public enum State {
 			setLED(LEDS_LEFT, COLOR_DEFAULT);
 			setLED(LEDS_REAR, COLOR_BREAK);
 			setServo(-50);
-			this.execute();			
+			this.execute();
 		}
 	},
 	/**
@@ -314,8 +300,7 @@ public enum State {
 			if (!GPIO.isLineRight()) {
 				this.execute();
 				return this;
-			}
-			else {
+			} else {
 				TURN_180_4_STATE.execute();
 				return TURN_180_4_STATE;
 			}
@@ -323,7 +308,7 @@ public enum State {
 
 		@Override
 		protected void execute() {
-			LEDS.setServo(LEDAndServoController.S15, 0);
+			setServo(0);
 			ENGINE.go(-FAST);
 		}
 
@@ -344,8 +329,7 @@ public enum State {
 			if (!GPIO.isLineLeft()) {
 				this.execute();
 				return this;
-			}
-			else {
+			} else {
 				LINE_FOLLOW_STATE.execute();
 				return LINE_FOLLOW_STATE;
 			}
@@ -365,37 +349,37 @@ public enum State {
 			this.execute();
 		}
 	};
-	
+
 	// speed configuration
 	private final static int FAST = 40;
 	private final static int TURN = 20;
 	private final static int SLOW = 15;
 	private final static int STOP = 0;
-	
+
 	// Pi2GO controller
 	private final static LEDAndServoController LEDS = LEDAndServoController.getInstance();
 	private final static Pi2GoGPIOController GPIO = Pi2GoGPIOController.getInstance();
 	private final static EngineController ENGINE = EngineController.getInstance();
-	
+
 	// LEDs
 	private final static int LEDS_FRONT = LEDAndServoController.FRONT;
 	private final static int LEDS_REAR = LEDAndServoController.REAR;
 	private final static int LEDS_LEFT = LEDAndServoController.LEFT;
 	private final static int LEDS_RIGHT = LEDAndServoController.RIGHT;
-	
+
 	// LED colors
 	private final static Color COLOR_BREAK = Color.RED;
 	private final static Color COLOR_DEFAULT = Color.WHITE;
-	
-	private double progress = 0;
-	
+
+	private double progress = 0.0;
+
 	/**
 	 * Gets the next state according to the sensor values.
 	 * 
 	 * @return the next state of the automate
 	 */
 	public abstract State getNextState();
-	
+
 	/**
 	 * Controls the LEDs and engine according to the current state.
 	 */
@@ -404,7 +388,7 @@ public enum State {
 	/**
 	 * Gets the progress of the current state.
 	 * 
-	 * @return	0.0 <= progress <= 1.0
+	 * @return 0.0 <= progress <= 1.0
 	 */
 	public double getProgress() {
 		if (progress > 1.0) {
@@ -416,43 +400,47 @@ public enum State {
 	/**
 	 * Sets the progress of the current state.
 	 * 
-	 * @param progress 0.0 <= progress
+	 * @param progress
+	 *            0.0 <= progress
 	 */
 	protected void setProgress(double progress) {
 		this.progress = progress;
 	}
-	
+
 	/**
 	 * Starts the current state.
 	 */
 	public abstract void start();
-	
+
 	/**
-	 * Resets all LEDs to black. 
+	 * Resets all LEDs to black.
 	 */
 	protected void resetLED() {
 		LEDS.setAllLEDs(Color.BLACK);
-		//LEDS.setLED(LEDS_FRONT, Color.WHITE);
+		// LEDS.setLED(LEDS_FRONT, Color.WHITE);
 	}
-	
+
 	/**
 	 * Sets the specified LEDs to the specified color.
 	 * 
-	 * @param	led		the LEDs to color
-	 * @param	color	the color of the LEDs
+	 * @param led
+	 *            the LEDs to color
+	 * @param color
+	 *            the color of the LEDs
 	 */
 	protected void setLED(int led, Color color) {
 		resetLED();
 		LEDS.setLED(led, color);
 	}
-	
+
 	/**
 	 * Sets the servo to the specified degree.
-	 *  
-	 * @param	degree	the degrees to set the servo to
+	 * 
+	 * @param degree
+	 *            the degrees to set the servo to
 	 */
 	protected void setServo(double degree) {
 		LEDS.setServo(LEDAndServoController.S15, degree);
 	}
-	
+
 }
