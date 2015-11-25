@@ -64,8 +64,9 @@ public enum MqttTopic {
 					return topic;
 				} else if (expression.charAt(j) == '+') {
 					// Wildcard for any string before next slash
-					while (input.charAt(i) != '/' && i < input.length())
+					while (i < input.length() && input.charAt(i) != '/')
 						i++;
+					j++;
 				} else {
 					// Strings to not match
 					break;
