@@ -22,7 +22,32 @@ public interface IPosition {
 	 * @author Michael Thies
 	 */
 	public enum Orientation {
-		NORTH, EAST, SOUTH, WEST
+		NORTH("n"), EAST("e"), SOUTH("s"), WEST("w");
+		
+		private String orientation;
+		
+		private Orientation(String orientation) {
+			this.orientation = orientation;
+		}
+		
+		public static Orientation getBy(String text) {
+		    if( text.equals("n") ) {
+		    	return NORTH;
+		    } else if( text.equals("e") ) {
+		    	return EAST;
+		    } else if( text.equals("s") ) {
+		    	return SOUTH;
+		    } else if( text.equals("w") ) {
+		    	return WEST;
+		    } else {
+		    	throw new IllegalArgumentException("No constant with representation "+text+" found!");
+		    }
+		}
+		
+		@Override
+		public String toString() {
+			return this.orientation;
+		}
 	}
 
 	/**
