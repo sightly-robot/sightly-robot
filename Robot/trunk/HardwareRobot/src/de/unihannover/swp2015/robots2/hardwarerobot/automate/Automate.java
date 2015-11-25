@@ -29,7 +29,7 @@ public class Automate implements AiEventObserver, Runnable {
 	private static final long LOOP_WAIT_MS = 30;
 
 	// State:
-	private State state = State.WAIT_STATE;
+	private State state = State.WAIT;
 
 	// Positioning:
 	private Point nextPosition = new Point(0, 0);
@@ -62,7 +62,7 @@ public class Automate implements AiEventObserver, Runnable {
 			tempState = state.getNextState();
 
 			if (state != tempState) {
-				if (tempState == State.WAIT_STATE) {
+				if (tempState == State.WAIT) {
 					// Update Only Position:
 					robotController.updatePosition(nextPosition.x, nextPosition.y,
 							robot.getPosition().getOrientation());
@@ -84,7 +84,7 @@ public class Automate implements AiEventObserver, Runnable {
 
 	@Override
 	public boolean nextOrientationEvent(Orientation orientation) {
-		if (state == State.WAIT_STATE) {
+		if (state == State.WAIT) {
 			nextPosition.setLocation(robot.getPosition().getX(), robot.getPosition().getY());
 			switch (orientation) {
 			case NORTH:
@@ -126,53 +126,53 @@ public class Automate implements AiEventObserver, Runnable {
 		case NORTH:
 			switch (robot.getPosition().getOrientation()) {
 			case EAST:
-				return State.TURN_LEFT_1_STATE;
+				return State.TURN_LEFT_1;
 			case SOUTH:
-				return State.TURN_180_1_STATE;
+				return State.TURN_180_1;
 			case WEST:
-				return State.TURN_RIGHT_1_STATE;
+				return State.TURN_RIGHT_1;
 			case NORTH:
-				return State.LINE_FOLLOW_STATE;
+				return State.FOLLOW_LINE;
 			}
 			break;
 		case EAST:
 			switch (robot.getPosition().getOrientation()) {
 			case NORTH:
-				return State.TURN_RIGHT_1_STATE;
+				return State.TURN_RIGHT_1;
 			case WEST:
-				return State.TURN_180_1_STATE;
+				return State.TURN_180_1;
 			case SOUTH:
-				return State.TURN_LEFT_1_STATE;
+				return State.TURN_LEFT_1;
 			case EAST:
-				return State.LINE_FOLLOW_STATE;
+				return State.FOLLOW_LINE;
 			}
 			break;
 		case SOUTH:
 			switch (robot.getPosition().getOrientation()) {
 			case EAST:
-				return State.TURN_RIGHT_1_STATE;
+				return State.TURN_RIGHT_1;
 			case NORTH:
-				return State.TURN_180_1_STATE;
+				return State.TURN_180_1;
 			case WEST:
-				return State.TURN_LEFT_1_STATE;
+				return State.TURN_LEFT_1;
 			case SOUTH:
-				return State.LINE_FOLLOW_STATE;
+				return State.FOLLOW_LINE;
 			}
 			break;
 		case WEST:
 			switch (robot.getPosition().getOrientation()) {
 			case SOUTH:
-				return State.TURN_RIGHT_1_STATE;
+				return State.TURN_RIGHT_1;
 			case EAST:
-				return State.TURN_180_1_STATE;
+				return State.TURN_180_1;
 			case NORTH:
-				return State.TURN_LEFT_1_STATE;
+				return State.TURN_LEFT_1;
 			case WEST:
-				return State.LINE_FOLLOW_STATE;
+				return State.FOLLOW_LINE;
 			}
 			break;
 		}
-		return State.LINE_FOLLOW_STATE;
+		return State.FOLLOW_LINE;
 	}
 
 }

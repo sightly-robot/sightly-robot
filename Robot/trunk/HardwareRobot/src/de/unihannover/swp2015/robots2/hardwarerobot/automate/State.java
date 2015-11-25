@@ -16,12 +16,12 @@ public enum State {
 	/**
 	 * The robot follows a line until he reaches the next junction.
 	 */
-	LINE_FOLLOW_STATE {
+	FOLLOW_LINE {
 		@Override
 		public State getNextState() {
 			if (GPIO.isLineLeft() && GPIO.isLineRight()) {
-				DRIVE_ON_CELL_STATE.execute();
-				return DRIVE_ON_CELL_STATE;
+				DRIVE_ON_CELL.execute();
+				return DRIVE_ON_CELL;
 			} else {
 				this.execute();
 				return this;
@@ -55,7 +55,7 @@ public enum State {
 	/**
 	 * The robot drives fully onto the cell.
 	 */
-	DRIVE_ON_CELL_STATE {
+	DRIVE_ON_CELL {
 
 		private long startTime;
 		private static final double DRIVE_DURATION = 320;
@@ -64,8 +64,8 @@ public enum State {
 		public State getNextState() {
 			setProgress(((System.currentTimeMillis() - startTime) / DRIVE_DURATION));
 			if (getProgress() >= 1.0) {
-				WAIT_STATE.execute();
-				return WAIT_STATE;
+				WAIT.execute();
+				return WAIT;
 			} else {
 				this.execute();
 				return this;
@@ -103,7 +103,7 @@ public enum State {
 	/**
 	 * The robot awaits a new command.
 	 */
-	WAIT_STATE {
+	WAIT {
 		@Override
 		public State getNextState() {
 			this.execute();
@@ -124,15 +124,15 @@ public enum State {
 	/**
 	 * First part of turning left.
 	 */
-	TURN_LEFT_1_STATE {
+	TURN_LEFT_1 {
 		@Override
 		public State getNextState() {
 			if (GPIO.isLineLeft()) {
 				this.execute();
 				return this;
 			} else {
-				TURN_LEFT_2_STATE.execute();
-				return TURN_LEFT_2_STATE;
+				TURN_LEFT_2.execute();
+				return TURN_LEFT_2;
 			}
 		}
 
@@ -152,15 +152,15 @@ public enum State {
 	/**
 	 * Second part of turning left.
 	 */
-	TURN_LEFT_2_STATE {
+	TURN_LEFT_2 {
 		@Override
 		public State getNextState() {
 			if (!GPIO.isLineLeft()) {
 				this.execute();
 				return this;
 			} else {
-				LINE_FOLLOW_STATE.execute();
-				return LINE_FOLLOW_STATE;
+				FOLLOW_LINE.execute();
+				return FOLLOW_LINE;
 			}
 		}
 
@@ -180,15 +180,15 @@ public enum State {
 	/**
 	 * First part of turning right.
 	 */
-	TURN_RIGHT_1_STATE {
+	TURN_RIGHT_1 {
 		@Override
 		public State getNextState() {
 			if (GPIO.isLineRight()) {
 				this.execute();
 				return this;
 			} else {
-				TURN_RIGHT_2_STATE.execute();
-				return TURN_RIGHT_2_STATE;
+				TURN_RIGHT_2.execute();
+				return TURN_RIGHT_2;
 			}
 		}
 
@@ -208,15 +208,15 @@ public enum State {
 	/**
 	 * Second part of turning right.
 	 */
-	TURN_RIGHT_2_STATE {
+	TURN_RIGHT_2 {
 		@Override
 		public State getNextState() {
 			if (!GPIO.isLineRight()) {
 				this.execute();
 				return this;
 			} else {
-				LINE_FOLLOW_STATE.execute();
-				return LINE_FOLLOW_STATE;
+				FOLLOW_LINE.execute();
+				return FOLLOW_LINE;
 			}
 		}
 
@@ -236,15 +236,15 @@ public enum State {
 	/**
 	 * First part of turning 180 degrees.
 	 */
-	TURN_180_1_STATE {
+	TURN_180_1 {
 		@Override
 		public State getNextState() {
 			if (GPIO.isLineLeft()) {
 				this.execute();
 				return this;
 			} else {
-				TURN_180_2_STATE.execute();
-				return TURN_180_2_STATE;
+				TURN_180_2.execute();
+				return TURN_180_2;
 			}
 		}
 
@@ -265,15 +265,15 @@ public enum State {
 	/**
 	 * Second part of turning 180 degrees.
 	 */
-	TURN_180_2_STATE {
+	TURN_180_2 {
 		@Override
 		public State getNextState() {
 			if (!GPIO.isLineLeft()) {
 				this.execute();
 				return this;
 			} else {
-				TURN_180_3_STATE.execute();
-				return TURN_180_3_STATE;
+				TURN_180_3.execute();
+				return TURN_180_3;
 			}
 		}
 
@@ -294,15 +294,15 @@ public enum State {
 	/**
 	 * Third part of turning 180 degrees.
 	 */
-	TURN_180_3_STATE {
+	TURN_180_3 {
 		@Override
 		public State getNextState() {
 			if (!GPIO.isLineRight()) {
 				this.execute();
 				return this;
 			} else {
-				TURN_180_4_STATE.execute();
-				return TURN_180_4_STATE;
+				TURN_180_4.execute();
+				return TURN_180_4;
 			}
 		}
 
@@ -323,15 +323,15 @@ public enum State {
 	/**
 	 * Fourth part of turning 180 degrees.
 	 */
-	TURN_180_4_STATE {
+	TURN_180_4 {
 		@Override
 		public State getNextState() {
 			if (!GPIO.isLineLeft()) {
 				this.execute();
 				return this;
 			} else {
-				LINE_FOLLOW_STATE.execute();
-				return LINE_FOLLOW_STATE;
+				FOLLOW_LINE.execute();
+				return FOLLOW_LINE;
 			}
 		}
 
