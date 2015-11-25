@@ -14,7 +14,9 @@ import de.unihannover.swp2015.robots2.hardwarerobot.pi2gocontroller.Pi2GoGPIOCon
  */
 public enum State {
 	
-	/** The robot follows a line until he reaches the next junction. */
+	/**
+	 * The robot follows a line until he reaches the next junction.
+	 */
 	LINE_FOLLOW_STATE {
 		@Override
 		public State getNextState() {
@@ -54,7 +56,9 @@ public enum State {
 			this.execute();
 		}
 	},
-	/** The robot drives fully onto the cell. */
+	/**
+	 * The robot drives fully onto the cell.
+	 */
 	DRIVE_ON_CELL_STATE {
 		
 		private long startTime;
@@ -104,7 +108,9 @@ public enum State {
 			this.execute();
 		}
 	},
-	/** The robot awaits a new command. */
+	/**
+	 * The robot awaits a new command.
+	 */
 	WAIT_STATE {
 		@Override
 		public State getNextState() {
@@ -123,7 +129,9 @@ public enum State {
 			this.execute();
 		}
 	},
-	/** First part of turning left. */
+	/**
+	 * First part of turning left.
+	 */
 	TURN_LEFT_1_STATE {
 		@Override
 		public State getNextState() {
@@ -150,7 +158,9 @@ public enum State {
 			this.execute();
 		}
 	},
-	/** Second part of turning left. */
+	/**
+	 * Second part of turning left.
+	 */
 	TURN_LEFT_2_STATE {
 		@Override
 		public State getNextState() {
@@ -177,7 +187,9 @@ public enum State {
 			this.execute();	
 		}
 	},
-	/** First part of turning right. */
+	/**
+	 * First part of turning right.
+	 */
 	TURN_RIGHT_1_STATE {
 		@Override
 		public State getNextState() {
@@ -204,7 +216,9 @@ public enum State {
 			this.execute();
 		}
 	},
-	/** Second part of turning right. */
+	/**
+	 * Second part of turning right.
+	 */
 	TURN_RIGHT_2_STATE {
 		@Override
 		public State getNextState() {
@@ -231,7 +245,9 @@ public enum State {
 			this.execute();
 		}
 	},
-	/** First part of turning 180 degrees. */
+	/**
+	 * First part of turning 180 degrees.
+	 */
 	TURN_180_1_STATE {
 		@Override
 		public State getNextState() {
@@ -259,7 +275,9 @@ public enum State {
 			this.execute();
 		}
 	},
-	/** Second part of turning 180 degrees. */
+	/**
+	 * Second part of turning 180 degrees.
+	 */
 	TURN_180_2_STATE {
 		@Override
 		public State getNextState() {
@@ -287,7 +305,9 @@ public enum State {
 			this.execute();			
 		}
 	},
-	/** Third part of turning 180 degrees. */
+	/**
+	 * Third part of turning 180 degrees.
+	 */
 	TURN_180_3_STATE {
 		@Override
 		public State getNextState() {
@@ -315,7 +335,9 @@ public enum State {
 			this.execute();
 		}
 	},
-	/** Fourth part of turning 180 degrees. */
+	/**
+	 * Fourth part of turning 180 degrees.
+	 */
 	TURN_180_4_STATE {
 		@Override
 		public State getNextState() {
@@ -379,26 +401,56 @@ public enum State {
 	 */
 	protected abstract void execute();
 
+	/**
+	 * Gets the progress of the current state.
+	 * 
+	 * @return	0.0 <= progress <= 1.0
+	 */
 	public double getProgress() {
+		if (progress > 1.0) {
+			progress = 1.0;
+		}
 		return progress;
 	}
 
-	public void setProgress(double progress) {
+	/**
+	 * Sets the progress of the current state.
+	 * 
+	 * @param progress 0.0 <= progress
+	 */
+	protected void setProgress(double progress) {
 		this.progress = progress;
 	}
 	
+	/**
+	 * Starts the current state.
+	 */
 	public abstract void start();
 	
+	/**
+	 * Resets all LEDs to black. 
+	 */
 	protected void resetLED() {
 		LEDS.setAllLEDs(Color.BLACK);
-		LEDS.setLED(LEDS_FRONT, Color.WHITE);
+		//LEDS.setLED(LEDS_FRONT, Color.WHITE);
 	}
 	
+	/**
+	 * Sets the specified LEDs to the specified color.
+	 * 
+	 * @param	led		the LEDs to color
+	 * @param	color	the color of the LEDs
+	 */
 	protected void setLED(int led, Color color) {
 		resetLED();
 		LEDS.setLED(led, color);
 	}
 	
+	/**
+	 * Sets the servo to the specified degree.
+	 *  
+	 * @param	degree	the degrees to set the servo to
+	 */
 	protected void setServo(double degree) {
 		LEDS.setServo(LEDAndServoController.S15, degree);
 	}
