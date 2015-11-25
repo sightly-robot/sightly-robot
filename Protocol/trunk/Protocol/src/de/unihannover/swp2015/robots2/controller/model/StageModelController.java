@@ -17,6 +17,7 @@ public class StageModelController {
 	 */
 	public void mqttSetWalls(String message) {
 		// TODO implement method
+		// TODO emit Event (Stage)
 	}
 	
 	/**
@@ -26,6 +27,7 @@ public class StageModelController {
 	 */
 	public void mqttSetFood(String message) {
 		// TODO implement method
+		// TODO emit Event (Field)
 	}
 	
 	/**
@@ -35,6 +37,7 @@ public class StageModelController {
 	 */
 	public void mqttSetFieldFood(int x, int y, int value) {
 		// TODO implement method
+		// TODO emit Event (Field)
 	}
 
 }

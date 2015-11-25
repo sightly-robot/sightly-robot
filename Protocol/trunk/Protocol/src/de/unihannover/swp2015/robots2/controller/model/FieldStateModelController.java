@@ -48,16 +48,18 @@ public class FieldStateModelController {
 	 * Updates the state of the field (given by id in MQTT topic) dependent on
 	 * its current state.
 	 * 
-	 * @param topic
+	 * @param key
 	 *            MQTT Topic string of the message
 	 * @param message
 	 *            MQTT payload
 	 */
-	public void mqttFieldLock(String topic, String message) {
-		int[] coordinates = parseFieldFromTopic(topic);
+	public void mqttFieldLock(String key, String message) {
+		String[] coord = key.split("-");
+		int x = Integer.parseInt(coord[0]);
+		int y = Integer.parseInt(coord[1]);
 
-		IFieldWriteable f = this.stage.getFieldWriteable(coordinates[0],
-				coordinates[1]);
+		IFieldWriteable f = this.stage.getFieldWriteable(x,
+				y);
 
 		switch (f.getState()) {
 		case FREE:
@@ -98,16 +100,18 @@ public class FieldStateModelController {
 	 * Updates the state of the field (given by id in MQTT topic) dependent on
 	 * its current state.
 	 * 
-	 * @param topic
+	 * @param key
 	 *            MQTT Topic string of the message
 	 * @param message
 	 *            MQTT payload
 	 */
-	public void mqttFieldOccupy(String topic, String message) {
-		int[] coordinates = parseFieldFromTopic(topic);
+	public void mqttFieldOccupy(String key, String message) {
+		String[] coord = key.split("-");
+		int x = Integer.parseInt(coord[0]);
+		int y = Integer.parseInt(coord[1]);
 
-		IFieldWriteable f = this.stage.getFieldWriteable(coordinates[0],
-				coordinates[1]);
+		IFieldWriteable f = this.stage.getFieldWriteable(x,
+				y);
 
 		if (f.getState() != State.OURS) {
 			f.cancelStateTimer();
@@ -123,16 +127,18 @@ public class FieldStateModelController {
 	 * Updates the state of the field (given by id in MQTT topic) dependent on
 	 * its current state.
 	 * 
-	 * @param topic
+	 * @param key
 	 *            MQTT Topic string of the message
 	 * @param message
 	 *            MQTT payload
 	 */
-	public void mqttFieldRelease(String topic, String message) {
-		int[] coordinates = parseFieldFromTopic(topic);
+	public void mqttFieldRelease(String key, String message) {
+		String[] coord = key.split("-");
+		int x = Integer.parseInt(coord[0]);
+		int y = Integer.parseInt(coord[1]);
 
-		IFieldWriteable f = this.stage.getFieldWriteable(coordinates[0],
-				coordinates[1]);
+		IFieldWriteable f = this.stage.getFieldWriteable(x,
+				y);
 
 		switch (f.getState()) {
 		case LOCKED:
@@ -204,22 +210,5 @@ public class FieldStateModelController {
 
 		f.setState(State.FREE);
 		f.emitEvent(UpdateType.FIELD_STATE);
-	}
-
-	/**
-	 * Parse coordinates of field id from a topic. The ID must be in format
-	 * "x-y" and make up the last part of the topic.
-	 * 
-	 * @param topic
-	 *            The MQTT topic string
-	 * @return An integer array with the field coordinates [0] = x and [1] = y
-	 */
-	private int[] parseFieldFromTopic(String topic) {
-		String[] split1 = topic.split("/");
-		String[] split2 = split1[split1.length - 1].split("-");
-		int x = Integer.parseInt(split2[0]);
-		int y = Integer.parseInt(split2[0]);
-
-		return new int[] { x, y };
 	}
 }

@@ -9,6 +9,7 @@ import de.unihannover.swp2015.robots2.controller.interfaces.IRobotController;
 import de.unihannover.swp2015.robots2.controller.mqtt.MqttController;
 import de.unihannover.swp2015.robots2.controller.mqtt.MqttTopic;
 import de.unihannover.swp2015.robots2.model.implementation.Robot;
+import de.unihannover.swp2015.robots2.model.interfaces.IEvent.UpdateType;
 import de.unihannover.swp2015.robots2.model.interfaces.IField.State;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
 import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
@@ -19,17 +20,19 @@ import de.unihannover.swp2015.robots2.model.writeableInterfaces.IRobotWriteable;
  * @version 0.1
  * @author Patrick Kawczynski
  */
-public class RobotMainController extends AbstractMainController implements IRobotController, IFieldTimerController {
+public class RobotMainController extends AbstractMainController implements
+		IRobotController, IFieldTimerController {
 
 	private IRobotWriteable myself;
 
 	public RobotMainController(boolean hardwareRobot) {
 		super();
 
-		String id = UUID.randomUUID().toString().substring(0,8);
+		String id = UUID.randomUUID().toString().substring(0, 8);
 		this.myself = new Robot(id, hardwareRobot, true);
 		this.game.addRobot(this.myself);
 
+		this.fieldStateModelController.setFieldTimerCallback(this);
 		this.infoComponent = "robot/" + id;
 	}
 
@@ -41,12 +44,17 @@ public class RobotMainController extends AbstractMainController implements IRobo
 			String[] subscribeTopics = {};
 
 			try {
-				this.mqttController = new MqttController(brokerUrl, clientId, this, Arrays.asList(subscribeTopics));
+				this.mqttController = new MqttController(brokerUrl, clientId,
+						this, Arrays.asList(subscribeTopics));
 				return true;
 			} catch (MqttException e) {
 				e.printStackTrace();
 				return false;
 			}
+
+			// TODO send robot/type
+			// TODO send robot/new
+			// TODO send robot/discover
 		} else {
 			return true;
 		}
@@ -57,59 +65,70 @@ public class RobotMainController extends AbstractMainController implements IRobo
 		MqttTopic mqtttopic = MqttTopic.getBy(topic);
 		String key = MqttTopic.getKey(topic);
 
-		if (mqtttopic != null) {
-			switch (mqtttopic) {
-			case ROBOT_DISCOVER:
-				String hardwareRobot = (this.myself.isHardwareRobot()) ? "real" : "virtual";
-				this.sendMqttMessage("robot/type/" + this.myself.getId(), hardwareRobot);
-				break;
-			case ROBOT_NEW:
-				String fieldId = this.myself.getPosition().getX() + "-" + this.myself.getPosition().getX();
-				this.sendMqttMessage("map/occupy/" + fieldId, this.myself.getId());
-				break;
-			case ROBOT_TYPE:
-				this.gameModelController.mqttAddRobot(key, message);
-				break;
-			case ROBOT_POSITION:
+		switch (mqtttopic) {
+		case ROBOT_DISCOVER:
+			String hardwareRobot = (this.myself.isHardwareRobot()) ? "real"
+					: "virtual";
+			this.sendMqttMessage(
+					MqttTopic.ROBOT_TYPE.toString(this.myself.getId()),
+					hardwareRobot);
+			break;
 
-			case ROBOT_SETPOSITION:
-				if (!this.game.isRunning() && key.equals(this.myself.getId())) {
-					String[] positionParts = message.split(",");
-					this.myself.setPosition(Integer.valueOf(positionParts[0]), Integer.valueOf(positionParts[1]),
-							Orientation.getBy(positionParts[2]));
-				}
-				break;
-			case ROBOT_VIRTUALSPEED:
-				this.gameModelController.mqttSetRobotVirtualspeed(Float.valueOf(message));
-				break;
-			case MAP_WALLS:
-				this.stageModelController.mqttSetWalls(message);
-				break;
-			case MAP_FOOD:
-				this.stageModelController.mqttSetFood(message);
-				break;
-			case FIELD_FOOD:
-				String[] coordinates = key.split("-");
-				if (coordinates.length == 2) {
-					this.stageModelController.mqttSetFieldFood(Integer.valueOf(coordinates[0]),
-							Integer.valueOf(coordinates[1]), Integer.valueOf(message));
-				}
-				break;
-			case FIELD_OCCUPIED_LOCK:
-				this.fieldStateModelController.mqttFieldLock(topic, message);
-				break;
-			case FIELD_OCCUPIED_SET:
-				this.fieldStateModelController.mqttFieldOccupy(topic, message);
-				break;
-			case FIELD_OCCUPIED_RELEASE:
-				this.fieldStateModelController.mqttFieldRelease(topic, message);
-				break;
-			case CONTROL_STATE:
-				this.gameModelController.mqttSetGameState(message);
-				break;
-			default:
-				break;
+		case ROBOT_NEW:
+			// TODO send all occupied fields
+			break;
+
+		case ROBOT_TYPE:
+			this.gameModelController.mqttAddRobot(key, message);
+			break;
+
+		case ROBOT_POSITION:
+		case ROBOT_SETPOSITION:
+			this.robotModelController.mqttRobotPosition(key, message,
+					mqtttopic == MqttTopic.ROBOT_SETPOSITION);
+			break;
+
+		case ROBOT_VIRTUALSPEED:
+			this.gameModelController.mqttSetRobotVirtualspeed(Float
+					.valueOf(message));
+			break;
+
+		case MAP_WALLS:
+			this.stageModelController.mqttSetWalls(message);
+			break;
+
+		case MAP_FOOD:
+			this.stageModelController.mqttSetFood(message);
+			break;
+
+		case FIELD_FOOD:
+			String[] coordinates = key.split("-");
+			if (coordinates.length == 2) {
+				this.stageModelController.mqttSetFieldFood(
+						Integer.valueOf(coordinates[0]),
+						Integer.valueOf(coordinates[1]),
+						Integer.valueOf(message));
 			}
+			break;
+
+		case FIELD_OCCUPIED_LOCK:
+			this.fieldStateModelController.mqttFieldLock(key, message);
+			break;
+
+		case FIELD_OCCUPIED_SET:
+			this.fieldStateModelController.mqttFieldOccupy(key, message);
+			break;
+
+		case FIELD_OCCUPIED_RELEASE:
+			this.fieldStateModelController.mqttFieldRelease(key, message);
+			break;
+
+		case CONTROL_STATE:
+			this.gameModelController.mqttSetGameState(message);
+			break;
+
+		default:
+			break;
 		}
 
 	}
@@ -131,13 +150,17 @@ public class RobotMainController extends AbstractMainController implements IRobo
 		if (this.game.getStage().getField(x, y).getState() != State.FREE)
 			return;
 
-		this.sendMqttMessage(MqttTopic.FIELD_OCCUPIED_LOCK.toString(x + "-" + y), this.myself.getId());
+		this.sendMqttMessage(
+				MqttTopic.FIELD_OCCUPIED_LOCK.toString(x + "-" + y),
+				this.myself.getId());
 		this.fieldStateModelController.setFieldLock(x, y);
 	}
 
 	@Override
 	public void releaseField(int x, int y) {
-		this.sendMqttMessage(MqttTopic.FIELD_OCCUPIED_RELEASE.toString(x + "-" + y), this.myself.getId());
+		this.sendMqttMessage(
+				MqttTopic.FIELD_OCCUPIED_RELEASE.toString(x + "-" + y),
+				this.myself.getId());
 		this.fieldStateModelController.setFieldRelease(x, y);
 	}
 
@@ -159,7 +182,9 @@ public class RobotMainController extends AbstractMainController implements IRobo
 
 	@Override
 	public void occupyField(int x, int y) {
-		this.sendMqttMessage(MqttTopic.FIELD_OCCUPIED_SET.toString(x + "-" + y), this.myself.getId());
+		this.sendMqttMessage(
+				MqttTopic.FIELD_OCCUPIED_SET.toString(x + "-" + y),
+				this.myself.getId());
 		this.fieldStateModelController.setFieldOccupy(x, y);
 	}
 }
