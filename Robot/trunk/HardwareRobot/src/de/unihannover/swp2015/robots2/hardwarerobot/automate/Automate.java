@@ -101,13 +101,13 @@ public class Automate implements AiEventObserver, Runnable {
 				break;
 			}
 
-			// Update Only Orientation:
-			robotController.updatePosition(robot.getPosition().getX(), robot.getPosition().getY(), orientation);
-
 			// Set new State:
 			state = getStateForOrientation(orientation);
 			System.out.println(state.name());
 
+			// Update Only Orientation:
+			robotController.updatePosition(robot.getPosition().getX(), robot.getPosition().getY(), orientation);
+			
 			synchronized (automation) {
 				automation.notify();
 			}
@@ -122,6 +122,7 @@ public class Automate implements AiEventObserver, Runnable {
 	}
 
 	private State getStateForOrientation(Orientation orientation) {
+		System.out.println("getStateForOrientation: " + orientation.name() + "\t robot orientation: " + robot.getPosition().getOrientation().name());
 		switch (orientation) {
 		case NORTH:
 			switch (robot.getPosition().getOrientation()) {
