@@ -5,7 +5,8 @@ import com.pi4j.wiringpi.SoftPwm;
 
 /**
  * The MotorController is used for controlling the speed of two motors.<br>
- * It is not instantiable because it uses the Singleton pattern. Use the instance instead.
+ * It is not instantiable because it uses the Singleton pattern. Use the
+ * instance instead.
  * 
  * Code mainly from Prof. Dr. Joel Greenyer.
  * 
@@ -42,23 +43,24 @@ public class MotorController {
 	/**
 	 * Initializes the Singleton instance.<br>
 	 * <br>
-	 * Therefore the wiringPi library and the SoftPWM for controlling the engines are initialized.
+	 * Therefore the wiringPi library and the SoftPWM for controlling the
+	 * engines are initialized.
 	 */
 	private MotorController() {
 		// initialize wiringPi library
 		Gpio.wiringPiSetup();
-		
+
 		SoftPwm.softPwmCreate(PIN_LEFT_FWD, 0, 100);
 		SoftPwm.softPwmCreate(PIN_LEFT_BWD, 0, 100);
 		SoftPwm.softPwmCreate(PIN_RIGHT_FWD, 0, 100);
 		SoftPwm.softPwmCreate(PIN_RIGHT_BWD, 0, 100);
 	}
-	
+
 	/**
 	 * Gets the instance of the MotorController.<br>
 	 * If the instance is {@code null} a new one will be created.
 	 * 
-	 * @return	the engine controller instance
+	 * @return the MotorController instance
 	 */
 	public static MotorController getInstance() {
 		if (instance == null) {
@@ -70,7 +72,7 @@ public class MotorController {
 	/**
 	 * Gets the current speed of the right wheel.
 	 * 
-	 * @return	-100 <= speed of right wheel <= 100
+	 * @return -100 <= speed of right wheel <= 100
 	 */
 	public int getRightSpeed() {
 		return rightSpeed;
@@ -79,7 +81,7 @@ public class MotorController {
 	/**
 	 * Gets the current speed of the left wheel.
 	 * 
-	 * @return	-100 <= speed of left wheel <= 100
+	 * @return -100 <= speed of left wheel <= 100
 	 */
 	public int getLeftSpeed() {
 		return leftSpeed;
@@ -88,7 +90,8 @@ public class MotorController {
 	/**
 	 * Sets the speed of both wheels to the specified value.
 	 * 
-	 * @param	speed	-100 <= speed <= 100
+	 * @param speed
+	 *            -100 <= speed <= 100
 	 */
 	public void go(int speed) {
 		setLeftSpeed(speed);
@@ -98,26 +101,30 @@ public class MotorController {
 	/**
 	 * Sets the speed of both wheels to the respectively specified value.
 	 * 
-	 * @param	speedLeft	-100 <= speedLeft <= 100
-	 * @param	speedRight	-100 <= speedRight <= 100
+	 * @param speedLeft
+	 *            -100 <= speedLeft <= 100
+	 * @param speedRight
+	 *            -100 <= speedRight <= 100
 	 */
 	public void go(int speedLeft, int speedRight) {
 		setLeftSpeed(speedLeft);
 		setRightSpeed(speedRight);
-	}	
-	
+	}
+
 	/**
 	 * Sets the speed of both wheels to zero, so the Pi2Go stops.
 	 */
 	public void stop() {
 		go(0);
 	}
-	
+
 	/**
-	 * Sets the speed of the left wheel to the specified value and the speed of the right wheel to its
-	 * negative value, that is the Pi2Go spins left if speed was positive.
+	 * Sets the speed of the left wheel to the specified value and the speed of
+	 * the right wheel to its negative value, that is the Pi2Go spins left if
+	 * speed was positive.
 	 * 
-	 * @param	speed	-100 <= speed <= 100
+	 * @param speed
+	 *            -100 <= speed <= 100
 	 */
 	public void spinLeft(int speed) {
 		setLeftSpeed(speed);
@@ -125,10 +132,12 @@ public class MotorController {
 	}
 
 	/**
-	 * Sets the speed of the right wheel to the specified value and the speed of the left wheel to its
-	 * negative value, that is the Pi2Go spins right if speed was positive.
+	 * Sets the speed of the right wheel to the specified value and the speed of
+	 * the left wheel to its negative value, that is the Pi2Go spins right if
+	 * speed was positive.
 	 * 
-	 * @param	speed	-100 <= speed <= 100
+	 * @param speed
+	 *            -100 <= speed <= 100
 	 */
 	public void spinRight(int speed) {
 		setLeftSpeed(-speed);
@@ -138,8 +147,10 @@ public class MotorController {
 	/**
 	 * Sets the speed of the left wheel.
 	 * 
-	 * @param	speed						-100 <= speed <= 100
-	 * @throws	IllegalArgumentException	thrown if the argument is not in the specified range
+	 * @param speed
+	 *            -100 <= speed <= 100
+	 * @throws IllegalArgumentException
+	 *             thrown if the argument is not in the specified range
 	 */
 	private void setLeftSpeed(int speed) {
 		if (speed < -100) {
@@ -151,8 +162,7 @@ public class MotorController {
 		if (speed > 0) {
 			SoftPwm.softPwmWrite(PIN_LEFT_BWD, 0);
 			SoftPwm.softPwmWrite(PIN_LEFT_FWD, speed);
-		}
-		else {
+		} else {
 			SoftPwm.softPwmWrite(PIN_LEFT_FWD, 0);
 			SoftPwm.softPwmWrite(PIN_LEFT_BWD, -speed);
 		}
@@ -163,8 +173,10 @@ public class MotorController {
 	/**
 	 * Sets the speed of the right wheel.
 	 * 
-	 * @param	speed						-100 <= speed <= 100
-	 * @throws	IllegalArgumentException	thrown if the argument is not in the specified range
+	 * @param speed
+	 *            -100 <= speed <= 100
+	 * @throws IllegalArgumentException
+	 *             thrown if the argument is not in the specified range
 	 */
 	private void setRightSpeed(int speed) throws IllegalArgumentException {
 		if (speed < -100) {
@@ -176,8 +188,7 @@ public class MotorController {
 		if (speed > 0) {
 			SoftPwm.softPwmWrite(PIN_RIGHT_BWD, 0);
 			SoftPwm.softPwmWrite(PIN_RIGHT_FWD, speed);
-		}
-		else {
+		} else {
 			SoftPwm.softPwmWrite(PIN_RIGHT_FWD, 0);
 			SoftPwm.softPwmWrite(PIN_RIGHT_BWD, -speed);
 		}

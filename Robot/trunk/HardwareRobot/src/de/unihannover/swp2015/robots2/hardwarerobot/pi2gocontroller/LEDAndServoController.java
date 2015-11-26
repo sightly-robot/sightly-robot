@@ -8,18 +8,21 @@ import com.pi4j.io.i2c.I2CDevice;
 import com.pi4j.io.i2c.I2CFactory;
 
 /**
- * PCA9685 LED and Servo Controller. 
- * Is a Singleton.
- * Code converted and functionality added from Python Example. 
- * See: http://4tronix.co.uk/blog/?p=475
+ * The LEDAndServoController is a controller class for the PCA9685 LED and Servo
+ * Controller of the Pi2Go.<br>
+ * It is not instantiable because it uses the Singleton pattern. Use the
+ * instance instead.<br>
+ * <br>
+ * Code converted and functionality added from Python example. See:
+ * http://4tronix.co.uk/blog/?p=475
  * 
  * @author Lenard Spiecker
  */
 public class LEDAndServoController {
 
-	//Singleton
+	/** The Singleton instance of the LEDAndServoController. */
 	private static LEDAndServoController instance;
-	
+
 	private static final boolean DEBUG = true;
 
 	// Registers/etc.
@@ -52,22 +55,25 @@ public class LEDAndServoController {
 	public static final int REAR = 1;
 	public static final int RIGHT = 2;
 	public static final int FRONT = 3;
-	
-	//Servos
+
+	// Servos
 	public static final int S12 = 0;
 	public static final int S13 = 1;
 	public static final int S14 = 2;
 	public static final int S15 = 3;
-	public static final double DEG_CENTER_CORRECTURE[] = new double[]{25,25,25,25};
-	
+	public static final double DEG_CENTER_CORRECTURE[] = new double[] { 25, 25, 25, 25 };
+
 	public static final int PWM_MAX = 4095;
 	private static final double FREQUENCY = 50; // HZ
-	private static final double SERVO_CENTER_PWM =  PWM_MAX/(1000/FREQUENCY);
-	public static final double PWM_PER_DEGREE = SERVO_CENTER_PWM/180;
+	private static final double SERVO_CENTER_PWM = PWM_MAX / (1000 / FREQUENCY);
+	public static final double PWM_PER_DEGREE = SERVO_CENTER_PWM / 180;
 
 	/**
-	 * Connects to the I2C Device and initializes the frequency.
+	 * Initializes the Singleton instance.<br>
+	 * Therefore connects to the I2C Device and initializes the frequency.
+	 * 
 	 * @throws IOException
+	 *             thrown if the I2C Device connection or initialization failed
 	 */
 	private LEDAndServoController() throws IOException {
 		bus = I2CFactory.getInstance(I2CBus.BUS_1);
@@ -84,15 +90,15 @@ public class LEDAndServoController {
 			System.out.println("I2CRGBLEDController is running!");
 		}
 	}
-	
+
 	/**
-	 * Eventually creates an new Instance of {@link LEDAndServoController} and returns it.
-	 * @return {@link LEDAndServoController}
+	 * Gets the instance of the LEDAndServoController.<br>
+	 * If the instance is {@code null} a new one will be created.
+	 * 
+	 * @return the LEDAndServoController instance
 	 */
-	public static LEDAndServoController getInstance()
-	{
-		if(instance == null)
-		{
+	public static LEDAndServoController getInstance() {
+		if (instance == null) {
 			try {
 				instance = new LEDAndServoController();
 			} catch (IOException e) {
@@ -103,11 +109,14 @@ public class LEDAndServoController {
 	}
 
 	/**
-	 * Sets the PWM Frequency
+	 * Sets the PWM frequency.
 	 * 
 	 * @param frequency
+	 *            the PWM frequency to set
 	 * @throws IOException
+	 *             thrown if device not available or writable
 	 * @throws InterruptedException
+	 *             thrown if sleep is interrupted
 	 */
 	private void setPWMFrequency(double frequency) throws IOException {
 		double prescaleval = 25000000.0; // 25MHz
@@ -135,12 +144,13 @@ public class LEDAndServoController {
 	}
 
 	/**
-	 * Sets single PWM Channel
+	 * Sets single PWM channel.
 	 * 
 	 * @param channel
 	 * @param on
 	 * @param off
 	 */
+	// TODO JavaDoc
 	private void setPWM(int channel, int on, int off) {
 		try {
 			device.write(__LED0_ON_L + 4 * channel, (byte) (on & 0xFF));
@@ -150,23 +160,26 @@ public class LEDAndServoController {
 		} catch (IOException e) {
 		}
 	}
-	
+
 	/**
-	 * Control a LED on a Servo connection-
-	 * pwm up to 4095
+	 * Control a LED on a Servo connection.
+	 * 
 	 * @param servo
 	 * @param pwm
+	 *            pwm <= 4095
 	 */
+	// TODO JavaDoc
 	public void setServoOutputAsLED(int servo, int pwm) {
 		setPWM(servo + 12, 0, pwm);
 	}
-	
+
 	/**
-	 * Control a Servo in degrees from -80 (left) to 80 (right) degree. 0 =
-	 * Center
+	 * Sets the specified Servo to the specified degrees.
 	 * 
 	 * @param servo
-	 * @param grad
+	 *            the Servo to control
+	 * @param degree
+	 *            -80 (left) <= degree <= 80 (right)
 	 */
 	public void setServo(int servo, double degree) {
 		int pwm = (int) (SERVO_CENTER_PWM - (degree + DEG_CENTER_CORRECTURE[servo]) * PWM_PER_DEGREE);
@@ -174,8 +187,16 @@ public class LEDAndServoController {
 	}
 
 	/**
-	 * setLED(LED, Red, Green, Blue): Sets the LED specified to required RGB
-	 * value. 0 >= LED <= 3; 0 <= R,G,B <= 4095
+	 * Sets the specified LED to the specified RGB value.
+	 * 
+	 * @param LED
+	 *            the LED to color
+	 * @param red
+	 *            0 <= red <= 4095
+	 * @param green
+	 *            0 <= green <= 4095
+	 * @param blue
+	 *            0 <= blue <= 4095
 	 */
 	public void setLED(int LED, int red, int green, int blue) {
 		setPWM(LED * 3 + RED, 0, red);
@@ -184,18 +205,26 @@ public class LEDAndServoController {
 	}
 
 	/**
-	 * setLED(LED, Red, Green, Blue): Sets the LED specified to required RGB
-	 * value. 0 >= LED <= 3; 0 <= R,G,B <= 4095
+	 * Sets the specified LED to the specified {@link Color}.
+	 * 
+	 * @param LED
+	 *            the LED to color
+	 * @param color
+	 *            the color to set
 	 */
 	public void setLED(int LED, Color color) {
-		setLED(LED, color.getRed()*16, color.getGreen()*16, color.getBlue()*16);
+		setLED(LED, color.getRed() * 16, color.getGreen() * 16, color.getBlue() * 16);
 	}
 
 	/**
-	 * setAllLEDs(Red, Green, Blue): Sets all LEDs to required RGB. 0 <= R,G,B
-	 * <= 4095
+	 * Sets all LEDs to the specified RGB value.
 	 * 
-	 * @return
+	 * @param red
+	 *            0 <= red <= 4095
+	 * @param green
+	 *            0 <= green <= 4095
+	 * @param blue
+	 *            0 <= blue <= 4095
 	 */
 	public void setAllLEDs(int red, int green, int blue) {
 		for (int i = 0; i < 4; i++) {
@@ -204,25 +233,27 @@ public class LEDAndServoController {
 	}
 
 	/**
-	 * setAllLEDs(Red, Green, Blue): Sets all LEDs to required RGB. 0 <= R,G,B
-	 * <= 4095
+	 * Sets all LEDs to the specified {@link Color}.
 	 * 
-	 * @return
+	 * @param color
+	 *            the color to set
 	 */
 	public void setAllLEDs(Color color) {
-		setAllLEDs(color.getRed()*16, color.getGreen()*16, color.getBlue()*16);
+		setAllLEDs(color.getRed() * 16, color.getGreen() * 16, color.getBlue() * 16);
 	}
 
 	/**
-	 * Closes the I2C Bus.
+	 * Closes the I2C bus and resets all LEDs.
 	 * 
 	 * @throws IOException
+	 *             thrown if the bus could not be closed.
 	 */
-	public void shutdown(){
+	public void shutdown() {
 		setAllLEDs(0, 0, 0);
 		try {
 			bus.close();
 		} catch (IOException e) {
+			// only catch
 		}
 		if (DEBUG) {
 			System.out.println("I2CRGBLEDController stopped!");
