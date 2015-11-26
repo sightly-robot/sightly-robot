@@ -44,7 +44,7 @@ public class Node {
 	 * @return if occupied
 	 */
 	public boolean isOccupied() {
-		return this.robot == null ? false : true;
+		return !(this.robot == null);
 	}
 
 	public Robot getRobot() {
