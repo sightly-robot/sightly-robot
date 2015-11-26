@@ -18,6 +18,7 @@ import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
  * @author Lenard Spiecker
  *
  */
+@Deprecated
 public class Automate implements AiEventObserver, Runnable {
 
 	// Model:

@@ -11,6 +11,7 @@ import de.unihannover.swp2015.robots2.hardwarerobot.pi2gocontroller.Pi2GoGPIOCon
  * 
  * @author Philipp Rohde
  */
+@Deprecated
 public enum State {
 
 	/**
