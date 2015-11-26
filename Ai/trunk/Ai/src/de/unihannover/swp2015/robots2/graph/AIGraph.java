@@ -1,206 +1,129 @@
 package de.unihannover.swp2015.robots2.graph;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import de.unihannover.swp2015.robots2.model.interfaces.IField;
+import de.unihannover.swp2015.robots2.model.interfaces.IPosition;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
 import de.unihannover.swp2015.robots2.model.interfaces.IStage;
-import de.unihannover.swp2015.robots2.model.interfaces.IPosition;
 
 public class AIGraph {
 
-	private Node[][] nodes; // as array for potentially faster calculations,
-							// else a list would do, too
-	private Node myPos; // position of robot, possibly creates redundancy in
-						// "myself" variable in Robot.java
-	private int dimX, dimY; // x and y dimensions
+	private Node[][] nodes;
 
-	private class Node {
-		private List<Edge> neighbors;
-		private int ressourceValue;
-		private boolean isOccupied; // true, if a robot is currently on this
-									// Field (potentially redundant)
-		private Robot robot; // robot, who is on the field or null, if there
-								// isn't one
-		private int x;
-		private int y;
-		// private double foodGrowth; // per Second, maybe later
-		// private double weight; //used later
+	private Node myPos;
 
-		public Node() {
-			this.setNeighbors(new ArrayList<Edge>());
-		}
+	private int dimX;
+	private int dimY;
 
-		public List<Edge> getNeighbors() {
-			return neighbors;
-		}
+	public AIGraph() {
 
-		public void setNeighbors(List<Edge> neighbors) {
-			this.neighbors = neighbors;
-		}
-		
-		public void addNeighbor(Edge edge) {
-			this.neighbors.add(edge);
-		}
-
-		public int getRessourceValue() {
-			return ressourceValue;
-		}
-
-		public void setRessourceValue(int ressourceValue) {
-			this.ressourceValue = ressourceValue;
-		}
-
-		public boolean isOccupied() {
-			return isOccupied;
-		}
-
-		public void setOccupied(boolean isOccupied) {
-			this.isOccupied = isOccupied;
-		}
-
-		public Robot getRobot() {
-			return robot;
-		}
-
-		public void setRobot(Robot robot) {
-			this.robot = robot;
-		}
-		
-		public void removeRobot() {
-			this.robot = null;
-		}
-
-		public int getX() {
-			return x;
-		}
-
-		public void setX(int x) {
-			this.x = x;
-		}
-
-		public int getY() {
-			return y;
-		}
-
-		public void setY(int y) {
-			this.y = y;
-		}
 	}
 
-	private class Edge {
-		private Node source; // Ggf. redundant
-		private Node target;
-		private Orientation direction;
-
-		public Edge(Node source, Node target, Orientation dir) {
-			this.setSource(source);
-			this.setTarget(target);
-			this.setDirection(dir);
-		}
-
-		public Node getSource() {
-			return source;
-		}
-
-		public void setSource(Node source) {
-			this.source = source;
-		}
-
-		public Node getTarget() {
-			return target;
-		}
-
-		public void setTarget(Node target) {
-			this.target = target;
-		}
-
-		public Orientation getDirection() {
-			return direction;
-		}
-
-		public void setDirection(Orientation direction) {
-			this.direction = direction;
-		}
+	public AIGraph(int x, int y) {
+		this.nodes = new Node[x][y];
+		this.dimX = x;
+		this.dimY = y;
 	}
 
-	public AIGraph(int fieldX, int fieldY) { // creates graph of field without
-												// walls/ resources/ robots
-		nodes = new Node[fieldX][fieldY];
-		this.dimX = fieldX;
-		this.dimY = fieldY;
-		for (int i = 0; i < fieldX; i++) {
-			for (int j = 0; j < fieldY; j++) {
-				nodes[i][j] = new Node();
-			}
-		}
-		// TODO
-		for (int i = 0; i < fieldX; i++) {
-			for (int j = 0; j < fieldY; j++) {
-				if (i > 0)
-					nodes[i][j].addNeighbor(new Edge(nodes[i][j], nodes[i - 1][j], IPosition.Orientation.West));
-				if (j > 0)
-					nodes[i][j].addNeighbor(new Edge(nodes[i][j], nodes[i][j - 1], IPosition.Orientation.North));
-				if (i < fieldX - 1)
-					nodes[i][j].addNeighbor(new Edge(nodes[i][j], nodes[i + 1][j], IPosition.Orientation.East));
-				if (j < fieldY - 1)
-					nodes[i][j].addNeighbor(new Edge(nodes[i][j], nodes[i][j + 1], IPosition.Orientation.South));
-			}
-		}
-	}
-	
-	public AIGraph(IStage stage) {
-		this.dimX = stage.getWidth();
-		this.dimY = stage.getHeight();
-		this.nodes = new Node[this.dimX][this.dimY];
-		
-		for (int i = 0; i < fieldX; i++) {
-			for (int j = 0; j < fieldY; j++) {
-				nodes[i][j] = new Node();
-			}
-		}
-		
-		for (int i = 0; i < width; i++) {
-			for (int j = 0; j < height; j++) {
-				IField field = map.getField(i, j);
-				nodes[i][j].setRessourceValue(field.getFood());
-				//nodes[i][j].setFoodGrowth(field.getGrowingRate()); maybe later
-				if (i > 0 && !field.isWall(IPosition.Orientation.West))
-					nodes[i][j].addNeighbor(new Edge(nodes[i][j], nodes[i - 1][j], IPosition.Orientation.West));
-				if (j > 0 && !field.isWall(IPosition.Orientation.North))
-					nodes[i][j].addNeighbor(new Edge(nodes[i][j], nodes[i][j - 1], IPosition.Orientation.North));
-				if (i < fieldX - 1 && !field.isWall(IPosition.Orientation.East))
-					nodes[i][j].addNeighbor(new Edge(nodes[i][j], nodes[i + 1][j], IPosition.Orientation.East));
-				if (j < fieldY - 1 && !field.isWall(IPosition.Orientation.South))
-					nodes[i][j].addNeighbor(new Edge(nodes[i][j], nodes[i][j + 1], IPosition.Orientation.South));
-			}
-		}
+	public AIGraph(IStage map) {
+		this.loadFromMap(map);
 	}
 
 	/**
-	 * Transforms given map data to an AIGraph object
+	 * Loads map data into Graph object
 	 * 
 	 * @param map
-	 *            Map data object
+	 *            IStage data object
 	 */
 	public void loadFromMap(IStage map) {
-		/*
-		 * Maybe use this(x,y) and make method static instead of initializing
-		 * new graph
-		 */
-		//AIGraph graph = new AIGraph(map.getWidth(), map.getHeight());
 		int width = map.getWidth();
 		int height = map.getHeight();
 
+		this.nodes = new Node[width][height];
+		this.dimX = width;
+		this.dimY = height;
+
+		/*
+		 * Init graph from map data
+		 */
 		for (int i = 0; i < width; i++) {
 			for (int j = 0; j < height; j++) {
 				IField field = map.getField(i, j);
-				int x = field.getX();
-				int y = field.getY();
-				int food = field.getFood();
-				int growRate = field.getGrowingRate();
+				/*
+				 * Check if node already exists and eventually create new one
+				 */
+				Node source = this.nodes[i][j] == null ? new Node(field) : this.nodes[i][j];
+				if (i > 0 && !field.isWall(Orientation.WEST)) {
+					Node target = this.nodes[i - 1][j] == null ? new Node(map.getField(i - 1, j))
+							: this.nodes[i - 1][j];
+					Edge edge = new Edge(source, target, Orientation.WEST);
+					source.getNeighbors().add(edge);
+				}
+				if (i < this.dimX && !field.isWall(Orientation.EAST)) {
+					Node target = this.nodes[i + 1][j] == null ? new Node(map.getField(i + 1, j))
+							: this.nodes[i + 1][j];
+					Edge edge = new Edge(source, target, Orientation.EAST);
+					source.getNeighbors().add(edge);
+				}
+				if (j > 0 && !field.isWall(Orientation.NORTH)) {
+					Node target = this.nodes[i][j - 1] == null ? new Node(map.getField(i, j - 1))
+							: this.nodes[i][j - 1];
+					Edge edge = new Edge(source, target, Orientation.NORTH);
+					source.getNeighbors().add(edge);
+				}
+				if (j < this.dimY && !field.isWall(Orientation.SOUTH)) {
+					Node target = this.nodes[i][j + 1] == null ? new Node(map.getField(i, j + 1))
+							: this.nodes[i][j + 1];
+					Edge edge = new Edge(source, target, Orientation.SOUTH);
+					source.getNeighbors().add(edge);
+				}
+				this.nodes[i][j] = source;
 			}
 		}
+		/*
+		 * Set our and other robots positions
+		 */
+		for (IPosition pos : map.getStartPositions()) {
+			Node posNode = this.nodes[pos.getX()][pos.getY()];
+			IField field = map.getField(pos.getX(), pos.getY());
+			String id = field.getLockedBy();
+			Robot robot = new Robot(id, posNode, pos.getOrientation());
+			posNode.setRobot(robot);
+		}
+	}
+	
+	public void setStartPositions(IStage map) {
+		
+	}
+
+	public Node[][] getNodes() {
+		return nodes;
+	}
+
+	public void setNodes(Node[][] nodes) {
+		this.nodes = nodes;
+	}
+
+	public Node getMyPos() {
+		return myPos;
+	}
+
+	public void setMyPos(Node myPos) {
+		this.myPos = myPos;
+	}
+
+	public int getDimX() {
+		return dimX;
+	}
+
+	public void setDimX(int dimX) {
+		this.dimX = dimX;
+	}
+
+	public int getDimY() {
+		return dimY;
+	}
+
+	public void setDimY(int dimY) {
+		this.dimY = dimY;
 	}
 }
