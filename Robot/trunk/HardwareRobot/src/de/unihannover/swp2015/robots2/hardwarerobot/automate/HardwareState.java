@@ -9,6 +9,7 @@ import de.unihannover.swp2015.robots2.hardwarerobot.pi2gocontroller.MotorControl
 import de.unihannover.swp2015.robots2.hardwarerobot.pi2gocontroller.Pi2GoGPIOController;
 
 /**
+ * The states of the control automate of a hardware robot (Pi2Go).
  * 
  * @author Philipp Rohde
  */
