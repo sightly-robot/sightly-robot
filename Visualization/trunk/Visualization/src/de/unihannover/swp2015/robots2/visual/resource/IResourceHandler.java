@@ -30,8 +30,11 @@ public interface IResourceHandler extends Disposable {
 	public TextureRegion[] getRegion(final String... key);
 	
 	/**
-	 * Creates render unit, created with the texture region(s), which are mapped to <code>key</code>.
-	 * 
+	 * Creates render unit, created with the texture region(s), which are mapped to <code>key</code>. 
+	 * The resulting {@link RenderUnit} will be put into an internal map to avoid redundancy.
+	 * <br>
+	 * So it just allocates memory when there is no a appropriate {@link RenderUnit} for the given key.
+	 *  
 	 * @param key key of the texture region
 	 * @return RenderUnit
 	 */

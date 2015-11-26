@@ -43,6 +43,9 @@ public class Visualization extends ApplicationAdapter implements IVisualization 
 	 */
 	private OrthographicCamera cam;
 
+	/**
+	 * Handles virtual display. Furthermore it makes the application keep the aspect ratio.
+	 */
 	private Viewport fitViewport;
 	
 	/**

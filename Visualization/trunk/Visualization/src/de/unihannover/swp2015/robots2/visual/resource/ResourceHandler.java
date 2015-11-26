@@ -31,6 +31,13 @@ public class ResourceHandler implements IResourceHandler {
 	private final Map<String, Array<TextureRegion>> frameSetMap;
 	
 	/**
+	 * Map key->RendeUnit
+	 * <br>
+	 * Hint: <code>renderUnitMap.keySet() subset of (frameSetMap.keySet() union texMap.keySet())</code>.
+	 */
+	private final Map<String, RenderUnit> renderUnitMap;
+	
+	/**
 	 * Main textureAtlas
 	 */
 	private final TextureAtlas texAtlas;
@@ -46,6 +53,7 @@ public class ResourceHandler implements IResourceHandler {
 	public ResourceHandler(final String pathToAtlas) {
 		this.texMap = new HashMap<>();
 		this.frameSetMap = new HashMap<>();
+		this.renderUnitMap = new HashMap<>();
 		this.texAtlas = new TextureAtlas(pathToAtlas);
 
 		this.createRegions();
@@ -82,35 +90,46 @@ public class ResourceHandler implements IResourceHandler {
 
 	@Override
 	public RenderUnit createRenderUnit(final String key) {
+		if (renderUnitMap.containsKey(key))
+			return renderUnitMap.get(key);
+
+		final RenderUnit result = new RenderUnit();
 		if (texMap.containsKey(key)) {
-			final RenderUnit result = new RenderUnit();
 			result.initAsTexture(texMap.get(key));
-			return result;
 		}
 		else if (frameSetMap.containsKey(key)) {
-			final RenderUnit result = new RenderUnit();
 			//TODO modify for texture-packs (optional)
 			result.initAsAnimation(frameSetMap.get(key), PlayMode.LOOP, 1); 
-			return result;
 		}
-		return null;
+		else {
+			throw new IllegalArgumentException("No map contains the key: " + key + ".");
+		}
+		return result;
 	}
 
 	@Override
 	public RenderUnit[] createRenderUnit(final String... keys) {
 		final RenderUnit[] renderUnits = new RenderUnit[keys.length];
 		for (int i = 0; i < keys.length; ++i) {
+			if (renderUnitMap.containsKey(keys[i])) {
+				renderUnits[i] = renderUnitMap.get(keys[i]);
+				continue;
+			}
+			
+			final RenderUnit result = new RenderUnit();
 			if (texMap.containsKey(keys[i])) {
-				final RenderUnit result = new RenderUnit();
 				result.initAsTexture(texMap.get(keys[i]));
-				renderUnits[i] = result;
 			}
 			else if (frameSetMap.containsKey(keys[i])) {
-				final RenderUnit result = new RenderUnit();
 				//TODO modify for texture-packs (optional)
-				result.initAsAnimation(frameSetMap.get(keys[i]), PlayMode.LOOP, 1); 
-				renderUnits[i] = result;
+				result.initAsAnimation(frameSetMap.get(keys[i]), PlayMode.LOOP, 1);
 			}
+			else {
+				throw new IllegalArgumentException("No map contains the key: " + keys[i] + ".");
+			}
+
+			renderUnits[i] = result;
+			this.renderUnitMap.put(keys[i], result);
 		}
 		return renderUnits;
 	}
