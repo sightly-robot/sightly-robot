@@ -9,13 +9,12 @@ import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
 import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
 
 /**
- * Automate is a Runnable Class, that automatically creates 
+ * AbstractAutomate is a Runnable Class, that automatically creates 
  * an Thread for controlling the current State of a Hard- or SoftwareRoboter.
  * 
  * @author Lenard Spiecker
- *
  */
-public class Automate implements AiEventObserver, Runnable{
+public abstract class AbstractAutomate implements AiEventObserver, Runnable {
 
 		// Model:
 		private IRobotController robotController;
@@ -31,7 +30,7 @@ public class Automate implements AiEventObserver, Runnable{
 		// Positioning:
 		private Point nextPosition = new Point(0, 0);
 
-		public Automate(IRobotController robotController, IState waitState) {
+		public AbstractAutomate(IRobotController robotController, IState waitState) {
 			this.robotController = robotController;
 			robot = robotController.getMyself();
 
