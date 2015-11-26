@@ -2,6 +2,7 @@ package de.unihannover.swp2015.robots2.graph;
 
 import java.util.List;
 
+import de.unihannover.swp2015.robots2.core.Robot;
 import de.unihannover.swp2015.robots2.model.interfaces.IField;
 
 public class Node {

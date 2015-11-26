@@ -1,5 +1,6 @@
 package de.unihannover.swp2015.robots2.graph;
 
+import de.unihannover.swp2015.robots2.core.Robot;
 import de.unihannover.swp2015.robots2.model.interfaces.IField;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
@@ -90,9 +91,9 @@ public class AIGraph {
 			posNode.setRobot(robot);
 		}
 	}
-	
+
 	public void setStartPositions(IStage map) {
-		
+
 	}
 
 	public Node[][] getNodes() {
