@@ -144,15 +144,6 @@ public class RobotGameHandler implements IGameHandler {
 
 	@Override
 	public void resize(int width, int height) {
-		
-		final int rows = prefs.getInt(PreferencesConstants.MAP_ROWS_KEY, 12);
-		final int cols = prefs.getInt(PreferencesConstants.MAP_COLS_KEY, 9);
-		
-		if (rows == 0 || cols == 0)
-			return;
-		
-		this.prefs.putInt(PreferencesConstants.FIELD_WIDTH_KEY, Gdx.graphics.getWidth() / rows);
-		this.prefs.putInt(PreferencesConstants.FIELD_HEIGHT_KEY, Gdx.graphics.getHeight() / cols);
 	}
 
 }

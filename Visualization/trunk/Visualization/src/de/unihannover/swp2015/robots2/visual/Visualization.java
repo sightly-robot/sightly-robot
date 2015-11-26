@@ -7,7 +7,10 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
+import de.unihannover.swp2015.robots2.controller.externalInterfaces.IVisualization;
 import de.unihannover.swp2015.robots2.visual.core.IGameHandler;
 import de.unihannover.swp2015.robots2.visual.core.RobotGameHandler;
 import de.unihannover.swp2015.robots2.visual.resource.IResourceHandler;
@@ -22,7 +25,7 @@ import de.unihannover.swp2015.robots2.visual.util.pref.Preferences;
  * 
  * @author Rico Schrage
  */
-public class Visualization extends ApplicationAdapter {
+public class Visualization extends ApplicationAdapter implements IVisualization {
 
 	/**
 	 * List of all {@link IGameHandler}.
@@ -40,6 +43,8 @@ public class Visualization extends ApplicationAdapter {
 	 */
 	private OrthographicCamera cam;
 
+	private Viewport fitViewport;
+	
 	/**
 	 * Constructs a Visualization object.
 	 * 
@@ -60,7 +65,8 @@ public class Visualization extends ApplicationAdapter {
 		this.cam = new OrthographicCamera();
 		// !important! (0,0) is at the top-left corner
 		this.cam.setToOrtho(true, appWidth, appHeight);
-
+		this.fitViewport = new FitViewport(appWidth, appHeight, cam);
+		
 		// TODO create RobotGameHandler properly
 		final IResourceHandler resHandler = new ResourceHandler(ResourceConstants.ATLAS_PATH + ResourceConstants.ATLAS_NAME + ".atlas");
 		this.gameHandlerList.add(new RobotGameHandler(TestUtil.createRandomTestGame(2, 12, 9), resHandler, cam, prefs));
@@ -92,9 +98,22 @@ public class Visualization extends ApplicationAdapter {
 	
 	@Override
 	public void resize(final int width, final int height) {
+		this.fitViewport.update(width, height);
+		
 		for (int i = 0; i < gameHandlerList.size(); ++i) {
 			gameHandlerList.get(i).resize(width, height);
 		}
+	}
+
+	@Override
+	public void setSettings(String settings) {
+		//TODO json->preferences
+	}
+
+	@Override
+	public String getSettings() {
+		//TODO preferences->json
+		return null;
 	}
 
 }

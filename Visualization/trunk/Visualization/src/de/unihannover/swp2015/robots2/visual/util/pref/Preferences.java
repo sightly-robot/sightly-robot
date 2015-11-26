@@ -54,21 +54,25 @@ public class Preferences extends PreferencesObservable implements IPreferences {
 	@Override
 	public void putBoolean(String key, boolean value) {
 		this.booleanMap.put(key, value);
+		this.notifyObserver(key);
 	}
 
 	@Override
 	public void putFloat(String key, float value) {
 		this.floatMap.put(key, value);
+		this.notifyObserver(key);
 	}
 
 	@Override
 	public void putInt(String key, int value) {
 		this.integerMap.put(key, value);
+		this.notifyObserver(key);
 	}
 
 	@Override
 	public void putString(String key, String value) {
 		this.stringMap.put(key, value);
+		this.notifyObserver(key);
 	}
 
 }

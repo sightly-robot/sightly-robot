@@ -76,8 +76,12 @@ public class Robot extends Entity {
 
 	@Override
 	public void onUpdatePreferences(PreferencesObservable o, String updatedKey) {
-		// TODO Auto-generated method stub
-
+		switch(updatedKey) {
+			case PreferencesConstants.FIELD_WIDTH_KEY:
+			case PreferencesConstants.FIELD_HEIGHT_KEY:
+				this.renderX = model.getPosition().getX() * prefs.getInt(PreferencesConstants.FIELD_WIDTH_KEY, 42);
+				this.renderY = model.getPosition().getY() * prefs.getInt(PreferencesConstants.FIELD_HEIGHT_KEY, 42);
+		}
 	}
 
 }
