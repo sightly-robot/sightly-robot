@@ -17,7 +17,7 @@ import de.unihannover.swp2015.robots2.visual.entity.IEntity;
 import de.unihannover.swp2015.robots2.visual.resource.IResourceHandler;
 import de.unihannover.swp2015.robots2.visual.util.EntityUtil;
 import de.unihannover.swp2015.robots2.visual.util.pref.IPreferences;
-import de.unihannover.swp2015.robots2.visual.util.pref.Preferences;
+import de.unihannover.swp2015.robots2.visual.util.pref.observer.IPreferencesObserver;
 import de.unihannover.swp2015.robots2.visual.util.pref.observer.PreferencesObservable;
 
 public class EntitySortTest {
@@ -47,23 +47,42 @@ public class EntitySortTest {
 			
 		}
 
+	}	
+	
+	public static class TestPref implements IPreferences {
+
+		public void notifyObserver(String changedKey) {}
+		public void addObserver(IPreferencesObserver obs) {}
+		public boolean getBoolean(String key, boolean def) {return false;}
+		public float getFloat(String key, float def) {return 0;}
+		public int getInt(String key, int def) {return 0;}
+		public String getString(String key, String def) {return null;}
+		public void putBoolean(String key, boolean value) {}
+		public void putBoolean(String key, boolean value, boolean persistent) {}
+		public void putFloat(String key, float value) {}
+		public void putFloat(String key, float value, boolean persistent) {}
+		public void putInt(String key, int value) {}
+		public void putInt(String key, int value, boolean persistent) {}
+		public void putString(String key, String value) {}
+		public void putString(String key, String value, boolean persistent) {}
+		
 	}
 
 	@Test
 	public void testSortEntities() {
-		final IEntity entity = new TestEntity(null, null, new Preferences(), null);
+		final IEntity entity = new TestEntity(null, null, new TestPref(), null);
 		entity.setZIndex(5);
 
-		final IEntity entity_two = new TestEntity(null, null, new Preferences(), null);
+		final IEntity entity_two = new TestEntity(null, null, new TestPref(), null);
 		entity_two.setZIndex(0);
 
-		final IEntity entity_three = new TestEntity(null, null, new Preferences(), null);
+		final IEntity entity_three = new TestEntity(null, null, new TestPref(), null);
 		entity_three.setZIndex(42);
 
-		final IEntity entity_four = new TestEntity(null, null, new Preferences(), null);
+		final IEntity entity_four = new TestEntity(null, null, new TestPref(), null);
 		entity_four.setZIndex(1);
 
-		final IEntity entity_five = new TestEntity(null, null, new Preferences(), null);
+		final IEntity entity_five = new TestEntity(null, null, new TestPref(), null);
 		entity_five.setZIndex(9);
 
 		final List<IEntity> list = new ArrayList<>(5);
@@ -83,19 +102,19 @@ public class EntitySortTest {
 	
 	@Test
 	public void testInsertionSortEntities() {
-		final IEntity entity = new TestEntity(null, null, new Preferences(), null);
+		final IEntity entity = new TestEntity(null, null, new TestPref(), null);
 		entity.setZIndex(5);
 
-		final IEntity entity_two = new TestEntity(null, null, new Preferences(), null);
+		final IEntity entity_two = new TestEntity(null, null, new TestPref(), null);
 		entity_two.setZIndex(0);
 
-		final IEntity entity_three = new TestEntity(null, null, new Preferences(), null);
+		final IEntity entity_three = new TestEntity(null, null, new TestPref(), null);
 		entity_three.setZIndex(42);
 
-		final IEntity entity_four = new TestEntity(null, null, new Preferences(), null);
+		final IEntity entity_four = new TestEntity(null, null, new TestPref(), null);
 		entity_four.setZIndex(1);
 
-		final IEntity entity_five = new TestEntity(null, null, new Preferences(), null);
+		final IEntity entity_five = new TestEntity(null, null, new TestPref(), null);
 		entity_five.setZIndex(9);
 
 		final List<IEntity> list = new ArrayList<>(5);

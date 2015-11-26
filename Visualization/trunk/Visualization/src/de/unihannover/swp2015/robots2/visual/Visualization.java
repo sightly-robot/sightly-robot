@@ -18,7 +18,7 @@ import de.unihannover.swp2015.robots2.visual.resource.ResourceConstants;
 import de.unihannover.swp2015.robots2.visual.resource.ResourceHandler;
 import de.unihannover.swp2015.robots2.visual.util.TestUtil;
 import de.unihannover.swp2015.robots2.visual.util.pref.IPreferences;
-import de.unihannover.swp2015.robots2.visual.util.pref.Preferences;
+import de.unihannover.swp2015.robots2.visual.util.pref.FlexPreferences;
 
 /**
  * Main entry point.
@@ -35,7 +35,7 @@ public class Visualization extends ApplicationAdapter implements IVisualization 
 	/**
 	 * Settings received via MQTT
 	 */
-	private final IPreferences prefs;
+	private IPreferences prefs;
 
 	/**
 	 * Camera, which should be used as view.
@@ -56,7 +56,6 @@ public class Visualization extends ApplicationAdapter implements IVisualization 
 	 */
 	public Visualization() {
 		this.gameHandlerList = new ArrayList<>();
-		this.prefs = new Preferences();
 	}
 
 	@Override
@@ -64,7 +63,8 @@ public class Visualization extends ApplicationAdapter implements IVisualization 
 
 		int appWidth = Gdx.graphics.getWidth();
 		int appHeight = Gdx.graphics.getHeight();
-
+		
+		this.prefs = new FlexPreferences("prefs");
 		this.cam = new OrthographicCamera();
 		// !important! (0,0) is at the top-left corner
 		this.cam.setToOrtho(true, appWidth, appHeight);
