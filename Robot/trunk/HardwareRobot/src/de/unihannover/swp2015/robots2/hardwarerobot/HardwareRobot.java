@@ -5,7 +5,7 @@ import java.awt.Color;
 import de.unihannover.swp2015.robots2.abstractrobot.AbstractRobot;
 import de.unihannover.swp2015.robots2.hardwarerobot.automate.Automate;
 import de.unihannover.swp2015.robots2.hardwarerobot.pi2gocontroller.LEDAndServoController;
-import de.unihannover.swp2015.robots2.hardwarerobot.pi2gocontroller.EngineController;
+import de.unihannover.swp2015.robots2.hardwarerobot.pi2gocontroller.MotorController;
 import de.unihannover.swp2015.robots2.hardwarerobot.pi2gocontroller.Pi2GoGPIOController;
 
 /**
@@ -24,7 +24,7 @@ public class HardwareRobot extends AbstractRobot{
 		//PreInitialize Controller Instances:
 		LEDAndServoController.getInstance();
 		Pi2GoGPIOController.getInstance();
-		EngineController.getInstance();
+		MotorController.getInstance();
 //		SoundController.getInstance();
 //		ColorSensorController.getInstance();
 //		CompassController.getInstance();

@@ -2,7 +2,7 @@ package de.unihannover.swp2015.robots2.hardwarerobot.automate;
 
 import java.awt.Color;
 
-import de.unihannover.swp2015.robots2.hardwarerobot.pi2gocontroller.EngineController;
+import de.unihannover.swp2015.robots2.hardwarerobot.pi2gocontroller.MotorController;
 import de.unihannover.swp2015.robots2.hardwarerobot.pi2gocontroller.LEDAndServoController;
 import de.unihannover.swp2015.robots2.hardwarerobot.pi2gocontroller.Pi2GoGPIOController;
 
@@ -34,13 +34,13 @@ public enum State {
 
 			if (!left && !right) {
 				setServo(0);
-				ENGINE.go(FAST);
+				MOTORS.go(FAST);
 			} else if (right) {
 				setServo(20);
-				ENGINE.go(FAST, SLOW);
+				MOTORS.go(FAST, SLOW);
 			} else if (left) {
 				setServo(-20);
-				ENGINE.go(SLOW, FAST);
+				MOTORS.go(SLOW, FAST);
 			}
 		}
 
@@ -77,16 +77,16 @@ public enum State {
 			boolean right = GPIO.isLineRight();
 
 			if (left && right) {
-				ENGINE.go(FAST);
+				MOTORS.go(FAST);
 				setServo(0);
 			} else if (!right && !left) {
-				ENGINE.go(FAST);
+				MOTORS.go(FAST);
 				setServo(0);
 			} else if (right) {
-				ENGINE.go(FAST, SLOW);
+				MOTORS.go(FAST, SLOW);
 				setServo(20);
 			} else if (left) {
-				ENGINE.go(SLOW, FAST);
+				MOTORS.go(SLOW, FAST);
 				setServo(-20);
 			}
 		}
@@ -112,7 +112,7 @@ public enum State {
 
 		@Override
 		protected void execute() {
-			ENGINE.go(STOP);
+			MOTORS.go(STOP);
 		}
 
 		@Override
@@ -138,7 +138,7 @@ public enum State {
 		@Override
 		protected void execute() {
 			setServo(-50);
-			ENGINE.spinRight(TURN);
+			MOTORS.spinRight(TURN);
 		}
 
 		@Override
@@ -165,7 +165,7 @@ public enum State {
 		@Override
 		protected void execute() {
 			setServo(-50);
-			ENGINE.spinRight(TURN);
+			MOTORS.spinRight(TURN);
 		}
 
 		@Override
@@ -192,7 +192,7 @@ public enum State {
 		@Override
 		protected void execute() {
 			setServo(50);
-			ENGINE.spinLeft(TURN);
+			MOTORS.spinLeft(TURN);
 		}
 
 		@Override
@@ -219,7 +219,7 @@ public enum State {
 		@Override
 		protected void execute() {
 			setServo(50);
-			ENGINE.spinLeft(TURN);
+			MOTORS.spinLeft(TURN);
 		}
 
 		@Override
@@ -246,7 +246,7 @@ public enum State {
 		@Override
 		protected void execute() {
 			setServo(-50);
-			ENGINE.spinRight(TURN);
+			MOTORS.spinRight(TURN);
 		}
 
 		@Override
@@ -274,7 +274,7 @@ public enum State {
 		@Override
 		protected void execute() {
 			setServo(-50);
-			ENGINE.spinRight(TURN);
+			MOTORS.spinRight(TURN);
 		}
 
 		@Override
@@ -302,7 +302,7 @@ public enum State {
 		@Override
 		protected void execute() {
 			setServo(0);
-			ENGINE.go(-FAST);
+			MOTORS.go(-FAST);
 		}
 
 		@Override
@@ -330,7 +330,7 @@ public enum State {
 		@Override
 		protected void execute() {
 			setServo(-50);
-			ENGINE.spinRight(TURN);
+			MOTORS.spinRight(TURN);
 		}
 
 		@Override
@@ -351,7 +351,7 @@ public enum State {
 	// Pi2GO controller
 	private final static LEDAndServoController LEDS = LEDAndServoController.getInstance();
 	private final static Pi2GoGPIOController GPIO = Pi2GoGPIOController.getInstance();
-	private final static EngineController ENGINE = EngineController.getInstance();
+	private final static MotorController MOTORS = MotorController.getInstance();
 
 	// LEDs
 	private final static int LEDS_FRONT = LEDAndServoController.FRONT;

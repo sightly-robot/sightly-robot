@@ -4,17 +4,17 @@ import com.pi4j.wiringpi.Gpio;
 import com.pi4j.wiringpi.SoftPwm;
 
 /**
- * The EngineController is used for controlling the speed of two engines.<br>
+ * The MotorController is used for controlling the speed of two motors.<br>
  * It is not instantiable because it uses the Singleton pattern. Use the instance instead.
  * 
  * Code mainly from Prof. Dr. Joel Greenyer.
  * 
  * @author Lenard Spiecker
  */
-public class EngineController {
+public class MotorController {
 
-	/** The Singleton instance of the engine controller. */
-	private static EngineController instance;
+	/** The Singleton instance of the MotorController. */
+	private static MotorController instance;
 
 	// L1 = 26 pi4j: 11
 	// L2 = 24 pi4j: 10
@@ -44,7 +44,7 @@ public class EngineController {
 	 * <br>
 	 * Therefore the wiringPi library and the SoftPWM for controlling the engines are initialized.
 	 */
-	private EngineController() {
+	private MotorController() {
 		// initialize wiringPi library
 		Gpio.wiringPiSetup();
 		
@@ -55,14 +55,14 @@ public class EngineController {
 	}
 	
 	/**
-	 * Gets the instance of the engine controller.<br>
+	 * Gets the instance of the MotorController.<br>
 	 * If the instance is {@code null} a new one will be created.
 	 * 
 	 * @return	the engine controller instance
 	 */
-	public static EngineController getInstance() {
+	public static MotorController getInstance() {
 		if (instance == null) {
-			instance = new EngineController();
+			instance = new MotorController();
 		}
 		return instance;
 	}
