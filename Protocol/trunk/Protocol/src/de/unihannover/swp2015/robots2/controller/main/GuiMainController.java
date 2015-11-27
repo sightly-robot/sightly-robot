@@ -85,13 +85,7 @@ public class GuiMainController extends AbstractMainController implements
 			break;
 
 		case FIELD_FOOD:
-			String[] coordinates = key.split("-");
-			if (coordinates.length == 2) {
-				this.stageModelController.mqttSetFieldFood(
-						Integer.valueOf(coordinates[0]),
-						Integer.valueOf(coordinates[1]),
-						Integer.valueOf(message));
-			}
+			this.stageModelController.mqttSetFieldFood(key, message);
 			break;
 
 		case CONTROL_STATE:
