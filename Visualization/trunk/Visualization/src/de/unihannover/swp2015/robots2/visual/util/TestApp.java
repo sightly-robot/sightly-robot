@@ -2,14 +2,19 @@ package de.unihannover.swp2015.robots2.visual.util;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Collection;
+import java.util.Map;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 
 import de.unihannover.swp2015.robots2.model.implementation.Field;
+import de.unihannover.swp2015.robots2.model.implementation.Robot;
+import de.unihannover.swp2015.robots2.model.interfaces.IEvent.UpdateType;
 import de.unihannover.swp2015.robots2.model.interfaces.IGame;
 import de.unihannover.swp2015.robots2.model.interfaces.IStage;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
+import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
 
 /**
  * One-class swing app to test the reaction of the visualization when making changes to the IGame object.
@@ -81,6 +86,15 @@ public class TestApp extends JFrame implements ActionListener {
 					f.setWall(Orientation.EAST, rb());
 					f.setWall(Orientation.WEST, rb());
 				}
+			}
+		}
+		else if (e.getSource() == this.changeRobotPos) {
+			final Map<String, ? extends IRobot> r = game.getRobots();
+			final Collection<? extends IRobot> s = r.values();
+			for (IRobot ro : s) {
+				final Robot rob = (Robot) ro;
+				rob.setPosition((int)(Math.random()*game.getStage().getWidth()), (int)(Math.random()*game.getStage().getHeight()), Orientation.SOUTH);
+				rob.emitEvent(UpdateType.ROBOT_POSITION);
 			}
 		}
 	}

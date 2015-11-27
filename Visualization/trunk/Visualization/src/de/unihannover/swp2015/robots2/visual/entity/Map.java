@@ -32,6 +32,8 @@ public class Map extends Entity {
 		this.fieldList = new ArrayList<>(model.getWidth() * model.getHeight());
 		
 		this.model = model;
+		this.model.observe(this);
+		
 		this.init();
 	}
 	

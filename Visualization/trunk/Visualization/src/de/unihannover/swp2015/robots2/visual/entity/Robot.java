@@ -30,6 +30,7 @@ public class Robot extends Entity {
 		super(batch, gameHandler, prefs, resHandler);
 
 		this.model = robModel;
+		this.model.observe(this);
 
 		this.roboTex = resHandler.getRegion(ResourceConstants.DEFAULT_ROBO_SOUTH, ResourceConstants.DEFAULT_ROBO_NORTH,
 				ResourceConstants.DEFAULT_ROBO_WEST, ResourceConstants.DEFAULT_ROBO_EAST);
@@ -71,6 +72,9 @@ public class Robot extends Entity {
 																	// Information
 																	// da raus?
 			// TODO animation stuff
+			this.renderX = model.getPosition().getX() * prefs.getInt(PreferencesConstants.FIELD_WIDTH_KEY, 42);
+			this.renderY = model.getPosition().getY() * prefs.getInt(PreferencesConstants.FIELD_HEIGHT_KEY, 42);
+			System.out.println("asd");
 		}
 	}
 

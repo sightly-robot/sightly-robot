@@ -27,6 +27,8 @@ public class Resource extends Entity {
 		super(batch, gameHandler, prefs, resHandler);
 		
 		this.model = model;
+		this.model.observe(this);
+		
 		this.tex = resHandler.getRegion(ResourceConstants.DEFAULT_RES_0, ResourceConstants.DEFAULT_RES_1,
 				ResourceConstants.DEFAULT_RES_2, ResourceConstants.DEFAULT_RES_3, ResourceConstants.DEFAULT_RES_4,
 				ResourceConstants.DEFAULT_RES_5, ResourceConstants.DEFAULT_RES_6, ResourceConstants.DEFAULT_RES_7,
