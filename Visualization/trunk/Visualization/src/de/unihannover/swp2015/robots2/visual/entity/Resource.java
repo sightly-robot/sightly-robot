@@ -32,13 +32,19 @@ public class Resource extends Entity {
 				ResourceConstants.DEFAULT_RES_5, ResourceConstants.DEFAULT_RES_6, ResourceConstants.DEFAULT_RES_7,
 				ResourceConstants.DEFAULT_RES_8, ResourceConstants.DEFAULT_RES_9, ResourceConstants.DEFAULT_RES_10);
 
-		this.renderX = model.getX();
-		this.renderY = model.getY();
+		final float fieldWidth = prefs.getInt(PreferencesConstants.FIELD_WIDTH_KEY, 10);
+		final float fieldHeight = prefs.getInt(PreferencesConstants.FIELD_HEIGHT_KEY, 10);
+
+		this.renderX = model.getX() * fieldWidth;
+		this.renderY = model.getY() * fieldHeight;
 	}
 
 	@Override
 	public void render() {
 
+		if (model.getFood() == 0)
+			return;
+		
 		final float fieldWidth = prefs.getInt(PreferencesConstants.FIELD_WIDTH_KEY, 10);
 		final float fieldHeight = prefs.getInt(PreferencesConstants.FIELD_HEIGHT_KEY, 10);
 		

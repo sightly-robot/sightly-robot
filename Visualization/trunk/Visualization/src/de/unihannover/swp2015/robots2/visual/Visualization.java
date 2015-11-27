@@ -11,11 +11,13 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import de.unihannover.swp2015.robots2.controller.externalInterfaces.IVisualization;
+import de.unihannover.swp2015.robots2.model.interfaces.IGame;
 import de.unihannover.swp2015.robots2.visual.core.IGameHandler;
 import de.unihannover.swp2015.robots2.visual.core.RobotGameHandler;
 import de.unihannover.swp2015.robots2.visual.resource.IResourceHandler;
 import de.unihannover.swp2015.robots2.visual.resource.ResourceConstants;
 import de.unihannover.swp2015.robots2.visual.resource.ResourceHandler;
+import de.unihannover.swp2015.robots2.visual.util.TestApp;
 import de.unihannover.swp2015.robots2.visual.util.TestUtil;
 import de.unihannover.swp2015.robots2.visual.util.pref.IPreferences;
 import de.unihannover.swp2015.robots2.visual.util.pref.FlexPreferences;
@@ -70,9 +72,14 @@ public class Visualization extends ApplicationAdapter implements IVisualization 
 		this.cam.setToOrtho(true, appWidth, appHeight);
 		this.fitViewport = new FitViewport(appWidth, appHeight, cam);
 		
-		// TODO create RobotGameHandler properly
 		final IResourceHandler resHandler = new ResourceHandler(ResourceConstants.ATLAS_PATH + ResourceConstants.ATLAS_NAME + ".atlas");
-		this.gameHandlerList.add(new RobotGameHandler(TestUtil.createRandomTestGame(2, 12, 9), resHandler, cam, prefs));
+		
+		//obv. just for testing
+		final IGame testGame = TestUtil.createRandomTestGame(2, 12, 9);
+		new TestApp(testGame);	
+		
+		// TODO create RobotGameHandler properly
+		this.gameHandlerList.add(new RobotGameHandler(testGame, resHandler, cam, prefs));
 	}
 
 	@Override
@@ -101,7 +108,7 @@ public class Visualization extends ApplicationAdapter implements IVisualization 
 	
 	@Override
 	public void resize(final int width, final int height) {
-		this.fitViewport.update(width, height);
+		this.fitViewport.update(width, height, true);
 		
 		for (int i = 0; i < gameHandlerList.size(); ++i) {
 			gameHandlerList.get(i).resize(width, height);
