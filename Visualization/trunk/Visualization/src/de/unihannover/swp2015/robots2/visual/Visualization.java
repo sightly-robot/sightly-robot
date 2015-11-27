@@ -9,6 +9,10 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.bitfire.postprocessing.PostProcessor;
+import com.bitfire.postprocessing.effects.Bloom;
+import com.bitfire.postprocessing.effects.Fxaa;
+import com.bitfire.utils.ShaderLoader;
 
 import de.unihannover.swp2015.robots2.controller.externalInterfaces.IVisualization;
 import de.unihannover.swp2015.robots2.model.interfaces.IGame;
@@ -50,6 +54,8 @@ public class Visualization extends ApplicationAdapter implements IVisualization 
 	 */
 	private Viewport fitViewport;
 	
+	private PostProcessor pp;
+	
 	/**
 	 * Constructs a Visualization object.
 	 * 
@@ -66,9 +72,12 @@ public class Visualization extends ApplicationAdapter implements IVisualization 
 		int appWidth = Gdx.graphics.getWidth();
 		int appHeight = Gdx.graphics.getHeight();
 		
+		ShaderLoader.BasePath = "resources/shaders/";
+		
+		this.pp = new PostProcessor(false, false, true);
+		this.pp.addEffect(new Fxaa(appWidth, appHeight));
 		this.prefs = new FlexPreferences("prefs");
 		this.cam = new OrthographicCamera();
-		// !important! (0,0) is at the top-left corner
 		this.cam.setToOrtho(true, appWidth, appHeight);
 		this.fitViewport = new FitViewport(appWidth, appHeight, cam);
 		
@@ -97,6 +106,8 @@ public class Visualization extends ApplicationAdapter implements IVisualization 
 		// clears the scene
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+		pp.capture();
+		
 		for (int i = 0; i < gameHandlerList.size(); ++i) {
 			gameHandlerList.get(i).update();
 		}
@@ -104,6 +115,8 @@ public class Visualization extends ApplicationAdapter implements IVisualization 
 		for (int i = 0; i < gameHandlerList.size(); ++i) {
 			gameHandlerList.get(i).render();
 		}
+		
+		pp.render();
 	}
 	
 	@Override
