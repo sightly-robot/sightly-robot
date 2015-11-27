@@ -1,5 +1,9 @@
 package de.unihannover.swp2015.robots2.graph;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import de.unihannover.swp2015.robots2.core.Robot;
 import de.unihannover.swp2015.robots2.model.interfaces.IField;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition;
@@ -10,7 +14,7 @@ public class AIGraph {
 
 	private Node[][] nodes;
 
-	private Node myPos;
+	private Robot myself;
 
 	private int dimX;
 	private int dimY;
@@ -91,7 +95,55 @@ public class AIGraph {
 			posNode.setRobot(robot);
 		}
 	}
-
+	
+	//not returning backward in increment 1
+	/**
+	 * This method returns a random valid Orientation, which the robot is supposed to 
+	 * move in next.
+	 * 
+	 * @return	Orientation, the robot should move in next
+	 */
+	public Orientation getRandomOrientation() {
+		List<Orientation> available = new ArrayList<Orientation>();
+		Orientation curr = this.myself.getOrientation();
+		int x = getMyPosition().getX();
+		int y = getMyPosition().getY();
+		
+		switch(curr) {
+			case NORTH:	if(!nodes[x][y].isWall(Orientation.WEST))
+							available.add(Orientation.WEST);
+						if(!nodes[x][y].isWall(Orientation.NORTH))
+							available.add(Orientation.NORTH);
+						if(!nodes[x][y].isWall(Orientation.EAST))
+							available.add(Orientation.EAST);
+						break;
+			case EAST:	if(!nodes[x][y].isWall(Orientation.NORTH))
+							available.add(Orientation.NORTH);
+						if(!nodes[x][y].isWall(Orientation.EAST))
+							available.add(Orientation.EAST);
+						if(!nodes[x][y].isWall(Orientation.SOUTH))
+							available.add(Orientation.SOUTH);
+						break;
+			case SOUTH:	if(!nodes[x][y].isWall(Orientation.EAST))
+							available.add(Orientation.EAST);
+						if(!nodes[x][y].isWall(Orientation.SOUTH))
+							available.add(Orientation.SOUTH);
+						if(!nodes[x][y].isWall(Orientation.WEST))
+							available.add(Orientation.WEST);
+						break;
+			case WEST:	if(!nodes[x][y].isWall(Orientation.SOUTH))
+							available.add(Orientation.SOUTH);
+						if(!nodes[x][y].isWall(Orientation.WEST))
+							available.add(Orientation.WEST);
+						if(!nodes[x][y].isWall(Orientation.NORTH))
+							available.add(Orientation.NORTH);
+						break;
+		}
+		
+		Collections.shuffle(available);
+		return available.get(0);
+	}
+	
 	public void setStartPositions(IStage map) {
 
 	}
@@ -104,12 +156,12 @@ public class AIGraph {
 		this.nodes = nodes;
 	}
 
-	public Node getMyPos() {
-		return myPos;
+	public Node getMyPosition() {
+		return this.myself.getPosition();
 	}
 
-	public void setMyPos(Node myPos) {
-		this.myPos = myPos;
+	public void setMyPosition(Node myPosition) {
+		this.myself.setPosition(myPosition);
 	}
 
 	public int getDimX() {
