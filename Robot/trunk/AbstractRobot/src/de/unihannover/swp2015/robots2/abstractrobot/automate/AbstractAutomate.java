@@ -30,11 +30,11 @@ public abstract class AbstractAutomate implements AiEventObserver, Runnable {
 		// Positioning:
 		private Point nextPosition = new Point(0, 0);
 
-		public AbstractAutomate(IRobotController robotController, IState waitState) {
+		public AbstractAutomate(IRobotController robotController, IState initialState) {
 			this.robotController = robotController;
 			robot = robotController.getMyself();
 
-			state = waitState;
+			state = initialState;
 		}
 		
 		public void start()
