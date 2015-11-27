@@ -39,7 +39,14 @@ public class GuiMainController extends AbstractMainController implements
 		if (this.mqttController == null) {
 			String clientId = "gui_" + UUID.randomUUID().toString();
 			// TODO subscription list
-			String[] subscribeTopics = {};
+			String[] subscribeTopics = {
+					"robot/#",
+					"map/walls",
+					"map/food",
+					"map/food/+",
+					"event/error/robot/#",
+					"extension/2/settings/#",
+			};
 
 			try {
 				this.mqttController = new MqttController(brokerUrl, clientId,
@@ -70,8 +77,11 @@ public class GuiMainController extends AbstractMainController implements
 			this.robotModelController.mqttRobotPosition(key, message,
 					mqtttopic == MqttTopic.ROBOT_SETPOSITION);
 			break;
+		
+		case ROBOT_SCORE:
+			this.robotModelController.mqttScoreUpdate(key,message);
 
-		case ROBOT_VIRTUALSPEED:
+		case CONTROL_VIRTUALSPEED:
 			this.gameModelController.mqttSetRobotVirtualspeed(Float
 					.valueOf(message));
 			break;
@@ -162,32 +172,36 @@ public class GuiMainController extends AbstractMainController implements
 
 	@Override
 	public void sendGameParameters(float robotSpeed, int hesitationTime) {
-		// TODO Auto-generated method stub
-
+		this.sendMqttMessage(MqttTopic.CONTROL_VIRTUALSPEED, null,
+				Float.toString(robotSpeed));
+		this.sendMqttMessage(MqttTopic.CONTROL_HESITATIONTIME, null,
+				Integer.toString(hesitationTime));
 	}
 
 	@Override
 	public void setRobotPosition(int x, int y, Orientation orientation,
 			IRobot robot) {
-		// TODO Auto-generated method stub
-
+		String message = Integer.toString(x) + "," + Integer.toString(y) + ","
+				+ orientation.toString();
+		this.sendMqttMessage(MqttTopic.ROBOT_SETPOSITION, robot.getId(),
+				message);
 	}
 
 	@Override
 	public void startGame() {
-		// TODO
+		this.sendMqttMessage(MqttTopic.CONTROL_STATE, null, "running");
 	}
 
 	@Override
 	public void stopGame() {
-		// TODO Auto-generated method stub
-
+		this.sendMqttMessage(MqttTopic.CONTROL_STATE, null, "stopped");
 	}
 
 	@Override
 	public void resetGame() {
-		// TODO Auto-generated method stub
-
+		// Reset robots' scores
+		for (IRobot r : this.game.getRobots().values())
+			this.sendMqttMessage(MqttTopic.ROBOT_SCORE, r.getId(), "0");
 	}
 
 	@Override

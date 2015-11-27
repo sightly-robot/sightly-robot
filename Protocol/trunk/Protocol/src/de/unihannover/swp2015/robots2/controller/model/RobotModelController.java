@@ -50,4 +50,21 @@ public class RobotModelController {
 
 		}
 	}
+
+	/**
+	 * Handle a score update that was received via MQTT topic ROBOT_SCORE.
+	 * 
+	 * @param key
+	 *            Robot id extracted from MQTT topic
+	 * @param message
+	 *            MQTT message payload containing the new score
+	 */
+	public void mqttScoreUpdate(String key, String message) {
+		IRobotWriteable r = this.robots.get(key);
+		if (r == null)
+			return;
+
+		r.setScore(Integer.parseInt(message));
+		r.emitEvent(UpdateType.ROBOT_SCORE);
+	}
 }

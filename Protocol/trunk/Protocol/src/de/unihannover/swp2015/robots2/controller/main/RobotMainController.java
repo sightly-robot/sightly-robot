@@ -89,7 +89,7 @@ public class RobotMainController extends AbstractMainController implements
 			// robot/setposition
 			break;
 
-		case ROBOT_VIRTUALSPEED:
+		case CONTROL_VIRTUALSPEED:
 			this.gameModelController.mqttSetRobotVirtualspeed(Float
 					.valueOf(message));
 			break;

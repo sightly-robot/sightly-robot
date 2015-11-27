@@ -19,7 +19,9 @@ public enum MqttTopic {
 	ROBOT_POSITION("robot/position/+", true),
 
 	ROBOT_SETPOSITION("robot/setposition/+", false),
-
+	
+	ROBOT_SCORE("robot/score", true),
+	
 	/**
 	 * Let Robot with given ID (+) blink in given color.
 	 * 
@@ -27,8 +29,6 @@ public enum MqttTopic {
 	 * extensions, v1.0
 	 */
 	ROBOT_BLINK("robot/blink/+", false),
-
-	ROBOT_VIRTUALSPEED("robot/virtualspeed", true),
 
 	MAP_WALLS("map/walls", true),
 
@@ -47,6 +47,10 @@ public enum MqttTopic {
 	FIELD_OCCUPIED_RELEASE("map/occupied/release/+", false),
 
 	CONTROL_STATE("control/state", true),
+
+	CONTROL_VIRTUALSPEED("robot/virtualspeed", true),
+	
+	CONTROL_HESITATIONTIME("extension/2/robot/hesitationtime", true),
 
 	EVENT_ERROR_SERVER_CONNECTION("event/error/server/connection", false),
 
