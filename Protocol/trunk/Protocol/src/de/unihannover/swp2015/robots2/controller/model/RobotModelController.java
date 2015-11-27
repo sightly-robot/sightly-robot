@@ -2,8 +2,6 @@ package de.unihannover.swp2015.robots2.controller.model;
 
 import java.util.Map;
 
-import de.unihannover.swp2015.robots2.controller.mqtt.MqttTopic;
-import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent.UpdateType;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
 import de.unihannover.swp2015.robots2.model.writeableInterfaces.IRobotWriteable;
@@ -34,16 +32,22 @@ public class RobotModelController {
 			boolean setPosition) {
 		IRobotWriteable r = this.robots.get(key);
 
-		if (r != null
-				&& (setPosition && r.isMyself() || !setPosition
-						&& !r.isMyself())) {
-			
+		// Only update position if other robot or explicit external command to
+		// reset position.
+		if (r != null && (setPosition || !r.isMyself())) {
+
 			String[] positionParts = message.split(",");
 
 			r.setPosition(Integer.valueOf(positionParts[0]),
 					Integer.valueOf(positionParts[1]),
 					Orientation.getBy(positionParts[2]));
 			r.emitEvent(UpdateType.ROBOT_POSITION);
+
+			if (setPosition) {
+				r.setSetupState(true);
+				r.emitEvent(UpdateType.ROBOT_STATE);
+			}
+
 		}
 	}
 }

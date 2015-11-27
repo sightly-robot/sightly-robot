@@ -15,10 +15,15 @@ public class GameModelController {
 	/**
 	 * Handle a ROBOT_TYPE message.
 	 * 
-	 * @param message
+	 * This will add the robot if not existent or delete it (if message == "").
+	 * 
+	 * @param robotId Robot Id extracted from MQTT topic
+	 * @param message MQTT message payload
 	 */
 	public void mqttAddRobot(String robotId, String message) {
-		if (this.game.getRobots().containsKey(robotId))
+		if (message.equals(""))
+			this.game.getRobotsWriteable().remove(robotId);
+		else if (!this.game.getRobots().containsKey(robotId))
 			this.game
 					.addRobot(new Robot(robotId, message.equals("real"), false));
 	}
