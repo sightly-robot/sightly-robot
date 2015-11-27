@@ -1,6 +1,7 @@
 package de.unihannover.swp2015.robots2.controller.model;
 
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent.UpdateType;
+import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
 import de.unihannover.swp2015.robots2.model.writeableInterfaces.IFieldWriteable;
 import de.unihannover.swp2015.robots2.model.writeableInterfaces.IStageWriteable;
 
@@ -13,23 +14,72 @@ public class StageModelController {
 	}
 
 	/**
-	 * Handle a MAP_WALLS message.
+	 * Handle an update of the walls, received via MQTT topic MAP_WALLS.
+	 * 
+	 * This method resizes the stage (if necessary), updates all fields and
+	 * emits the applicable Events on the Stage.
 	 * 
 	 * @param message
+	 *            The MQTT message payload
 	 */
 	public void mqttSetWalls(String message) {
-		// TODO implement method
-		// TODO emit Event (Stage)
+		String[] parts = message.split(",");
+		if (parts.length < 3)
+			return;
+
+		int width = Integer.parseInt(parts[0]);
+		int height = Integer.parseInt(parts[1]);
+
+		if (parts.length != width * height + 2)
+			return;
+
+		if (width != this.stage.getWidth() || height != this.stage.getHeight()) {
+			this.stage.changeSize(width, height);
+			this.stage.emitEvent(UpdateType.STAGE_SIZE);
+		}
+
+		for (int i = 2; i < parts.length; i++) {
+			IFieldWriteable f = this.stage.getFieldWriteable((i - 2) % width,
+					(i - 2) / width);
+			for (Orientation o : Orientation.values()) {
+				f.setWall(o, parts[i].contains(o.toString()));
+			}
+		}
+		this.stage.emitEvent(UpdateType.STAGE_WALL);
+
 	}
 
 	/**
-	 * Handle a MAP_FOOD message.
+	 * Handle an update of the food for whole map, received via MQTT topic
+	 * MAP_FOOD.
+	 * 
+	 * This method updates all fields and emits the applicable Events on the
+	 * Stage.
 	 * 
 	 * @param message
+	 *            The MQTT message payload
 	 */
 	public void mqttSetFood(String message) {
-		// TODO implement method
-		// TODO emit Event (Field)
+		String[] parts = message.split(",");
+		if (parts.length < 3)
+			return;
+
+		int width = Integer.parseInt(parts[0]);
+		int height = Integer.parseInt(parts[1]);
+
+		if (parts.length != width * height + 2
+				|| width != this.stage.getWidth()
+				|| height != this.stage.getHeight())
+			return;
+
+		for (int i = 2; i < parts.length; i++) {
+			IFieldWriteable f = this.stage.getFieldWriteable((i - 2) % width,
+					(i - 2) / width);
+			int food = Integer.parseInt(parts[i]);
+			f.setFood(food);
+			f.emitEvent(UpdateType.FIELD_FOOD);
+		}
+
 	}
 
 	/**
@@ -48,8 +98,9 @@ public class StageModelController {
 			int x = Integer.parseInt(coordinates[0]);
 			int y = Integer.parseInt(coordinates[1]);
 			int food = Integer.parseInt(message);
-			
-			if (x >= 0 && x < this.stage.getWidth() && y >= 0 && y < this.stage.getWidth()) {
+
+			if (x >= 0 && x < this.stage.getWidth() && y >= 0
+					&& y < this.stage.getWidth()) {
 				IFieldWriteable f = this.stage.getFieldWriteable(x, y);
 				f.setFood(food);
 				f.emitEvent(UpdateType.FIELD_FOOD);
