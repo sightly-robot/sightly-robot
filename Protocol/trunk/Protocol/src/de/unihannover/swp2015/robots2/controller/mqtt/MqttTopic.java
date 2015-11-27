@@ -10,15 +10,15 @@ package de.unihannover.swp2015.robots2.controller.mqtt;
  */
 public enum MqttTopic {
 
-	ROBOT_DISCOVER("robot/discover"),
+	ROBOT_DISCOVER("robot/discover", false),
 
-	ROBOT_NEW("robot/new"),
+	ROBOT_NEW("robot/new", false),
 
-	ROBOT_TYPE("robot/type/+"),
+	ROBOT_TYPE("robot/type/+", true),
 
-	ROBOT_POSITION("robot/position/+"),
+	ROBOT_POSITION("robot/position/+", true),
 
-	ROBOT_SETPOSITION("robot/setposition/+"),
+	ROBOT_SETPOSITION("robot/setposition/+", false),
 
 	/**
 	 * Let Robot with given ID (+) blink in given color.
@@ -26,49 +26,50 @@ public enum MqttTopic {
 	 * Message format = <R>,<G>,<B> with R,G,B = [0-255] From standard
 	 * extensions, v1.0
 	 */
-	ROBOT_BLINK("robot/blink/+"),
+	ROBOT_BLINK("robot/blink/+", false),
 
-	ROBOT_VIRTUALSPEED("robot/virtualspeed"),
+	ROBOT_VIRTUALSPEED("robot/virtualspeed", true),
 
-	MAP_WALLS("map/walls"),
+	MAP_WALLS("map/walls", true),
 
-	MAP_FOOD("map/food"),
+	MAP_FOOD("map/food", false),
 
-	FIELD_FOOD("map/food/+"),
+	FIELD_FOOD("map/food/+", true),
 
-	FIELD_OCCUPIED_LOCK("map/occupied/lock/+"),
+	FIELD_OCCUPIED_LOCK("map/occupied/lock/+", false),
 
-	FIELD_OCCUPIED_SET("map/occupied/set/+"),
+	FIELD_OCCUPIED_SET("map/occupied/set/+", false),
 
-	FIELD_OCCUPIED_RELEASE("map/occupied/release/+"),
+	FIELD_OCCUPIED_RELEASE("map/occupied/release/+", false),
 
-	CONTROL_STATE("control/state"),
+	CONTROL_STATE("control/state", true),
 
-	EVENT_ERROR_SERVER_CONNECTION("event/error/server/connection"),
+	EVENT_ERROR_SERVER_CONNECTION("event/error/server/connection", false),
 
-	EVENT_ERROR_ROBOT_CONNECTION("event/error/robot/+/connection"),
+	EVENT_ERROR_ROBOT_CONNECTION("event/error/robot/+/connection", false),
 
-	EVENT_ERROR_ROBOT_ROBOTICS("event/error/robot/+/robotics"),
+	EVENT_ERROR_ROBOT_ROBOTICS("event/error/robot/+/robotics", false),
 
 	/** Get the current hardware settings of the given robot. */
-	SETTINGS_ROBOT_REQUEST("extension/2/settings/robot/+/request"),
+	SETTINGS_ROBOT_REQUEST("extension/2/settings/robot/+/request", false),
 
 	/** Answer of the robot to SETTINGS_ROBOT_REQUEST. */
-	SETTINGS_ROBOT_RESPONSE("extension/2/settings/robot/+/response"),
+	SETTINGS_ROBOT_RESPONSE("extension/2/settings/robot/+/response", false),
 
 	/** Set hardware settings of the given robot. */
-	SETTINGS_ROBOT_SET("extension/2/settings/robot/+/set"),
+	SETTINGS_ROBOT_SET("extension/2/settings/robot/+/set", false),
 
-	/**Get the current hardware settings of the given robot. */
-	SETTINGS_VISU_REQUEST("extension/2/settings/visu/request"),
+	/** Get the current hardware settings of the given robot. */
+	SETTINGS_VISU_REQUEST("extension/2/settings/visu/request", false),
 
 	/** Answer of the robot to SETTINGS_ROBOT_REQUEST. */
-	SETTINGS_VISU_RESPONSE("extension/2/settings/visu/response"),
+	SETTINGS_VISU_RESPONSE("extension/2/settings/visu/response", false),
 
 	/** Set hardware settings of the given robot. */
-	SETTINGS_VISU_SET("extension/2/settings/visu/set");
+	SETTINGS_VISU_SET("extension/2/settings/visu/set", false);
 
 	private final String topic;
+	private final boolean retained;
 
 	/**
 	 * Returns the MqttTopic-Object by the given topic string. This method is
@@ -110,8 +111,9 @@ public enum MqttTopic {
 		return null;
 	}
 
-	private MqttTopic(String topic) {
+	private MqttTopic(String topic, boolean retained) {
 		this.topic = topic;
+		this.retained = retained;
 	}
 
 	@Override
@@ -150,6 +152,16 @@ public enum MqttTopic {
 			return input.substring(begin);
 		else
 			return input.substring(begin, end);
+	}
+
+	/**
+	 * Check whether messages published to this topic should be sent as retained
+	 * messages, that are persisted at the MQTT broker.
+	 * 
+	 * @return Whether to retain messages to this topic
+	 */
+	public boolean isRetained() {
+		return this.retained;
 	}
 
 }

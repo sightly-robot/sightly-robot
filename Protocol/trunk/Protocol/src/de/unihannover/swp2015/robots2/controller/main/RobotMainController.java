@@ -66,10 +66,10 @@ public class RobotMainController extends AbstractMainController implements
 
 		switch (mqtttopic) {
 		case ROBOT_DISCOVER:
+			/* Should be deprecated when using retained messages */
 			String hardwareRobot = (this.myself.isHardwareRobot()) ? "real"
 					: "virtual";
-			this.sendMqttMessage(
-					MqttTopic.ROBOT_TYPE.toString(this.myself.getId()),
+			this.sendMqttMessage(MqttTopic.ROBOT_TYPE, this.myself.getId(),
 					hardwareRobot);
 			break;
 
@@ -85,6 +85,8 @@ public class RobotMainController extends AbstractMainController implements
 		case ROBOT_SETPOSITION:
 			this.robotModelController.mqttRobotPosition(key, message,
 					mqtttopic == MqttTopic.ROBOT_SETPOSITION);
+			// TODO echo field to robot/position occupy field on
+			// robot/setposition
 			break;
 
 		case ROBOT_VIRTUALSPEED:
@@ -111,15 +113,18 @@ public class RobotMainController extends AbstractMainController implements
 			break;
 
 		case FIELD_OCCUPIED_LOCK:
-			this.fieldStateModelController.mqttFieldLock(key, message);
+			if (message != this.myself.getId())
+				this.fieldStateModelController.mqttFieldLock(key, message);
 			break;
 
 		case FIELD_OCCUPIED_SET:
-			this.fieldStateModelController.mqttFieldOccupy(key, message);
+			if (message != this.myself.getId())
+				this.fieldStateModelController.mqttFieldOccupy(key, message);
 			break;
 
 		case FIELD_OCCUPIED_RELEASE:
-			this.fieldStateModelController.mqttFieldRelease(key, message);
+			if (message != this.myself.getId())
+				this.fieldStateModelController.mqttFieldRelease(key, message);
 			break;
 
 		case CONTROL_STATE:
@@ -149,16 +154,14 @@ public class RobotMainController extends AbstractMainController implements
 		if (this.game.getStage().getField(x, y).getState() != State.FREE)
 			return;
 
-		this.sendMqttMessage(
-				MqttTopic.FIELD_OCCUPIED_LOCK.toString(x + "-" + y),
+		this.sendMqttMessage(MqttTopic.FIELD_OCCUPIED_LOCK, (x + "-" + y),
 				this.myself.getId());
 		this.fieldStateModelController.setFieldLock(x, y);
 	}
 
 	@Override
 	public void releaseField(int x, int y) {
-		this.sendMqttMessage(
-				MqttTopic.FIELD_OCCUPIED_RELEASE.toString(x + "-" + y),
+		this.sendMqttMessage(MqttTopic.FIELD_OCCUPIED_RELEASE, (x + "-" + y),
 				this.myself.getId());
 		this.fieldStateModelController.setFieldRelease(x, y);
 	}
@@ -181,8 +184,7 @@ public class RobotMainController extends AbstractMainController implements
 
 	@Override
 	public void occupyField(int x, int y) {
-		this.sendMqttMessage(
-				MqttTopic.FIELD_OCCUPIED_SET.toString(x + "-" + y),
+		this.sendMqttMessage(MqttTopic.FIELD_OCCUPIED_SET, (x + "-" + y),
 				this.myself.getId());
 		this.fieldStateModelController.setFieldOccupy(x, y);
 	}

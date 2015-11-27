@@ -1,6 +1,5 @@
 package de.unihannover.swp2015.robots2.controller.main;
 
-
 import de.unihannover.swp2015.robots2.controller.interfaces.IController;
 import de.unihannover.swp2015.robots2.controller.interfaces.InfoType;
 import de.unihannover.swp2015.robots2.controller.model.FieldStateModelController;
@@ -9,6 +8,7 @@ import de.unihannover.swp2015.robots2.controller.model.RobotModelController;
 import de.unihannover.swp2015.robots2.controller.model.StageModelController;
 import de.unihannover.swp2015.robots2.controller.mqtt.IMqttController;
 import de.unihannover.swp2015.robots2.controller.mqtt.IMqttMessageHandler;
+import de.unihannover.swp2015.robots2.controller.mqtt.MqttTopic;
 import de.unihannover.swp2015.robots2.model.implementation.Game;
 import de.unihannover.swp2015.robots2.model.interfaces.IGame;
 import de.unihannover.swp2015.robots2.model.writeableInterfaces.IGameWriteable;
@@ -47,8 +47,8 @@ public abstract class AbstractMainController implements IController,
 	@Override
 	public void sendInfoMessage(InfoType type, String topic, String message) {
 		if (type.compareTo(this.infoType) >= 0) {
-			this.sendMqttMessage("event/" + type.toString() + "/"
-					+ this.infoComponent + "/" + topic, message);
+			this.mqttController.sendMessage("event/" + type.toString() + "/"
+					+ this.infoComponent + "/" + topic, message, false);
 			System.out.println(type.toString() + ": " + message);
 		}
 	}
@@ -62,12 +62,23 @@ public abstract class AbstractMainController implements IController,
 	 * Send an MQTT message with this controller's mqtt controller – if it was
 	 * started properly.
 	 * 
-	 * @param topic MQTT topic of the message
-	 * @param message Payload of the MQTT message
+	 * The Retained flag will be set according to the topic's setting.
+	 * 
+	 * @param topic
+	 *            MQTT topic of the message
+	 * @param topicKey
+	 *            Id or key that will be inserted in the topic string. NULL if
+	 *            you don't want to insert a key.
+	 * @param message
+	 *            Payload of the MQTT message
 	 */
-	protected void sendMqttMessage(String topic, String message) {
+	protected void sendMqttMessage(MqttTopic topic, String topicKey,
+			String message) {
 		if (this.mqttController != null) {
-			this.mqttController.sendMessage(topic, message);
+			String fullTopic = (topicKey == null) ? topic.toString() : topic
+					.toString(topicKey);
+			this.mqttController.sendMessage(fullTopic, message,
+					topic.isRetained());
 		}
 	}
 

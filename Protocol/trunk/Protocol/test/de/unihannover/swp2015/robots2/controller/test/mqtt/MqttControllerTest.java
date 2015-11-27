@@ -55,11 +55,11 @@ public class MqttControllerTest {
 				Arrays.asList(new String[] { "test/y", "test/b" }));
 		
 		for (int i=0; i<100; i++) {
-			mqttController2.sendMessage("test/x", Integer.toString(i));
+			mqttController2.sendMessage("test/x", Integer.toString(i), false);
 		}
-		mqttController2.sendMessage("test/x", "x");
-		mqttController1.sendMessage("test/y", "y");
-		mqttController2.sendMessage("test/b", "b");
+		mqttController2.sendMessage("test/x", "x", false);
+		mqttController1.sendMessage("test/y", "y", false);
+		mqttController2.sendMessage("test/b", "b", false);
 		
 		Thread.sleep(500);
 		

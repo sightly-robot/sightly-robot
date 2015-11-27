@@ -13,6 +13,9 @@ public interface IMqttController {
 	 *            The MQTT topic to send the message to
 	 * @param message
 	 *            The payload of the MQTT message
+	 * @param retained
+	 *            Send the message as retained message, so the MQTT broker will
+	 *            store the value for new connected clients.
 	 */
-	public void sendMessage(String topic, String message);
+	public void sendMessage(String topic, String message, boolean retained);
 }

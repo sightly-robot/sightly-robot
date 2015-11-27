@@ -128,28 +128,27 @@ public class GuiMainController extends AbstractMainController implements
 
 	@Override
 	public void setRobotSettings(String id, String settings) {
-		this.sendMqttMessage(MqttTopic.SETTINGS_ROBOT_SET.toString(id),
-				settings);
+		this.sendMqttMessage(MqttTopic.SETTINGS_ROBOT_SET, id, settings);
 	}
 
 	@Override
 	public void getRobotSettings(String id) {
-		this.sendMqttMessage(MqttTopic.SETTINGS_ROBOT_REQUEST.toString(id), "");
+		this.sendMqttMessage(MqttTopic.SETTINGS_ROBOT_REQUEST, id, "");
 	}
 
 	@Override
 	public void setVisualizationSettings(String settings) {
-		this.sendMqttMessage(MqttTopic.SETTINGS_VISU_SET.toString(), settings);
+		this.sendMqttMessage(MqttTopic.SETTINGS_VISU_SET, null, settings);
 	}
 
 	@Override
 	public void getVisualizationSettings() {
-		this.sendMqttMessage(MqttTopic.SETTINGS_VISU_REQUEST.toString(), "");
+		this.sendMqttMessage(MqttTopic.SETTINGS_VISU_REQUEST, null, "");
 	}
 
 	@Override
 	public void letRobotBlink(String id) {
-		this.sendMqttMessage(MqttTopic.ROBOT_BLINK.toString(id), "");
+		this.sendMqttMessage(MqttTopic.ROBOT_BLINK, id, "");
 	}
 
 	@Override

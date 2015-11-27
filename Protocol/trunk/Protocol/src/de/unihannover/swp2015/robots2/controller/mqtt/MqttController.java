@@ -114,8 +114,9 @@ public class MqttController implements IMqttController {
 	 * by the send worker thread.
 	 */
 	@Override
-	public void sendMessage(String topic, String message) {
+	public void sendMessage(String topic, String message, boolean retained) {
 		MqttMessage mqttMessage = new MqttMessage(message.getBytes(StandardCharsets.UTF_8));
+		mqttMessage.setRetained(retained);
 		try {
 			this.sendQueue.put(new MqttFullMessage(topic, mqttMessage));
 		} catch (InterruptedException e) {
