@@ -87,11 +87,11 @@ public class RobotGameHandler implements IGameHandler {
 		final IStage stage = game.getStage();
 
 		//set preferences !have to happen before creating entities!
-		this.prefs.putInt(PreferencesConstants.WALL_THICK_KEY, 2);
+		this.prefs.putInt(PreferencesConstants.WALL_THICK_KEY, 10);
 		this.prefs.putInt(PreferencesConstants.MAP_ROWS_KEY, stage.getWidth());
 		this.prefs.putInt(PreferencesConstants.MAP_COLS_KEY, stage.getHeight());
-		this.prefs.putInt(PreferencesConstants.FIELD_WIDTH_KEY, Gdx.graphics.getWidth() / stage.getWidth());
-		this.prefs.putInt(PreferencesConstants.FIELD_HEIGHT_KEY, Gdx.graphics.getHeight() / stage.getHeight());
+		this.prefs.putFloat(PreferencesConstants.FIELD_WIDTH_KEY, ((float) Gdx.graphics.getWidth()) / stage.getWidth());
+		this.prefs.putFloat(PreferencesConstants.FIELD_HEIGHT_KEY, ((float) Gdx.graphics.getHeight()) / stage.getHeight());
 
 		//create entites
 		for (final IRobot robot : game.getRobots().values()) {

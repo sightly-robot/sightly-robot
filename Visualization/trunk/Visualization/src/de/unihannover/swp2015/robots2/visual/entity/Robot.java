@@ -35,8 +35,8 @@ public class Robot extends Entity {
 		this.roboTex = resHandler.getRegion(ResourceConstants.DEFAULT_ROBO_SOUTH, ResourceConstants.DEFAULT_ROBO_NORTH,
 				ResourceConstants.DEFAULT_ROBO_WEST, ResourceConstants.DEFAULT_ROBO_EAST);
 
-		this.renderX = model.getPosition().getX() * prefs.getInt(PreferencesConstants.FIELD_WIDTH_KEY, 42);
-		this.renderY = model.getPosition().getY() * prefs.getInt(PreferencesConstants.FIELD_HEIGHT_KEY, 42);
+		this.renderX = model.getPosition().getX() * prefs.getFloat(PreferencesConstants.FIELD_WIDTH_KEY, 42);
+		this.renderY = model.getPosition().getY() * prefs.getFloat(PreferencesConstants.FIELD_HEIGHT_KEY, 42);
 		System.out.println(model.getPosition().getX());
 	}
 
@@ -44,8 +44,8 @@ public class Robot extends Entity {
 	public void render() {
 		
 		Orientation orientation = model.getPosition().getOrientation();
-		final float fieldWidth = prefs.getInt(PreferencesConstants.FIELD_WIDTH_KEY, 10);
-		final float fieldHeight = prefs.getInt(PreferencesConstants.FIELD_HEIGHT_KEY, 10);
+		final float fieldWidth = prefs.getFloat(PreferencesConstants.FIELD_WIDTH_KEY, 10);
+		final float fieldHeight = prefs.getFloat(PreferencesConstants.FIELD_HEIGHT_KEY, 10);
 		
 		batch.begin();
 		switch (orientation) {

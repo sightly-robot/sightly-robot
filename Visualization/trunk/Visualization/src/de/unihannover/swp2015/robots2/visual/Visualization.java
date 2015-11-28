@@ -122,7 +122,7 @@ public class Visualization extends ApplicationAdapter implements IVisualization 
 	
 	@Override
 	public void resize(final int width, final int height) {
-		this.fitViewport.update(width, height, true);
+		this.fitViewport.update(width, height, false);
 		this.pp.setViewport(new Rectangle(fitViewport.getScreenX(), fitViewport.getScreenY(), fitViewport.getScreenWidth(), fitViewport.getScreenHeight()));
 		
 		for (int i = 0; i < gameHandlerList.size(); ++i) {

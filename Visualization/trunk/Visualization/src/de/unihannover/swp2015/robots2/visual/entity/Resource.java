@@ -34,8 +34,8 @@ public class Resource extends Entity {
 				ResourceConstants.DEFAULT_RES_5, ResourceConstants.DEFAULT_RES_6, ResourceConstants.DEFAULT_RES_7,
 				ResourceConstants.DEFAULT_RES_8, ResourceConstants.DEFAULT_RES_9, ResourceConstants.DEFAULT_RES_10);
 
-		final float fieldWidth = prefs.getInt(PreferencesConstants.FIELD_WIDTH_KEY, 10);
-		final float fieldHeight = prefs.getInt(PreferencesConstants.FIELD_HEIGHT_KEY, 10);
+		final float fieldWidth = prefs.getFloat(PreferencesConstants.FIELD_WIDTH_KEY, 10);
+		final float fieldHeight = prefs.getFloat(PreferencesConstants.FIELD_HEIGHT_KEY, 10);
 
 		this.renderX = model.getX() * fieldWidth;
 		this.renderY = model.getY() * fieldHeight;
@@ -47,8 +47,8 @@ public class Resource extends Entity {
 		if (model.getFood() == 0)
 			return;
 		
-		final float fieldWidth = prefs.getInt(PreferencesConstants.FIELD_WIDTH_KEY, 10);
-		final float fieldHeight = prefs.getInt(PreferencesConstants.FIELD_HEIGHT_KEY, 10);
+		final float fieldWidth = prefs.getFloat(PreferencesConstants.FIELD_WIDTH_KEY, 10);
+		final float fieldHeight = prefs.getFloat(PreferencesConstants.FIELD_HEIGHT_KEY, 10);
 		
 		batch.begin();
 		batch.draw(tex[model.getFood()], renderX, renderY, fieldWidth/2, fieldHeight/2);
