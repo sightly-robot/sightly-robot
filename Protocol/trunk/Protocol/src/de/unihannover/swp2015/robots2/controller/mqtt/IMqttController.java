@@ -18,4 +18,6 @@ public interface IMqttController {
 	 *            store the value for new connected clients.
 	 */
 	public void sendMessage(String topic, String message, boolean retained);
+	
+	public void deleteRetainedMessage(String topic);
 }

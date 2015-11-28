@@ -123,5 +123,16 @@ public class MqttController implements IMqttController {
 			e.printStackTrace();
 		}
 	}
+	
+	@Override
+	public void deleteRetainedMessage(String topic) {
+		MqttMessage mqttMessage = new MqttMessage();
+		mqttMessage.setRetained(true);
+		try {
+			this.sendQueue.put(new MqttFullMessage(topic, mqttMessage));
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
 
 }
