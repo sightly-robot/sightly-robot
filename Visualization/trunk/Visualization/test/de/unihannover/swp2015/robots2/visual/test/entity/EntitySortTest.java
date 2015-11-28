@@ -17,6 +17,7 @@ import de.unihannover.swp2015.robots2.visual.entity.IEntity;
 import de.unihannover.swp2015.robots2.visual.resource.IResourceHandler;
 import de.unihannover.swp2015.robots2.visual.util.EntityUtil;
 import de.unihannover.swp2015.robots2.visual.util.pref.IPreferences;
+import de.unihannover.swp2015.robots2.visual.util.pref.IPreferencesKey;
 import de.unihannover.swp2015.robots2.visual.util.pref.observer.IPreferencesObserver;
 import de.unihannover.swp2015.robots2.visual.util.pref.observer.PreferencesObservable;
 
@@ -42,7 +43,7 @@ public class EntitySortTest {
 		}
 
 		@Override
-		public void onUpdatePreferences(PreferencesObservable o, String updatedKey) {
+		public void onUpdatePreferences(PreferencesObservable o, IPreferencesKey updatedKey) {
 			// TODO Auto-generated method stub
 			
 		}
@@ -51,20 +52,20 @@ public class EntitySortTest {
 	
 	public static class TestPref implements IPreferences {
 
-		public void notifyObserver(String changedKey) {}
+		public void notifyObserver(IPreferencesKey changedKey) {}
 		public void addObserver(IPreferencesObserver obs) {}
-		public boolean getBoolean(String key, boolean def) {return false;}
-		public float getFloat(String key, float def) {return 0;}
-		public int getInt(String key, int def) {return 0;}
-		public String getString(String key, String def) {return null;}
-		public void putBoolean(String key, boolean value) {}
-		public void putBoolean(String key, boolean value, boolean persistent) {}
-		public void putFloat(String key, float value) {}
-		public void putFloat(String key, float value, boolean persistent) {}
-		public void putInt(String key, int value) {}
-		public void putInt(String key, int value, boolean persistent) {}
-		public void putString(String key, String value) {}
-		public void putString(String key, String value, boolean persistent) {}
+		public boolean getBoolean(IPreferencesKey key, boolean def) {return false;}
+		public float getFloat(IPreferencesKey key, float def) {return 0;}
+		public int getInt(IPreferencesKey key, int def) {return 0;}
+		public String getString(IPreferencesKey key, String def) {return null;}
+		public void putBoolean(IPreferencesKey key, boolean value) {}
+		public void putBoolean(IPreferencesKey key, boolean value, boolean persistent) {}
+		public void putFloat(IPreferencesKey key, float value) {}
+		public void putFloat(IPreferencesKey key, float value, boolean persistent) {}
+		public void putInt(IPreferencesKey key, int value) {}
+		public void putInt(IPreferencesKey key, int value, boolean persistent) {}
+		public void putString(IPreferencesKey key, String value) {}
+		public void putString(IPreferencesKey key, String value, boolean persistent) {}
 		
 	}
 

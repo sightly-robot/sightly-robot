@@ -19,7 +19,7 @@ import de.unihannover.swp2015.robots2.model.interfaces.IGame;
 import de.unihannover.swp2015.robots2.visual.core.IGameHandler;
 import de.unihannover.swp2015.robots2.visual.core.RobotGameHandler;
 import de.unihannover.swp2015.robots2.visual.resource.IResourceHandler;
-import de.unihannover.swp2015.robots2.visual.resource.ResourceConstants;
+import de.unihannover.swp2015.robots2.visual.resource.ResConst;
 import de.unihannover.swp2015.robots2.visual.resource.ResourceHandler;
 import de.unihannover.swp2015.robots2.visual.util.TestApp;
 import de.unihannover.swp2015.robots2.visual.util.TestUtil;
@@ -82,7 +82,7 @@ public class Visualization extends ApplicationAdapter implements IVisualization 
 		this.pp.addEffect(new Fxaa(appWidth, appHeight));
 		this.pp.setViewport(new Rectangle(fitViewport.getScreenX(), fitViewport.getScreenY(), fitViewport.getScreenWidth(), fitViewport.getScreenHeight()));
 		
-		final IResourceHandler resHandler = new ResourceHandler(ResourceConstants.ATLAS_PATH + ResourceConstants.ATLAS_NAME + ".atlas");
+		final IResourceHandler resHandler = new ResourceHandler(ResConst.ATLAS_PATH.getName() + ResConst.ATLAS_NAME.getName() + ".atlas");
 		
 		//obv. just for testing
 		final IGame testGame = TestUtil.createRandomTestGame(2, 12, 9);

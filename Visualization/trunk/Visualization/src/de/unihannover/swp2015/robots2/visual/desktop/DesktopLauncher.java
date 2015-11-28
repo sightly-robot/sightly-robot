@@ -6,7 +6,7 @@ import com.badlogic.gdx.tools.texturepacker.TexturePacker;
 import com.badlogic.gdx.tools.texturepacker.TexturePacker.Settings;
 
 import de.unihannover.swp2015.robots2.visual.Visualization;
-import de.unihannover.swp2015.robots2.visual.resource.ResourceConstants;
+import de.unihannover.swp2015.robots2.visual.resource.ResConst;
 
 public class DesktopLauncher {
 	
@@ -15,7 +15,7 @@ public class DesktopLauncher {
 		Settings packSettings = new Settings();
 		packSettings.maxWidth = 2048;
 		packSettings.maxHeight = 2048;
-		TexturePacker.process(packSettings, "assets/tex", ResourceConstants.ATLAS_PATH, ResourceConstants.ATLAS_NAME);
+		TexturePacker.process(packSettings, "assets/tex", ResConst.ATLAS_PATH.getName(), ResConst.ATLAS_NAME.getName());
 		
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.width = 800;

@@ -7,10 +7,11 @@ import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
 import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
 import de.unihannover.swp2015.robots2.visual.core.IGameHandler;
-import de.unihannover.swp2015.robots2.visual.core.PreferencesConstants;
+import de.unihannover.swp2015.robots2.visual.core.PrefConst;
 import de.unihannover.swp2015.robots2.visual.resource.IResourceHandler;
-import de.unihannover.swp2015.robots2.visual.resource.ResourceConstants;
+import de.unihannover.swp2015.robots2.visual.resource.ResConst;
 import de.unihannover.swp2015.robots2.visual.util.pref.IPreferences;
+import de.unihannover.swp2015.robots2.visual.util.pref.IPreferencesKey;
 import de.unihannover.swp2015.robots2.visual.util.pref.observer.PreferencesObservable;
 
 /**
@@ -32,20 +33,20 @@ public class Robot extends Entity {
 		this.model = robModel;
 		this.model.observe(this);
 
-		this.roboTex = resHandler.getRegion(ResourceConstants.DEFAULT_ROBO_SOUTH, ResourceConstants.DEFAULT_ROBO_NORTH,
-				ResourceConstants.DEFAULT_ROBO_WEST, ResourceConstants.DEFAULT_ROBO_EAST);
+		this.roboTex = resHandler.getRegion(ResConst.DEFAULT_ROBO_SOUTH, ResConst.DEFAULT_ROBO_NORTH,
+				ResConst.DEFAULT_ROBO_WEST, ResConst.DEFAULT_ROBO_EAST);
 
-		this.renderX = model.getPosition().getX() * prefs.getFloat(PreferencesConstants.FIELD_WIDTH_KEY, 42);
-		this.renderY = model.getPosition().getY() * prefs.getFloat(PreferencesConstants.FIELD_HEIGHT_KEY, 42);
+		this.renderX = model.getPosition().getX() * prefs.getFloat(PrefConst.FIELD_WIDTH_KEY, 42);
+		this.renderY = model.getPosition().getY() * prefs.getFloat(PrefConst.FIELD_HEIGHT_KEY, 42);
 		System.out.println(model.getPosition().getX());
 	}
 
 	@Override
 	public void render() {
 		
-		Orientation orientation = model.getPosition().getOrientation();
-		final float fieldWidth = prefs.getFloat(PreferencesConstants.FIELD_WIDTH_KEY, 10);
-		final float fieldHeight = prefs.getFloat(PreferencesConstants.FIELD_HEIGHT_KEY, 10);
+		final Orientation orientation = model.getPosition().getOrientation();
+		final float fieldWidth = prefs.getFloat(PrefConst.FIELD_WIDTH_KEY, 10);
+		final float fieldHeight = prefs.getFloat(PrefConst.FIELD_HEIGHT_KEY, 10);
 		
 		batch.begin();
 		switch (orientation) {
@@ -67,24 +68,27 @@ public class Robot extends Entity {
 
 	@Override
 	public void onModelUpdate(IEvent event) {
-		if (event.getType() == IEvent.UpdateType.ROBOT_POSITION) { // wie zieh
-																	// ich die
-																	// Information
-																	// da raus?
-			// TODO animation stuff
-			this.renderX = model.getPosition().getX() * prefs.getInt(PreferencesConstants.FIELD_WIDTH_KEY, 42);
-			this.renderY = model.getPosition().getY() * prefs.getInt(PreferencesConstants.FIELD_HEIGHT_KEY, 42);
-			System.out.println("asd");
+		switch(event.getType()) {
+		case ROBOT_ADD:
+			break;
+		case ROBOT_POSITION:
+			this.renderX = model.getPosition().getX() * prefs.getFloat(PrefConst.FIELD_WIDTH_KEY, 42);
+			this.renderY = model.getPosition().getY() * prefs.getFloat(PrefConst.FIELD_HEIGHT_KEY, 42);
+			break;
+		case ROBOT_SCORE:
+			break;
+		case ROBOT_STATE:
+			break;
+		default:
+			break;
 		}
 	}
 
 	@Override
-	public void onUpdatePreferences(PreferencesObservable o, String updatedKey) {
-		switch(updatedKey) {
-			case PreferencesConstants.FIELD_WIDTH_KEY:
-			case PreferencesConstants.FIELD_HEIGHT_KEY:
-				this.renderX = model.getPosition().getX() * prefs.getInt(PreferencesConstants.FIELD_WIDTH_KEY, 42);
-				this.renderY = model.getPosition().getY() * prefs.getInt(PreferencesConstants.FIELD_HEIGHT_KEY, 42);
+	public void onUpdatePreferences(PreferencesObservable o, IPreferencesKey updatedKey) {
+		if (updatedKey.getEnum() == PrefConst.FIELD_WIDTH_KEY || updatedKey.getEnum() == PrefConst.FIELD_HEIGHT_KEY) {
+			this.renderX = model.getPosition().getX() * prefs.getFloat(PrefConst.FIELD_WIDTH_KEY, 42);
+			this.renderY = model.getPosition().getY() * prefs.getFloat(PrefConst.FIELD_HEIGHT_KEY, 42);
 		}
 	}
 

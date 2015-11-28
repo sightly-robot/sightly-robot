@@ -12,9 +12,10 @@ import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
 import de.unihannover.swp2015.robots2.model.interfaces.IField;
 import de.unihannover.swp2015.robots2.model.interfaces.IStage;
 import de.unihannover.swp2015.robots2.visual.core.IGameHandler;
-import de.unihannover.swp2015.robots2.visual.core.PreferencesConstants;
+import de.unihannover.swp2015.robots2.visual.core.PrefConst;
 import de.unihannover.swp2015.robots2.visual.resource.IResourceHandler;
 import de.unihannover.swp2015.robots2.visual.util.pref.IPreferences;
+import de.unihannover.swp2015.robots2.visual.util.pref.IPreferencesKey;
 import de.unihannover.swp2015.robots2.visual.util.pref.observer.PreferencesObservable;
 
 /**
@@ -57,8 +58,8 @@ public class Map extends Entity {
 	@Override
 	public void render() {
 		
-		final float fieldWidth = prefs.getFloat(PreferencesConstants.FIELD_WIDTH_KEY, 10);
-		final float fieldHeight = prefs.getFloat(PreferencesConstants.FIELD_HEIGHT_KEY, 10);
+		final float fieldWidth = prefs.getFloat(PrefConst.FIELD_WIDTH_KEY, 10);
+		final float fieldHeight = prefs.getFloat(PrefConst.FIELD_HEIGHT_KEY, 10);
 
 		shapeRenderer.begin(ShapeType.Filled);
 		shapeRenderer.setColor(100f/255f, 100f/255f, 100f/255f, 100f/255f);
@@ -83,7 +84,7 @@ public class Map extends Entity {
 	}
 
 	@Override
-	public void onUpdatePreferences(PreferencesObservable o, String updatedKey) {
+	public void onUpdatePreferences(PreferencesObservable o, IPreferencesKey updatedKey) {
 		// TODO Auto-generated method stub
 		
 	}

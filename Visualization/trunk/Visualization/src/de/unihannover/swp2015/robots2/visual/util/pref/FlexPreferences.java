@@ -24,22 +24,22 @@ public class FlexPreferences extends PreferencesObservable implements IPreferenc
 	/**
 	 * Map for string values.
 	 */
-	protected final Map<String, String> stringMap;
+	protected final Map<IPreferencesKey, String> stringMap;
 
 	/**
 	 * Map for boolean values.
 	 */
-	protected final Map<String, Boolean> booleanMap;
+	protected final Map<IPreferencesKey, Boolean> booleanMap;
 
 	/**
 	 * Map for integer values.
 	 */
-	protected final Map<String, Integer> integerMap;
+	protected final Map<IPreferencesKey, Integer> integerMap;
 
 	/**
 	 * Map for float values.
 	 */
-	protected final Map<String, Float> floatMap;
+	protected final Map<IPreferencesKey, Float> floatMap;
 
 	/**
 	 * Constructs a {@link FlexPreferences}, <code>name</code> will be used as filename to store persistent data.
@@ -56,11 +56,11 @@ public class FlexPreferences extends PreferencesObservable implements IPreferenc
 	}
 
 	@Override
-	public boolean getBoolean(String key, boolean def) {
+	public boolean getBoolean(IPreferencesKey key, boolean def) {
 		final Boolean result = booleanMap.get(key);
 		if (result == null) {
-			if (persistentDataHandler.contains(key)) {
-				final boolean pResult = persistentDataHandler.getBoolean(key);
+			if (persistentDataHandler.contains(key.getKey())) {
+				final boolean pResult = persistentDataHandler.getBoolean(key.getKey());
 				this.booleanMap.put(key, pResult);
 				return pResult;
 			}
@@ -70,11 +70,11 @@ public class FlexPreferences extends PreferencesObservable implements IPreferenc
 	}
 
 	@Override
-	public float getFloat(String key, float def) {
+	public float getFloat(IPreferencesKey key, float def) {
 		final Float result = floatMap.get(key);
 		if (result == null) {
-			if (persistentDataHandler.contains(key)) {
-				final Float pResult = persistentDataHandler.getFloat(key);
+			if (persistentDataHandler.contains(key.getKey())) {
+				final Float pResult = persistentDataHandler.getFloat(key.getKey());
 				this.floatMap.put(key, pResult);
 				return pResult;
 			}
@@ -84,11 +84,11 @@ public class FlexPreferences extends PreferencesObservable implements IPreferenc
 	}
 
 	@Override
-	public int getInt(String key, int def) {
+	public int getInt(IPreferencesKey key, int def) {
 		final Integer result = integerMap.get(key);
 		if (result == null) {
-			if (persistentDataHandler.contains(key)) {
-				final Integer pResult = persistentDataHandler.getInteger(key);
+			if (persistentDataHandler.contains(key.getKey())) {
+				final Integer pResult = persistentDataHandler.getInteger(key.getKey());
 				this.integerMap.put(key, pResult);
 				return pResult;
 			}
@@ -98,11 +98,11 @@ public class FlexPreferences extends PreferencesObservable implements IPreferenc
 	}
 
 	@Override
-	public String getString(String key, String def) {
+	public String getString(IPreferencesKey key, String def) {
 		final String result = stringMap.get(key);
 		if (result == null) {
-			if (persistentDataHandler.contains(key)) {
-				final String pResult = persistentDataHandler.getString(key);
+			if (persistentDataHandler.contains(key.getKey())) {
+				final String pResult = persistentDataHandler.getString(key.getKey());
 				this.stringMap.put(key, pResult);
 				return pResult;
 			}
@@ -112,16 +112,16 @@ public class FlexPreferences extends PreferencesObservable implements IPreferenc
 	}
 
 	@Override
-	public void putBoolean(String key, boolean value) {
+	public void putBoolean(IPreferencesKey key, boolean value) {
 		this.putBoolean(key, value, false);
 	}
 
 	@Override
-	public void putBoolean(String key, boolean value, boolean persistent) {
+	public void putBoolean(IPreferencesKey key, boolean value, boolean persistent) {
 		if (persistent) {
-			persistentDataHandler.putBoolean(key, value);
+			persistentDataHandler.putBoolean(key.getKey(), value);
 		}
-		else if (persistentDataHandler.contains(key)) {
+		else if (persistentDataHandler.contains(key.getKey())) {
 			throw new IllegalArgumentException("The key already exists for storing data in a persistent way!");
 		}
 		
@@ -130,16 +130,16 @@ public class FlexPreferences extends PreferencesObservable implements IPreferenc
 	}
 
 	@Override
-	public void putFloat(String key, float value) {
+	public void putFloat(IPreferencesKey key, float value) {
 		this.putFloat(key, value, false);
 	}
 
 	@Override
-	public void putFloat(String key, float value, boolean persistent) {
+	public void putFloat(IPreferencesKey key, float value, boolean persistent) {
 		if (persistent) {
-			persistentDataHandler.putFloat(key, value);
+			persistentDataHandler.putFloat(key.getKey(), value);
 		}
-		else if (persistentDataHandler.contains(key)) {
+		else if (persistentDataHandler.contains(key.getKey())) {
 			throw new IllegalArgumentException("The key already exists for storing data in a persistent way!");
 		}
 		
@@ -148,16 +148,16 @@ public class FlexPreferences extends PreferencesObservable implements IPreferenc
 	}
 
 	@Override
-	public void putInt(String key, int value) {
+	public void putInt(IPreferencesKey key, int value) {
 		this.putInt(key, value, false);
 	}
 
 	@Override
-	public void putInt(String key, int value, boolean persistent) {
+	public void putInt(IPreferencesKey key, int value, boolean persistent) {
 		if (persistent) {
-			persistentDataHandler.putInteger(key, value);
+			persistentDataHandler.putInteger(key.getKey(), value);
 		}
-		else if (persistentDataHandler.contains(key)) {
+		else if (persistentDataHandler.contains(key.getKey())) {
 			throw new IllegalArgumentException("The key already exists for storing data in a persistent way!");
 		}
 		
@@ -166,16 +166,16 @@ public class FlexPreferences extends PreferencesObservable implements IPreferenc
 	}
 
 	@Override
-	public void putString(String key, String value) {
+	public void putString(IPreferencesKey key, String value) {
 		this.putString(key, value, false);
 	}
 
 	@Override
-	public void putString(String key, String value, boolean persistent) {
+	public void putString(IPreferencesKey key, String value, boolean persistent) {
 		if (persistent) {
-			persistentDataHandler.putString(key, value);
+			persistentDataHandler.putString(key.getKey(), value);
 		}
-		else if (persistentDataHandler.contains(key)) {
+		else if (persistentDataHandler.contains(key.getKey())) {
 			throw new IllegalArgumentException("The key already exists for storing data in a persistent way!");
 		}
 		

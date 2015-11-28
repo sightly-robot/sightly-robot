@@ -7,10 +7,11 @@ import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
 import de.unihannover.swp2015.robots2.model.interfaces.IField;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition;
 import de.unihannover.swp2015.robots2.visual.core.IGameHandler;
-import de.unihannover.swp2015.robots2.visual.core.PreferencesConstants;
+import de.unihannover.swp2015.robots2.visual.core.PrefConst;
 import de.unihannover.swp2015.robots2.visual.resource.IResourceHandler;
-import de.unihannover.swp2015.robots2.visual.resource.ResourceConstants;
+import de.unihannover.swp2015.robots2.visual.resource.ResConst;
 import de.unihannover.swp2015.robots2.visual.util.pref.IPreferences;
+import de.unihannover.swp2015.robots2.visual.util.pref.IPreferencesKey;
 import de.unihannover.swp2015.robots2.visual.util.pref.observer.PreferencesObservable;
 
 /**
@@ -31,11 +32,11 @@ public class Field extends Entity {
 		this.model = model;
 		this.model.observe(this);
 		
-		this.texWall = resHandler.getRegion(ResourceConstants.DEFAULT_WALL_H, ResourceConstants.DEFAULT_WALL_V); 
-		this.field = resHandler.getRegion(ResourceConstants.DEFAULT_FIELD); 
+		this.texWall = resHandler.getRegion(ResConst.DEFAULT_WALL_H, ResConst.DEFAULT_WALL_V); 
+		this.field = resHandler.getRegion(ResConst.DEFAULT_FIELD); 
 
-		final float fieldWidth = prefs.getFloat(PreferencesConstants.FIELD_WIDTH_KEY, 10);
-		final float fieldHeight = prefs.getFloat(PreferencesConstants.FIELD_HEIGHT_KEY, 10);
+		final float fieldWidth = prefs.getFloat(PrefConst.FIELD_WIDTH_KEY, 10);
+		final float fieldHeight = prefs.getFloat(PrefConst.FIELD_HEIGHT_KEY, 10);
 		
 		this.renderX = model.getX() * fieldWidth;
 		this.renderY = model.getY() * fieldHeight;
@@ -44,9 +45,9 @@ public class Field extends Entity {
 	@Override
 	public void render() {
 		
-		final float fieldWidth = prefs.getFloat(PreferencesConstants.FIELD_WIDTH_KEY, 10);
-		final float fieldHeight = prefs.getFloat(PreferencesConstants.FIELD_HEIGHT_KEY, 10);
-		final float wallThickness = prefs.getInt(PreferencesConstants.WALL_THICK_KEY, 10);
+		final float fieldWidth = prefs.getFloat(PrefConst.FIELD_WIDTH_KEY, 10);
+		final float fieldHeight = prefs.getFloat(PrefConst.FIELD_HEIGHT_KEY, 10);
+		final float wallThickness = prefs.getInt(PrefConst.WALL_THICK_KEY, 10);
 
 		batch.begin();
 		//TODO render field
@@ -70,7 +71,7 @@ public class Field extends Entity {
 	}
 
 	@Override
-	public void onUpdatePreferences(PreferencesObservable o, String updatedKey) {
+	public void onUpdatePreferences(PreferencesObservable o, IPreferencesKey updatedKey) {
 		// TODO Auto-generated method stub
 		
 	}

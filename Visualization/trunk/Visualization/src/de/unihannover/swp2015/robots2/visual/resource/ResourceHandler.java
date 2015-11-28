@@ -17,25 +17,25 @@ public class ResourceHandler implements IResourceHandler {
 	 * <br>
 	 * Hint: <code>frameSetMap.keySet() intersection texMap.keySet() = { }</code>.
 	 * 
-	 * @see {@link ResourceConstants} for available keys
+	 * @see {@link ResConst} for available keys
 	 */
-	private final Map<String, TextureRegion> texMap;
+	private final Map<ResConst, TextureRegion> texMap;
 	
 	/**
 	 * Map key->Array of TextureRegion's.
 	 * <br>
 	 * Hint: <code>frameSetMap.keySet() intersection texMap.keySet() = { }</code>.
 	 * 
-	 * @see {@link ResourceConstants} for available keys
+	 * @see {@link ResConst} for available keys
 	 */
-	private final Map<String, Array<TextureRegion>> frameSetMap;
+	private final Map<ResConst, Array<TextureRegion>> frameSetMap;
 	
 	/**
 	 * Map key->RendeUnit
 	 * <br>
 	 * Hint: <code>renderUnitMap.keySet() subset of (frameSetMap.keySet() union texMap.keySet())</code>.
 	 */
-	private final Map<String, RenderUnit> renderUnitMap;
+	private final Map<ResConst, RenderUnit> renderUnitMap;
 	
 	/**
 	 * Main textureAtlas
@@ -45,7 +45,7 @@ public class ResourceHandler implements IResourceHandler {
 	/**
 	 * Will be returned if texMap.get(key) == null
 	 */
-	private static final String placeholderKey = ResourceConstants.DEFAULT_MAP;
+	private static final ResConst placeholderKey = ResConst.DEFAULT_FIELD;
 	
 	/**
 	 * Constructs ResourceHandler
@@ -61,35 +61,35 @@ public class ResourceHandler implements IResourceHandler {
 	
 	private void createRegions() {
 		final TextureRegion someRegion = texAtlas.findRegion("simplistic_textures_map");
-		this.texMap.put(ResourceConstants.DEFAULT_MAP, someRegion);
+		this.texMap.put(ResConst.DEFAULT_FIELD, someRegion);
 		
 		final TextureRegion wallHRegion = texAtlas.findRegion("wall_h");
-		this.texMap.put(ResourceConstants.DEFAULT_WALL_H, wallHRegion);
+		this.texMap.put(ResConst.DEFAULT_WALL_H, wallHRegion);
 		
 		final TextureRegion wallVRegion = texAtlas.findRegion("wall_v");
-		this.texMap.put(ResourceConstants.DEFAULT_WALL_V, wallVRegion);
+		this.texMap.put(ResConst.DEFAULT_WALL_V, wallVRegion);
 		
 		final TextureRegion circle = texAtlas.findRegion("circle");
-		this.texMap.put(ResourceConstants.DEFAULT_ROBO_EAST, circle);
-		this.texMap.put(ResourceConstants.DEFAULT_ROBO_NORTH, circle);
-		this.texMap.put(ResourceConstants.DEFAULT_ROBO_WEST, circle);
-		this.texMap.put(ResourceConstants.DEFAULT_ROBO_SOUTH, circle);
-		this.texMap.put(ResourceConstants.DEFAULT_RES_0, circle);
-		this.texMap.put(ResourceConstants.DEFAULT_RES_1, circle);
-		this.texMap.put(ResourceConstants.DEFAULT_RES_2, circle);
-		this.texMap.put(ResourceConstants.DEFAULT_RES_3, circle);
-		this.texMap.put(ResourceConstants.DEFAULT_RES_4, circle);
-		this.texMap.put(ResourceConstants.DEFAULT_RES_5, circle);
-		this.texMap.put(ResourceConstants.DEFAULT_RES_6, circle);
-		this.texMap.put(ResourceConstants.DEFAULT_RES_7, circle);
-		this.texMap.put(ResourceConstants.DEFAULT_RES_8, circle);
-		this.texMap.put(ResourceConstants.DEFAULT_RES_9, circle);
-		this.texMap.put(ResourceConstants.DEFAULT_RES_10, circle);
+		this.texMap.put(ResConst.DEFAULT_ROBO_EAST, circle);
+		this.texMap.put(ResConst.DEFAULT_ROBO_NORTH, circle);
+		this.texMap.put(ResConst.DEFAULT_ROBO_WEST, circle);
+		this.texMap.put(ResConst.DEFAULT_ROBO_SOUTH, circle);
+		this.texMap.put(ResConst.DEFAULT_RES_0, circle);
+		this.texMap.put(ResConst.DEFAULT_RES_1, circle);
+		this.texMap.put(ResConst.DEFAULT_RES_2, circle);
+		this.texMap.put(ResConst.DEFAULT_RES_3, circle);
+		this.texMap.put(ResConst.DEFAULT_RES_4, circle);
+		this.texMap.put(ResConst.DEFAULT_RES_5, circle);
+		this.texMap.put(ResConst.DEFAULT_RES_6, circle);
+		this.texMap.put(ResConst.DEFAULT_RES_7, circle);
+		this.texMap.put(ResConst.DEFAULT_RES_8, circle);
+		this.texMap.put(ResConst.DEFAULT_RES_9, circle);
+		this.texMap.put(ResConst.DEFAULT_RES_10, circle);
 		//TODO finish this
 	}
 
 	@Override
-	public RenderUnit createRenderUnit(final String key) {
+	public RenderUnit createRenderUnit(final ResConst key) {
 		if (renderUnitMap.containsKey(key))
 			return renderUnitMap.get(key);
 
@@ -108,7 +108,7 @@ public class ResourceHandler implements IResourceHandler {
 	}
 
 	@Override
-	public RenderUnit[] createRenderUnit(final String... keys) {
+	public RenderUnit[] createRenderUnit(final ResConst... keys) {
 		final RenderUnit[] renderUnits = new RenderUnit[keys.length];
 		for (int i = 0; i < keys.length; ++i) {
 			if (renderUnitMap.containsKey(keys[i])) {
@@ -135,7 +135,7 @@ public class ResourceHandler implements IResourceHandler {
 	}
 	
 	@Override
-	public TextureRegion getRegion(final String key) {
+	public TextureRegion getRegion(final ResConst key) {
 		final TextureRegion region = texMap.get(key);
 		if (region == null)
 			return texMap.get(placeholderKey);
@@ -143,7 +143,7 @@ public class ResourceHandler implements IResourceHandler {
 	}
 	
 	@Override
-	public TextureRegion[] getRegion(final String... keys) {
+	public TextureRegion[] getRegion(final ResConst... keys) {
 		TextureRegion[] regionArray = new TextureRegion[keys.length];
         for (int i = 0 ; i < keys.length; ++i) {
             regionArray[i] = texMap.get(keys[i]);
