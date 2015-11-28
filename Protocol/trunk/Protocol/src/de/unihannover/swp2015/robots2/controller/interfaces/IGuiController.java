@@ -51,8 +51,9 @@ public interface IGuiController extends IController {
 	 * @param growingRates
 	 *            A list of lists containing the new growing rate for each field
 	 *            line by line. Each inner list represents a row (west to east)
-	 *            and each item in these lists will be the new food state of the
-	 *            corresponding field.
+	 *            and each item in these lists will be the new growing rate of
+	 *            the corresponding field. Growing rate is given as milliseconds
+	 *            per food level change.
 	 */
 	public void sendGrowingRates(List<List<Integer>> growingRates);
 

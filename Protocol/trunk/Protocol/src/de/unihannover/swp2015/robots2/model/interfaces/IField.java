@@ -70,7 +70,7 @@ public interface IField extends IAbstractModel {
 	 * Returns the growing rate of the food on the field. Only available on
 	 * Server and GUI!
 	 * 
-	 * @return The growing rate in seconds per level.
+	 * @return The growing rate in milliseconds per food level.
 	 */
 	public int getGrowingRate();
 }

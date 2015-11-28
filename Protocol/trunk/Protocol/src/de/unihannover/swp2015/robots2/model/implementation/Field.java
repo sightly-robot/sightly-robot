@@ -58,6 +58,8 @@ public class Field extends AbstractModel implements IField, IFieldWriteable {
 	/**
 	 * Growing rate of food on this field. This value is intended to be used by
 	 * the server program and may be zero in other parts of the software.
+	 * 
+	 * Should be interpreted as milliseconds per food level.
 	 */
 	private volatile int growingRate;
 	/** Timer used for scheduling timed state changes */
