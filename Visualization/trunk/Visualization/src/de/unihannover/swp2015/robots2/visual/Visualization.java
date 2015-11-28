@@ -7,10 +7,10 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.bitfire.postprocessing.PostProcessor;
-import com.bitfire.postprocessing.effects.Bloom;
 import com.bitfire.postprocessing.effects.Fxaa;
 import com.bitfire.utils.ShaderLoader;
 
@@ -74,12 +74,13 @@ public class Visualization extends ApplicationAdapter implements IVisualization 
 		
 		ShaderLoader.BasePath = "resources/shaders/";
 		
-		this.pp = new PostProcessor(false, false, true);
-		this.pp.addEffect(new Fxaa(appWidth, appHeight));
 		this.prefs = new FlexPreferences("prefs");
 		this.cam = new OrthographicCamera();
 		this.cam.setToOrtho(true, appWidth, appHeight);
 		this.fitViewport = new FitViewport(appWidth, appHeight, cam);
+		this.pp = new PostProcessor(false, false, true);
+		this.pp.addEffect(new Fxaa(appWidth, appHeight));
+		this.pp.setViewport(new Rectangle(fitViewport.getScreenX(), fitViewport.getScreenY(), fitViewport.getScreenWidth(), fitViewport.getScreenHeight()));
 		
 		final IResourceHandler resHandler = new ResourceHandler(ResourceConstants.ATLAS_PATH + ResourceConstants.ATLAS_NAME + ".atlas");
 		
@@ -122,6 +123,7 @@ public class Visualization extends ApplicationAdapter implements IVisualization 
 	@Override
 	public void resize(final int width, final int height) {
 		this.fitViewport.update(width, height, true);
+		this.pp.setViewport(new Rectangle(fitViewport.getScreenX(), fitViewport.getScreenY(), fitViewport.getScreenWidth(), fitViewport.getScreenHeight()));
 		
 		for (int i = 0; i < gameHandlerList.size(); ++i) {
 			gameHandlerList.get(i).resize(width, height);
