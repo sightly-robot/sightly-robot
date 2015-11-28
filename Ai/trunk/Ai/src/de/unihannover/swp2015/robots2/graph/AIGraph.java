@@ -103,39 +103,39 @@ public class AIGraph {
 	 * 
 	 * @return	Orientation, the robot should move in next
 	 */
+	//TODO: Exception if there is no valid Orientation
 	public Orientation getRandomOrientation() {
 		List<Orientation> available = new ArrayList<Orientation>();
 		Orientation curr = this.myself.getOrientation();
-		int x = getMyPosition().getX();
-		int y = getMyPosition().getY();
+		Node myPos = getMyPosition();
 		
 		switch(curr) {
-			case NORTH:	if(!nodes[x][y].isWall(Orientation.WEST))
+			case NORTH:	if(!myPos.isWall(Orientation.WEST))
 							available.add(Orientation.WEST);
-						if(!nodes[x][y].isWall(Orientation.NORTH))
+						if(!myPos.isWall(Orientation.NORTH))
 							available.add(Orientation.NORTH);
-						if(!nodes[x][y].isWall(Orientation.EAST))
+						if(!myPos.isWall(Orientation.EAST))
 							available.add(Orientation.EAST);
 						break;
-			case EAST:	if(!nodes[x][y].isWall(Orientation.NORTH))
+			case EAST:	if(!myPos.isWall(Orientation.NORTH))
 							available.add(Orientation.NORTH);
-						if(!nodes[x][y].isWall(Orientation.EAST))
+						if(!myPos.isWall(Orientation.EAST))
 							available.add(Orientation.EAST);
-						if(!nodes[x][y].isWall(Orientation.SOUTH))
+						if(!myPos.isWall(Orientation.SOUTH))
 							available.add(Orientation.SOUTH);
 						break;
-			case SOUTH:	if(!nodes[x][y].isWall(Orientation.EAST))
+			case SOUTH:	if(!myPos.isWall(Orientation.EAST))
 							available.add(Orientation.EAST);
-						if(!nodes[x][y].isWall(Orientation.SOUTH))
+						if(!myPos.isWall(Orientation.SOUTH))
 							available.add(Orientation.SOUTH);
-						if(!nodes[x][y].isWall(Orientation.WEST))
+						if(!myPos.isWall(Orientation.WEST))
 							available.add(Orientation.WEST);
 						break;
-			case WEST:	if(!nodes[x][y].isWall(Orientation.SOUTH))
+			case WEST:	if(!myPos.isWall(Orientation.SOUTH))
 							available.add(Orientation.SOUTH);
-						if(!nodes[x][y].isWall(Orientation.WEST))
+						if(!myPos.isWall(Orientation.WEST))
 							available.add(Orientation.WEST);
-						if(!nodes[x][y].isWall(Orientation.NORTH))
+						if(!myPos.isWall(Orientation.NORTH))
 							available.add(Orientation.NORTH);
 						break;
 		}
