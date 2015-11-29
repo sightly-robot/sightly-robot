@@ -25,12 +25,16 @@ public class Robot { // potentially only used later on
 	public Node getPosition() {
 		return this.position;
 	}
-	
+
 	public void setPosition(Node node) {
 		this.position = node;
 	}
-	
+
 	public Orientation getOrientation() {
 		return this.orientation;
+	}
+
+	public void setOrientation(Orientation orientation) {
+		this.orientation = orientation;
 	}
 }

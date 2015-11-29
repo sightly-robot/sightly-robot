@@ -165,6 +165,29 @@ public class AIGraph {
 		return available.get(0);
 	}
 
+	/**
+	 * Sets the new position of a robot in the graph
+	 * 
+	 * @param robot
+	 *            Robot to be set
+	 * @param pos
+	 *            new position
+	 */
+	public void setRobotPosition(Robot robot, IPosition pos) {
+		int oldX = robot.getPosition().getX();
+		int oldY = robot.getPosition().getY();
+
+		/*
+		 * Delete robot from old position in graph
+		 */
+		this.nodes[oldX][oldY].setRobot(null);
+		/*
+		 * Set new orientation for robot Set robot on new position in graph
+		 */
+		robot.setOrientation(pos.getOrientation());
+		this.nodes[pos.getX()][pos.getY()].setRobot(robot);
+	}
+
 	public void setStartPositions(IStage map) {
 
 	}
