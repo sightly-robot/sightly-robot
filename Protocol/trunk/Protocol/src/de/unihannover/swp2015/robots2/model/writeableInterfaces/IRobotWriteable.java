@@ -27,6 +27,14 @@ public interface IRobotWriteable extends IRobot, IAbstractModelWriteable {
 	public void setPosition(int x, int y, IPosition.Orientation orientation);
 
 	/**
+	 * Update the drive progress of this robot.
+	 * 
+	 * @param progress
+	 *            The new progress
+	 */
+	public void setProgress(int progress);
+
+	/**
 	 * Change the name of the robot.
 	 * 
 	 * @param name

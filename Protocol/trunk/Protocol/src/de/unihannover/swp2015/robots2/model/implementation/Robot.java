@@ -77,6 +77,11 @@ public class Robot extends AbstractModel implements IRobot, IRobotWriteable {
 	}
 
 	@Override
+	public void setProgress(int progress) {
+		this.position.setProgress(progress);
+	}
+
+	@Override
 	public void setName(String name) {
 		this.name = name;
 	}
