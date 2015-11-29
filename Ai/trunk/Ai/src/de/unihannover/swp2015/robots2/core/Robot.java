@@ -30,6 +30,38 @@ public class Robot { // potentially only used later on
 		this.position = node;
 	}
 
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public int getScore() {
+		return score;
+	}
+
+	public void setScore(int score) {
+		this.score = score;
+	}
+
+	public boolean isMyself() {
+		return myself;
+	}
+
+	public void setMyself(boolean myself) {
+		this.myself = myself;
+	}
+
+	public boolean isVirtual() {
+		return isVirtual;
+	}
+
+	public void setVirtual(boolean isVirtual) {
+		this.isVirtual = isVirtual;
+	}
+
 	public Orientation getOrientation() {
 		return this.orientation;
 	}

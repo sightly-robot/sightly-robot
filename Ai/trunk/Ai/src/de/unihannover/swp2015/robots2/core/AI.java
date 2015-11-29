@@ -59,6 +59,7 @@ public class AI extends AbstractAi implements IModelObserver {
 				catch(NoValidOrientationException e) {
 					
 				}
+				
 			}
 			break;
 		default:

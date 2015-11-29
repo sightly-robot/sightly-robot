@@ -186,6 +186,10 @@ public class AIGraph {
 		 */
 		robot.setOrientation(pos.getOrientation());
 		this.nodes[pos.getX()][pos.getY()].setRobot(robot);
+		robot.setPosition(this.nodes[pos.getX()][pos.getY()]);
+		if(robot.isMyself()) {
+			this.myself = robot;
+		}
 	}
 
 	public void setStartPositions(IStage map) {
