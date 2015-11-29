@@ -22,7 +22,7 @@ public class AI extends AbstractAi {
 
 	public void initialize() {
 		try {
-			this.graph = new AIGraph(this.game.getStage());
+			this.graph = new AIGraph(this.game);
 		} catch (InvalidStageException e) {
 			e.printStackTrace();
 		}

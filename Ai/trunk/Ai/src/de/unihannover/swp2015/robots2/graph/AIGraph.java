@@ -10,13 +10,14 @@ import de.unihannover.swp2015.robots2.exceptions.NoValidOrientationEvent;
 import de.unihannover.swp2015.robots2.model.externalInterfaces.IModelObserver;
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
 import de.unihannover.swp2015.robots2.model.interfaces.IField;
+import de.unihannover.swp2015.robots2.model.interfaces.IGame;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
 import de.unihannover.swp2015.robots2.model.interfaces.IStage;
 
 public class AIGraph implements IModelObserver {
 
-	private IStage stage;
+	private IGame game;
 
 	private Node[][] nodes;
 
@@ -25,10 +26,10 @@ public class AIGraph implements IModelObserver {
 	private int dimX;
 	private int dimY;
 
-	public AIGraph(IStage stage) throws InvalidStageException {
-		this.stage = stage;
-		this.stage.observe(this);
-		this.loadFromStage(stage);
+	public AIGraph(IGame game) throws InvalidStageException {
+		this.game = game;
+		this.game.observe(this);
+		this.loadFromStage(game.getStage());
 	}
 
 	public AIGraph(int x, int y) {
@@ -54,6 +55,8 @@ public class AIGraph implements IModelObserver {
 		case ROBOT_SCORE:
 			break;
 		case ROBOT_POSITION:
+			break;
+		default:
 			break;
 		}
 	}
@@ -221,11 +224,11 @@ public class AIGraph implements IModelObserver {
 		this.dimY = dimY;
 	}
 
-	public IStage getStage() {
-		return stage;
+	public IGame getGame() {
+		return game;
 	}
 
-	public void setStage(IStage stage) {
-		this.stage = stage;
+	public void setGame(IGame game) {
+		this.game = game;
 	}
 }
