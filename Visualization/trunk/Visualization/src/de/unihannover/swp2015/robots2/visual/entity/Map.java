@@ -61,23 +61,24 @@ public class Map extends Entity {
 		final float fieldWidth = prefs.getFloat(PrefConst.FIELD_WIDTH_KEY, 50);
 		final float fieldHeight = prefs.getFloat(PrefConst.FIELD_HEIGHT_KEY, 50);
 		
+		for (int i = 0 ; i < fieldList.size() ; ++i) {
+			fieldList.get(i).render();
+			resourceList.get(i).render();
+		}
+
 		batch.end();
 		
 		shapeRenderer.begin(ShapeType.Filled);
 		shapeRenderer.setColor(100f/255f, 100f/255f, 100f/255f, 100f/255f);
 		for (int y = 1; y < model.getHeight(); ++y) {
-			shapeRenderer.rect(0, y*fieldWidth, Gdx.graphics.getWidth(), 1);
+			shapeRenderer.rect(0, y*fieldWidth, Gdx.graphics.getWidth(), 2);
 		}
 		for (int x = 1; x < model.getWidth(); ++x) {
-			shapeRenderer.rect(x*fieldHeight, 0, 1, Gdx.graphics.getHeight());
+			shapeRenderer.rect(x*fieldHeight, 0, 2, Gdx.graphics.getHeight());
 		}
 		shapeRenderer.end();
 		
 		batch.begin();
-		for (int i = 0 ; i < fieldList.size() ; ++i) {
-			fieldList.get(i).render();
-			resourceList.get(i).render();
-		}
 	}
 
 	@Override

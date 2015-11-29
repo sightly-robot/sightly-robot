@@ -51,7 +51,6 @@ public class Field extends Entity {
 		
 		final float fieldWidth = prefs.getFloat(PrefConst.FIELD_WIDTH_KEY, 50);
 		final float fieldHeight = prefs.getFloat(PrefConst.FIELD_HEIGHT_KEY, 50);
-		final float wallThickness = prefs.getInt(PrefConst.WALL_THICK_KEY, 50);
 
 		batch.draw(field[1], renderX, renderY, fieldWidth, fieldHeight);
 		
@@ -60,13 +59,13 @@ public class Field extends Entity {
 			batch.draw(texWall[0], renderX, renderY, fieldWidth, fieldHeight);
 		
 		if(model.isWall(IPosition.Orientation.EAST))
-			batch.draw(texWall[1], renderX + fieldWidth - wallThickness, renderY, fieldWidth, fieldHeight);
+			batch.draw(texWall[1], renderX, renderY, fieldWidth, fieldHeight);
 		
 		if(model.isWall(IPosition.Orientation.SOUTH))
-			batch.draw(texWall[0], renderX, renderY + fieldHeight - wallThickness, fieldWidth, fieldHeight);
+			batch.draw(texWall[2], renderX, renderY, fieldWidth, fieldHeight);
 		
 		if(model.isWall(IPosition.Orientation.WEST))
-			batch.draw(texWall[1], renderX, renderY, fieldWidth, fieldHeight);
+			batch.draw(texWall[3], renderX, renderY, fieldWidth, fieldHeight);
 	}
 
 	@Override
