@@ -2,7 +2,7 @@ package de.unihannover.swp2015.robots2.visual.resource;
 
 public enum ResConst {
 	
-	ATLAS_PATH("assets/tex/"),
+	ATLAS_PATH("assets/texturepacker/"),
 	ATLAS_NAME("tiles_default_theme"),
 	
 	DEFAULT_WALL_H("default_wall_v"),
