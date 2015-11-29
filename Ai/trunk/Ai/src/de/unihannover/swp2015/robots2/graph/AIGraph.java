@@ -170,10 +170,10 @@ public class AIGraph {
 	 * 
 	 * @param robot
 	 *            Robot to be set
-	 * @param pos
+	 * @param newPosition
 	 *            new position
 	 */
-	public void setRobotPosition(Robot robot, IPosition pos) {
+	public void setRobotPosition(Robot robot, IPosition newPosition) {
 		int oldX = robot.getPosition().getX();
 		int oldY = robot.getPosition().getY();
 
@@ -184,12 +184,9 @@ public class AIGraph {
 		/*
 		 * Set new orientation for robot Set robot on new position in graph
 		 */
-		robot.setOrientation(pos.getOrientation());
-		this.nodes[pos.getX()][pos.getY()].setRobot(robot);
-		robot.setPosition(this.nodes[pos.getX()][pos.getY()]);
-		if(robot.isMyself()) {
-			this.myself = robot;
-		}
+		robot.setOrientation(newPosition.getOrientation());
+		this.nodes[newPosition.getX()][newPosition.getY()].setRobot(robot);
+		robot.setPosition(this.nodes[newPosition.getX()][newPosition.getY()]);
 	}
 
 	public void setStartPositions(IStage map) {
