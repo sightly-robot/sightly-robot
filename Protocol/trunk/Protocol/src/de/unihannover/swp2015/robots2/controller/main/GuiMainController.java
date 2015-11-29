@@ -41,11 +41,13 @@ public class GuiMainController extends AbstractMainController implements
 			// TODO subscription list
 			String[] subscribeTopics = {
 					"robot/#",
+					"extension/2/robot/#",
 					"map/walls",
 					"map/food",
 					"map/food/+",
 					"event/error/robot/#",
 					"extension/2/settings/#",
+					"control/state"
 			};
 
 			try {
@@ -64,6 +66,9 @@ public class GuiMainController extends AbstractMainController implements
 	@Override
 	public void handleMqttMessage(String topic, String message) {
 		MqttTopic mqtttopic = MqttTopic.getBy(topic);
+		if (mqtttopic == null)
+			return;
+		
 		String key = mqtttopic.getKey(topic);
 
 		switch (mqtttopic) {
@@ -77,14 +82,20 @@ public class GuiMainController extends AbstractMainController implements
 			this.robotModelController.mqttRobotPosition(key, message,
 					mqtttopic == MqttTopic.ROBOT_SETPOSITION);
 			break;
+			
+		case ROBOT_PROGRESS:
+			this.robotModelController.mqttRobotProgress(key, message);
 		
 		case ROBOT_SCORE:
 			this.robotModelController.mqttScoreUpdate(key,message);
 
 		case CONTROL_VIRTUALSPEED:
 			this.gameModelController.mqttSetRobotVirtualspeed(Float
-					.valueOf(message));
+					.parseFloat(message));
 			break;
+		
+		case CONTROL_HESITATIONTIME:
+			this.gameModelController.mqttSetRobotHesitationTime(message);
 
 		case MAP_WALLS:
 			this.stageModelController.mqttSetWalls(message);

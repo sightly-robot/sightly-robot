@@ -135,8 +135,6 @@ public class GuiMainControllerSendTest {
 				this.receiveHandler.getValue("extension/2/map/setfood"));
 
 		// Check for any other mqtt topics
-		for (String s : this.receiveHandler.getKeysSorted())
-			System.out.println(s);
 		assertEquals(1, this.receiveHandler.getKeysSorted().length);
 
 		// Check that it is NOT retained

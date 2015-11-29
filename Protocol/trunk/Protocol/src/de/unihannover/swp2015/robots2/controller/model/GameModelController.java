@@ -3,6 +3,7 @@ package de.unihannover.swp2015.robots2.controller.model;
 import de.unihannover.swp2015.robots2.model.implementation.Robot;
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent.UpdateType;
 import de.unihannover.swp2015.robots2.model.writeableInterfaces.IGameWriteable;
+import de.unihannover.swp2015.robots2.model.writeableInterfaces.IRobotWriteable;
 
 public class GameModelController {
 
@@ -17,15 +18,20 @@ public class GameModelController {
 	 * 
 	 * This will add the robot if not existent or delete it (if message == "").
 	 * 
-	 * @param robotId Robot Id extracted from MQTT topic
-	 * @param message MQTT message payload
+	 * @param robotId
+	 *            Robot Id extracted from MQTT topic
+	 * @param message
+	 *            MQTT message payload
 	 */
 	public void mqttAddRobot(String robotId, String message) {
 		if (message.equals(""))
 			this.game.getRobotsWriteable().remove(robotId);
-		else if (!this.game.getRobots().containsKey(robotId))
-			this.game
-					.addRobot(new Robot(robotId, message.equals("real"), false));
+		else if (!this.game.getRobots().containsKey(robotId)) {
+			IRobotWriteable r = new Robot(robotId, message.equals("real"),
+					false);
+			this.game.addRobot(r);
+			this.game.emitEvent(UpdateType.ROBOT_ADD, r);
+		}
 	}
 
 	/**
@@ -45,6 +51,17 @@ public class GameModelController {
 	 */
 	public void mqttSetRobotVirtualspeed(float speed) {
 		this.game.setVRobotSpeed(speed);
+		this.game.emitEvent(UpdateType.GAME_PARAMETER);
+	}
+
+	/**
+	 * Update game parameter "Robot hesitation time" when published via MQTT
+	 * topic CONTROL_HESITATIONTIME.
+	 * 
+	 * @param message
+	 */
+	public void mqttSetRobotHesitationTime(String message) {
+		this.game.setHesitationTime(Integer.parseInt(message));
 		this.game.emitEvent(UpdateType.GAME_PARAMETER);
 	}
 }

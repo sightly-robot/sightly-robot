@@ -42,7 +42,24 @@ public class StageModelController {
 			IFieldWriteable f = this.stage.getFieldWriteable((i - 2) % width,
 					(i - 2) / width);
 			for (Orientation o : Orientation.values()) {
-				f.setWall(o, parts[i].contains(o.toString()));
+				// Add walls to outer stage borders if not existent
+				boolean stageBorder = false;
+				switch(o) {
+				case WEST:
+					stageBorder = (i - 2) % width == 0;
+					break;
+				case EAST:
+					stageBorder = (i - 2) % width == width - 1;
+					break;
+				case NORTH:
+					stageBorder = (i - 2) / width == 0;
+					break;
+				case SOUTH:
+					stageBorder = (i - 2) / width == height - 1;
+					break;
+				};
+				
+				f.setWall(o, parts[i].contains(o.toString()) || stageBorder);
 			}
 		}
 		this.stage.emitEvent(UpdateType.STAGE_WALL);

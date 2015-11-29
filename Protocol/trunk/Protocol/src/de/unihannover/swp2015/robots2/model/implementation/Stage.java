@@ -123,7 +123,7 @@ public class Stage extends AbstractModel implements IStage, IStageWriteable {
 		try {
 			// Delete obsolete rows
 			if (height < this.height) {
-				for (int y = this.height - 1; y >= height - 1; y--) {
+				for (int y = this.height - 1; y > height - 1; y--) {
 					this.fields.remove(y);
 				}
 				// ... or add new rows
@@ -140,7 +140,7 @@ public class Stage extends AbstractModel implements IStage, IStageWriteable {
 			// Resize all rows still existing from before
 			for (int y = 0; y < Math.min(this.height, height); y++) {
 				if (width < this.width) {
-					for (int x = this.height - 1; x >= height - 1; x--) {
+					for (int x = this.width - 1; x > width - 1; x--) {
 						this.fields.get(y).remove(x);
 					}
 				} else if (width > this.width) {

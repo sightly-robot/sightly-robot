@@ -41,6 +41,7 @@ public class RobotModelController {
 			r.setPosition(Integer.valueOf(positionParts[0]),
 					Integer.valueOf(positionParts[1]),
 					Orientation.getBy(positionParts[2]));
+			r.setProgress(0);
 			r.emitEvent(UpdateType.ROBOT_POSITION);
 
 			if (setPosition) {
@@ -48,6 +49,24 @@ public class RobotModelController {
 				r.emitEvent(UpdateType.ROBOT_STATE);
 			}
 
+		}
+	}
+
+	/**
+	 * Handle a drive progress update, published by robot via the ROBOT_PROGRESS
+	 * MQTT topic.
+	 * 
+	 * @param key
+	 *            ID of the robot extracted from MQTT topic
+	 * @param message
+	 *            MQTT payload containing the new progress
+	 */
+	public void mqttRobotProgress(String key, String message) {
+		IRobotWriteable r = this.robots.get(key);
+		
+		if (r != null && !r.isMyself()) {
+			r.setProgress(Integer.parseInt(message));
+			r.emitEvent(UpdateType.ROBOT_POSITION);
 		}
 	}
 
