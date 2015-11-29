@@ -6,6 +6,7 @@ import java.util.List;
 
 import de.unihannover.swp2015.robots2.core.Robot;
 import de.unihannover.swp2015.robots2.exceptions.InvalidStageException;
+import de.unihannover.swp2015.robots2.exceptions.NoValidOrientationEvent;
 import de.unihannover.swp2015.robots2.model.interfaces.IField;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
@@ -117,7 +118,7 @@ public class AIGraph {
 	 * @return Orientation, the robot should move in next
 	 */
 	// TODO: Exception if there is no valid Orientation
-	public Orientation getRandomOrientation() {
+	public Orientation getRandomOrientation() throws NoValidOrientationEvent {
 		List<Orientation> available = new ArrayList<Orientation>();
 		Orientation curr = this.myself.getOrientation();
 		Node myPos = getMyPosition();
