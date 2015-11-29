@@ -7,12 +7,16 @@ import java.util.List;
 import de.unihannover.swp2015.robots2.core.Robot;
 import de.unihannover.swp2015.robots2.exceptions.InvalidStageException;
 import de.unihannover.swp2015.robots2.exceptions.NoValidOrientationEvent;
+import de.unihannover.swp2015.robots2.model.externalInterfaces.IModelObserver;
+import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
 import de.unihannover.swp2015.robots2.model.interfaces.IField;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
 import de.unihannover.swp2015.robots2.model.interfaces.IStage;
 
-public class AIGraph {
+public class AIGraph implements IModelObserver {
+
+	private IStage stage;
 
 	private Node[][] nodes;
 
@@ -21,8 +25,10 @@ public class AIGraph {
 	private int dimX;
 	private int dimY;
 
-	public AIGraph() {
-
+	public AIGraph(IStage stage) throws InvalidStageException {
+		this.stage = stage;
+		this.stage.observe(this);
+		this.loadFromStage(stage);
 	}
 
 	public AIGraph(int x, int y) {
@@ -31,8 +37,25 @@ public class AIGraph {
 		this.dimY = y;
 	}
 
-	public AIGraph(IStage stage) throws InvalidStageException {
-		this.loadFromStage(stage);
+	/**
+	 * React on given events
+	 */
+	@Override
+	public void onModelUpdate(IEvent event) {
+		switch (event.getType()) {
+		case FIELD_FOOD:
+			break;
+		case STAGE_WALL:
+			break;
+		case STAGE_SIZE:
+			break;
+		case FIELD_STATE:
+			break;
+		case ROBOT_SCORE:
+			break;
+		case ROBOT_POSITION:
+			break;
+		}
 	}
 
 	/**
@@ -196,5 +219,13 @@ public class AIGraph {
 
 	public void setDimY(int dimY) {
 		this.dimY = dimY;
+	}
+
+	public IStage getStage() {
+		return stage;
+	}
+
+	public void setStage(IStage stage) {
+		this.stage = stage;
 	}
 }

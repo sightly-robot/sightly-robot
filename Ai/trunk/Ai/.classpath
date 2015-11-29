@@ -15,5 +15,6 @@
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/Utils"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/Visualisierung-Prototype"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/Visualization"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/3"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
