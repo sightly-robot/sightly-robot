@@ -166,7 +166,7 @@ public class GuiMainController extends AbstractMainController implements
 
 	@Override
 	public void sendGrowingRates(List<List<Integer>> growingRates) {
-		this.sendMqttMessage(MqttTopic.MAP_INIT_FOOD, null,
+		this.sendMqttMessage(MqttTopic.MAP_INIT_GROWINGRATE, null,
 				this.food2String(growingRates));
 	}
 

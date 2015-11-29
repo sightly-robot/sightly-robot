@@ -10,7 +10,7 @@ public class MqttTopicTest {
 
 	@Test
 	public void testSimpleMatch() {
-		assertEquals(MqttTopic.ROBOT_VIRTUALSPEED,
+		assertEquals(MqttTopic.CONTROL_VIRTUALSPEED,
 				MqttTopic.getBy("robot/virtualspeed"));
 		assertEquals(MqttTopic.EVENT_ERROR_SERVER_CONNECTION,
 				MqttTopic.getBy("event/error/server/connection"));

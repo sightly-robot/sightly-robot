@@ -71,4 +71,39 @@ public class MqttControllerTest {
 		assertEquals(null, messageHandler1.getValue("test/y"));
 	}
 
+	@Test
+	public void testRetained() throws Exception {
+		TestReceiveHandler messageHandler3 = new TestReceiveHandler("3");
+		IMqttController mqttController3 = new MqttController("tcp://localhost",
+				"junit_testclient3", messageHandler3,
+				Arrays.asList(new String[] { }));
+		
+		mqttController3.sendMessage("test/a", "blub", true);
+		
+		
+		Thread.sleep(100);
+
+		messageHandler3 = new TestReceiveHandler("3");
+		mqttController3 = new MqttController("tcp://localhost",
+				"junit_testclient3", messageHandler3,
+				Arrays.asList(new String[] { "test/a" }));
+
+		Thread.sleep(100);
+		
+		assertEquals("blub", messageHandler3.getValue("test/a"));
+		mqttController3.deleteRetainedMessage("test/a");
+		
+		
+		Thread.sleep(100);
+
+		messageHandler3 = new TestReceiveHandler("3");
+		mqttController3 = new MqttController("tcp://localhost",
+				"junit_testclient3", messageHandler3,
+				Arrays.asList(new String[] { "test/a" }));
+
+		Thread.sleep(100);
+		
+		assertEquals(null, messageHandler3.getValue("test/a"));
+	}
+
 }

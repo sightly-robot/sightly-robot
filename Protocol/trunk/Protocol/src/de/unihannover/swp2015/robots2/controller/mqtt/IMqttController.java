@@ -18,6 +18,13 @@ public interface IMqttController {
 	 *            store the value for new connected clients.
 	 */
 	public void sendMessage(String topic, String message, boolean retained);
-	
+
+	/**
+	 * Delete a retained message that was sent previously to the broker using
+	 * the given topic.
+	 * 
+	 * @param topic
+	 *            MQTT topic to delete the retained message from
+	 */
 	public void deleteRetainedMessage(String topic);
 }
