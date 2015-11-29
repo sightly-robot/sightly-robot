@@ -6,18 +6,19 @@ import java.util.List;
 
 import de.unihannover.swp2015.robots2.core.Robot;
 import de.unihannover.swp2015.robots2.exceptions.InvalidStageException;
-import de.unihannover.swp2015.robots2.exceptions.NoValidOrientationEvent;
+import de.unihannover.swp2015.robots2.exceptions.NoValidOrientationException;
 import de.unihannover.swp2015.robots2.model.externalInterfaces.IModelObserver;
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
 import de.unihannover.swp2015.robots2.model.interfaces.IField;
 import de.unihannover.swp2015.robots2.model.interfaces.IGame;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
+import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
 import de.unihannover.swp2015.robots2.model.interfaces.IStage;
 
-public class AIGraph implements IModelObserver {
+public class AIGraph {
 
-	private IGame game;
+	private IStage stage;
 
 	private Node[][] nodes;
 
@@ -26,39 +27,15 @@ public class AIGraph implements IModelObserver {
 	private int dimX;
 	private int dimY;
 
-	public AIGraph(IGame game) throws InvalidStageException {
-		this.game = game;
-		this.game.observe(this);
-		this.loadFromStage(game.getStage());
+	public AIGraph(IStage stage) throws InvalidStageException {
+		this.stage = stage;
+		this.loadFromStage(stage);
 	}
 
 	public AIGraph(int x, int y) {
 		this.nodes = new Node[x][y];
 		this.dimX = x;
 		this.dimY = y;
-	}
-
-	/**
-	 * React on given events
-	 */
-	@Override
-	public void onModelUpdate(IEvent event) {
-		switch (event.getType()) {
-		case FIELD_FOOD:
-			break;
-		case STAGE_WALL:
-			break;
-		case STAGE_SIZE:
-			break;
-		case FIELD_STATE:
-			break;
-		case ROBOT_SCORE:
-			break;
-		case ROBOT_POSITION:
-			break;
-		default:
-			break;
-		}
 	}
 
 	/**
@@ -144,7 +121,7 @@ public class AIGraph implements IModelObserver {
 	 * @return Orientation, the robot should move in next
 	 */
 	// TODO: Exception if there is no valid Orientation
-	public Orientation getRandomOrientation() throws NoValidOrientationEvent {
+	public Orientation getRandomOrientation() throws NoValidOrientationException {
 		List<Orientation> available = new ArrayList<Orientation>();
 		Orientation curr = this.myself.getOrientation();
 		Node myPos = getMyPosition();
