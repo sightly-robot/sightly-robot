@@ -57,7 +57,7 @@ public class RobotGameHandler implements IGameHandler {
 	protected OrthographicCamera cam;
 	
 	/**
-	 * Settings received via MQTT
+	 * Settings received via MQTT plus internal non-persistent settings.
 	 */
 	protected IPreferences prefs;
 	
@@ -107,9 +107,11 @@ public class RobotGameHandler implements IGameHandler {
 	
 	@Override
 	public void render() {
+		spriteBatch.begin();
 		for (int i = 0; i < entityList.size(); ++i) {
 			this.entityList.get(i).render();
 		}
+		spriteBatch.end();
 	}
 
 	@Override

@@ -51,9 +51,7 @@ public class Resource extends Entity {
 		final float fieldWidth = prefs.getFloat(PrefConst.FIELD_WIDTH_KEY, 10);
 		final float fieldHeight = prefs.getFloat(PrefConst.FIELD_HEIGHT_KEY, 10);
 		
-		batch.begin();
 		batch.draw(tex[model.getFood()], renderX, renderY, fieldWidth/2, fieldHeight/2);
-		batch.end();
 	}
 
 	@Override

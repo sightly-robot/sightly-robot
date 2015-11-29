@@ -102,12 +102,12 @@ public class Visualization extends ApplicationAdapter implements IVisualization 
 	@Override
 	public void render() {
 
+		pp.capture();
+
 		// sets the clear color to rgba(0, 0, 0, 1)
-		Gdx.gl.glClearColor(0, 0, 0, 1);
+		Gdx.gl.glClearColor(0.5f, 0.5f, 0.5f, 1);
 		// clears the scene
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-		pp.capture();
 		
 		for (int i = 0; i < gameHandlerList.size(); ++i) {
 			gameHandlerList.get(i).update();
@@ -118,6 +118,8 @@ public class Visualization extends ApplicationAdapter implements IVisualization 
 		}
 		
 		pp.render();
+		
+		System.out.println(Gdx.graphics.getFramesPerSecond());
 	}
 	
 	@Override

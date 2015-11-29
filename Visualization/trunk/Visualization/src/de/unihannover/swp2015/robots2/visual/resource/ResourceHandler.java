@@ -68,6 +68,7 @@ public class ResourceHandler implements IResourceHandler {
 		
 		final TextureRegion wallVRegion = texAtlas.findRegion("wall_v");
 		this.texMap.put(ResConst.DEFAULT_WALL_V, wallVRegion);
+		this.texMap.put(ResConst.DEFAULT_BUBBLE, wallVRegion);
 		
 		final TextureRegion circle = texAtlas.findRegion("circle");
 		this.texMap.put(ResConst.DEFAULT_ROBO_EAST, circle);

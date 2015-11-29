@@ -22,7 +22,8 @@ public enum ResConst {
 	DEFAULT_ROBO_NORTH("default_robo_north"),
 	DEFAULT_ROBO_SOUTH("default_robo_south"),
 	DEFAULT_ROBO_WEST("default_robo_west"),
-	DEFAULT_ROBO_EAST("default_robo_east");
+	DEFAULT_ROBO_EAST("default_robo_east"),
+	DEFAULT_BUBBLE("default_bubble");
 	
 	private final String name;
 	

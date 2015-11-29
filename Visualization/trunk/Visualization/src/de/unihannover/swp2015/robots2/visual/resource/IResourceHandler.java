@@ -27,7 +27,7 @@ public interface IResourceHandler extends Disposable {
 	 * @param key keys of the texture-regions
 	 * @return result[i] = null if there is no region mapped to <code>key[i]</code>
 	 */
-	public TextureRegion[] getRegion(final ResConst... key);
+	public TextureRegion[] getRegion(final ResConst... keys);
 	
 	/**
 	 * Creates render unit, created with the texture region(s), which are mapped to <code>key</code>. 

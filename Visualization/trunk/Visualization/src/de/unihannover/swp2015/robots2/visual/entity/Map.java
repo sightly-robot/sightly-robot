@@ -60,7 +60,9 @@ public class Map extends Entity {
 		
 		final float fieldWidth = prefs.getFloat(PrefConst.FIELD_WIDTH_KEY, 10);
 		final float fieldHeight = prefs.getFloat(PrefConst.FIELD_HEIGHT_KEY, 10);
-
+		
+		batch.end();
+		
 		shapeRenderer.begin(ShapeType.Filled);
 		shapeRenderer.setColor(100f/255f, 100f/255f, 100f/255f, 100f/255f);
 		for (int y = 1; y < model.getHeight(); ++y) {
@@ -71,6 +73,7 @@ public class Map extends Entity {
 		}
 		shapeRenderer.end();
 		
+		batch.begin();
 		for (int i = 0 ; i < fieldList.size() ; ++i) {
 			fieldList.get(i).render();
 			resourceList.get(i).render();

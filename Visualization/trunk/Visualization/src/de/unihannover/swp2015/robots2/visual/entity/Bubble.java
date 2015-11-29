@@ -1,6 +1,6 @@
 package de.unihannover.swp2015.robots2.visual.entity;
 
-
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
@@ -10,65 +10,44 @@ import de.unihannover.swp2015.robots2.visual.core.IGameHandler;
 import de.unihannover.swp2015.robots2.visual.core.PrefConst;
 import de.unihannover.swp2015.robots2.visual.resource.IResourceHandler;
 import de.unihannover.swp2015.robots2.visual.resource.ResConst;
+import de.unihannover.swp2015.robots2.visual.util.ColorUtil;
 import de.unihannover.swp2015.robots2.visual.util.pref.IPreferences;
 import de.unihannover.swp2015.robots2.visual.util.pref.IPreferencesKey;
 import de.unihannover.swp2015.robots2.visual.util.pref.observer.PreferencesObservable;
 
-/**
- * An entity used for the visualization of robots
- * 
- * @version 0.2
- * @author Daphne Schössow
- */
-public class Robot extends Entity {
+public class Bubble extends Entity {
 
-	// private boolean isVirtual; //TODO Einbauen
-	private final IRobot model;
-	private final TextureRegion[] roboTex;
-	private final Bubble bubble;
+	private TextureRegion bubble;
+	private IRobot model;
 	
 	private float width;
 	private float height;
-		
-	public Robot(final IRobot robModel, SpriteBatch batch, IGameHandler gameHandler, IPreferences prefs, IResourceHandler resHandler) {
+	private Color color;
+	
+	public Bubble(final IRobot model, SpriteBatch batch, IGameHandler gameHandler, IPreferences prefs, IResourceHandler resHandler) {
 		super(batch, gameHandler, prefs, resHandler);
-
-		this.model = robModel;
+				
+		this.model = model;
 		this.model.observe(this);
-
-		this.bubble = new Bubble(model, batch, gameHandler, prefs, resHandler);
-		this.roboTex = resHandler.getRegion(ResConst.DEFAULT_ROBO_SOUTH, ResConst.DEFAULT_ROBO_NORTH,
-				ResConst.DEFAULT_ROBO_WEST, ResConst.DEFAULT_ROBO_EAST);
-
+		this.bubble = resHandler.getRegion(ResConst.DEFAULT_BUBBLE);
+		this.color = ColorUtil.fromAwtColor(model.getColor());
+		
 		final float fieldWidth = prefs.getFloat(PrefConst.FIELD_WIDTH_KEY, 42);
 		final float fieldHeight = prefs.getFloat(PrefConst.FIELD_HEIGHT_KEY, 42);
 
-		this.width = fieldWidth * EntityConst.ROBOT_SCALE;
-		this.height = fieldHeight * EntityConst.ROBOT_SCALE;
+		this.renderX = model.getPosition().getX() * fieldWidth;
+		this.renderY = model.getPosition().getY() * fieldHeight;
 		
-		this.renderX = model.getPosition().getX() * fieldWidth + fieldWidth/2 - width/2;
-		this.renderY = model.getPosition().getY() * fieldHeight + fieldHeight/2 - height/2;
+		this.width = fieldWidth * 0.4f;
+		this.height = fieldHeight * 0.4f;
 	}
 
 	@Override
 	public void render() {
-				
-		switch (model.getPosition().getOrientation()) {
-			case SOUTH:
-				batch.draw(roboTex[0], renderX, renderY, width, height);
-				break;
-			case NORTH:
-				batch.draw(roboTex[1], renderX, renderY, width, height);
-				break;
-			case WEST:
-				batch.draw(roboTex[2], renderX, renderY, width, height);
-				break;
-			case EAST:
-				batch.draw(roboTex[3], renderX, renderY, width, height);
-				break;
-		}
 		
-		bubble.render();
+		batch.setColor(color);
+		batch.draw(bubble, renderX, renderY, width, height);
+		batch.setColor(Color.WHITE);
 	}
 
 	@Override
@@ -79,8 +58,8 @@ public class Robot extends Entity {
 			case ROBOT_POSITION:
 				final float fieldWidth = prefs.getFloat(PrefConst.FIELD_WIDTH_KEY, 42);
 				final float fieldHeight = prefs.getFloat(PrefConst.FIELD_HEIGHT_KEY, 42);
-				this.renderX = model.getPosition().getX() * fieldWidth + fieldWidth/2 - width/2;
-				this.renderY = model.getPosition().getY() * fieldHeight + fieldHeight/2 - height/2;
+				this.renderX = model.getPosition().getX() * fieldWidth;
+				this.renderY = model.getPosition().getY() * fieldHeight;
 				break;
 			case ROBOT_SCORE:
 				break;
@@ -93,6 +72,7 @@ public class Robot extends Entity {
 
 	@Override
 	public void onUpdatePreferences(PreferencesObservable o, IPreferencesKey updatedKey) {
+		// TODO Auto-generated method stub
 	}
 
 }
