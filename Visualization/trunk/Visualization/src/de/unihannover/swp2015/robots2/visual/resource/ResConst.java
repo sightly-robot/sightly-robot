@@ -25,7 +25,6 @@ public enum ResConst {
 	DEFAULT_FIELD_C_ES("default_field_c_es"),
 	DEFAULT_FIELD_C_SW("default_field_c_sw"),
 	DEFAULT_FIELD_C_WN("default_field_c_wn"),
-	DEFAULT_RES_0("default_res_00"),
 	DEFAULT_RES_1("default_res_01"),
 	DEFAULT_RES_2("default_res_02"),
 	DEFAULT_RES_3("default_res_03"),

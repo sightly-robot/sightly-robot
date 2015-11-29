@@ -30,7 +30,7 @@ public class Resource extends Entity {
 		this.model = model;
 		this.model.observe(this);
 		
-		this.tex = resHandler.getRegion(ResConst.DEFAULT_RES_0, ResConst.DEFAULT_RES_1,
+		this.tex = resHandler.getRegion(ResConst.DEFAULT_RES_1,
 				ResConst.DEFAULT_RES_2, ResConst.DEFAULT_RES_3, ResConst.DEFAULT_RES_4,
 				ResConst.DEFAULT_RES_5, ResConst.DEFAULT_RES_6, ResConst.DEFAULT_RES_7,
 				ResConst.DEFAULT_RES_8, ResConst.DEFAULT_RES_9, ResConst.DEFAULT_RES_10);
@@ -51,7 +51,8 @@ public class Resource extends Entity {
 		final float fieldWidth = prefs.getFloat(PrefConst.FIELD_WIDTH_KEY, 50);
 		final float fieldHeight = prefs.getFloat(PrefConst.FIELD_HEIGHT_KEY, 50);
 		
-		batch.draw(tex[model.getFood()], renderX, renderY, fieldWidth/2, fieldHeight/2);
+		if (model.getFood() > 0)
+			batch.draw(tex[model.getFood()-1], renderX, renderY, fieldWidth, fieldHeight);
 	}
 
 	@Override

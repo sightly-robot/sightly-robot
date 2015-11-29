@@ -78,18 +78,17 @@ public class ResourceHandler implements IResourceHandler {
 		final TextureRegion wallVRegion = texAtlas.findRegion("wall_v");
 		this.texMap.put(ResConst.DEFAULT_BUBBLE, wallVRegion);
 		
-		final TextureRegion food = texAtlas.findRegion("food");
-		this.texMap.put(ResConst.DEFAULT_RES_0, wallVRegion);
-		this.texMap.put(ResConst.DEFAULT_RES_1, food);
-		this.texMap.put(ResConst.DEFAULT_RES_2, food);
-		this.texMap.put(ResConst.DEFAULT_RES_3, food);
-		this.texMap.put(ResConst.DEFAULT_RES_4, food);
-		this.texMap.put(ResConst.DEFAULT_RES_5, food);
-		this.texMap.put(ResConst.DEFAULT_RES_6, food);
-		this.texMap.put(ResConst.DEFAULT_RES_7, food);
-		this.texMap.put(ResConst.DEFAULT_RES_8, food);
-		this.texMap.put(ResConst.DEFAULT_RES_9, food);
-		this.texMap.put(ResConst.DEFAULT_RES_10, food);
+		final Array<TextureAtlas.AtlasRegion> food = texAtlas.findRegions("food");
+		this.texMap.put(ResConst.DEFAULT_RES_1, food.get(0));
+		this.texMap.put(ResConst.DEFAULT_RES_2, food.get(1));
+		this.texMap.put(ResConst.DEFAULT_RES_3, food.get(2));
+		this.texMap.put(ResConst.DEFAULT_RES_4, food.get(3));
+		this.texMap.put(ResConst.DEFAULT_RES_5, food.get(4));
+		this.texMap.put(ResConst.DEFAULT_RES_6, food.get(5));
+		this.texMap.put(ResConst.DEFAULT_RES_7, food.get(6));
+		this.texMap.put(ResConst.DEFAULT_RES_8, food.get(7));
+		this.texMap.put(ResConst.DEFAULT_RES_9, food.get(8));
+		this.texMap.put(ResConst.DEFAULT_RES_10, food.get(9));
 		
 		final TextureRegion robo = texAtlas.findRegion("robo");
 		this.texMap.put(ResConst.DEFAULT_ROBO_EAST, robo);
