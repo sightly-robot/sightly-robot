@@ -34,7 +34,12 @@ public abstract class AbstractModel implements IAbstractModel, IAbstractModelWri
 
 	@Override
 	public void emitEvent(Event.UpdateType type) {
-		IEvent event = new Event(type, this);
+		this.emitEvent(type, this);
+	}
+
+	@Override
+	public void emitEvent(Event.UpdateType type, Object object) {
+		IEvent event = new Event(type, object);
 		for (IModelObserver o : this.observers)
 			o.onModelUpdate(event);
 	}
