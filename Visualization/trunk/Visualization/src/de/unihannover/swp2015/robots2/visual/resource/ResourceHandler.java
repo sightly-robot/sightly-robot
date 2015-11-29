@@ -60,13 +60,20 @@ public class ResourceHandler implements IResourceHandler {
 	}
 	
 	private void createRegions() {
-		final TextureRegion someRegion = texAtlas.findRegion("tiles_default_theme");
 		final TextureRegion noWay = texAtlas.findRegion("wall_test");
 		this.texMap.put(ResConst.DEFAULT_FIELD, noWay);
 		
-		final TextureRegion wall = texAtlas.findRegion("wall_tiled");
-		this.texMap.put(ResConst.DEFAULT_WALL_H, wall);
-		this.texMap.put(ResConst.DEFAULT_WALL_V, wall);
+		final TextureRegion wallN = texAtlas.findRegion("wall_n");
+		this.texMap.put(ResConst.DEFAULT_WALL_N, wallN);
+		
+		final TextureRegion wallW = texAtlas.findRegion("wall_w");
+		this.texMap.put(ResConst.DEFAULT_WALL_W, wallW);
+		
+		final TextureRegion wallE = texAtlas.findRegion("wall_e");
+		this.texMap.put(ResConst.DEFAULT_WALL_E, wallE);
+		
+		final TextureRegion wallS = texAtlas.findRegion("wall_s");
+		this.texMap.put(ResConst.DEFAULT_WALL_S, wallS);
 		
 		final TextureRegion wallVRegion = texAtlas.findRegion("wall_v");
 		this.texMap.put(ResConst.DEFAULT_BUBBLE, wallVRegion);

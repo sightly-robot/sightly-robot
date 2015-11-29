@@ -5,8 +5,10 @@ public enum ResConst {
 	ATLAS_PATH("assets/texturepacker/"),
 	ATLAS_NAME("tiles_default_theme"),
 	
-	DEFAULT_WALL_H("default_wall_v"),
-	DEFAULT_WALL_V("default_wall_v"),
+	DEFAULT_WALL_N("default_wall_n"),
+	DEFAULT_WALL_W("default_wall_w"),
+	DEFAULT_WALL_E("default_wall_e"),
+	DEFAULT_WALL_S("default_wall_s"),
 	DEFAULT_FIELD("default_field"),
 	DEFAULT_FIELD_1_N("default_field_1_n"),
 	DEFAULT_FIELD_1_E("default_field_1_e"),

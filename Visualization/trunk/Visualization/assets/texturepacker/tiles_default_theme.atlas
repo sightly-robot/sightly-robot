@@ -34,7 +34,7 @@ repeat: none
   index: -1
 circle
   rotate: false
-  xy: 2512, 1920
+  xy: 2512, 1418
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
@@ -123,6 +123,13 @@ robo
   orig: 500, 500
   offset: 0, 0
   index: -1
+wall_e
+  rotate: false
+  xy: 2010, 1018
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: -1
 wall_h
   rotate: false
   xy: 2, 2
@@ -130,17 +137,31 @@ wall_h
   orig: 100, 10
   offset: 0, 0
   index: -1
-wall_tiled
+wall_n
   rotate: false
-  xy: 2010, 1018
+  xy: 2512, 1520
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: -1
+wall_s
+  rotate: false
+  xy: 1508, 14
   size: 500, 500
   orig: 500, 500
   offset: 0, 0
   index: -1
 wall_v
   rotate: false
-  xy: 1508, 414
+  xy: 3014, 1920
   size: 10, 100
   orig: 10, 100
+  offset: 0, 0
+  index: -1
+wall_w
+  rotate: false
+  xy: 2010, 516
+  size: 500, 500
+  orig: 500, 500
   offset: 0, 0
   index: -1

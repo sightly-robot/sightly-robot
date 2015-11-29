@@ -17,6 +17,7 @@ import de.unihannover.swp2015.robots2.visual.entity.Robot;
 import de.unihannover.swp2015.robots2.visual.entity.modifier.base.IEntityModifier;
 import de.unihannover.swp2015.robots2.visual.resource.IResourceHandler;
 import de.unihannover.swp2015.robots2.visual.resource.ResourceHandler;
+import de.unihannover.swp2015.robots2.visual.util.EntityUtil;
 import de.unihannover.swp2015.robots2.visual.util.pref.IPreferences;
 
 /**
@@ -87,7 +88,6 @@ public class RobotGameHandler implements IGameHandler {
 		final IStage stage = game.getStage();
 
 		//set preferences !have to happen before creating entities!
-		this.prefs.putInt(PrefConst.WALL_THICK_KEY, 10);
 		this.prefs.putInt(PrefConst.MAP_ROWS_KEY, stage.getWidth());
 		this.prefs.putInt(PrefConst.MAP_COLS_KEY, stage.getHeight());
 		this.prefs.putFloat(PrefConst.FIELD_WIDTH_KEY, ((float) Gdx.graphics.getWidth()) / stage.getWidth());
@@ -95,9 +95,14 @@ public class RobotGameHandler implements IGameHandler {
 
 		//create entites
 		for (final IRobot robot : game.getRobots().values()) {
-			this.entityList.add(new Robot(robot, spriteBatch, this, prefs, resourceHandler));
+			final Robot robo = new Robot(robot, spriteBatch, this, prefs, resourceHandler);
+			robo.setZIndex(1);
+			this.entityList.add(robo);
+			
 		}
 		this.entityList.add(new Map(stage, spriteBatch, this, prefs, resourceHandler));
+		
+		EntityUtil.sortEntities(entityList);
 	}
 	
 	@Override

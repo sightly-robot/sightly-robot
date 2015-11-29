@@ -78,10 +78,8 @@ public class Visualization extends ApplicationAdapter implements IVisualization 
 		this.cam = new OrthographicCamera();
 		this.cam.setToOrtho(true, appWidth, appHeight);
 		this.fitViewport = new FitViewport(appWidth, appHeight, cam);
-		this.fitViewport.update(appWidth, appHeight, true);
 		this.pp = new PostProcessor(false, false, true);
 		this.pp.addEffect(new Fxaa(appWidth, appHeight));
-		this.pp.setViewport(new Rectangle(fitViewport.getScreenX(), fitViewport.getScreenY(), fitViewport.getScreenWidth(), fitViewport.getScreenHeight()));
 		
 		final IResourceHandler resHandler = new ResourceHandler(ResConst.ATLAS_PATH.getName() + ResConst.ATLAS_NAME.getName() + ".atlas");
 		
@@ -102,10 +100,10 @@ public class Visualization extends ApplicationAdapter implements IVisualization 
 
 	@Override
 	public void render() {
-		
-		Gdx.gl.glClearColor(0f, 0f, 0f, 1f);
+				
+		Gdx.gl.glClearColor(0f, 0f, 0f, 0f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		
+
 		pp.capture();
 
 		for (int i = 0; i < gameHandlerList.size(); ++i) {

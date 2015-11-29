@@ -13,7 +13,7 @@ public class EntityUtil {
 	 * to add a new entity. 
 	 */
 	public static void sortEntities(final List<IEntity> entityList) {
-		Collections.sort(entityList, Collections.reverseOrder());
+		Collections.sort(entityList);
 	}
 	
 	/**
@@ -28,7 +28,7 @@ public class EntityUtil {
 				break;
 			}
 			
-			if (entity.getZIndex() > entityList.get(i).getZIndex()) {
+			if (entity.getZIndex() < entityList.get(i).getZIndex()) {
 				entityList.add(i, entity);
 				break;
 			}

@@ -93,7 +93,7 @@ public class EntitySortTest {
 		list.add(entity_four);
 		list.add(entity_five);
 
-		final List<IEntity> expected = Arrays.asList(entity_three, entity_five, entity, entity_four, entity_two);
+		final List<IEntity> expected = Arrays.asList(entity_two, entity_four, entity, entity_five, entity_three);
 
 		EntityUtil.sortEntities(list);
 
@@ -126,7 +126,7 @@ public class EntitySortTest {
 		EntityUtil.addEntitySorted(entity_four, list);
 		EntityUtil.addEntitySorted(entity_five, list);
 
-		final List<IEntity> expected = Arrays.asList(entity_three, entity_five, entity, entity_four, entity_two);
+		final List<IEntity> expected = Arrays.asList(entity_two, entity_four, entity, entity_five, entity_three);
 
 		assertTrue("Expect that 'list' and 'expected' are equal \n 'list' = " + list + "\n 'expected = " + expected,
 				list.equals(expected));

@@ -32,7 +32,7 @@ public class Field extends Entity {
 		this.model = model;
 		this.model.observe(this);
 		
-		this.texWall = resHandler.getRegion(ResConst.DEFAULT_WALL_H, ResConst.DEFAULT_WALL_V); 
+		this.texWall = resHandler.getRegion(ResConst.DEFAULT_WALL_N, ResConst.DEFAULT_WALL_E, ResConst.DEFAULT_WALL_S, ResConst.DEFAULT_WALL_W); 
 		this.field = resHandler.getRegion(ResConst.DEFAULT_FIELD, ResConst.DEFAULT_FIELD_1_N, ResConst.DEFAULT_FIELD_1_E, ResConst.DEFAULT_FIELD_1_S, ResConst.DEFAULT_FIELD_1_W,
 				ResConst.DEFAULT_FIELD_2_N, ResConst.DEFAULT_FIELD_2_E,
 				ResConst.DEFAULT_FIELD_3_N, ResConst.DEFAULT_FIELD_3_E, ResConst.DEFAULT_FIELD_3_S, ResConst.DEFAULT_FIELD_3_W,
@@ -53,18 +53,20 @@ public class Field extends Entity {
 		final float fieldHeight = prefs.getFloat(PrefConst.FIELD_HEIGHT_KEY, 50);
 		final float wallThickness = prefs.getInt(PrefConst.WALL_THICK_KEY, 50);
 
+		batch.draw(field[1], renderX, renderY, fieldWidth, fieldHeight);
+		
 		//TODO render field
 		if(model.isWall(IPosition.Orientation.NORTH))
-			batch.draw(texWall[0], renderX, renderY, fieldWidth, wallThickness);
+			batch.draw(texWall[0], renderX, renderY, fieldWidth, fieldHeight);
 		
 		if(model.isWall(IPosition.Orientation.EAST))
-			batch.draw(texWall[1], renderX + fieldWidth - wallThickness, renderY, wallThickness, fieldHeight);
+			batch.draw(texWall[1], renderX + fieldWidth - wallThickness, renderY, fieldWidth, fieldHeight);
 		
 		if(model.isWall(IPosition.Orientation.SOUTH))
-			batch.draw(texWall[0], renderX, renderY + fieldHeight - wallThickness, fieldWidth, wallThickness);
+			batch.draw(texWall[0], renderX, renderY + fieldHeight - wallThickness, fieldWidth, fieldHeight);
 		
 		if(model.isWall(IPosition.Orientation.WEST))
-			batch.draw(texWall[1], renderX, renderY, wallThickness, fieldHeight);
+			batch.draw(texWall[1], renderX, renderY, fieldWidth, fieldHeight);
 	}
 
 	@Override
