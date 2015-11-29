@@ -54,7 +54,7 @@ public class Visualization extends ApplicationAdapter implements IVisualization 
 	 */
 	private Viewport fitViewport;
 	
-	private PostProcessor pp;
+	//private PostProcessor pp;
 	
 	/**
 	 * Constructs a Visualization object.
@@ -72,20 +72,20 @@ public class Visualization extends ApplicationAdapter implements IVisualization 
 		int appWidth = Gdx.graphics.getWidth();
 		int appHeight = Gdx.graphics.getHeight();
 		
-		ShaderLoader.BasePath = "resources/shaders/";
+		//ShaderLoader.BasePath = "resources/shaders/";
 		
 		this.prefs = new FlexPreferences("prefs");
 		this.cam = new OrthographicCamera();
 		this.cam.setToOrtho(true, appWidth, appHeight);
 		this.fitViewport = new FitViewport(appWidth, appHeight, cam);
-		this.pp = new PostProcessor(false, false, true);
-		this.pp.addEffect(new Fxaa(appWidth, appHeight));
-		this.pp.setViewport(new Rectangle(fitViewport.getScreenX(), fitViewport.getScreenY(), fitViewport.getScreenWidth(), fitViewport.getScreenHeight()));
+		//this.pp = new PostProcessor(false, false, true);
+		//this.pp.addEffect(new Fxaa(appWidth, appHeight));
+		//this.pp.setViewport(new Rectangle(fitViewport.getScreenX(), fitViewport.getScreenY(), fitViewport.getScreenWidth(), fitViewport.getScreenHeight()));
 		
 		final IResourceHandler resHandler = new ResourceHandler(ResConst.ATLAS_PATH.getName() + ResConst.ATLAS_NAME.getName() + ".atlas");
 		
 		//obv. just for testing
-		final IGame testGame = TestUtil.createRandomTestGame(2, 12, 9);
+		final IGame testGame = TestUtil.createRandomTestGame(2, 4, 3);
 		new TestApp(testGame);	
 		
 		// TODO create RobotGameHandler properly
@@ -102,7 +102,7 @@ public class Visualization extends ApplicationAdapter implements IVisualization 
 	@Override
 	public void render() {
 
-		pp.capture();
+		//pp.capture();
 
 		// sets the clear color to rgba(0, 0, 0, 1)
 		Gdx.gl.glClearColor(0.5f, 0.5f, 0.5f, 1);
@@ -117,7 +117,7 @@ public class Visualization extends ApplicationAdapter implements IVisualization 
 			gameHandlerList.get(i).render();
 		}
 		
-		pp.render();
+		//pp.render();
 		
 		System.out.println(Gdx.graphics.getFramesPerSecond());
 	}
@@ -125,7 +125,7 @@ public class Visualization extends ApplicationAdapter implements IVisualization 
 	@Override
 	public void resize(final int width, final int height) {
 		this.fitViewport.update(width, height, false);
-		this.pp.setViewport(new Rectangle(fitViewport.getScreenX(), fitViewport.getScreenY(), fitViewport.getScreenWidth(), fitViewport.getScreenHeight()));
+		//this.pp.setViewport(new Rectangle(fitViewport.getScreenX(), fitViewport.getScreenY(), fitViewport.getScreenWidth(), fitViewport.getScreenHeight()));
 		
 		for (int i = 0; i < gameHandlerList.size(); ++i) {
 			gameHandlerList.get(i).resize(width, height);

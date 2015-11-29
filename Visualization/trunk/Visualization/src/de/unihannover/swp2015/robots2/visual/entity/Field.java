@@ -24,7 +24,7 @@ public class Field extends Entity {
 	
 	private final IField model;
 	private final TextureRegion[] texWall;
-	private final TextureRegion field;
+	private final TextureRegion[] field;
 	
 	public Field(final IField model, final SpriteBatch renderer, final IGameHandler gameHandler, final IPreferences prefs, final IResourceHandler resHandler){
 		super(renderer, gameHandler, prefs, resHandler);
@@ -33,10 +33,14 @@ public class Field extends Entity {
 		this.model.observe(this);
 		
 		this.texWall = resHandler.getRegion(ResConst.DEFAULT_WALL_H, ResConst.DEFAULT_WALL_V); 
-		this.field = resHandler.getRegion(ResConst.DEFAULT_FIELD); 
+		this.field = resHandler.getRegion(ResConst.DEFAULT_FIELD, ResConst.DEFAULT_FIELD_1_N, ResConst.DEFAULT_FIELD_1_E, ResConst.DEFAULT_FIELD_1_S, ResConst.DEFAULT_FIELD_1_W,
+				ResConst.DEFAULT_FIELD_2_N, ResConst.DEFAULT_FIELD_2_E,
+				ResConst.DEFAULT_FIELD_3_N, ResConst.DEFAULT_FIELD_3_E, ResConst.DEFAULT_FIELD_3_S, ResConst.DEFAULT_FIELD_3_W,
+				ResConst.DEFAULT_FIELD_4,
+				ResConst.DEFAULT_FIELD_C_NE, ResConst.DEFAULT_FIELD_C_ES, ResConst.DEFAULT_FIELD_C_SW, ResConst.DEFAULT_FIELD_C_WN); 
 
-		final float fieldWidth = prefs.getFloat(PrefConst.FIELD_WIDTH_KEY, 10);
-		final float fieldHeight = prefs.getFloat(PrefConst.FIELD_HEIGHT_KEY, 10);
+		final float fieldWidth = prefs.getFloat(PrefConst.FIELD_WIDTH_KEY, 50);
+		final float fieldHeight = prefs.getFloat(PrefConst.FIELD_HEIGHT_KEY, 50);
 		
 		this.renderX = model.getX() * fieldWidth;
 		this.renderY = model.getY() * fieldHeight;
@@ -45,9 +49,9 @@ public class Field extends Entity {
 	@Override
 	public void render() {
 		
-		final float fieldWidth = prefs.getFloat(PrefConst.FIELD_WIDTH_KEY, 10);
-		final float fieldHeight = prefs.getFloat(PrefConst.FIELD_HEIGHT_KEY, 10);
-		final float wallThickness = prefs.getInt(PrefConst.WALL_THICK_KEY, 10);
+		final float fieldWidth = prefs.getFloat(PrefConst.FIELD_WIDTH_KEY, 50);
+		final float fieldHeight = prefs.getFloat(PrefConst.FIELD_HEIGHT_KEY, 50);
+		final float wallThickness = prefs.getInt(PrefConst.WALL_THICK_KEY, 50);
 
 		//TODO render field
 		if(model.isWall(IPosition.Orientation.NORTH))

@@ -60,33 +60,62 @@ public class ResourceHandler implements IResourceHandler {
 	}
 	
 	private void createRegions() {
-		final TextureRegion someRegion = texAtlas.findRegion("simplistic_textures_map");
-		this.texMap.put(ResConst.DEFAULT_FIELD, someRegion);
+		final TextureRegion someRegion = texAtlas.findRegion("tiles_default_theme");
+		final TextureRegion noWay = texAtlas.findRegion("wall_test");
+		this.texMap.put(ResConst.DEFAULT_FIELD, noWay);
 		
-		final TextureRegion wallHRegion = texAtlas.findRegion("wall_h");
-		this.texMap.put(ResConst.DEFAULT_WALL_H, wallHRegion);
+		final TextureRegion wall = texAtlas.findRegion("wall_tiled");
+		this.texMap.put(ResConst.DEFAULT_WALL_H, wall);
+		this.texMap.put(ResConst.DEFAULT_WALL_V, wall);
 		
 		final TextureRegion wallVRegion = texAtlas.findRegion("wall_v");
-		this.texMap.put(ResConst.DEFAULT_WALL_V, wallVRegion);
 		this.texMap.put(ResConst.DEFAULT_BUBBLE, wallVRegion);
 		
-		final TextureRegion circle = texAtlas.findRegion("circle");
-		this.texMap.put(ResConst.DEFAULT_ROBO_EAST, circle);
-		this.texMap.put(ResConst.DEFAULT_ROBO_NORTH, circle);
-		this.texMap.put(ResConst.DEFAULT_ROBO_WEST, circle);
-		this.texMap.put(ResConst.DEFAULT_ROBO_SOUTH, circle);
-		this.texMap.put(ResConst.DEFAULT_RES_0, circle);
-		this.texMap.put(ResConst.DEFAULT_RES_1, circle);
-		this.texMap.put(ResConst.DEFAULT_RES_2, circle);
-		this.texMap.put(ResConst.DEFAULT_RES_3, circle);
-		this.texMap.put(ResConst.DEFAULT_RES_4, circle);
-		this.texMap.put(ResConst.DEFAULT_RES_5, circle);
-		this.texMap.put(ResConst.DEFAULT_RES_6, circle);
-		this.texMap.put(ResConst.DEFAULT_RES_7, circle);
-		this.texMap.put(ResConst.DEFAULT_RES_8, circle);
-		this.texMap.put(ResConst.DEFAULT_RES_9, circle);
-		this.texMap.put(ResConst.DEFAULT_RES_10, circle);
-		//TODO finish this
+		final TextureRegion food = texAtlas.findRegion("food");
+		this.texMap.put(ResConst.DEFAULT_RES_0, wallVRegion);
+		this.texMap.put(ResConst.DEFAULT_RES_1, food);
+		this.texMap.put(ResConst.DEFAULT_RES_2, food);
+		this.texMap.put(ResConst.DEFAULT_RES_3, food);
+		this.texMap.put(ResConst.DEFAULT_RES_4, food);
+		this.texMap.put(ResConst.DEFAULT_RES_5, food);
+		this.texMap.put(ResConst.DEFAULT_RES_6, food);
+		this.texMap.put(ResConst.DEFAULT_RES_7, food);
+		this.texMap.put(ResConst.DEFAULT_RES_8, food);
+		this.texMap.put(ResConst.DEFAULT_RES_9, food);
+		this.texMap.put(ResConst.DEFAULT_RES_10, food);
+		
+		final TextureRegion robo = texAtlas.findRegion("robo");
+		this.texMap.put(ResConst.DEFAULT_ROBO_EAST, robo);
+		this.texMap.put(ResConst.DEFAULT_ROBO_NORTH, robo);
+		this.texMap.put(ResConst.DEFAULT_ROBO_WEST, robo);
+		this.texMap.put(ResConst.DEFAULT_ROBO_SOUTH, robo);
+		
+		final TextureRegion way1 = texAtlas.findRegion("1_way_tile_tiled");
+		this.texMap.put(ResConst.DEFAULT_FIELD_1_N, way1);
+		this.texMap.put(ResConst.DEFAULT_FIELD_1_E, way1);
+		this.texMap.put(ResConst.DEFAULT_FIELD_1_S, way1);
+		this.texMap.put(ResConst.DEFAULT_FIELD_1_W, way1);
+		
+		final TextureRegion way2 = texAtlas.findRegion("2_way_WE_tile_tiled");
+		this.texMap.put(ResConst.DEFAULT_FIELD_2_N, way2);
+		this.texMap.put(ResConst.DEFAULT_FIELD_2_E, way2);
+		
+		final TextureRegion way3 = texAtlas.findRegion("3_way_tile_tiled");
+		this.texMap.put(ResConst.DEFAULT_FIELD_3_N, way3);
+		this.texMap.put(ResConst.DEFAULT_FIELD_3_E, way3);
+		this.texMap.put(ResConst.DEFAULT_FIELD_3_S, way3);
+		this.texMap.put(ResConst.DEFAULT_FIELD_3_W, way3);
+		
+		final TextureRegion way4 = texAtlas.findRegion("4_way_tile_tiled");
+		this.texMap.put(ResConst.DEFAULT_FIELD_4, way4);
+		
+		final TextureRegion wayC = texAtlas.findRegion("curve_tile_tiled");
+		this.texMap.put(ResConst.DEFAULT_FIELD_C_NE, wayC);
+		this.texMap.put(ResConst.DEFAULT_FIELD_C_ES, wayC);
+		this.texMap.put(ResConst.DEFAULT_FIELD_C_SW, wayC);
+		this.texMap.put(ResConst.DEFAULT_FIELD_C_WN, wayC);
+
+		//TODO rotate if needed
 	}
 
 	@Override

@@ -58,8 +58,8 @@ public class Map extends Entity {
 	@Override
 	public void render() {
 		
-		final float fieldWidth = prefs.getFloat(PrefConst.FIELD_WIDTH_KEY, 10);
-		final float fieldHeight = prefs.getFloat(PrefConst.FIELD_HEIGHT_KEY, 10);
+		final float fieldWidth = prefs.getFloat(PrefConst.FIELD_WIDTH_KEY, 50);
+		final float fieldHeight = prefs.getFloat(PrefConst.FIELD_HEIGHT_KEY, 50);
 		
 		batch.end();
 		

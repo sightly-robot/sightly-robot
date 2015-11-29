@@ -1,0 +1,159 @@
+
+tiles_default_theme.png
+size: 2112,2214
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+1_way_tile_tiled
+  rotate: false
+  xy: 2, 1712
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: -1
+2_way_WE_tile_tiled
+  rotate: false
+  xy: 2, 1210
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: -1
+3_way_tile_tiled
+  rotate: false
+  xy: 504, 1712
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: -1
+4_way_tile_tiled
+  rotate: false
+  xy: 2, 708
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: -1
+circle
+  rotate: false
+  xy: 2, 104
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+curve_tile_tiled
+  rotate: false
+  xy: 504, 1210
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: -1
+food
+  rotate: false
+  xy: 1006, 1712
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: 1
+food
+  rotate: false
+  xy: 2, 206
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: 2
+food
+  rotate: false
+  xy: 504, 708
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: 3
+food
+  rotate: false
+  xy: 1006, 1210
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: 4
+food
+  rotate: false
+  xy: 1508, 1712
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: 5
+food
+  rotate: false
+  xy: 504, 206
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: 6
+food
+  rotate: false
+  xy: 1006, 708
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: 7
+food
+  rotate: false
+  xy: 1508, 1210
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: 8
+food
+  rotate: false
+  xy: 1006, 206
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: 9
+food
+  rotate: false
+  xy: 1508, 708
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: 10
+robo
+  rotate: false
+  xy: 1508, 206
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: -1
+wall_h
+  rotate: false
+  xy: 2010, 2202
+  size: 100, 10
+  orig: 100, 10
+  offset: 0, 0
+  index: -1
+wall_v
+  rotate: false
+  xy: 2, 2
+  size: 10, 100
+  orig: 10, 100
+  offset: 0, 0
+  index: -1
+
+tiles_default_theme2.png
+size: 1006,504
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+tiles_test
+  rotate: false
+  xy: 2, 2
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: -1
+wall_tiled
+  rotate: false
+  xy: 504, 2
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: -1
