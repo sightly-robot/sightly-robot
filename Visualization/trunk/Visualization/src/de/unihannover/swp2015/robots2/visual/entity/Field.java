@@ -25,6 +25,7 @@ public class Field extends Entity {
 	private final IField model;
 	private final TextureRegion[] texWall;
 	private final TextureRegion[] field;
+	private final Resource food;
 	
 	public Field(final IField model, final SpriteBatch renderer, final IGameHandler gameHandler, final IPreferences prefs, final IResourceHandler resHandler){
 		super(renderer, gameHandler, prefs, resHandler);
@@ -32,6 +33,7 @@ public class Field extends Entity {
 		this.model = model;
 		this.model.observe(this);
 		
+		this.food = new Resource(model, renderer, gameHandler, prefs, resHandler);
 		this.texWall = resHandler.getRegion(ResConst.DEFAULT_WALL_N, ResConst.DEFAULT_WALL_E, ResConst.DEFAULT_WALL_S, ResConst.DEFAULT_WALL_W); 
 		this.field = resHandler.getRegion(ResConst.DEFAULT_FIELD, ResConst.DEFAULT_FIELD_1_N, ResConst.DEFAULT_FIELD_1_E, ResConst.DEFAULT_FIELD_1_S, ResConst.DEFAULT_FIELD_1_W,
 				ResConst.DEFAULT_FIELD_2_N, ResConst.DEFAULT_FIELD_2_E,
@@ -53,6 +55,8 @@ public class Field extends Entity {
 		final float fieldHeight = prefs.getFloat(PrefConst.FIELD_HEIGHT_KEY, 50);
 
 		batch.draw(field[1], renderX, renderY, fieldWidth, fieldHeight);
+		
+		food.render();
 		
 		//TODO render field
 		if(model.isWall(IPosition.Orientation.NORTH))

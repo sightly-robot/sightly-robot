@@ -27,14 +27,12 @@ import de.unihannover.swp2015.robots2.visual.util.pref.observer.PreferencesObser
 public class Map extends Entity {
 
 	private final IStage model;
-	private final List<Resource> resourceList;
 	private final List<Field> fieldList;
 	private final ShapeRenderer shapeRenderer;
 	
 	public Map(IStage model, SpriteBatch batch, IGameHandler gameHandler, IPreferences prefs, IResourceHandler resHandler) {
 		super(batch, gameHandler, prefs, resHandler);
 	
-		this.resourceList = new ArrayList<>(model.getWidth() * model.getHeight());
 		this.fieldList = new ArrayList<>(model.getWidth() * model.getHeight());
 		this.shapeRenderer = new ShapeRenderer();
 		this.shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
@@ -49,7 +47,6 @@ public class Map extends Entity {
 		for (int x = 0; x < model.getWidth(); ++x) {
 			for (int y = 0; y < model.getHeight(); ++y) {
 				final IField field = model.getField(x, y);
-				this.resourceList.add(new Resource(field, batch, gameHandler, prefs, resHandler));
 				this.fieldList.add(new Field(field, batch, gameHandler, prefs, resHandler));
 			}
 		}
@@ -63,7 +60,6 @@ public class Map extends Entity {
 		
 		for (int i = 0 ; i < fieldList.size() ; ++i) {
 			fieldList.get(i).render();
-			resourceList.get(i).render();
 		}
 
 		batch.end();
