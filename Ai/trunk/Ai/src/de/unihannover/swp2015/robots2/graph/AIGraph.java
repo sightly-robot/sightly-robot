@@ -228,11 +228,11 @@ public class AIGraph {
 		this.dimY = dimY;
 	}
 
-	public IGame getGame() {
-		return game;
+	public IStage getStage() {
+		return stage;
 	}
 
-	public void setGame(IGame game) {
-		this.game = game;
+	public void setStage(IStage stage) {
+		this.stage = stage;
 	}
 }
