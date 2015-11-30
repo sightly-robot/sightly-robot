@@ -1,14 +1,20 @@
-/*package de.unihannover.swp2015.robots2.tests;
+package de.unihannover.swp2015.robots2.tests;
 
-import de.unihannover.swp2015.robots2.model.implementation.Stage;
+import de.unihannover.swp2015.robots2.exceptions.InvalidStageException;
+import de.unihannover.swp2015.robots2.graph.AIGraph;
 import junit.framework.TestCase;
 
 public class MapToGraphTest extends TestCase {
-	protected Stage stage;
+	protected FakeStage stage;
+	protected AIGraph resultGraph;
 
 	protected void setUp() {
-		this.stage = new Stage();
+		this.stage = new FakeStage();
 	}
 
+	public void testLoad() throws InvalidStageException {
+		AIGraph graph = new AIGraph(this.stage);
+		assertTrue(graph.getDimX() == this.stage.getWidth());
+		assertTrue(graph.getDimY() == this.stage.getHeight());
+	}
 }
-*/

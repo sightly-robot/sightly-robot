@@ -31,6 +31,7 @@ public class AIGraph {
 		this.stage = stage;
 		this.loadFromStage(stage);
 	}
+
 	/**
 	 * Creates Graph of size x * y without Walls.
 	 * 
@@ -41,28 +42,28 @@ public class AIGraph {
 		this.nodes = new Node[x][y];
 		this.dimX = x;
 		this.dimY = y;
-		
-		for(int i = 0; i < dimX; i++) {
-			for(int j = 0; j < dimY; j++) {
+
+		for (int i = 0; i < dimX; i++) {
+			for (int j = 0; j < dimY; j++) {
 				this.nodes[i][j] = new Node(i, j);
 			}
 		}
-		
-		for(int i = 0; i < x; i++) {
-			for(int j = 0; j < y; j++) {
-				if(i > 0) {
+
+		for (int i = 0; i < x; i++) {
+			for (int j = 0; j < y; j++) {
+				if (i > 0) {
 					Edge edge = new Edge(nodes[i][j], nodes[i - 1][j], Orientation.WEST);
 					nodes[i][j].getNeighbors().add(edge);
 				}
-				if(i < this.dimX - 1) {
+				if (i < this.dimX - 1) {
 					Edge edge = new Edge(nodes[i][j], nodes[i + 1][j], Orientation.EAST);
 					nodes[i][j].getNeighbors().add(edge);
 				}
-				if(j > 0) {
+				if (j > 0) {
 					Edge edge = new Edge(nodes[i][j], nodes[i][j - 1], Orientation.NORTH);
 					nodes[i][j].getNeighbors().add(edge);
 				}
-				if(j < this.dimY - 1) {
+				if (j < this.dimY - 1) {
 					Edge edge = new Edge(nodes[i][j], nodes[i][j + 1], Orientation.SOUTH);
 					nodes[i][j].getNeighbors().add(edge);
 				}
@@ -112,8 +113,8 @@ public class AIGraph {
 					Edge edge = new Edge(source, target, Orientation.WEST);
 					source.getNeighbors().add(edge);
 				}
-				//dimX oder dimX - 1?
-				if (i < this.dimX && !field.isWall(Orientation.EAST)) {
+				// dimX oder dimX - 1?
+				if (i < this.dimX - 1 && !field.isWall(Orientation.EAST)) {
 					Node target = this.nodes[i + 1][j] == null ? new Node(stage.getField(i + 1, j))
 							: this.nodes[i + 1][j];
 					Edge edge = new Edge(source, target, Orientation.EAST);
@@ -125,8 +126,8 @@ public class AIGraph {
 					Edge edge = new Edge(source, target, Orientation.NORTH);
 					source.getNeighbors().add(edge);
 				}
-				//dimY oder dimY - 1?
-				if (j < this.dimY && !field.isWall(Orientation.SOUTH)) {
+				// dimY oder dimY - 1?
+				if (j < this.dimY - 1 && !field.isWall(Orientation.SOUTH)) {
 					Node target = this.nodes[i][j + 1] == null ? new Node(stage.getField(i, j + 1))
 							: this.nodes[i][j + 1];
 					Edge edge = new Edge(source, target, Orientation.SOUTH);
@@ -138,12 +139,14 @@ public class AIGraph {
 		/*
 		 * Set our and other robots positions
 		 */
-		for (IPosition pos : stage.getStartPositions()) {
-			Node posNode = this.nodes[pos.getX()][pos.getY()];
-			IField field = stage.getField(pos.getX(), pos.getY());
-			String id = field.getLockedBy();
-			Robot robot = new Robot(id, posNode, pos.getOrientation());
-			posNode.setRobot(robot);
+		if (stage.getStartPositions() != null) {
+			for (IPosition pos : stage.getStartPositions()) {
+				Node posNode = this.nodes[pos.getX()][pos.getY()];
+				IField field = stage.getField(pos.getX(), pos.getY());
+				String id = field.getLockedBy();
+				Robot robot = new Robot(id, posNode, pos.getOrientation());
+				posNode.setRobot(robot);
+			}
 		}
 	}
 
@@ -266,9 +269,11 @@ public class AIGraph {
 	public void setStage(IStage stage) {
 		this.stage = stage;
 	}
+
 	public Robot getMyself() {
 		return myself;
 	}
+
 	public void setMyself(Robot myself) {
 		this.myself = myself;
 	}
