@@ -25,10 +25,11 @@ public class AIGraphTest {
 		robot.setOrientation(Orientation.SOUTH);
 		Position pos = new Position(2, 2, Orientation.SOUTH);
 		testGraph.setRobotPosition(robot, pos);
+		testGraph.setMyself(robot);
 	}
 
 	@Test
-	public void testGetRandomOrientation() throws NoValidOrientationException{
+	public void testGetRandomOrientation() throws NoValidOrientationException {
 		assertEquals(Orientation.WEST, testGraph.getRandomOrientation());
 	}
 

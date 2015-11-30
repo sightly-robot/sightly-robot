@@ -1,5 +1,6 @@
 package de.unihannover.swp2015.robots2.graph;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import de.unihannover.swp2015.robots2.core.Robot;
@@ -22,21 +23,29 @@ public class Node {
 
 		this.growRate = field.getGrowingRate();
 		this.ressourceValue = field.getFood();
+		
+		this.neighbors = new ArrayList<Edge>();
 	}
 
 	public Node(int x, int y) {
 		this.x = x;
 		this.y = y;
+		
+		this.neighbors = new ArrayList<Edge>();
 	}
 
 	public Node(int x, int y, int food) {
 		this(x, y);
 		this.ressourceValue = food;
+	
+		this.neighbors = new ArrayList<Edge>();
 	}
 
 	public Node(int x, int y, int food, int growRate) {
 		this(x, y, food);
 		this.growRate = growRate;
+		
+		this.neighbors = new ArrayList<Edge>();
 	}
 	
 

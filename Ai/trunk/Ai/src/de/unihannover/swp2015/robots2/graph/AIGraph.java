@@ -42,6 +42,12 @@ public class AIGraph {
 		this.dimX = x;
 		this.dimY = y;
 		
+		for(int i = 0; i < dimX; i++) {
+			for(int j = 0; j < dimY; j++) {
+				this.nodes[i][j] = new Node(i, j);
+			}
+		}
+		
 		for(int i = 0; i < x; i++) {
 			for(int j = 0; j < y; j++) {
 				if(i > 0) {
@@ -259,5 +265,11 @@ public class AIGraph {
 
 	public void setStage(IStage stage) {
 		this.stage = stage;
+	}
+	public Robot getMyself() {
+		return myself;
+	}
+	public void setMyself(Robot myself) {
+		this.myself = myself;
 	}
 }
