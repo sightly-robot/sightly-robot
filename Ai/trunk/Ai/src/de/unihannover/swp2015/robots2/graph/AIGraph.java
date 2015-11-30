@@ -7,13 +7,9 @@ import java.util.List;
 import de.unihannover.swp2015.robots2.core.Robot;
 import de.unihannover.swp2015.robots2.exceptions.InvalidStageException;
 import de.unihannover.swp2015.robots2.exceptions.NoValidOrientationException;
-import de.unihannover.swp2015.robots2.model.externalInterfaces.IModelObserver;
-import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
 import de.unihannover.swp2015.robots2.model.interfaces.IField;
-import de.unihannover.swp2015.robots2.model.interfaces.IGame;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
-import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
 import de.unihannover.swp2015.robots2.model.interfaces.IStage;
 
 public class AIGraph {
@@ -22,6 +18,9 @@ public class AIGraph {
 
 	private Node[][] nodes;
 
+	/*
+	 * Should be set by the AI class!
+	 */
 	private Robot myself;
 
 	private int dimX;
@@ -113,7 +112,6 @@ public class AIGraph {
 					Edge edge = new Edge(source, target, Orientation.WEST);
 					source.getNeighbors().add(edge);
 				}
-				// dimX oder dimX - 1?
 				if (i < this.dimX - 1 && !field.isWall(Orientation.EAST)) {
 					Node target = this.nodes[i + 1][j] == null ? new Node(stage.getField(i + 1, j))
 							: this.nodes[i + 1][j];
@@ -126,7 +124,6 @@ public class AIGraph {
 					Edge edge = new Edge(source, target, Orientation.NORTH);
 					source.getNeighbors().add(edge);
 				}
-				// dimY oder dimY - 1?
 				if (j < this.dimY - 1 && !field.isWall(Orientation.SOUTH)) {
 					Node target = this.nodes[i][j + 1] == null ? new Node(stage.getField(i, j + 1))
 							: this.nodes[i][j + 1];
