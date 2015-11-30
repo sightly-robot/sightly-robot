@@ -23,7 +23,7 @@ public class StageModelController {
 	 *            The MQTT message payload
 	 */
 	public void mqttSetWalls(String message) {
-		String[] parts = message.split(",");
+		String[] parts = message.split(",",-1);
 		if (parts.length < 3)
 			return;
 

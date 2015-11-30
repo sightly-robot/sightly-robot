@@ -16,6 +16,7 @@ import de.unihannover.swp2015.robots2.controller.mqtt.MqttController;
 import de.unihannover.swp2015.robots2.model.externalInterfaces.IModelObserver;
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent.UpdateType;
+import de.unihannover.swp2015.robots2.model.interfaces.IField;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
 import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
 import de.unihannover.swp2015.robots2.model.interfaces.IStage;
@@ -95,7 +96,7 @@ public class GuiMainControllerReceiveTest {
 
 		// Add robot
 		sender.sendMessage("robot/type/1a2b3c4d", "virtual", false);
-		Thread.sleep(100);
+		Thread.sleep(200);
 		IRobot r = this.guiController.getGame().getRobots().get("1a2b3c4d");
 
 		// Observe robot
@@ -327,4 +328,71 @@ public class GuiMainControllerReceiveTest {
 	}
 
 
+	@Test
+	public void testFood() throws Exception {
+		class TestStageModelObserver implements IModelObserver {
+			public int count;
+			public IField field;
+
+			@Override
+			public void onModelUpdate(IEvent event) {
+				switch (event.getType()) {
+				case FIELD_FOOD:
+					this.count++;
+					this.field = (IField)event.getObject();
+					break;
+				default:
+					break;
+				}
+			}
+		}
+		
+		IStage stage = this.guiController.getGame().getStage();
+		
+		TestStageModelObserver observer = new TestStageModelObserver();
+		stage.observe(observer);
+		
+		// Init walls & observe fields
+		sender.sendMessage("map/walls", "2,3,,,,,,", false);
+		Thread.sleep(100);
+		for(int i = 0; i < 2; i++) {
+			for (int j = 0; j < 3; j++) {
+				stage.getField(i, j).observe(observer);
+			}
+		}
+		
+		// Test full food
+		sender.sendMessage("map/food", "2,3,1,10,5,7,0,10", false);
+		Thread.sleep(100);
+
+		assertEquals(6, observer.count);
+		assertEquals(1, stage.getField(0, 0).getFood());
+		assertEquals(10, stage.getField(1, 0).getFood());
+		assertEquals(5, stage.getField(0, 1).getFood());
+		assertEquals(10, stage.getField(1, 2).getFood());
+		
+		// Test single field food
+		sender.sendMessage("map/food/1-0", "7", false);
+		Thread.sleep(100);
+		assertEquals(7, observer.count);
+		assertEquals(7, stage.getField(1, 0).getFood());
+		assertEquals(stage.getField(1, 0),observer.field);
+		
+		// Test discarding of wrong stage size message
+		sender.sendMessage("map/food", "2,1,7,5", false);
+		Thread.sleep(100);
+
+		assertEquals(7, observer.count);
+		assertEquals(1, stage.getField(0, 0).getFood());
+		assertEquals(7, stage.getField(1, 0).getFood());
+		
+		// Test discarding of invalid message
+		sender.sendMessage("map/food", "2,3,7,5,3,5,6,7,9", false);
+		Thread.sleep(100);
+
+		assertEquals(7, observer.count);
+		assertEquals(1, stage.getField(0, 0).getFood());
+		assertEquals(7, stage.getField(1, 0).getFood());
+	}
+	
 }
