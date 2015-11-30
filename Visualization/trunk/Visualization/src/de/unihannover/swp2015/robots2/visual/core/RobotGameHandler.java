@@ -52,6 +52,12 @@ public class RobotGameHandler extends GameHandler {
 	protected OrthographicCamera cam;
 	
 	/**
+	 * Overview of robots for ranking
+	 */
+	private IRobot[] robots;
+	private int robotsIndex;
+	
+	/**
 	 * Construct a new RobotGameHandler and connects this handler (means it will directly observe the model) to the given model <code>game</code>
 	 * @param game root of the model
 	 * @param resourceHandler {@link IResourceHandler}
@@ -76,6 +82,9 @@ public class RobotGameHandler extends GameHandler {
 	private void init() {
 		final IStage stage = game.getStage();
 
+		this.robots = new IRobot[game.getRobots().size()];
+		this.robotsIndex = 0;
+		
 		//set preferences !have to happen before creating entities!
 		this.prefs.putInt(PrefConst.MAP_ROWS_KEY, stage.getWidth());
 		this.prefs.putInt(PrefConst.MAP_COLS_KEY, stage.getHeight());
@@ -87,7 +96,8 @@ public class RobotGameHandler extends GameHandler {
 			final Robot robo = new Robot(robot, spriteBatch, this);
 			robo.setZIndex(1);
 			this.entityList.add(robo);
-			
+			this.robots[robotsIndex]=robot;
+			robotsIndex++;
 		}
 		this.entityList.add(new Map(stage, spriteBatch, this));
 		
@@ -157,24 +167,15 @@ public class RobotGameHandler extends GameHandler {
 	public void resize(int width, int height) {
 	}
 	
-	private IRobot[] getRobots()
-	{
-		IRobot[]robots = null;
-		int index=0;
+	@Override
+	public int getRanking(final IRobot robo) {
 		IRobot temp;
 		
-		for(int i=0; i<entityList.size(); i++)
-		{
-			if(entityList.get(i) instanceof Robot) //TODO funktionierend machen
-			{
-				robots[index]=(IRobot) entityList.get(i);
-				index++;
-			}
-		}
-		for(int h=0; h<robots.length; h++)
+		for(int h=0; h<robots.length-1; h++)
 		{
 			for(int i=0; i<robots.length-h; i++)
 			{
+				System.out.println(robots[i].getScore());//TODO fix Nullpointer
 				if(robots[i].getScore()>robots[i+1].getScore())
 				{
 					temp = robots[i];
@@ -183,12 +184,6 @@ public class RobotGameHandler extends GameHandler {
 				}
 			}
 		}
-		return robots;
-	}
-	
-	@Override
-	public int getRanking(final IRobot robo) {
-		IRobot[] robots = getRobots();
 		for(int i=0; i<robots.length; i++)
 		{
 			if(robots[i]==robo)
