@@ -31,16 +31,23 @@ public interface IPosition {
 		}
 		
 		public static Orientation getBy(String text) {
-		    if( text.equals("n") ) {
+		    if (text.length() > 0)
+		    	return getBy(text.charAt(0));
+		    else
+		    	throw new IllegalArgumentException("Orientation may not be empty");
+		}
+		
+		public static Orientation getBy(char c) {
+		    if( c == 'n' ) {
 		    	return NORTH;
-		    } else if( text.equals("e") ) {
+		    } else if( c == 'e' ) {
 		    	return EAST;
-		    } else if( text.equals("s") ) {
+		    } else if( c == 's' ) {
 		    	return SOUTH;
-		    } else if( text.equals("w") ) {
+		    } else if( c == 'w' ) {
 		    	return WEST;
 		    } else {
-		    	throw new IllegalArgumentException("No constant with representation "+text+" found!");
+		    	throw new IllegalArgumentException("No constant with representation "+c+" found!");
 		    }
 		}
 		
