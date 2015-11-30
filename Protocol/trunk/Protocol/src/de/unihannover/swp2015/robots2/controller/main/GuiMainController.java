@@ -13,6 +13,8 @@ import de.unihannover.swp2015.robots2.controller.interfaces.IGuiController;
 import de.unihannover.swp2015.robots2.controller.mqtt.MqttController;
 import de.unihannover.swp2015.robots2.controller.mqtt.MqttTopic;
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent.UpdateType;
+import de.unihannover.swp2015.robots2.model.interfaces.IField;
+import de.unihannover.swp2015.robots2.model.interfaces.IField.State;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
 import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
 import de.unihannover.swp2015.robots2.model.writeableInterfaces.IRobotWriteable;
@@ -39,16 +41,10 @@ public class GuiMainController extends AbstractMainController implements
 		if (this.mqttController == null) {
 			String clientId = "gui_" + UUID.randomUUID().toString();
 			// TODO subscription list
-			String[] subscribeTopics = {
-					"robot/#",
-					"extension/2/robot/#",
-					"map/walls",
-					"map/food",
-					"map/food/+",
-					"event/error/robot/#",
-					"extension/2/settings/#",
-					"control/state"
-			};
+			String[] subscribeTopics = { "robot/#", "extension/2/robot/#",
+					"map/walls", "map/food", "map/food/+",
+					"map/occupied/+/set", "event/error/robot/#",
+					"extension/2/settings/#", "control/state" };
 
 			try {
 				this.mqttController = new MqttController(brokerUrl, clientId,
@@ -68,7 +64,7 @@ public class GuiMainController extends AbstractMainController implements
 		MqttTopic mqtttopic = MqttTopic.getBy(topic);
 		if (mqtttopic == null)
 			return;
-		
+
 		String key = mqtttopic.getKey(topic);
 
 		switch (mqtttopic) {
@@ -82,18 +78,18 @@ public class GuiMainController extends AbstractMainController implements
 			this.robotModelController.mqttRobotPosition(key, message,
 					mqtttopic == MqttTopic.ROBOT_SETPOSITION);
 			break;
-			
+
 		case ROBOT_PROGRESS:
 			this.robotModelController.mqttRobotProgress(key, message);
-		
+
 		case ROBOT_SCORE:
-			this.robotModelController.mqttScoreUpdate(key,message);
+			this.robotModelController.mqttScoreUpdate(key, message);
 
 		case CONTROL_VIRTUALSPEED:
 			this.gameModelController.mqttSetRobotVirtualspeed(Float
 					.parseFloat(message));
 			break;
-		
+
 		case CONTROL_HESITATIONTIME:
 			this.gameModelController.mqttSetRobotHesitationTime(message);
 
@@ -109,6 +105,10 @@ public class GuiMainController extends AbstractMainController implements
 			this.stageModelController.mqttSetFieldFood(key, message);
 			break;
 
+		case FIELD_OCCUPIED_SET:
+			this.fieldStateModelController.mqttFieldOccupy(key, message);
+			break;
+
 		case CONTROL_STATE:
 			this.gameModelController.mqttSetGameState(message);
 			break;
@@ -119,8 +119,6 @@ public class GuiMainController extends AbstractMainController implements
 			r.setErrorState(true);
 			r.emitEvent(UpdateType.ROBOT_STATE);
 			break;
-
-		// TODO complete message handling
 
 		case SETTINGS_ROBOT_RESPONSE:
 		case SETTINGS_ROBOT_SET:
@@ -238,6 +236,22 @@ public class GuiMainController extends AbstractMainController implements
 	@Override
 	public void letRobotBlink(String id) {
 		this.sendMqttMessage(MqttTopic.ROBOT_BLINK, id, "");
+	}
+
+	@Override
+	public void deleteRobot(String id) {
+		this.mqttController.deleteRetainedMessage(MqttTopic.ROBOT_TYPE
+				.toString(id));
+
+		// Release all fields occupied by this robot
+		for (int x = 0; x < this.game.getStage().getWidth(); x++) {
+			for (int y = 0; x < this.game.getStage().getHeight(); y++) {
+				IField f = this.game.getStage().getField(x, y);
+				if (f.getState() == State.OCCUPIED && f.getLockedBy() == id)
+					this.sendMqttMessage(MqttTopic.FIELD_OCCUPIED_RELEASE, x
+							+ "-" + y, "");
+			}
+		}
 	}
 
 	@Override

@@ -148,6 +148,13 @@ public interface IGuiController extends IController {
 	 *            The id of the robot that will light up his LEDs
 	 */
 	public void letRobotBlink(String id);
+	
+	/**
+	 * Delete a robot from the game.
+	 * 
+	 * @param id The id of the robot to be deleted
+	 */
+	public void deleteRobot(String id);
 
 	/**
 	 * Register an IVisualizationControl that will receive the settings of each

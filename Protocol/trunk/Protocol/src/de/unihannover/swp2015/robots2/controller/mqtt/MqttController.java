@@ -91,7 +91,8 @@ public class MqttController implements IMqttController {
 
 			@Override
 			public void connectionLost(Throwable arg0) {
-				// TODO
+				// TODO propagate to MessageHandler and Model
+				// TODO try reconnect by interval and propagate on successful reconnect
 			}
 		});
 

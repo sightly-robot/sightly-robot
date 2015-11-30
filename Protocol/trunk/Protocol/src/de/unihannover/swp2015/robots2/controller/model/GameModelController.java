@@ -24,9 +24,17 @@ public class GameModelController {
 	 *            MQTT message payload
 	 */
 	public void mqttAddRobot(String robotId, String message) {
-		if (message.equals(""))
-			this.game.getRobotsWriteable().remove(robotId);
-		else if (!this.game.getRobots().containsKey(robotId)) {
+		// Empty message means: delete robot
+		if (message.equals("")) {
+			IRobotWriteable r = this.game.getRobotsWriteable().get(robotId);
+			if (r != null) {
+				// TODO agree on this behaviour
+				this.game.getRobotsWriteable().remove(robotId);
+				this.game.emitEvent(UpdateType.ROBOT_DELETE, r);
+			}
+
+			// Else check if robot does exist and add if not
+		} else if (!this.game.getRobots().containsKey(robotId)) {
 			IRobotWriteable r = new Robot(robotId, message.equals("real"),
 					false);
 			this.game.addRobot(r);

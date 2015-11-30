@@ -20,8 +20,9 @@ public interface IMqttController {
 	public void sendMessage(String topic, String message, boolean retained);
 
 	/**
-	 * Delete a retained message that was sent previously to the broker using
-	 * the given topic.
+	 * Publish a message with empty payload to the given topic. This will delete
+	 * a retained message that was sent previously to the broker using this
+	 * topic.
 	 * 
 	 * @param topic
 	 *            MQTT topic to delete the retained message from
