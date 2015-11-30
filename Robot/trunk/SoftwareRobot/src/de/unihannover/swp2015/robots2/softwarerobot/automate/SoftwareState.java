@@ -19,7 +19,7 @@ public enum SoftwareState implements IState {
 	},
 	FOREWARD, RIGHT, BACKWARD, LEFT;
 
-	private static final double DURATION = 2000;
+	private static double DURATION = 2000;
 
 	private double progress = 0.0;
 	private long startTime;
@@ -81,5 +81,10 @@ public enum SoftwareState implements IState {
 			return SoftwareState.FOREWARD;
 		}
 		return FOREWARD;
+	}
+	
+	public static void setVSpeed(float secondsPerField)
+	{
+		DURATION = secondsPerField*1000;
 	}
 }

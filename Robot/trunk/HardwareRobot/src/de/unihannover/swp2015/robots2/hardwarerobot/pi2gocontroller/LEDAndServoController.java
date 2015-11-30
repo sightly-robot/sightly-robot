@@ -21,7 +21,7 @@ import com.pi4j.io.i2c.I2CFactory;
 public class LEDAndServoController {
 
 	/** The Singleton instance of the LEDAndServoController. */
-	private static LEDAndServoController instance;
+	protected static LEDAndServoController instance;
 
 	private static final boolean DEBUG = true;
 
@@ -46,9 +46,9 @@ public class LEDAndServoController {
 	private I2CDevice device;
 
 	// Define Colour IDs for the RGB LEDs
-	private static final int BLUE = 0;
-	private static final int GREEN = 1;
-	private static final int RED = 2;
+	protected static final int BLUE = 0;
+	protected static final int GREEN = 1;
+	protected static final int RED = 2;
 
 	// LEDs
 	public static final int LEFT = 0;
@@ -75,7 +75,7 @@ public class LEDAndServoController {
 	 * @throws IOException
 	 *             thrown if the I2C Device connection or initialization failed
 	 */
-	private LEDAndServoController() throws IOException {
+	protected LEDAndServoController() throws IOException {
 		bus = I2CFactory.getInstance(I2CBus.BUS_1);
 
 		// Init PCA9685
@@ -151,7 +151,7 @@ public class LEDAndServoController {
 	 * @param off
 	 */
 	// TODO JavaDoc
-	private void setPWM(int channel, int on, int off) {
+	protected void setPWM(int channel, int on, int off) {
 		try {
 			device.write(__LED0_ON_L + 4 * channel, (byte) (on & 0xFF));
 			device.write(__LED0_ON_H + 4 * channel, (byte) (on >> 8));
@@ -198,7 +198,7 @@ public class LEDAndServoController {
 	 * @param blue
 	 *            0 <= blue <= 4095
 	 */
-	public void setLED(int LED, int red, int green, int blue) {
+	protected void setLED(int LED, int red, int green, int blue) {
 		setPWM(LED * 3 + RED, 0, red);
 		setPWM(LED * 3 + GREEN, 0, green);
 		setPWM(LED * 3 + BLUE, 0, blue);

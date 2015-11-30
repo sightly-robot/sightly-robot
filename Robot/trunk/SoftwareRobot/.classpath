@@ -5,5 +5,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/AbstractRobot"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/AiInterface"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Protocol"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Ai"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

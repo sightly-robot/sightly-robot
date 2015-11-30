@@ -17,8 +17,8 @@ import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
 public abstract class AbstractAutomate implements AiEventObserver, Runnable {
 
 		// Model:
-		private IRobotController robotController;
-		private IRobot robot;
+		protected IRobotController robotController;
+		protected IRobot robot;
 
 		// Thread:
 		private Thread automation = new Thread(this);

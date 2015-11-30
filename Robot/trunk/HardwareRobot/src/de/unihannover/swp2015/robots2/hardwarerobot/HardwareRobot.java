@@ -4,7 +4,10 @@ import java.awt.Color;
 
 import de.unihannover.swp2015.robots2.abstractrobot.AbstractRobot;
 import de.unihannover.swp2015.robots2.abstractrobot.automate.AbstractAutomate;
+import de.unihannover.swp2015.robots2.controller.main.RobotMainController;
+import de.unihannover.swp2015.robots2.core.AI;
 import de.unihannover.swp2015.robots2.hardwarerobot.automate.HardwareAutomate;
+import de.unihannover.swp2015.robots2.hardwarerobot.pi2gocontroller.BlinkLEDAndServoController;
 import de.unihannover.swp2015.robots2.hardwarerobot.pi2gocontroller.LEDAndServoController;
 import de.unihannover.swp2015.robots2.hardwarerobot.pi2gocontroller.MotorController;
 import de.unihannover.swp2015.robots2.hardwarerobot.pi2gocontroller.Pi2GoGPIOController;
@@ -19,30 +22,35 @@ import de.unihannover.swp2015.robots2.hardwarerobot.pi2gocontroller.Pi2GoGPIOCon
  */
 public class HardwareRobot extends AbstractRobot {
 
-	AbstractAutomate automate;
-
 	public HardwareRobot() {
-		super();
-
 		// PreInitialize Controller Instances:
-		LEDAndServoController.getInstance();
+		BlinkLEDAndServoController.getInstance();
 		Pi2GoGPIOController.getInstance();
 		MotorController.getInstance();
 		// SoundController.getInstance();
 		// ColorSensorController.getInstance();
 		// CompassController.getInstance();
-
-		LEDAndServoController.getInstance().setAllLEDs(Color.CYAN);
+		
+		robotController = new RobotMainController(true);
+		robotController.startMqtt("localhost");
+		
+		blinkOnce();
+		
+		automate = new HardwareAutomate(robotController);
+		automate.start();
+		
+		ai = new AI(robotController);
+		ai.setAiEventObserver(automate);
+	}
+	
+	private void blinkOnce()
+	{
+		LEDAndServoController.getInstance().setAllLEDs(robotController.getMyself().getColor());
 		try {
 			Thread.sleep(200);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 		LEDAndServoController.getInstance().setAllLEDs(Color.BLACK);
-
-		automate = new HardwareAutomate(robotController);
-		automate.start();
-
-		ai.setAiEventObserver(automate);
 	}
 }

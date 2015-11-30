@@ -9,5 +9,6 @@
 	<classpathentry exported="true" kind="lib" path="/LibrariesAndBuilds/pi4j/pi4j-service.jar"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/AiInterface"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/Protocol"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Ai"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
