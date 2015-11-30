@@ -15,6 +15,7 @@ import de.unihannover.swp2015.robots2.controller.mqtt.MqttTopic;
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent.UpdateType;
 import de.unihannover.swp2015.robots2.model.interfaces.IField;
 import de.unihannover.swp2015.robots2.model.interfaces.IField.State;
+import de.unihannover.swp2015.robots2.model.interfaces.IPosition;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
 import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
 import de.unihannover.swp2015.robots2.model.writeableInterfaces.IRobotWriteable;
@@ -297,6 +298,12 @@ public class GuiMainController extends AbstractMainController implements
 		}
 
 		return sb.toString();
+	}
+
+	@Override
+	public void sendStartPositions(List<IPosition> positions) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

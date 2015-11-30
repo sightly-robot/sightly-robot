@@ -31,6 +31,16 @@ public interface IGuiController extends IController {
 	 *            this direction.
 	 */
 	public void sendWalls(List<List<Set<Orientation>>> walls);
+	
+	/**
+	 * Send possible start positions to the game server. 
+	 * 
+	 * @param positions 
+	 * 			  A list of positions which contain the x, y and orientation of
+	 * 			  the start position. Robots can be placed there and shall have
+	 * 			  the give orientation.	
+	 */
+	public void sendStartPositions(List<IPosition> positions);
 
 	/**
 	 * Send a list of the current food state of each field to the game server.
