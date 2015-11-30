@@ -1,9 +1,12 @@
 package de.unihannover.swp2015.robots2.model.implementation;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.Future;
 
 import de.unihannover.swp2015.robots2.model.interfaces.IField;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition;
+import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
 import de.unihannover.swp2015.robots2.model.writeableInterfaces.IFieldWriteable;
 
 /**
@@ -188,6 +191,20 @@ public class Field extends AbstractModel implements IField, IFieldWriteable {
 	public void cancelStateTimer() {
 		this.stateTimerFuture.cancel(true);
 		this.stateTimerFuture = null;
+	}
+
+	@Override
+	public Set<Orientation> getWalls() {
+		Set<Orientation> walls = new HashSet<Orientation>();
+		if (this.northWall)
+			walls.add(Orientation.NORTH);
+		if (this.eastWall)
+			walls.add(Orientation.EAST);
+		if (this.southWall)
+			walls.add(Orientation.SOUTH);
+		if (this.westWall)
+			walls.add(Orientation.WEST);
+		return walls;
 	}
 
 }

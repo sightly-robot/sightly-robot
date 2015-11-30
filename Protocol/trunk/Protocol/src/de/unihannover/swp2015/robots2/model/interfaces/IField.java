@@ -1,5 +1,7 @@
 package de.unihannover.swp2015.robots2.model.interfaces;
 
+import java.util.Set;
+
 /**
  * Read-only interface of a Labyrinth-Field, which represents a single position
  * on the Stage.
@@ -43,6 +45,14 @@ public interface IField extends IAbstractModel {
 	 * @return true: if there is a wall; false: else
 	 */
 	public boolean isWall(IPosition.Orientation orientation);
+	
+	/**
+	 * Returns all walls around a field. An orientation will be in the list
+	 * if isWall would return true for that direction.
+	 *  
+	 * @return A set of directions that represent walls.
+	 */
+	public Set<IPosition.Orientation> getWalls();
 
 	/**
 	 * Returns the current amount of food on the field.
