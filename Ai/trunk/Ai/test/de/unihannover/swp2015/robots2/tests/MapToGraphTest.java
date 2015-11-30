@@ -28,6 +28,13 @@ public class MapToGraphTest extends TestCase {
 				for (Orientation orientation : Orientation.values()) {
 					// System.out.println("Node pos.: " + i + "," + j + "
 					// Orientation: " + orientation.toString());
+					/*
+					 * See which random walls were set
+					 */
+					if (graph.getNodes()[i][j].isWall(orientation) && i != 0 && j != 0 && i != graph.getDimX() - 1
+							&& j != graph.getDimY() - 1) {
+						System.out.println("Wall at: " + i + "," + j);
+					}
 					assertEquals(graph.getNodes()[i][j].isWall(orientation),
 							this.stage.getField(i, j).isWall(orientation));
 				}

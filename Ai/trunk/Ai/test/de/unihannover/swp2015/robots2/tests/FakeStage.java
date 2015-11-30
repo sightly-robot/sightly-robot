@@ -1,5 +1,7 @@
 package de.unihannover.swp2015.robots2.tests;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
@@ -45,6 +47,15 @@ public class FakeStage implements IStage {
 				}
 				if (j == this.height - 1) {
 					fld.setWall(Orientation.SOUTH, true);
+				}
+				/*
+				 * Set random walls for testing at chance 1/200
+				 */
+				if (rand.nextInt(200) == 2) {
+					List<Orientation> lis = Arrays.asList(Orientation.values());
+					Collections.shuffle(lis);
+					Orientation orien = lis.get(0);
+					fld.setWall(orien, true);
 				}
 
 				this.fields[i][j] = fld;
