@@ -134,7 +134,7 @@ public class RobotMainController extends AbstractMainController implements
 	@Override
 	public void updatePosition(int x, int y, Orientation orientation) {
 		// TODO Auto-generated method stub
-
+		myself.setPosition(x, y, orientation);
 	}
 
 	@Override
