@@ -90,10 +90,7 @@ public class ResourceHandler implements IResourceHandler {
 		this.texMap.put(ResConst.DEFAULT_RES_10, food.get(9));
 		
 		final TextureRegion robo = texAtlas.findRegion("robo");
-		this.texMap.put(ResConst.DEFAULT_ROBO_EAST, robo);
 		this.texMap.put(ResConst.DEFAULT_ROBO_NORTH, robo);
-		this.texMap.put(ResConst.DEFAULT_ROBO_WEST, robo);
-		this.texMap.put(ResConst.DEFAULT_ROBO_SOUTH, robo);
 		
 		final TextureRegion noWay = texAtlas.findRegion("0_way_tile_tiled");
 		this.texMap.put(ResConst.DEFAULT_FIELD, noWay);
@@ -122,8 +119,6 @@ public class ResourceHandler implements IResourceHandler {
 		this.texMap.put(ResConst.DEFAULT_FIELD_C_ES, wayC);
 		this.texMap.put(ResConst.DEFAULT_FIELD_C_SW, wayC);
 		this.texMap.put(ResConst.DEFAULT_FIELD_C_WN, wayC);
-
-		//TODO rotate if needed
 	}
 
 	@Override

@@ -36,9 +36,6 @@ public enum ResConst {
 	DEFAULT_RES_9("default_res_09"),
 	DEFAULT_RES_10("default_res_10"),
 	DEFAULT_ROBO_NORTH("default_robo_north"),
-	DEFAULT_ROBO_SOUTH("default_robo_south"),
-	DEFAULT_ROBO_WEST("default_robo_west"),
-	DEFAULT_ROBO_EAST("default_robo_east"),
 	DEFAULT_BUBBLE("default_bubble");
 	
 	private final String name;

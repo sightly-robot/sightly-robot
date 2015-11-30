@@ -1,6 +1,7 @@
 package de.unihannover.swp2015.robots2.visual.entity;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
@@ -23,6 +24,8 @@ public class Bubble extends Entity {
 	private float width;
 	private float height;
 	private Color color;
+	private BitmapFont font;
+	private CharSequence points;
 	
 	public Bubble(final IRobot model, SpriteBatch batch, IGameHandler gameHandler, IPreferences prefs, IResourceHandler resHandler) {
 		super(batch, gameHandler, prefs, resHandler);
@@ -34,14 +37,19 @@ public class Bubble extends Entity {
 		//temporary
 		this.color = color.set(color.r, color.g, color.b, color.a * 0.7f);
 		
+		this.font = new BitmapFont();
+        this.font.setColor(Color.WHITE); //TODO change so it fits color
+        
+        this.points = "Test: "+model.getId(); //TODO Format richtig machen
+		
 		final float fieldWidth = prefs.getFloat(PrefConst.FIELD_WIDTH_KEY, 42);
 		final float fieldHeight = prefs.getFloat(PrefConst.FIELD_HEIGHT_KEY, 42);
 
 		this.renderX = model.getPosition().getX() * fieldWidth;
 		this.renderY = model.getPosition().getY() * fieldHeight;
 		
-		this.width = fieldWidth * 0.4f;
-		this.height = fieldHeight * 0.4f;
+		this.width = fieldWidth * 0.5f;
+		this.height = fieldHeight * 0.2f;
 	}
 
 	@Override
@@ -49,6 +57,7 @@ public class Bubble extends Entity {
 		
 		batch.setColor(color);
 		batch.draw(bubble, renderX, renderY, width, height);
+		font.draw(batch, points, renderX, renderY);
 		batch.setColor(Color.WHITE);
 	}
 

@@ -24,7 +24,6 @@ public class Robot extends Entity {
 
 	// private boolean isVirtual; //TODO Einbauen
 	private final IRobot model;
-	//private final TextureRegion[] roboTex;
 	private final TextureRegion robo;
 	private final Bubble bubble;
 	
@@ -39,8 +38,6 @@ public class Robot extends Entity {
 		this.model.observe(this);
 
 		this.bubble = new Bubble(model, batch, gameHandler, prefs, resHandler);
-		//this.roboTex = resHandler.getRegion(ResConst.DEFAULT_ROBO_SOUTH, ResConst.DEFAULT_ROBO_NORTH,
-				//ResConst.DEFAULT_ROBO_WEST, ResConst.DEFAULT_ROBO_EAST);
 		this.robo = resHandler.getRegion(ResConst.DEFAULT_ROBO_NORTH);
 		
 		final float fieldWidth = prefs.getFloat(PrefConst.FIELD_WIDTH_KEY, 42);
@@ -72,24 +69,7 @@ public class Robot extends Entity {
 	
 	@Override
 	public void render() {
-				
-		/*switch (model.getPosition().getOrientation()) {
-			case SOUTH:
-				batch.draw(roboTex[0], renderX, renderY, width, height);
-				break;
-			case NORTH:
-				batch.draw(roboTex[1], renderX, renderY, width, height);
-				break;
-			case WEST:
-				batch.draw(roboTex[2], renderX, renderY, width, height);
-				break;
-			case EAST:
-				batch.draw(roboTex[3], renderX, renderY, width, height);
-				break;
-		}*/
-		batch.draw(robo, renderX, renderY, width/2f, height/2f, width, height, 1f, 1f, direction);
-		
-		
+		batch.draw(robo, renderX, renderY, width/2f, height/2f, width, height, 1f, 1f, direction);	
 		bubble.render();
 	}
 
