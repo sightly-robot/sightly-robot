@@ -37,10 +37,10 @@ public class Bubble extends Entity {
 		//temporary
 		this.color = color.set(color.r, color.g, color.b, color.a * 0.7f);
 		
-		this.font = new BitmapFont();
-        this.font.setColor(Color.WHITE); //TODO change so it fits color
+		this.font = new BitmapFont(true);
+        this.font.setColor(1-color.r, 1-color.g, 1-color.b,color.a); //TODO change so it fits color
         
-        this.points = "Test: "+model.getId(); //TODO Format richtig machen
+        this.points = model.getName()+" : "+model.getScore(); //TODO Platz
 		
 		final float fieldWidth = prefs.getFloat(PrefConst.FIELD_WIDTH_KEY, 42);
 		final float fieldHeight = prefs.getFloat(PrefConst.FIELD_HEIGHT_KEY, 42);
@@ -57,7 +57,7 @@ public class Bubble extends Entity {
 		
 		batch.setColor(color);
 		batch.draw(bubble, renderX, renderY, width, height);
-		font.draw(batch, points, renderX, renderY);
+		font.draw(batch, points, renderX+5, renderY+5);
 		batch.setColor(Color.WHITE);
 	}
 
@@ -73,6 +73,7 @@ public class Bubble extends Entity {
 				this.renderY = model.getPosition().getY() * fieldHeight;
 				break;
 			case ROBOT_SCORE:
+				this.points = model.getName()+" : "+model.getScore(); //TODO: Platz
 				break;
 			case ROBOT_STATE:
 				break;
