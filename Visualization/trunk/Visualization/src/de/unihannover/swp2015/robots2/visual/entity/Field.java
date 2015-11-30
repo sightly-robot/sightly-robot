@@ -36,8 +36,6 @@ public class Field extends Entity {
 		this.model = model;
 		this.model.observe(this);
 		this.parent = parent;
-		//remove later
-		this.observerNeighbours(model);
 		
 		this.food = new Resource(model, renderer, gameHandler);
 		this.texWall = resHandler.getRegion(ResConst.DEFAULT_WALL_N, ResConst.DEFAULT_WALL_E, ResConst.DEFAULT_WALL_S, ResConst.DEFAULT_WALL_W); 
@@ -50,20 +48,6 @@ public class Field extends Entity {
 		this.renderY = model.getY() * fieldHeight;
 
 		this.determineFieldTexture(model);
-	}
-	
-	//For test only, should work without later
-	private void observerNeighbours(final IField field) {
-		if (field.getX() > 0)
-			parent.getField(field.getX()-1, field.getY()).observe(this);
-		if (field.getX()+1 < parent.getWidth())
-			parent.getField(field.getX()+1, field.getY()).observe(this);
-
-		if (field.getY() > 0)
-			parent.getField(field.getX(), field.getY()-1).observe(this);
-		if (field.getY()+1 < parent.getHeight())
-			parent.getField(field.getX(), field.getY()+1).observe(this);
-	
 	}
 	
 	private void determineFieldTexture(final IField model) {
@@ -146,6 +130,8 @@ public class Field extends Entity {
 				field = resHandler.getRegion(ResConst.DEFAULT_FIELD);
 				fieldRotation = 0;
 				break;
+			default:
+				break;
 		}
 	}
 	
@@ -179,10 +165,6 @@ public class Field extends Entity {
 		final IField field = (IField) model;
 		
 		switch(event.getType()) {
-		//remove later
-		case FIELD_FOOD:
-			determineFieldTexture(field);
-			break;
 		case STAGE_WALL:
 			determineFieldTexture(field);
 			break;

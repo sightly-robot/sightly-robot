@@ -12,7 +12,6 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.bitfire.postprocessing.PostProcessor;
 import com.bitfire.postprocessing.effects.Fxaa;
-import com.bitfire.utils.ShaderLoader;
 
 import de.unihannover.swp2015.robots2.controller.externalInterfaces.IVisualization;
 import de.unihannover.swp2015.robots2.model.interfaces.IGame;
@@ -71,9 +70,7 @@ public class Visualization extends ApplicationAdapter implements IVisualization 
 
 		int appWidth = Gdx.graphics.getWidth();
 		int appHeight = Gdx.graphics.getHeight();
-		
-		ShaderLoader.BasePath = "resources/shaders/";
-		
+				
 		this.prefs = new FlexPreferences("prefs");
 		this.cam = new OrthographicCamera();
 		this.cam.setToOrtho(true, appWidth, appHeight);

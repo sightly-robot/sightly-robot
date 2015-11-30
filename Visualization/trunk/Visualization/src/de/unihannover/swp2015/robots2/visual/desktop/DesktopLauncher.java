@@ -4,6 +4,7 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.tools.texturepacker.TexturePacker;
 import com.badlogic.gdx.tools.texturepacker.TexturePacker.Settings;
+import com.bitfire.utils.ShaderLoader;
 
 import de.unihannover.swp2015.robots2.visual.Visualization;
 import de.unihannover.swp2015.robots2.visual.resource.ResConst;
@@ -11,6 +12,8 @@ import de.unihannover.swp2015.robots2.visual.resource.ResConst;
 public class DesktopLauncher {
 	
 	public static void main (String[] arg) {
+
+		ShaderLoader.BasePath = "resources/shaders/";
 
 		Settings packSettings = new Settings();
 		packSettings.maxWidth = 1024*4;

@@ -76,7 +76,7 @@ public class EntitySortTest {
 		
 	}
 	
-	public static class gh implements IGameHandler {
+	public static class GH implements IGameHandler {
 
 		public void update() {}
 		public void onModelUpdate(IEvent event) {}
@@ -102,19 +102,19 @@ public class EntitySortTest {
 
 	@Test
 	public void testSortEntities() {
-		final IEntity entity = new TestEntity(null, new gh());
+		final IEntity entity = new TestEntity(null, new GH());
 		entity.setZIndex(5);
 
-		final IEntity entity_two = new TestEntity(null, new gh());
+		final IEntity entity_two = new TestEntity(null, new GH());
 		entity_two.setZIndex(0);
 
-		final IEntity entity_three = new TestEntity(null, new gh());
+		final IEntity entity_three = new TestEntity(null, new GH());
 		entity_three.setZIndex(42);
 
-		final IEntity entity_four = new TestEntity(null, new gh());
+		final IEntity entity_four = new TestEntity(null, new GH());
 		entity_four.setZIndex(1);
 
-		final IEntity entity_five = new TestEntity(null, new gh());
+		final IEntity entity_five = new TestEntity(null, new GH());
 		entity_five.setZIndex(9);
 
 		final List<IEntity> list = new ArrayList<>(5);
@@ -134,19 +134,19 @@ public class EntitySortTest {
 	
 	@Test
 	public void testInsertionSortEntities() {
-		final IEntity entity = new TestEntity(null, new gh());
+		final IEntity entity = new TestEntity(null, new GH());
 		entity.setZIndex(5);
 
-		final IEntity entity_two = new TestEntity(null, new gh());
+		final IEntity entity_two = new TestEntity(null, new GH());
 		entity_two.setZIndex(0);
 
-		final IEntity entity_three = new TestEntity(null, new gh());
+		final IEntity entity_three = new TestEntity(null, new GH());
 		entity_three.setZIndex(42);
 
-		final IEntity entity_four = new TestEntity(null, new gh());
+		final IEntity entity_four = new TestEntity(null, new GH());
 		entity_four.setZIndex(1);
 
-		final IEntity entity_five = new TestEntity(null, new gh());
+		final IEntity entity_five = new TestEntity(null, new GH());
 		entity_five.setZIndex(9);
 
 		final List<IEntity> list = new ArrayList<>(5);

@@ -12,6 +12,7 @@ import javax.swing.JFrame;
 import de.unihannover.swp2015.robots2.model.implementation.Field;
 import de.unihannover.swp2015.robots2.model.implementation.Game;
 import de.unihannover.swp2015.robots2.model.implementation.Robot;
+import de.unihannover.swp2015.robots2.model.implementation.Stage;
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent.UpdateType;
 import de.unihannover.swp2015.robots2.model.interfaces.IGame;
 import de.unihannover.swp2015.robots2.model.interfaces.IStage;
@@ -79,7 +80,7 @@ public class TestApp extends JFrame implements ActionListener {
 			}
 		}
 		else if (e.getSource() == this.changeWalls) {
-			final IStage stage = game.getStage();
+			final Stage stage = (Stage)game.getStage();
 			for (int x = 0; x < stage.getWidth(); ++x) {
 				for (int y = 0; y < stage.getHeight(); ++y) {
 					final Field f = (Field) stage.getField(x, y);
@@ -90,6 +91,7 @@ public class TestApp extends JFrame implements ActionListener {
 					f.emitEvent(UpdateType.FIELD_FOOD);
 				}
 			}
+			stage.emitEvent(UpdateType.STAGE_WALL);
 		}
 		else if (e.getSource() == this.changeRobotPos) {
 			final Map<String, ? extends IRobot> r = game.getRobots();

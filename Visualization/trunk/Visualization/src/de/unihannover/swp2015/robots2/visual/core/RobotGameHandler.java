@@ -69,8 +69,8 @@ public class RobotGameHandler extends GameHandler {
 		this.entityList = new ArrayList<>();
 		this.game = game;
 		this.spriteBatch = new SpriteBatch();
-		this.spriteBatch.setProjectionMatrix(cam.combined);
 		this.cam = cam;
+		this.spriteBatch.setProjectionMatrix(this.cam.combined);
 		this.game.observe(this);
 		
 		this.init();
