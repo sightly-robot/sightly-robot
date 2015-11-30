@@ -3,6 +3,7 @@ package de.unihannover.swp2015.robots2.visual.resource;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -54,14 +55,12 @@ public class ResourceHandler implements IResourceHandler {
 		this.texMap = new HashMap<>();
 		this.frameSetMap = new HashMap<>();
 		this.renderUnitMap = new HashMap<>();
-		this.texAtlas = new TextureAtlas(pathToAtlas);
+		this.texAtlas = new TextureAtlas(Gdx.files.internal(pathToAtlas), true);
 
 		this.createRegions();
 	}
 	
 	private void createRegions() {
-		final TextureRegion noWay = texAtlas.findRegion("wall_test");
-		this.texMap.put(ResConst.DEFAULT_FIELD, noWay);
 		
 		final TextureRegion wallN = texAtlas.findRegion("wall_n");
 		this.texMap.put(ResConst.DEFAULT_WALL_N, wallN);
@@ -96,6 +95,9 @@ public class ResourceHandler implements IResourceHandler {
 		this.texMap.put(ResConst.DEFAULT_ROBO_WEST, robo);
 		this.texMap.put(ResConst.DEFAULT_ROBO_SOUTH, robo);
 		
+		final TextureRegion noWay = texAtlas.findRegion("0_way_tile_tiled");
+		this.texMap.put(ResConst.DEFAULT_FIELD, noWay);
+
 		final TextureRegion way1 = texAtlas.findRegion("1_way_tile_tiled");
 		this.texMap.put(ResConst.DEFAULT_FIELD_1_N, way1);
 		this.texMap.put(ResConst.DEFAULT_FIELD_1_E, way1);

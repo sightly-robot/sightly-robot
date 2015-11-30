@@ -47,7 +47,7 @@ public class Map extends Entity {
 		for (int x = 0; x < model.getWidth(); ++x) {
 			for (int y = 0; y < model.getHeight(); ++y) {
 				final IField field = model.getField(x, y);
-				this.fieldList.add(new Field(field, batch, gameHandler, prefs, resHandler));
+				this.fieldList.add(new Field(model, field, batch, gameHandler, prefs, resHandler));
 			}
 		}
 	}

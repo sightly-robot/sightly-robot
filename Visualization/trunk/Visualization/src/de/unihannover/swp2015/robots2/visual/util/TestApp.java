@@ -85,6 +85,7 @@ public class TestApp extends JFrame implements ActionListener {
 					f.setWall(Orientation.SOUTH, rb());
 					f.setWall(Orientation.EAST, rb());
 					f.setWall(Orientation.WEST, rb());
+					f.emitEvent(UpdateType.FIELD_FOOD);
 				}
 			}
 		}

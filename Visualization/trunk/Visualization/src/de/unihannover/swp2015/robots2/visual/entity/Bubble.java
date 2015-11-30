@@ -32,7 +32,7 @@ public class Bubble extends Entity {
 		this.bubble = resHandler.getRegion(ResConst.DEFAULT_BUBBLE);
 		this.color = ColorUtil.fromAwtColor(model.getColor());
 		//temporary
-		this.color = color.set(color.r, color.g, color.b, color.a * 0.8f);
+		this.color = color.set(color.r, color.g, color.b, color.a * 0.7f);
 		
 		final float fieldWidth = prefs.getFloat(PrefConst.FIELD_WIDTH_KEY, 42);
 		final float fieldHeight = prefs.getFloat(PrefConst.FIELD_HEIGHT_KEY, 42);

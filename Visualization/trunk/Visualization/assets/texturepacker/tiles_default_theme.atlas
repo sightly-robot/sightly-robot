@@ -4,128 +4,135 @@ size: 4096,2048
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
-1_way_tile_tiled
+0_way_tile_tiled
   rotate: false
   xy: 2, 1520
   size: 500, 500
   orig: 500, 500
   offset: 0, 0
   index: -1
-2_way_WE_tile_tiled
+1_way_tile_tiled
   rotate: false
   xy: 2, 1018
   size: 500, 500
   orig: 500, 500
   offset: 0, 0
   index: -1
-3_way_tile_tiled
+2_way_WE_tile_tiled
   rotate: false
   xy: 504, 1520
   size: 500, 500
   orig: 500, 500
   offset: 0, 0
   index: -1
-4_way_tile_tiled
+3_way_tile_tiled
   rotate: false
   xy: 2, 516
   size: 500, 500
   orig: 500, 500
   offset: 0, 0
   index: -1
-circle
-  rotate: false
-  xy: 2512, 1418
-  size: 100, 100
-  orig: 100, 100
-  offset: 0, 0
-  index: -1
-curve_tile_tiled
+4_way_tile_tiled
   rotate: false
   xy: 504, 1018
   size: 500, 500
   orig: 500, 500
   offset: 0, 0
   index: -1
-food
+circle
+  rotate: false
+  xy: 3014, 1920
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+curve_tile_tiled
   rotate: false
   xy: 1006, 1520
   size: 500, 500
   orig: 500, 500
   offset: 0, 0
-  index: 1
+  index: -1
 food
   rotate: false
   xy: 2, 14
   size: 500, 500
   orig: 500, 500
   offset: 0, 0
-  index: 2
+  index: 1
 food
   rotate: false
   xy: 504, 516
   size: 500, 500
   orig: 500, 500
   offset: 0, 0
-  index: 3
+  index: 2
 food
   rotate: false
   xy: 1006, 1018
   size: 500, 500
   orig: 500, 500
   offset: 0, 0
-  index: 4
+  index: 3
 food
   rotate: false
   xy: 1508, 1520
   size: 500, 500
   orig: 500, 500
   offset: 0, 0
-  index: 5
+  index: 4
 food
   rotate: false
   xy: 504, 14
   size: 500, 500
   orig: 500, 500
   offset: 0, 0
-  index: 6
+  index: 5
 food
   rotate: false
   xy: 1006, 516
   size: 500, 500
   orig: 500, 500
   offset: 0, 0
-  index: 7
+  index: 6
 food
   rotate: false
   xy: 1508, 1018
   size: 500, 500
   orig: 500, 500
   offset: 0, 0
-  index: 8
+  index: 7
 food
   rotate: false
   xy: 2010, 1520
   size: 500, 500
   orig: 500, 500
   offset: 0, 0
-  index: 9
+  index: 8
 food
   rotate: false
   xy: 1006, 14
   size: 500, 500
   orig: 500, 500
   offset: 0, 0
+  index: 9
+food
+  rotate: false
+  xy: 1508, 516
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
   index: 10
 robo
   rotate: false
-  xy: 1508, 516
+  xy: 2010, 1018
   size: 500, 500
   orig: 500, 500
   offset: 0, 0
   index: -1
 wall_e
   rotate: false
-  xy: 2010, 1018
+  xy: 2512, 1520
   size: 500, 500
   orig: 500, 500
   offset: 0, 0
@@ -139,28 +146,28 @@ wall_h
   index: -1
 wall_n
   rotate: false
-  xy: 2512, 1520
+  xy: 1508, 14
   size: 500, 500
   orig: 500, 500
   offset: 0, 0
   index: -1
 wall_s
   rotate: false
-  xy: 1508, 14
+  xy: 2010, 516
   size: 500, 500
   orig: 500, 500
   offset: 0, 0
   index: -1
 wall_v
   rotate: false
-  xy: 3014, 1920
+  xy: 2010, 414
   size: 10, 100
   orig: 10, 100
   offset: 0, 0
   index: -1
 wall_w
   rotate: false
-  xy: 2010, 516
+  xy: 2512, 1018
   size: 500, 500
   orig: 500, 500
   offset: 0, 0
