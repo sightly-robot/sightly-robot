@@ -4,6 +4,7 @@ import com.badlogic.gdx.utils.Disposable;
 
 import de.unihannover.swp2015.robots2.model.externalInterfaces.IModelObserver;
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
+import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
 import de.unihannover.swp2015.robots2.visual.entity.IEntity;
 import de.unihannover.swp2015.robots2.visual.resource.ResourceHandler;
 import de.unihannover.swp2015.robots2.visual.util.pref.IPreferences;
@@ -42,4 +43,9 @@ public interface IGameHandler extends IUpdateable, IModelObserver, IRenderable, 
 	 */
 	void resize(final int width, final int height);
 	
+	
+	/**
+	 * Returns the current ranking
+	 */
+	int getRanking(final IRobot robo);
 }

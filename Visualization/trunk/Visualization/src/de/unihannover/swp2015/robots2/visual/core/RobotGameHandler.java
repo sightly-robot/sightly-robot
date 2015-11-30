@@ -151,5 +151,46 @@ public class RobotGameHandler implements IGameHandler {
 	@Override
 	public void resize(int width, int height) {
 	}
+	
+	private IRobot[] getRobots()
+	{
+		IRobot[]robots = null;
+		int index=0;
+		IRobot temp;
+		
+		for(int i=0; i<entityList.size(); i++)
+		{
+			if(entityList.get(i) instanceof Robot) //TODO funktionierend machen
+			{
+				robots[index]=(IRobot) entityList.get(i);
+				index++;
+			}
+		}
+		for(int h=0; h<robots.length; h++)
+		{
+			for(int i=0; i<robots.length-h; i++)
+			{
+				if(robots[i].getScore()>robots[i+1].getScore())
+				{
+					temp = robots[i];
+					robots[i] = robots[i+1];
+					robots[i+1]=temp;
+				}
+			}
+		}
+		return robots;
+	}
+	
+	@Override
+	public int getRanking(final IRobot robo) {
+		IRobot[] robots = getRobots();
+		for(int i=0; i<robots.length; i++)
+		{
+			if(robots[i]==robo)
+				return i+1;
+		}
+		return 0;
+	}
+
 
 }
