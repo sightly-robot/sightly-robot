@@ -64,7 +64,7 @@ public class Map extends Entity {
 
 		batch.end();
 		
-		shapeRenderer.begin(ShapeType.Filled);
+		/*shapeRenderer.begin(ShapeType.Filled);
 		shapeRenderer.setColor(100f/255f, 100f/255f, 100f/255f, 100f/255f);
 		for (int y = 1; y < model.getHeight(); ++y) {
 			shapeRenderer.rect(0, y*fieldWidth, Gdx.graphics.getWidth(), 2);
@@ -72,7 +72,7 @@ public class Map extends Entity {
 		for (int x = 1; x < model.getWidth(); ++x) {
 			shapeRenderer.rect(x*fieldHeight, 0, 2, Gdx.graphics.getHeight());
 		}
-		shapeRenderer.end();
+		shapeRenderer.end();*/
 		
 		batch.begin();
 	}

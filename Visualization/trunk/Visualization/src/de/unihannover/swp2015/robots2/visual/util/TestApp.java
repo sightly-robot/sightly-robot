@@ -94,9 +94,23 @@ public class TestApp extends JFrame implements ActionListener {
 			final Collection<? extends IRobot> s = r.values();
 			for (IRobot ro : s) {
 				final Robot rob = (Robot) ro;
-				rob.setPosition((int)(Math.random()*game.getStage().getWidth()), (int)(Math.random()*game.getStage().getHeight()), Orientation.SOUTH);
+				rob.setPosition((int)(Math.random()*game.getStage().getWidth()), (int)(Math.random()*game.getStage().getHeight()), randomOrientation());
 				rob.emitEvent(UpdateType.ROBOT_POSITION);
 			}
+		}
+	}
+	
+	private Orientation randomOrientation(){
+		int rd = (int)(Math.random()*4);
+		switch(rd){
+		case 1:
+			return Orientation.NORTH;
+		case 2:
+			return Orientation.EAST;
+		case 3:
+			return Orientation.WEST;
+		default:
+			return Orientation.SOUTH;
 		}
 	}
 	

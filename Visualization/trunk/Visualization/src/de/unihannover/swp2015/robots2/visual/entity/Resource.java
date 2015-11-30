@@ -52,7 +52,7 @@ public class Resource extends Entity {
 		final float fieldHeight = prefs.getFloat(PrefConst.FIELD_HEIGHT_KEY, 50);
 		
 		if (model.getFood() > 0)
-			batch.draw(tex[model.getFood()-1], renderX, renderY, fieldWidth, fieldHeight);
+			batch.draw(tex[model.getFood()-1], renderX+(fieldWidth*0.15f)/2, renderY+(fieldHeight*0.15f)/2, fieldWidth*0.85f, fieldHeight*0.85f);
 	}
 
 	@Override
