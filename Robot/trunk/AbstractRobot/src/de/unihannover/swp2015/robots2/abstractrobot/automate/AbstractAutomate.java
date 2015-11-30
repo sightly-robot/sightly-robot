@@ -29,6 +29,12 @@ public abstract class AbstractAutomate implements AiEventObserver, Runnable {
 
 		// Positioning:
 		private Point nextPosition = new Point(0, 0);
+		
+		//Progress:
+		private static final long PROGRESS_UPDATE_DURATION = 100;
+		private long nextUpdateTime;
+		
+		
 
 		public AbstractAutomate(IRobotController robotController, IState initialState) {
 			this.robotController = robotController;
@@ -57,6 +63,12 @@ public abstract class AbstractAutomate implements AiEventObserver, Runnable {
 					state = tempState;
 					state.start();
 					//System.out.println(state.name());
+				}
+				
+				if(System.currentTimeMillis() > nextUpdateTime)
+				{
+					robotController.updatePositionProgress((int) (state.getProgress()*1000));
+					nextUpdateTime = System.currentTimeMillis() + PROGRESS_UPDATE_DURATION;
 				}
 
 				synchronized (automation) {

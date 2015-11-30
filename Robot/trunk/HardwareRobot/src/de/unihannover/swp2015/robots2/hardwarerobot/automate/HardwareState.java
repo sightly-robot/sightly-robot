@@ -319,9 +319,6 @@ public enum HardwareState implements IState {
 	 */
 	@Override
 	public double getProgress() {
-		if (progress > 1.0) {
-			progress = 1.0;
-		}
 		return progress;
 	}
 
@@ -332,7 +329,7 @@ public enum HardwareState implements IState {
 	 *            0.0 <= progress
 	 */
 	protected void setProgress(double progress) {
-		this.progress = progress;
+		this.progress = Math.min(1,Math.max(0,progress));
 	}
 
 	/**
