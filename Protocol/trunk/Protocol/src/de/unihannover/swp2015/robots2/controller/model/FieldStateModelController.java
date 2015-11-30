@@ -1,5 +1,6 @@
 package de.unihannover.swp2015.robots2.controller.model;
 
+import java.util.Random;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -21,12 +22,14 @@ public class FieldStateModelController {
 	private final IStageWriteable stage;
 	private final ScheduledThreadPoolExecutor timer;
 	private IFieldTimerController fieldTimerCallback = null;
+	private Random random;
 
 	public FieldStateModelController(IStageWriteable stage) {
 		this.stage = stage;
 
 		this.timer = new ScheduledThreadPoolExecutor(20);
 		this.timer.setRemoveOnCancelPolicy(true);
+		this.random = new Random();
 	}
 
 	/**
@@ -58,8 +61,7 @@ public class FieldStateModelController {
 		int x = Integer.parseInt(coord[0]);
 		int y = Integer.parseInt(coord[1]);
 
-		IFieldWriteable f = this.stage.getFieldWriteable(x,
-				y);
+		IFieldWriteable f = this.stage.getFieldWriteable(x, y);
 
 		switch (f.getState()) {
 		case FREE:
@@ -68,8 +70,8 @@ public class FieldStateModelController {
 			f.setState(State.LOCKED);
 			f.setLockedBy(message);
 
-			Future<Object> newTimer = this.timer.schedule(new FieldTimerTask(f,
-					null), 3000, TimeUnit.MILLISECONDS);
+			Future<Object> newTimer = this.timer.schedule(
+					new FieldTimerTask(f, null), 3000, TimeUnit.MILLISECONDS);
 			f.setStateTimerFuture(newTimer);
 
 			f.emitEvent(UpdateType.FIELD_STATE);
@@ -80,9 +82,10 @@ public class FieldStateModelController {
 			f.cancelStateTimer();
 			f.setState(State.RANDOM_WAIT);
 
-			// TODO generate random wait
-			Future<Object> newTimer = this.timer.schedule(new FieldTimerTask(f,
-					this.fieldTimerCallback), 1000, TimeUnit.MILLISECONDS);
+			int waitTime = this.random.nextInt(2900) + 100;
+			Future<Object> newTimer = this.timer.schedule(
+					new FieldTimerTask(f, this.fieldTimerCallback), waitTime,
+					TimeUnit.MILLISECONDS);
 			f.setStateTimerFuture(newTimer);
 
 			f.emitEvent(UpdateType.FIELD_STATE);
@@ -169,8 +172,9 @@ public class FieldStateModelController {
 		IFieldWriteable f = this.stage.getFieldWriteable(x, y);
 		f.setState(State.LOCK_WAIT);
 
-		Future<Object> newTimer = this.timer.schedule(new FieldTimerTask(f,
-				this.fieldTimerCallback), 1000, TimeUnit.MILLISECONDS);
+		Future<Object> newTimer = this.timer.schedule(
+				new FieldTimerTask(f, this.fieldTimerCallback), 100,
+				TimeUnit.MILLISECONDS);
 		f.setStateTimerFuture(newTimer);
 
 		f.emitEvent(UpdateType.FIELD_STATE);
@@ -179,7 +183,8 @@ public class FieldStateModelController {
 	/**
 	 * Set the state of the field at the given coordinates to OURS.
 	 * 
-	 * You must send a lock message before calling this method!
+	 * You must check that this is allowed and send an occupy message before
+	 * calling this method!
 	 * 
 	 * @param x
 	 *            x coordinate of the field
@@ -198,7 +203,8 @@ public class FieldStateModelController {
 	 * Set the state of the field at the given coordinates to FREE after it has
 	 * been OURS.
 	 * 
-	 * You must send a lock message before calling this method!
+	 * You must check that this is allowed and send a release message before
+	 * calling this method!
 	 * 
 	 * @param x
 	 *            x coordinate of the field

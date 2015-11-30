@@ -9,6 +9,7 @@ import de.unihannover.swp2015.robots2.controller.interfaces.IRobotController;
 import de.unihannover.swp2015.robots2.controller.mqtt.MqttController;
 import de.unihannover.swp2015.robots2.controller.mqtt.MqttTopic;
 import de.unihannover.swp2015.robots2.model.implementation.Robot;
+import de.unihannover.swp2015.robots2.model.interfaces.IField;
 import de.unihannover.swp2015.robots2.model.interfaces.IField.State;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
 import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
@@ -19,8 +20,8 @@ import de.unihannover.swp2015.robots2.model.writeableInterfaces.IRobotWriteable;
  * @version 0.1
  * @author Patrick Kawczynski
  */
-public class RobotMainController extends AbstractMainController implements
-		IRobotController, IFieldTimerController {
+public class RobotMainController extends AbstractMainController
+		implements IRobotController, IFieldTimerController {
 
 	private IRobotWriteable myself;
 
@@ -107,18 +108,17 @@ public class RobotMainController extends AbstractMainController implements
 			break;
 
 		case FIELD_OCCUPIED_LOCK:
-			if (message != this.myself.getId())
+			if (!message.equals(this.myself.getId()))
 				this.fieldStateModelController.mqttFieldLock(key, message);
 			break;
 
 		case FIELD_OCCUPIED_SET:
-			if (message != this.myself.getId())
+			if (!message.equals(this.myself.getId()))
 				this.fieldStateModelController.mqttFieldOccupy(key, message);
 			break;
 
 		case FIELD_OCCUPIED_RELEASE:
-			if (message != this.myself.getId())
-				this.fieldStateModelController.mqttFieldRelease(key, message);
+			this.fieldStateModelController.mqttFieldRelease(key, message);
 			break;
 
 		case CONTROL_STATE:
@@ -155,8 +155,13 @@ public class RobotMainController extends AbstractMainController implements
 
 	@Override
 	public void releaseField(int x, int y) {
-		this.sendMqttMessage(MqttTopic.FIELD_OCCUPIED_RELEASE, (x + "-" + y),
-				this.myself.getId());
+		IField f = this.game.getStage().getField(x, y);
+		if (f.getState() != State.OURS && f.getState() != State.RANDOM_WAIT)
+			return;
+
+		if (f.getState() == State.OURS)
+			this.sendMqttMessage(MqttTopic.FIELD_OCCUPIED_RELEASE,
+					(x + "-" + y), "");
 		this.fieldStateModelController.setFieldRelease(x, y);
 	}
 

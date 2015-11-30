@@ -90,6 +90,7 @@ public class Field extends AbstractModel implements IField, IFieldWriteable {
 		this.y = y;
 		this.foodLock = new Object();
 		this.state = State.FREE;
+		this.lockedBy = "";
 	}
 
 	@Override
@@ -193,8 +194,10 @@ public class Field extends AbstractModel implements IField, IFieldWriteable {
 
 	@Override
 	public void cancelStateTimer() {
-		this.stateTimerFuture.cancel(true);
-		this.stateTimerFuture = null;
+		if (this.stateTimerFuture != null) {
+			this.stateTimerFuture.cancel(true);
+			this.stateTimerFuture = null;
+		}
 	}
 
 	@Override

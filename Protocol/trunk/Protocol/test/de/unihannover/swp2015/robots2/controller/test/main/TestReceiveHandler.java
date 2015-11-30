@@ -13,15 +13,19 @@ class TestReceiveHandler implements IMqttMessageHandler {
 	public void handleMqttMessage(String topic, String message) {
 		this.values.put(topic, message);
 	}
-	
+
 	public String getValue(String key) {
 		return this.values.get(key);
 	}
-	
+
 	public String[] getKeysSorted() {
 		String[] keys = this.values.keySet().toArray(new String[1]);
 		Arrays.sort(keys);
 		return keys;
+	}
+
+	public void removeValue(String key) {
+		this.values.remove(key);
 	}
 
 }

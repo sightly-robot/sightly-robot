@@ -21,6 +21,7 @@ public class FieldTimerTask implements Callable<Object> {
 		switch (this.field.getState()) {
 		case LOCKED:
 			this.field.setState(State.FREE);
+			this.field.setLockedBy("");
 			this.field.emitEvent(UpdateType.FIELD_STATE);
 			break;
 
