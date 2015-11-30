@@ -5,7 +5,7 @@ import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
 import de.unihannover.swp2015.robots2.model.interfaces.IStage;
 
 public class StageUtil {
-
+	
 	/**
 	 * Checks if it is possible to drive from field <code>model</code> in the direction <code>direction</code>. 
 	 * @param model current field of the robot

@@ -4,11 +4,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Collection;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 
 import de.unihannover.swp2015.robots2.model.implementation.Field;
+import de.unihannover.swp2015.robots2.model.implementation.Game;
 import de.unihannover.swp2015.robots2.model.implementation.Robot;
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent.UpdateType;
 import de.unihannover.swp2015.robots2.model.interfaces.IGame;
@@ -97,6 +99,12 @@ public class TestApp extends JFrame implements ActionListener {
 				rob.setPosition((int)(Math.random()*game.getStage().getWidth()), (int)(Math.random()*game.getStage().getHeight()), randomOrientation());
 				rob.emitEvent(UpdateType.ROBOT_POSITION);
 			}
+		}
+		else if (e.getSource() == this.changeRobots) {
+			final Game g = (Game) game;
+			final Robot robo = new Robot(UUID.randomUUID().toString(),true,true); 
+			g.addRobot(robo);
+			g.emitEvent(UpdateType.ROBOT_ADD, robo);
 		}
 	}
 	

@@ -1,7 +1,10 @@
 package de.unihannover.swp2015.robots2.visual.entity;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import de.unihannover.swp2015.robots2.model.interfaces.IAbstractModel;
+import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
 import de.unihannover.swp2015.robots2.visual.core.IGameHandler;
 import de.unihannover.swp2015.robots2.visual.resource.IResourceHandler;
 import de.unihannover.swp2015.robots2.visual.util.pref.IPreferences;
@@ -16,6 +19,7 @@ import de.unihannover.swp2015.robots2.visual.util.pref.IPreferences;
  */
 public abstract class Entity implements IEntity {
 
+	protected IAbstractModel model;
     protected float renderX; 
     protected float renderY; 
     protected int zIndex = 0;
@@ -25,15 +29,28 @@ public abstract class Entity implements IEntity {
     protected final IGameHandler gameHandler;
     protected final SpriteBatch batch;
     
-    public Entity(final SpriteBatch batch, final IGameHandler gameHandler, final IPreferences prefs, final IResourceHandler resHandler) {
+    public Entity(final IAbstractModel model, final SpriteBatch batch, final IGameHandler gameHandler) {
     	this.batch = batch;
     	this.gameHandler = gameHandler;
-    	this.resHandler = resHandler;
+    	this.resHandler = gameHandler.getResourceHandler();
 
-    	this.prefs = prefs;
+    	this.prefs = gameHandler.getPreferences();
     	this.prefs.addObserver(this);
+    	
+    	this.model = model;
+    	this.model.observe(this);
     }
     
+    @Override 
+    public void onModelUpdate(final IEvent event) {
+		Gdx.app.postRunnable(new Runnable() {
+			@Override
+			public void run() {
+				Entity.this.onManagedModelUpdate(event);
+			}
+		});
+    }
+        
     @Override
     public int getZIndex() {
     	return zIndex;
@@ -63,6 +80,11 @@ public abstract class Entity implements IEntity {
 	@Override
 	public float getPositionY() {
 		return renderY;
+	}
+	
+	@Override
+	public IAbstractModel getModel() {
+		return model;
 	}
     
 }

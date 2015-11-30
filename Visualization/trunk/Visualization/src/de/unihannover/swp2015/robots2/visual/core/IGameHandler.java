@@ -6,7 +6,7 @@ import de.unihannover.swp2015.robots2.model.externalInterfaces.IModelObserver;
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
 import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
 import de.unihannover.swp2015.robots2.visual.entity.IEntity;
-import de.unihannover.swp2015.robots2.visual.resource.ResourceHandler;
+import de.unihannover.swp2015.robots2.visual.resource.IResourceHandler;
 import de.unihannover.swp2015.robots2.visual.util.pref.IPreferences;
 
 /**
@@ -18,11 +18,18 @@ import de.unihannover.swp2015.robots2.visual.util.pref.IPreferences;
 public interface IGameHandler extends IUpdateable, IModelObserver, IRenderable, Disposable {
 
 	/**
-	 * Sets the connected {@link ResourceHandler}.
+	 * Sets the connected {@link IResourceHandler}.
 	 * 
-	 * @param resourceHandler contains resources and manages the textures.
+	 * @param resourceHandler contains resources and manages the textures
 	 */
-	void setResourceHandler(final ResourceHandler resourceHandler);
+	void setResourceHandler(final IResourceHandler resourceHandler);
+	
+	/**
+	 * Gets the connected {@link IResourceHandler}
+	 * 
+	 * @return resourceHandler contains resources and manages the textures
+	 */
+	IResourceHandler getResourceHandler();
 	
 	/**
 	 * Dispatches an event from the model.
@@ -48,4 +55,6 @@ public interface IGameHandler extends IUpdateable, IModelObserver, IRenderable, 
 	 * Returns the current ranking
 	 */
 	int getRanking(final IRobot robo);
+	
+	void onManagedModelUpdate(final IEvent event);
 }

@@ -16,7 +16,6 @@ import de.unihannover.swp2015.robots2.visual.entity.Map;
 import de.unihannover.swp2015.robots2.visual.entity.Robot;
 import de.unihannover.swp2015.robots2.visual.entity.modifier.base.IEntityModifier;
 import de.unihannover.swp2015.robots2.visual.resource.IResourceHandler;
-import de.unihannover.swp2015.robots2.visual.resource.ResourceHandler;
 import de.unihannover.swp2015.robots2.visual.util.EntityUtil;
 import de.unihannover.swp2015.robots2.visual.util.pref.IPreferences;
 
@@ -25,7 +24,7 @@ import de.unihannover.swp2015.robots2.visual.util.pref.IPreferences;
  * 
  * @author Rico Schrage
  */
-public class RobotGameHandler implements IGameHandler {
+public class RobotGameHandler extends GameHandler {
 
 	/**
 	 * Contains all modifiers, which are updated every tick.
@@ -43,11 +42,6 @@ public class RobotGameHandler implements IGameHandler {
 	protected final IGame game;
 	
 	/**
-	 * Contains multiple sets of resources for the game.
-	 */
-	protected IResourceHandler resourceHandler;
-	
-	/**
 	 * SpriteBatch for rendering textures.
 	 */
 	protected SpriteBatch spriteBatch;
@@ -58,24 +52,19 @@ public class RobotGameHandler implements IGameHandler {
 	protected OrthographicCamera cam;
 	
 	/**
-	 * Settings received via MQTT plus internal non-persistent settings.
-	 */
-	protected IPreferences prefs;
-	
-	/**
 	 * Construct a new RobotGameHandler and connects this handler (means it will directly observe the model) to the given model <code>game</code>
 	 * @param game root of the model
 	 * @param resourceHandler {@link IResourceHandler}
 	 */
 	public RobotGameHandler(final IGame game, final IResourceHandler resourceHandler, final OrthographicCamera cam, final IPreferences prefs) {
+		super(resourceHandler, prefs);
+		
 		this.modifierList = new ArrayList<>();
 		this.entityList = new ArrayList<>();
 		this.game = game;
-		this.resourceHandler = resourceHandler;
 		this.spriteBatch = new SpriteBatch();
 		this.spriteBatch.setProjectionMatrix(cam.combined);
 		this.cam = cam;
-		this.prefs = prefs;
 		this.game.observe(this);
 		
 		this.init();
@@ -95,12 +84,12 @@ public class RobotGameHandler implements IGameHandler {
 
 		//create entites
 		for (final IRobot robot : game.getRobots().values()) {
-			final Robot robo = new Robot(robot, spriteBatch, this, prefs, resourceHandler);
+			final Robot robo = new Robot(robot, spriteBatch, this);
 			robo.setZIndex(1);
 			this.entityList.add(robo);
 			
 		}
-		this.entityList.add(new Map(stage, spriteBatch, this, prefs, resourceHandler));
+		this.entityList.add(new Map(stage, spriteBatch, this));
 		
 		EntityUtil.sortEntities(entityList);
 	}
@@ -120,34 +109,50 @@ public class RobotGameHandler implements IGameHandler {
 	}
 
 	@Override
-	public void onModelUpdate(final IEvent event) {
-		// TODO Auto-generated method stub
+	public void onManagedModelUpdate(IEvent event) {
+		switch(event.getType()) {
 		
-	}
-
-	@Override
-	public void setResourceHandler(final ResourceHandler resourceHandler) {
-		// TODO Auto-generated method stub
+		case GAME_PARAMETER:
+			break;
+			
+		case GAME_STATE:
+			break;
+			
+		case ROBOT_ADD:
+			if (event.getObject() instanceof IRobot) {
+				final IRobot robot = (IRobot) event.getObject();
+				final Robot roboEntity = new Robot(robot, spriteBatch, this);
+				roboEntity.setZIndex(1);
+				EntityUtil.addEntitySorted(roboEntity, entityList);
+			}
+			break;
+			
+		case ROBOT_DELETE:
+			for (int i = entityList.size()-1; i >= 0 ; i--) {
+				if (entityList.get(i).getModel() == event.getObject()) {
+					this.entityList.remove(i);
+				}
+			}
+			break;
+			
+		default:
+			break;
 		
+		}		
 	}
 
 	@Override
 	public void dispatchEvent(final IEvent event, final IEntity source) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void dispose() {
+		super.dispose();
+		
 		this.spriteBatch.dispose();
-		this.resourceHandler.dispose();
 	}
-
-	@Override
-	public IPreferences getPreferences() {
-		return prefs;
-	}
-
+	
 	@Override
 	public void resize(int width, int height) {
 	}
@@ -191,6 +196,5 @@ public class RobotGameHandler implements IGameHandler {
 		}
 		return 0;
 	}
-
 
 }

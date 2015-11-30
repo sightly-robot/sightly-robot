@@ -10,10 +10,8 @@ import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
 import de.unihannover.swp2015.robots2.model.interfaces.IStage;
 import de.unihannover.swp2015.robots2.visual.core.IGameHandler;
 import de.unihannover.swp2015.robots2.visual.core.PrefConst;
-import de.unihannover.swp2015.robots2.visual.resource.IResourceHandler;
 import de.unihannover.swp2015.robots2.visual.resource.ResConst;
 import de.unihannover.swp2015.robots2.visual.util.StageUtil;
-import de.unihannover.swp2015.robots2.visual.util.pref.IPreferences;
 import de.unihannover.swp2015.robots2.visual.util.pref.IPreferencesKey;
 import de.unihannover.swp2015.robots2.visual.util.pref.observer.PreferencesObservable;
 
@@ -26,22 +24,22 @@ import de.unihannover.swp2015.robots2.visual.util.pref.observer.PreferencesObser
 public class Field extends Entity {
 	
 	private final IStage parent;
-	private final IField model;
 	private final TextureRegion[] texWall;
 	private final Resource food;
 	
 	private TextureRegion field;
 	private float fieldRotation = 0;
 	
-	public Field(final IStage parent, final IField model, final SpriteBatch renderer, final IGameHandler gameHandler, final IPreferences prefs, final IResourceHandler resHandler){
-		super(renderer, gameHandler, prefs, resHandler);
+	public Field(final IStage parent, final IField model, final SpriteBatch renderer, final IGameHandler gameHandler){
+		super(model, renderer, gameHandler);
 		
 		this.model = model;
 		this.model.observe(this);
 		this.parent = parent;
-		this.observerNeighbours();
+		//remove later
+		this.observerNeighbours(model);
 		
-		this.food = new Resource(model, renderer, gameHandler, prefs, resHandler);
+		this.food = new Resource(model, renderer, gameHandler);
 		this.texWall = resHandler.getRegion(ResConst.DEFAULT_WALL_N, ResConst.DEFAULT_WALL_E, ResConst.DEFAULT_WALL_S, ResConst.DEFAULT_WALL_W); 
 		this.field = resHandler.getRegion(ResConst.DEFAULT_FIELD); 
 
@@ -51,23 +49,24 @@ public class Field extends Entity {
 		this.renderX = model.getX() * fieldWidth;
 		this.renderY = model.getY() * fieldHeight;
 
-		this.determineFieldTexture();
+		this.determineFieldTexture(model);
 	}
 	
-	private void observerNeighbours() {
-		if (model.getX() > 0)
-			parent.getField(model.getX()-1, model.getY()).observe(this);
-		if (model.getX()+1 < parent.getWidth())
-			parent.getField(model.getX()+1, model.getY()).observe(this);
+	//For test only, should work without later
+	private void observerNeighbours(final IField field) {
+		if (field.getX() > 0)
+			parent.getField(field.getX()-1, field.getY()).observe(this);
+		if (field.getX()+1 < parent.getWidth())
+			parent.getField(field.getX()+1, field.getY()).observe(this);
 
-		if (model.getY() > 0)
-			parent.getField(model.getX(), model.getY()-1).observe(this);
-		if (model.getY()+1 < parent.getHeight())
-			parent.getField(model.getX(), model.getY()+1).observe(this);
+		if (field.getY() > 0)
+			parent.getField(field.getX(), field.getY()-1).observe(this);
+		if (field.getY()+1 < parent.getHeight())
+			parent.getField(field.getX(), field.getY()+1).observe(this);
 	
 	}
 	
-	private void determineFieldTexture() {
+	private void determineFieldTexture(final IField model) {
 
 		//3:SOUTH  2:NORTH  1:WEST  0:EAST
 		final boolean[] dir = new boolean[4];
@@ -144,7 +143,6 @@ public class Field extends Entity {
 				fieldRotation = 90;
 				break;
 			case 1111:
-				//replace with no way
 				field = resHandler.getRegion(ResConst.DEFAULT_FIELD);
 				fieldRotation = 0;
 				break;
@@ -161,22 +159,36 @@ public class Field extends Entity {
 		
 		food.render();
 				
-		if(model.isWall(IPosition.Orientation.NORTH))
+		final IField field = (IField) model;
+		
+		if(field.isWall(IPosition.Orientation.NORTH))
 			batch.draw(texWall[0], renderX, renderY, fieldWidth, fieldHeight);
 		
-		if(model.isWall(IPosition.Orientation.EAST))
+		if(field.isWall(IPosition.Orientation.EAST))
 			batch.draw(texWall[1], renderX, renderY, fieldWidth, fieldHeight);
 		
-		if(model.isWall(IPosition.Orientation.SOUTH))
+		if(field.isWall(IPosition.Orientation.SOUTH))
 			batch.draw(texWall[2], renderX, renderY, fieldWidth, fieldHeight);
 		
-		if(model.isWall(IPosition.Orientation.WEST))
+		if(field.isWall(IPosition.Orientation.WEST))
 			batch.draw(texWall[3], renderX, renderY, fieldWidth, fieldHeight);
 	}
-
+	
 	@Override
-	public void onModelUpdate(IEvent event) {
-		determineFieldTexture();
+	public void onManagedModelUpdate(IEvent event) {
+		final IField field = (IField) model;
+		
+		switch(event.getType()) {
+		//remove later
+		case FIELD_FOOD:
+			determineFieldTexture(field);
+			break;
+		case STAGE_WALL:
+			determineFieldTexture(field);
+			break;
+		default:
+			break;
+		}		
 	}
 
 	@Override

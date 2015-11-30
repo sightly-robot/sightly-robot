@@ -10,7 +10,9 @@ import org.junit.Test;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import de.unihannover.swp2015.robots2.model.implementation.Field;
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
+import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
 import de.unihannover.swp2015.robots2.visual.core.IGameHandler;
 import de.unihannover.swp2015.robots2.visual.entity.Entity;
 import de.unihannover.swp2015.robots2.visual.entity.IEntity;
@@ -25,9 +27,8 @@ public class EntitySortTest {
 
 	public static class TestEntity extends Entity {
 
-		public TestEntity(SpriteBatch batch, IGameHandler gameHandler, IPreferences prefs,
-				IResourceHandler resHandler) {
-			super(batch, gameHandler, prefs, resHandler);
+		public TestEntity(SpriteBatch batch, IGameHandler gameHandler) {
+			super(new Field(0,0), batch, gameHandler);
 		}
 
 		@Override
@@ -44,6 +45,12 @@ public class EntitySortTest {
 
 		@Override
 		public void onUpdatePreferences(PreferencesObservable o, IPreferencesKey updatedKey) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void onManagedModelUpdate(IEvent event) {
 			// TODO Auto-generated method stub
 			
 		}
@@ -68,22 +75,46 @@ public class EntitySortTest {
 		public void putString(IPreferencesKey key, String value, boolean persistent) {}
 		
 	}
+	
+	public static class gh implements IGameHandler {
+
+		public void update() {}
+		public void onModelUpdate(IEvent event) {}
+		public void render() {}
+		public void dispose() {}
+		public void setResourceHandler(IResourceHandler resourceHandler) {}
+		public IResourceHandler getResourceHandler() {return null;}
+		public void dispatchEvent(IEvent event, IEntity source) {}
+		public IPreferences getPreferences() {	return new TestPref();}
+		public void resize(int width, int height) {	}
+		@Override
+		public int getRanking(IRobot robo) {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+		@Override
+		public void onManagedModelUpdate(IEvent event) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+	}
 
 	@Test
 	public void testSortEntities() {
-		final IEntity entity = new TestEntity(null, null, new TestPref(), null);
+		final IEntity entity = new TestEntity(null, new gh());
 		entity.setZIndex(5);
 
-		final IEntity entity_two = new TestEntity(null, null, new TestPref(), null);
+		final IEntity entity_two = new TestEntity(null, new gh());
 		entity_two.setZIndex(0);
 
-		final IEntity entity_three = new TestEntity(null, null, new TestPref(), null);
+		final IEntity entity_three = new TestEntity(null, new gh());
 		entity_three.setZIndex(42);
 
-		final IEntity entity_four = new TestEntity(null, null, new TestPref(), null);
+		final IEntity entity_four = new TestEntity(null, new gh());
 		entity_four.setZIndex(1);
 
-		final IEntity entity_five = new TestEntity(null, null, new TestPref(), null);
+		final IEntity entity_five = new TestEntity(null, new gh());
 		entity_five.setZIndex(9);
 
 		final List<IEntity> list = new ArrayList<>(5);
@@ -103,19 +134,19 @@ public class EntitySortTest {
 	
 	@Test
 	public void testInsertionSortEntities() {
-		final IEntity entity = new TestEntity(null, null, new TestPref(), null);
+		final IEntity entity = new TestEntity(null, new gh());
 		entity.setZIndex(5);
 
-		final IEntity entity_two = new TestEntity(null, null, new TestPref(), null);
+		final IEntity entity_two = new TestEntity(null, new gh());
 		entity_two.setZIndex(0);
 
-		final IEntity entity_three = new TestEntity(null, null, new TestPref(), null);
+		final IEntity entity_three = new TestEntity(null, new gh());
 		entity_three.setZIndex(42);
 
-		final IEntity entity_four = new TestEntity(null, null, new TestPref(), null);
+		final IEntity entity_four = new TestEntity(null, new gh());
 		entity_four.setZIndex(1);
 
-		final IEntity entity_five = new TestEntity(null, null, new TestPref(), null);
+		final IEntity entity_five = new TestEntity(null, new gh());
 		entity_five.setZIndex(9);
 
 		final List<IEntity> list = new ArrayList<>(5);

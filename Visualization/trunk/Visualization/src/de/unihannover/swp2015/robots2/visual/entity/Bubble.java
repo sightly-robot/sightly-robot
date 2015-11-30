@@ -9,17 +9,14 @@ import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
 import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
 import de.unihannover.swp2015.robots2.visual.core.IGameHandler;
 import de.unihannover.swp2015.robots2.visual.core.PrefConst;
-import de.unihannover.swp2015.robots2.visual.resource.IResourceHandler;
 import de.unihannover.swp2015.robots2.visual.resource.ResConst;
 import de.unihannover.swp2015.robots2.visual.util.ColorUtil;
-import de.unihannover.swp2015.robots2.visual.util.pref.IPreferences;
 import de.unihannover.swp2015.robots2.visual.util.pref.IPreferencesKey;
 import de.unihannover.swp2015.robots2.visual.util.pref.observer.PreferencesObservable;
 
 public class Bubble extends Entity {
 
 	private TextureRegion bubble;
-	private IRobot model;
 	
 	private float width;
 	private float height;
@@ -27,11 +24,9 @@ public class Bubble extends Entity {
 	private BitmapFont font;
 	private CharSequence points;
 	
-	public Bubble(final IRobot model, SpriteBatch batch, IGameHandler gameHandler, IPreferences prefs, IResourceHandler resHandler) {
-		super(batch, gameHandler, prefs, resHandler);
+	public Bubble(final IRobot model, SpriteBatch batch, IGameHandler gameHandler) {
+		super(model, batch, gameHandler);
 				
-		this.model = model;
-		this.model.observe(this);
 		this.bubble = resHandler.getRegion(ResConst.DEFAULT_BUBBLE);
 		this.color = ColorUtil.fromAwtColor(model.getColor());
 		//temporary
@@ -62,26 +57,28 @@ public class Bubble extends Entity {
 	}
 
 	@Override
-	public void onModelUpdate(IEvent event) {
+	public void onManagedModelUpdate(IEvent event) {
+		final IRobot robo = (IRobot) model;
+		
 		switch(event.getType()) {
 			case ROBOT_ADD:
 				break;
 			case ROBOT_POSITION:
 				final float fieldWidth = prefs.getFloat(PrefConst.FIELD_WIDTH_KEY, 42);
 				final float fieldHeight = prefs.getFloat(PrefConst.FIELD_HEIGHT_KEY, 42);
-				this.renderX = model.getPosition().getX() * fieldWidth;
-				this.renderY = model.getPosition().getY() * fieldHeight;
+				this.renderX = robo.getPosition().getX() * fieldWidth;
+				this.renderY = robo.getPosition().getY() * fieldHeight;
 				break;
 			case ROBOT_SCORE:
-				this.points = model.getName()+" : "+model.getScore()+"("+gameHandler.getRanking(model)+")";
+				this.points = robo.getName() + "  : " + robo.getScore() +  "(" + gameHandler.getRanking(robo) + ")";
 				break;
 			case ROBOT_STATE:
 				break;
 			default:
 				break;
-		}
+		}		
 	}
-
+	
 	@Override
 	public void onUpdatePreferences(PreferencesObservable o, IPreferencesKey updatedKey) {
 		// TODO Auto-generated method stub

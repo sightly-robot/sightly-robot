@@ -8,9 +8,7 @@ import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
 import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
 import de.unihannover.swp2015.robots2.visual.core.IGameHandler;
 import de.unihannover.swp2015.robots2.visual.core.PrefConst;
-import de.unihannover.swp2015.robots2.visual.resource.IResourceHandler;
 import de.unihannover.swp2015.robots2.visual.resource.ResConst;
-import de.unihannover.swp2015.robots2.visual.util.pref.IPreferences;
 import de.unihannover.swp2015.robots2.visual.util.pref.IPreferencesKey;
 import de.unihannover.swp2015.robots2.visual.util.pref.observer.PreferencesObservable;
 
@@ -23,7 +21,6 @@ import de.unihannover.swp2015.robots2.visual.util.pref.observer.PreferencesObser
 public class Robot extends Entity {
 
 	// private boolean isVirtual; //TODO Einbauen
-	private final IRobot model;
 	private final TextureRegion robo;
 	private final Bubble bubble;
 	
@@ -31,13 +28,10 @@ public class Robot extends Entity {
 	private float height;
 	private float direction=0;
 		
-	public Robot(final IRobot robModel, SpriteBatch batch, IGameHandler gameHandler, IPreferences prefs, IResourceHandler resHandler) {
-		super(batch, gameHandler, prefs, resHandler);
+	public Robot(final IRobot robModel, SpriteBatch batch, IGameHandler gameHandler) {
+		super(robModel, batch, gameHandler);
 
-		this.model = robModel;
-		this.model.observe(this);
-
-		this.bubble = new Bubble(model, batch, gameHandler, prefs, resHandler);
+		this.bubble = new Bubble(robModel, batch, gameHandler);
 		this.robo = resHandler.getRegion(ResConst.DEFAULT_ROBO_NORTH);
 		
 		final float fieldWidth = prefs.getFloat(PrefConst.FIELD_WIDTH_KEY, 42);
@@ -46,12 +40,12 @@ public class Robot extends Entity {
 		this.width = fieldWidth * EntityConst.ROBOT_SCALE;
 		this.height = fieldHeight * EntityConst.ROBOT_SCALE;
 		
-		this.renderX = model.getPosition().getX() * fieldWidth + fieldWidth/2 - width/2;
-		this.renderY = model.getPosition().getY() * fieldHeight + fieldHeight/2 - height/2;
+		this.renderX = robModel.getPosition().getX() * fieldWidth + fieldWidth/2 - width/2;
+		this.renderY = robModel.getPosition().getY() * fieldHeight + fieldHeight/2 - height/2;
 	}
 
-	private void changeDirection(){
-		switch (model.getPosition().getOrientation()) {
+	private void updateDirection(final IRobot robo){
+		switch (robo.getPosition().getOrientation()) {
 		case SOUTH:
 			direction=180;
 			break;
@@ -64,7 +58,7 @@ public class Robot extends Entity {
 		case EAST:
 			direction=-90;
 			break;
-	}
+		}
 	}
 	
 	@Override
@@ -74,16 +68,18 @@ public class Robot extends Entity {
 	}
 
 	@Override
-	public void onModelUpdate(IEvent event) {
+	public void onManagedModelUpdate(IEvent event) {
+		IRobot robo = (IRobot) model;
+		
 		switch(event.getType()) {
 			case ROBOT_ADD:
 				break;
 			case ROBOT_POSITION:
 				final float fieldWidth = prefs.getFloat(PrefConst.FIELD_WIDTH_KEY, 42);
 				final float fieldHeight = prefs.getFloat(PrefConst.FIELD_HEIGHT_KEY, 42);
-				this.renderX = model.getPosition().getX() * fieldWidth + fieldWidth/2 - width/2;
-				this.renderY = model.getPosition().getY() * fieldHeight + fieldHeight/2 - height/2;
-				changeDirection();
+				this.renderX = robo.getPosition().getX() * fieldWidth + fieldWidth/2 - width/2;
+				this.renderY = robo.getPosition().getY() * fieldHeight + fieldHeight/2 - height/2;
+				updateDirection(robo);
 				break;
 			case ROBOT_SCORE:
 				break;
@@ -91,7 +87,7 @@ public class Robot extends Entity {
 				break;
 			default:
 				break;
-		}
+		}		
 	}
 
 	@Override

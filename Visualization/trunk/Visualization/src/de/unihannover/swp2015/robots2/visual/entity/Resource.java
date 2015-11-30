@@ -7,9 +7,7 @@ import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
 import de.unihannover.swp2015.robots2.model.interfaces.IField;
 import de.unihannover.swp2015.robots2.visual.core.IGameHandler;
 import de.unihannover.swp2015.robots2.visual.core.PrefConst;
-import de.unihannover.swp2015.robots2.visual.resource.IResourceHandler;
 import de.unihannover.swp2015.robots2.visual.resource.ResConst;
-import de.unihannover.swp2015.robots2.visual.util.pref.IPreferences;
 import de.unihannover.swp2015.robots2.visual.util.pref.IPreferencesKey;
 import de.unihannover.swp2015.robots2.visual.util.pref.observer.PreferencesObservable;
 
@@ -21,13 +19,11 @@ import de.unihannover.swp2015.robots2.visual.util.pref.observer.PreferencesObser
  */
 public class Resource extends Entity {
 
-	private IField model;
 	private final TextureRegion[] tex;
 
-	public Resource(final IField model, SpriteBatch batch, IGameHandler gameHandler, IPreferences prefs, IResourceHandler resHandler) {
-		super(batch, gameHandler, prefs, resHandler);
+	public Resource(final IField model, SpriteBatch batch, IGameHandler gameHandler) {
+		super(model, batch, gameHandler);
 		
-		this.model = model;
 		this.model.observe(this);
 		
 		this.tex = resHandler.getRegion(ResConst.DEFAULT_RES_1,
@@ -45,21 +41,22 @@ public class Resource extends Entity {
 	@Override
 	public void render() {
 
-		if (model.getFood() == 0)
+		final IField field = (IField) model;
+		
+		if (field.getFood() == 0)
 			return;
 		
 		final float fieldWidth = prefs.getFloat(PrefConst.FIELD_WIDTH_KEY, 50);
 		final float fieldHeight = prefs.getFloat(PrefConst.FIELD_HEIGHT_KEY, 50);
 		
-		if (model.getFood() > 0)
-			batch.draw(tex[model.getFood()-1], renderX+(fieldWidth*0.15f)/2, renderY+(fieldHeight*0.15f)/2, fieldWidth*0.85f, fieldHeight*0.85f);
+		batch.draw(tex[field.getFood()-1], renderX+(fieldWidth*0.15f)/2, renderY+(fieldHeight*0.15f)/2, fieldWidth*0.85f, fieldHeight*0.85f);
 	}
 
 	@Override
-	public void onModelUpdate(IEvent event) {
+	public void onManagedModelUpdate(IEvent event) {
 		if (event.getType() == IEvent.UpdateType.FIELD_FOOD) {
 			// some animation stuff
-		}
+		}		
 	}
 
 	@Override
@@ -67,4 +64,5 @@ public class Resource extends Entity {
 		// TODO Auto-generated method stub
 
 	}
+
 }
