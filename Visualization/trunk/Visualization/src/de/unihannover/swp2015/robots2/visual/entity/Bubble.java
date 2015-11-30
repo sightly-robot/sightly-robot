@@ -35,7 +35,7 @@ public class Bubble extends Entity {
 		this.font = new BitmapFont(true);
         this.font.setColor(1-color.r, 1-color.g, 1-color.b,color.a);
         
-        this.points = model.getName()+" : "+model.getScore()+"("+gameHandler.getRanking(model)+")";
+        this.points = model.getName()+" : "+model.getScore()+"(-)";
 		
 		final float fieldWidth = prefs.getFloat(PrefConst.FIELD_WIDTH_KEY, 42);
 		final float fieldHeight = prefs.getFloat(PrefConst.FIELD_HEIGHT_KEY, 42);
