@@ -82,6 +82,10 @@ public class Field extends AbstractModel implements IField, IFieldWriteable {
 	public Field(int x, int y) {
 		super();
 
+		this.northWall = false;
+		this.eastWall = false;
+		this.southWall = false;
+		this.westWall = false;
 		this.x = x;
 		this.y = y;
 		this.foodLock = new Object();
