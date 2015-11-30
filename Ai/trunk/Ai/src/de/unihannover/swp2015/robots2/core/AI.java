@@ -50,17 +50,36 @@ public class AI extends AbstractAi implements IModelObserver {
 		case ROBOT_SCORE:
 			break;
 		case ROBOT_POSITION:
-			IRobot robot = (IRobot)event.getObject();
-			if(robot.getPosition().getX() != this.graph.getMyPosition().getX() || 
-					robot.getPosition().getY() != this.graph.getMyPosition().getY()) {
+			if(this.game.isRunning()) {
+				IRobot robot = (IRobot)event.getObject();
+				if(robot.getPosition().getX() != this.graph.getMyPosition().getX() || 
+						robot.getPosition().getY() != this.graph.getMyPosition().getY()) {
+					try {
+						fireNextOrientationEvent(getNextOrientation());
+					}
+					catch(NoValidOrientationException e) {
+						
+					}
+					
+				}
+			}
+			break;
+		case GAME_STATE: //reicht das?
+			IGame game = (IGame)event.getObject();
+			if(game.isRunning()) {
 				try {
 					fireNextOrientationEvent(getNextOrientation());
 				}
 				catch(NoValidOrientationException e) {
 					
 				}
-				
 			}
+			break;
+		case GAME_PARAMETER:
+			break;
+		case ROBOT_ADD:
+			break;
+		case ROBOT_STATE:
 			break;
 		default:
 			break;
