@@ -41,13 +41,15 @@ public interface IFieldWriteable extends IField, IAbstractModelWriteable {
 	public void setFood(int food);
 
 	/**
-	 * Increase the food on this Field by one unit.
+	 * Increase the food on this Field by the given number of units.
 	 * 
 	 * This operation is thread safe.
 	 * 
+	 * @param value
+	 *            Number of food states to add to the current value
 	 * @return The new food state on this Field
 	 */
-	public int incrementFood();
+	public int incrementFood(int value);
 
 	/**
 	 * Set the lock state of this field.

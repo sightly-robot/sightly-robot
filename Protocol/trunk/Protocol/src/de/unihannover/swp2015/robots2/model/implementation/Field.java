@@ -160,9 +160,9 @@ public class Field extends AbstractModel implements IField, IFieldWriteable {
 	}
 
 	@Override
-	public int incrementFood() {
+	public int incrementFood(int value) {
 		synchronized (this.foodLock) {
-			this.food++;
+			this.food += value;
 			return this.food;
 		}
 	}

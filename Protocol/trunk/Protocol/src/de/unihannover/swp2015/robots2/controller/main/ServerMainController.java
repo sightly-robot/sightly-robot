@@ -8,6 +8,7 @@ import de.unihannover.swp2015.robots2.controller.interfaces.IServerController;
 import de.unihannover.swp2015.robots2.controller.mqtt.MqttController;
 import de.unihannover.swp2015.robots2.controller.mqtt.MqttTopic;
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent.UpdateType;
+import de.unihannover.swp2015.robots2.model.writeableInterfaces.IFieldWriteable;
 import de.unihannover.swp2015.robots2.model.writeableInterfaces.IRobotWriteable;
 
 /**
@@ -118,9 +119,24 @@ public class ServerMainController extends AbstractMainController implements ISer
 	}
 
 	@Override
+	public void increaseScore(String robotId, int points) {
+		int newScore = this.game.getRobotsWriteable().get(robotId).addScore(points);
+		this.sendMqttMessage(MqttTopic.ROBOT_SCORE, robotId, Integer.toString(newScore));
+	}
+
+	@Override
 	public void updateFood(int x, int y, int value) {
-		for (int i = 0; i < value; i++) {
-			this.game.getStageWriteable().getFieldWriteable(x, y).incrementFood();
-		}
+		IFieldWriteable f = this.game.getStageWriteable().getFieldWriteable(x, y);
+		f.setFood(value);
+		this.sendMqttMessage(MqttTopic.MAP_FOOD, (x + "-" + y), Integer.toString(value));
+		f.emitEvent(UpdateType.FIELD_FOOD);
+	}
+
+	@Override
+	public void increaseFood(int x, int y, int value) {
+		IFieldWriteable f = this.game.getStageWriteable().getFieldWriteable(x, y);
+		int newFood = f.incrementFood(value);
+		this.sendMqttMessage(MqttTopic.MAP_FOOD, (x + "-" + y), Integer.toString(newFood));
+		f.emitEvent(UpdateType.FIELD_FOOD);		
 	}
 }
