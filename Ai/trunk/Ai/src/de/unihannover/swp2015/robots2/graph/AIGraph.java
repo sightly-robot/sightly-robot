@@ -142,6 +142,7 @@ public class AIGraph {
 				IField field = stage.getField(pos.getX(), pos.getY());
 				String id = field.getLockedBy();
 				Robot robot = new Robot(id, posNode, pos.getOrientation());
+				this.myself = robot;
 				posNode.setRobot(robot);
 			}
 		}
