@@ -68,6 +68,12 @@ public class ServerMainController extends AbstractMainController implements ISer
 
 		case MAP_INIT_FOOD:
 			this.stageModelController.mqttSetFood(message);
+			for (int y = 0; y < this.game.getStage().getHeight(); y++) {
+				for (int x = 0; x < this.game.getStage().getWidth(); x++) {
+					this.sendMqttMessage(MqttTopic.FIELD_FOOD, (x + "-" + y),
+							Integer.toString(this.game.getStage().getField(x, y).getFood()));
+				}
+			}
 			break;
 
 		case MAP_INIT_GROWINGRATE:
@@ -136,6 +142,6 @@ public class ServerMainController extends AbstractMainController implements ISer
 		IFieldWriteable f = this.game.getStageWriteable().getFieldWriteable(x, y);
 		int newFood = f.incrementFood(value);
 		this.sendMqttMessage(MqttTopic.MAP_FOOD, (x + "-" + y), Integer.toString(newFood));
-		f.emitEvent(UpdateType.FIELD_FOOD);		
+		f.emitEvent(UpdateType.FIELD_FOOD);
 	}
 }
