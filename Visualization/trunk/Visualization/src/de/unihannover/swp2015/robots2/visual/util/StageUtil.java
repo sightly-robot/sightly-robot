@@ -37,7 +37,7 @@ public class StageUtil {
 		return false;
 	}	
 	
-	public static boolean checkDriveDirectionPlusNeighbours(final IField model, final IStage stage, final Orientation direction) {
+	public static boolean checkDriveDirectionOrNeighbours(final IField model, final IStage stage, final Orientation direction) {
 		boolean result = checkDriveDirection(model, direction, stage.getWidth(), stage.getHeight());
 		switch(direction) {
 		case NORTH: 
@@ -56,6 +56,29 @@ public class StageUtil {
 			if (model.getY()+1 == stage.getHeight())
 				return result;
 			return result || stage.getField(model.getX(), model.getY()+1).isWall(Orientation.NORTH);
+		}	
+		return result;
+	}
+	
+	public static boolean checkDriveDirectionAndNeighbours(final IField model, final IStage stage, final Orientation direction) {
+		boolean result = checkDriveDirection(model, direction, stage.getWidth(), stage.getHeight());
+		switch(direction) {
+		case NORTH: 
+			if (model.getY() == 0)
+				return result;
+			return result && stage.getField(model.getX(), model.getY()-1).isWall(Orientation.SOUTH);
+		case EAST:
+			if (model.getX()+1 == stage.getWidth())
+				return result;
+			return result && stage.getField(model.getX()+1, model.getY()).isWall(Orientation.WEST);
+		case WEST:
+			if (model.getX() == 0) 
+				return result;
+			return result && stage.getField(model.getX()-1, model.getY()).isWall(Orientation.EAST);
+		case SOUTH:
+			if (model.getY()+1 == stage.getHeight())
+				return result;
+			return result && stage.getField(model.getX(), model.getY()+1).isWall(Orientation.NORTH);
 		}	
 		return result;
 	}

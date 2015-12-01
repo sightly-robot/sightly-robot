@@ -62,7 +62,7 @@ public class Field extends Entity {
 		enums[3] = Orientation.SOUTH;
 		
 		for (int i = 0; i < 4; ++i) {
-			dir[i] = StageUtil.checkDriveDirectionPlusNeighbours(model, parent, enums[i]);
+			dir[i] = StageUtil.checkDriveDirectionAndNeighbours(model, parent, enums[i]);
 		}
 			
 		switch(StageUtil.convertToInt(dir)) {
