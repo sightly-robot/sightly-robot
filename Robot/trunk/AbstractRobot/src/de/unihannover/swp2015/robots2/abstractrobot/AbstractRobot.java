@@ -5,6 +5,7 @@ import de.unihannover.swp2015.robots2.aiinterface.AbstractAi;
 import de.unihannover.swp2015.robots2.controller.interfaces.IRobotController;
 import de.unihannover.swp2015.robots2.controller.main.RobotMainController;
 import de.unihannover.swp2015.robots2.core.AI;
+import de.unihannover.swp2015.robots2.model.externalInterfaces.IModelObserver;
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
 
@@ -41,6 +42,16 @@ public abstract class AbstractRobot {
 				e.printStackTrace();
 			}
 		}
+		
+//		IModelObserver mo = new IModelObserver() {
+//			@Override
+//			public void onModelUpdate(IEvent event) {
+//				System.out.println(event.getType().name());
+//			}
+//		};
+//		
+//		robotController.getGame().observe(mo);
+//		robotController.getGame().getStage().observe(mo);
 
 		// TODO Init AbstractAI
 		ai = new AI(robotController);

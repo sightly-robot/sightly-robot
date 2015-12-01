@@ -22,7 +22,7 @@ public abstract class AbstractAutomate implements AiEventObserver, Runnable {
 	protected IRobot robot;
 
 	// thread
-	private Thread automation = new Thread(this);
+	protected Thread automation = new Thread(this);
 	private static final long LOOP_WAIT_MS = 30;
 
 	// state
