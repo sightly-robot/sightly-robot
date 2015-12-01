@@ -9,8 +9,9 @@ import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
 import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
 
 /**
- * The AbstractAutomate is a {@code Runnable} that automatically creates a {@code Thread}
- * for controlling the current state of a {@link HardwareRobot} or {@link SoftwareRobot}.
+ * The AbstractAutomate is a {@code Runnable} that automatically creates a
+ * {@code Thread} for controlling the current state of a {@link HardwareRobot}
+ * or {@link SoftwareRobot}.
  * 
  * @author Lenard Spiecker
  */
@@ -33,22 +34,26 @@ public abstract class AbstractAutomate implements AiEventObserver, Runnable {
 	// progress
 	private static final long PROGRESS_UPDATE_DURATION = 100;
 	private long nextUpdateTime;
+	private int lastProgress = 0;
 
 	private double[] progressMeasurements = new double[] { 1000, 1000, 1000, 1000 };
-	private Direction currentDirection;
+	private Direction currentDirection = Direction.FORWARDS;
 	private long lastWaitTime;
 
 	/**
 	 * Constructs a new AbstractAutomate.
 	 * 
-	 * @param robotController the controller of the robot this automate controls
-	 * @param initialState the initial state of the automate
+	 * @param robotController
+	 *            the controller of the robot this automate controls
+	 * @param initialState
+	 *            the initial state of the automate
 	 */
 	public AbstractAutomate(IRobotController robotController, IState initialState) {
 		this.robotController = robotController;
 		robot = robotController.getMyself();
 
 		state = initialState;
+
 	}
 
 	/**
@@ -78,15 +83,14 @@ public abstract class AbstractAutomate implements AiEventObserver, Runnable {
 				}
 				state = tempState;
 				state.start();
-				// System.out.println(state.name());
 			}
 
 			if (System.currentTimeMillis() > nextUpdateTime) {
-				
-				robotController
-						.updatePositionProgress((int) ((Math.min(progressMeasurements[currentDirection.ordinal()],
-								(System.currentTimeMillis() - lastWaitTime))
-						/ progressMeasurements[currentDirection.ordinal()]) * 1000));
+				int currentProgress = calcProgress();
+				if (currentProgress != lastProgress) {
+					robotController.updatePositionProgress(currentProgress);
+					lastProgress = currentProgress;
+				}
 				nextUpdateTime = System.currentTimeMillis() + PROGRESS_UPDATE_DURATION;
 			}
 
@@ -97,6 +101,16 @@ public abstract class AbstractAutomate implements AiEventObserver, Runnable {
 					e.printStackTrace();
 				}
 			}
+		}
+	}
+
+	private int calcProgress() {
+		if (!state.isWait()) {
+			return (int) ((Math.min(progressMeasurements[currentDirection.ordinal()],
+					(System.currentTimeMillis() - lastWaitTime)) / progressMeasurements[currentDirection.ordinal()])
+					* 1000);
+		} else {
+			return 0;
 		}
 	}
 
@@ -123,7 +137,7 @@ public abstract class AbstractAutomate implements AiEventObserver, Runnable {
 			currentDirection = Direction.calcDirection(robot.getPosition().getOrientation(), orientation);
 			state = state.getStateForDirection(currentDirection);
 			state.start();
-			// System.out.println(state.name());
+			System.out.println(currentDirection.name());
 
 			// update orientation only
 			robotController.updatePosition(robot.getPosition().getX(), robot.getPosition().getY(), orientation);
