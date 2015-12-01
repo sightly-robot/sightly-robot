@@ -11,6 +11,7 @@ import de.unihannover.swp2015.robots2.controller.interfaces.IRobotController;
 import de.unihannover.swp2015.robots2.controller.mqtt.MqttController;
 import de.unihannover.swp2015.robots2.controller.mqtt.MqttTopic;
 import de.unihannover.swp2015.robots2.model.implementation.Robot;
+import de.unihannover.swp2015.robots2.model.interfaces.IEvent.UpdateType;
 import de.unihannover.swp2015.robots2.model.interfaces.IField;
 import de.unihannover.swp2015.robots2.model.interfaces.IField.State;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
@@ -145,6 +146,7 @@ public class RobotMainController extends AbstractMainController implements IRobo
 	public void updatePosition(int x, int y, Orientation orientation) {
 		this.sendMqttMessage(MqttTopic.ROBOT_POSITION, this.myself.getId(), x + "," + y + "," + orientation.toString());
 		this.myself.setPosition(x, y, orientation);
+		this.myself.emitEvent(UpdateType.ROBOT_POSITION);
 	}
 
 	@Override
