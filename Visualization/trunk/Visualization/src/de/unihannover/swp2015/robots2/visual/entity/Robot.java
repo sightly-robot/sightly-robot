@@ -92,6 +92,17 @@ public class Robot extends Entity {
 
 	@Override
 	public void onUpdatePreferences(PreferencesObservable o, IPreferencesKey updatedKey) {
+		if (updatedKey.getEnum() == PrefConst.FIELD_HEIGHT_KEY || updatedKey.getEnum() == PrefConst.FIELD_WIDTH_KEY) {
+			final float fieldWidth = prefs.getFloat(PrefConst.FIELD_WIDTH_KEY, 42);
+			final float fieldHeight = prefs.getFloat(PrefConst.FIELD_HEIGHT_KEY, 42);
+
+			this.width = fieldWidth * EntityConst.ROBOT_SCALE;
+			this.height = fieldHeight * EntityConst.ROBOT_SCALE;
+			
+			final IRobot r = (IRobot) model;
+			this.renderX = r.getPosition().getX() * fieldWidth + fieldWidth/2 - width/2;
+			this.renderY = r.getPosition().getY() * fieldHeight + fieldHeight/2 - height/2;
+		}
 	}
 
 }

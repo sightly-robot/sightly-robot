@@ -55,7 +55,11 @@ public class Resource extends Entity {
 	@Override
 	public void onManagedModelUpdate(IEvent event) {
 		if (event.getType() == IEvent.UpdateType.FIELD_FOOD) {
-			// some animation stuff
+			IField i = (IField) event.getObject();
+			System.out.println(i.getFood());
+			System.out.println(i.getX());
+			System.out.println(i.getY());
+			
 		}		
 	}
 

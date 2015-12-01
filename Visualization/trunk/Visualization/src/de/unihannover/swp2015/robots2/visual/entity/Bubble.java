@@ -105,7 +105,17 @@ public class Bubble extends Entity {
 	
 	@Override
 	public void onUpdatePreferences(PreferencesObservable o, IPreferencesKey updatedKey) {
-		// TODO Auto-generated method stub
+		if (updatedKey.getEnum() == PrefConst.FIELD_HEIGHT_KEY || updatedKey.getEnum() == PrefConst.FIELD_WIDTH_KEY) {
+			final float fieldWidth = prefs.getFloat(PrefConst.FIELD_WIDTH_KEY, 42);
+			final float fieldHeight = prefs.getFloat(PrefConst.FIELD_HEIGHT_KEY, 42);
+
+			this.width = fieldWidth * 0.5f;
+			this.height = fieldHeight * 0.2f;
+			
+			final IRobot r = (IRobot) model;
+			this.renderX = r.getPosition().getX() * fieldWidth;
+			this.renderY = r.getPosition().getY() * fieldHeight;
+		}
 	}
 
 }

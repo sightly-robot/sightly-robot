@@ -90,7 +90,7 @@ public class RobotGameHandler extends GameHandler {
 		this.prefs.putInt(PrefConst.MAP_COLS_KEY, stage.getHeight());
 		this.prefs.putFloat(PrefConst.FIELD_WIDTH_KEY, ((float) Gdx.graphics.getWidth()) / stage.getWidth());
 		this.prefs.putFloat(PrefConst.FIELD_HEIGHT_KEY, ((float) Gdx.graphics.getHeight()) / stage.getHeight());
-
+		
 		//create entites
 		for (final IRobot robot : game.getRobots().values()) {
 			final Robot robo = new Robot(robot, spriteBatch, this);
@@ -191,5 +191,6 @@ public class RobotGameHandler extends GameHandler {
 		}
 		return 0;
 	}
+	
 
 }

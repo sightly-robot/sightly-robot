@@ -30,6 +30,8 @@ import de.unihannover.swp2015.robots2.visual.util.pref.FlexPreferences;
  */
 public class Visualization extends ApplicationAdapter implements IVisualization {
 
+	private final String CONNECTION_IP = "tcp://192.168.1.66";
+	
 	/**
 	 * List of all {@link IGameHandler}.
 	 */
@@ -94,8 +96,8 @@ public class Visualization extends ApplicationAdapter implements IVisualization 
 		 */
 
 		//TODO handle connect exceptions
-		this.mainController.startMqtt("tcp://localhost");
-
+		this.mainController.startMqtt(CONNECTION_IP);
+		System.out.println("asd");
 		this.gameHandlerList.add(new RobotGameHandler(mainController.getGame(), resHandler, cam, prefs));
 	}
 
