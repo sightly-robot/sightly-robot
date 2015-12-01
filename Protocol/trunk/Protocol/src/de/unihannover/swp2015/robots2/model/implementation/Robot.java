@@ -66,7 +66,7 @@ public class Robot extends AbstractModel implements IRobot, IRobotWriteable {
 		this.id = id;
 		this.myself = myself;
 		this.hardwareRobot = hardwareRobot;
-		this.position = new Position(0, 0, Orientation.NORTH);
+		this.position = new Position(-1, -1, Orientation.NORTH);
 		this.scoreLock = new Object();
 	}
 
