@@ -68,11 +68,11 @@ public class FieldTest {
 		field.setFood(2);
 		assertEquals(2, field.getFood());
 		
-		field.incrementFood();
+		field.incrementFood(1);
 		assertEquals(3, field.getFood());
 		
-		field.incrementFood();
-		assertEquals(4, field.getFood());
+		field.incrementFood(5);
+		assertEquals(8, field.getFood());
 	}
 	
 	@Test
