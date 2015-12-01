@@ -2,15 +2,27 @@ package de.unihannover.swp2015.robots2.abstractrobot;
 
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
 
+/**
+ * An enumeration for the moving directions of a robot.
+ * 
+ * @author Lenard Spiecker
+ */
 public enum Direction {
 
-	FOREWARD,
-	RIGHT,
-	BACKWARD,
-	LEFT;
-	
-	public static Direction calcDirection(Orientation robotOrientation,Orientation orientation)
-	{
+	FOREWARD, RIGHT, BACKWARD, LEFT;
+
+	/**
+	 * Calculates the moving direction of the robot for his current orientation
+	 * and the orientation of the next position according to the current one.
+	 * 
+	 * @param robotOrientation
+	 *            the robot's orientation
+	 * @param orientation
+	 *            the orientation of the next position according to the current
+	 *            position
+	 * @return the moving direction to get to the next position
+	 */
+	public static Direction calcDirection(Orientation robotOrientation, Orientation orientation) {
 		switch (orientation) {
 		case NORTH:
 			switch (robotOrientation) {

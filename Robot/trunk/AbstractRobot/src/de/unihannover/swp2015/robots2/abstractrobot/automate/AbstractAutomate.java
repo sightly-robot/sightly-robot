@@ -9,28 +9,28 @@ import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
 import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
 
 /**
- * AbstractAutomate is a Runnable Class, that automatically creates an Thread
- * for controlling the current State of a Hard- or SoftwareRoboter.
+ * The AbstractAutomate is a {@code Runnable} that automatically creates a {@code Thread}
+ * for controlling the current state of a {@link HardwareRobot} or {@link SoftwareRobot}.
  * 
  * @author Lenard Spiecker
  */
 public abstract class AbstractAutomate implements AiEventObserver, Runnable {
 
-	// Model:
+	// model
 	protected IRobotController robotController;
 	protected IRobot robot;
 
-	// Thread:
+	// thread
 	private Thread automation = new Thread(this);
 	private static final long LOOP_WAIT_MS = 30;
 
-	// State:
+	// state
 	private IState state;
 
-	// Positioning:
+	// positioning
 	private Point nextPosition = new Point(0, 0);
 
-	// Progress:
+	// progress
 	private static final long PROGRESS_UPDATE_DURATION = 100;
 	private long nextUpdateTime;
 
@@ -38,6 +38,12 @@ public abstract class AbstractAutomate implements AiEventObserver, Runnable {
 	private Direction currentDirection;
 	private long lastWaitTime;
 
+	/**
+	 * Constructs a new AbstractAutomate.
+	 * 
+	 * @param robotController the controller of the robot this automate controls
+	 * @param initialState the initial state of the automate
+	 */
 	public AbstractAutomate(IRobotController robotController, IState initialState) {
 		this.robotController = robotController;
 		robot = robotController.getMyself();
@@ -45,11 +51,17 @@ public abstract class AbstractAutomate implements AiEventObserver, Runnable {
 		state = initialState;
 	}
 
+	/**
+	 * Starts the automate.
+	 */
 	public void start() {
 		state.start();
 		automation.start();
 	}
 
+	/**
+	 * Actually runs the automate.
+	 */
 	@Override
 	public void run() {
 		IState tempState = state;
@@ -58,10 +70,10 @@ public abstract class AbstractAutomate implements AiEventObserver, Runnable {
 
 			if (state != tempState) {
 				if (tempState.isWait()) {
-					// Update Only Position:
+					// update position only
 					robotController.updatePosition(nextPosition.x, nextPosition.y,
 							robot.getPosition().getOrientation());
-					// Measurements:
+					// measurements
 					progressMeasurements[currentDirection.ordinal()] = System.currentTimeMillis() - lastWaitTime;
 				}
 				state = tempState;
@@ -107,16 +119,16 @@ public abstract class AbstractAutomate implements AiEventObserver, Runnable {
 				break;
 			}
 
-			// Set new State:
+			// set new state
 			currentDirection = Direction.calcDirection(robot.getPosition().getOrientation(), orientation);
 			state = state.getStateForDirection(currentDirection);
 			state.start();
 			// System.out.println(state.name());
 
-			// Update Only Orientation:
+			// update orientation only
 			robotController.updatePosition(robot.getPosition().getX(), robot.getPosition().getY(), orientation);
 
-			// Measurements:
+			// measurements
 			lastWaitTime = System.currentTimeMillis();
 
 			synchronized (automation) {
