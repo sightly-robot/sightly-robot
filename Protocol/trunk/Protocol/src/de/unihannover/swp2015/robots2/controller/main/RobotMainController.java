@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import org.eclipse.paho.client.mqttv3.MqttException;
 
+import de.unihannover.swp2015.robots2.controller.externalInterfaces.IHardwareRobot;
 import de.unihannover.swp2015.robots2.controller.interfaces.IRobotController;
 import de.unihannover.swp2015.robots2.controller.mqtt.MqttController;
 import de.unihannover.swp2015.robots2.controller.mqtt.MqttTopic;
@@ -24,6 +25,7 @@ import de.unihannover.swp2015.robots2.model.writeableInterfaces.IRobotWriteable;
 public class RobotMainController extends AbstractMainController implements IRobotController, IFieldTimerController {
 
 	private IRobotWriteable myself;
+	private IHardwareRobot hardwareRobot;
 
 	public RobotMainController(boolean hardwareRobot) {
 		super();
@@ -67,6 +69,7 @@ public class RobotMainController extends AbstractMainController implements IRobo
 		String key = mqtttopic.getKey(topic);
 
 		switch (mqtttopic) {
+		// TODO handle robot settings
 		case ROBOT_DISCOVER:
 			/* Should be deprecated when using retained messages */
 			String hardwareRobot = (this.myself.isHardwareRobot()) ? "real" : "virtual";
@@ -75,7 +78,7 @@ public class RobotMainController extends AbstractMainController implements IRobo
 
 		case ROBOT_NEW:
 			List<String> ourFields = this.stageModelController.getOurFields();
-			for(String ourField : ourFields) {
+			for (String ourField : ourFields) {
 				this.sendMqttMessage(MqttTopic.FIELD_OCCUPIED_SET, ourField, this.myself.getId());
 			}
 			break;
@@ -89,6 +92,13 @@ public class RobotMainController extends AbstractMainController implements IRobo
 			this.occupyField(Integer.parseInt(positionParts[0]), Integer.parseInt(positionParts[1]));
 		case ROBOT_POSITION:
 			this.robotModelController.mqttRobotPosition(key, message, mqtttopic == MqttTopic.ROBOT_SETPOSITION);
+			break;
+
+		case ROBOT_BLINK:
+			if (this.hardwareRobot != null) {
+				// TODO correct color handling
+				this.hardwareRobot.blink(this.myself.getColor());
+			}
 			break;
 
 		case CONTROL_VIRTUALSPEED:
@@ -133,7 +143,7 @@ public class RobotMainController extends AbstractMainController implements IRobo
 
 	@Override
 	public void updatePosition(int x, int y, Orientation orientation) {
-		this.sendMqttMessage(MqttTopic.ROBOT_POSITION, this.myself.getId(), x+","+y+","+orientation.toString());
+		this.sendMqttMessage(MqttTopic.ROBOT_POSITION, this.myself.getId(), x + "," + y + "," + orientation.toString());
 		this.myself.setPosition(x, y, orientation);
 	}
 
@@ -182,5 +192,10 @@ public class RobotMainController extends AbstractMainController implements IRobo
 	public void occupyField(int x, int y) {
 		this.sendMqttMessage(MqttTopic.FIELD_OCCUPIED_SET, (x + "-" + y), this.myself.getId());
 		this.fieldStateModelController.setFieldOccupy(x, y);
+	}
+
+	@Override
+	public void registerHardwareRobot(IHardwareRobot hardwareRobot) {
+		this.hardwareRobot = hardwareRobot;
 	}
 }

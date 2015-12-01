@@ -5,6 +5,7 @@ import java.util.Arrays;
 import org.eclipse.paho.client.mqttv3.MqttException;
 
 import de.unihannover.swp2015.robots2.controller.interfaces.IServerController;
+import de.unihannover.swp2015.robots2.controller.interfaces.InfoType;
 import de.unihannover.swp2015.robots2.controller.mqtt.MqttController;
 import de.unihannover.swp2015.robots2.controller.mqtt.MqttTopic;
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent.UpdateType;
@@ -68,6 +69,7 @@ public class ServerMainController extends AbstractMainController implements ISer
 
 		case MAP_INIT_FOOD:
 			this.stageModelController.mqttSetFood(message);
+			this.sendInfoMessage(InfoType.INFO, "food", "New initial food received - echoing.");
 			for (int y = 0; y < this.game.getStage().getHeight(); y++) {
 				for (int x = 0; x < this.game.getStage().getWidth(); x++) {
 					this.sendMqttMessage(MqttTopic.FIELD_FOOD, (x + "-" + y),

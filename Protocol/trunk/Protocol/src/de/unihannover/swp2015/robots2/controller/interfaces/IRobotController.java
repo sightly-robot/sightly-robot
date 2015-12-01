@@ -1,5 +1,6 @@
 package de.unihannover.swp2015.robots2.controller.interfaces;
 
+import de.unihannover.swp2015.robots2.controller.externalInterfaces.IHardwareRobot;
 import de.unihannover.swp2015.robots2.model.interfaces.*;
 
 /**
@@ -68,4 +69,12 @@ public interface IRobotController extends IController {
 	 * @return The Robot-instance.
 	 */
 	public IRobot getMyself();
+
+	/**
+	 * Register the given hardware robot.
+	 * 
+	 * @param hardwareRobot
+	 *            The hardware robot.
+	 */
+	public void registerHardwareRobot(IHardwareRobot hardwareRobot);
 }
