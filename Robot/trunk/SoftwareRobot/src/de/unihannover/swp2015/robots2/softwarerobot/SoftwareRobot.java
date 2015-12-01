@@ -2,8 +2,6 @@ package de.unihannover.swp2015.robots2.softwarerobot;
 
 import de.unihannover.swp2015.robots2.abstractrobot.AbstractRobot;
 import de.unihannover.swp2015.robots2.abstractrobot.automate.AbstractAutomate;
-import de.unihannover.swp2015.robots2.controller.main.RobotMainController;
-import de.unihannover.swp2015.robots2.core.AI;
 import de.unihannover.swp2015.robots2.softwarerobot.automate.SoftwareAutomate;
 
 /**
@@ -12,19 +10,16 @@ import de.unihannover.swp2015.robots2.softwarerobot.automate.SoftwareAutomate;
  * 
  * @author Lenard Spiecker
  */
-public class SoftwareRobot extends AbstractRobot{
-	
-	AbstractAutomate automate;
-	
-	public SoftwareRobot() {
+public class SoftwareRobot extends AbstractRobot {
 
-			robotController = new RobotMainController(false);
-			robotController.startMqtt("localhost");
-			
-			automate = new SoftwareAutomate(robotController);
-			automate.start();
-			
-			ai = new AI(robotController);
-			ai.setAiEventObserver(automate);
-		}
+	AbstractAutomate automate;
+
+	public SoftwareRobot() {
+		super(false);
+
+		automate = new SoftwareAutomate(robotController);
+		automate.start();
+
+		ai.setAiEventObserver(automate);
+	}
 }
