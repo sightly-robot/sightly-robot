@@ -146,7 +146,7 @@ public class StageModelController {
 			int y = Integer.parseInt(coordinates[1]);
 			int food = Integer.parseInt(message);
 
-			if (x >= 0 && x < this.stage.getWidth() && y >= 0 && y < this.stage.getWidth()) {
+			if (x >= 0 && x < this.stage.getWidth() && y >= 0 && y < this.stage.getHeight()) {
 				IFieldWriteable f = this.stage.getFieldWriteable(x, y);
 				f.setFood(food);
 				f.emitEvent(UpdateType.FIELD_FOOD);
