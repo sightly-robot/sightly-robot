@@ -6,6 +6,11 @@ import java.util.List;
 import de.unihannover.swp2015.robots2.visual.core.RobotGameHandler;
 import de.unihannover.swp2015.robots2.visual.entity.IEntity;
 
+/**
+ * All utility methods related to {@IEntity}.
+ * 
+ * @author Rico Schrage
+ */
 public class EntityUtil {
 	
 	/**

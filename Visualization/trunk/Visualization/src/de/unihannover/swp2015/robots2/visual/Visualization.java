@@ -14,14 +14,12 @@ import com.bitfire.postprocessing.PostProcessor;
 import com.bitfire.postprocessing.effects.Fxaa;
 
 import de.unihannover.swp2015.robots2.controller.externalInterfaces.IVisualization;
-import de.unihannover.swp2015.robots2.model.interfaces.IGame;
+import de.unihannover.swp2015.robots2.controller.main.VisualizationMainController;
 import de.unihannover.swp2015.robots2.visual.core.IGameHandler;
 import de.unihannover.swp2015.robots2.visual.core.RobotGameHandler;
 import de.unihannover.swp2015.robots2.visual.resource.IResourceHandler;
 import de.unihannover.swp2015.robots2.visual.resource.ResConst;
 import de.unihannover.swp2015.robots2.visual.resource.ResourceHandler;
-import de.unihannover.swp2015.robots2.visual.util.TestApp;
-import de.unihannover.swp2015.robots2.visual.util.TestUtil;
 import de.unihannover.swp2015.robots2.visual.util.pref.IPreferences;
 import de.unihannover.swp2015.robots2.visual.util.pref.FlexPreferences;
 
@@ -53,7 +51,15 @@ public class Visualization extends ApplicationAdapter implements IVisualization 
 	 */
 	private Viewport fitViewport;
 	
+	/**
+	 * Handles post-processing.
+	 */
 	private PostProcessor pp;
+	
+	/**
+	 * Handles all MQTT stuff. Contains main model.
+	 */
+	private final VisualizationMainController mainController;
 	
 	/**
 	 * Constructs a Visualization object.
@@ -63,6 +69,7 @@ public class Visualization extends ApplicationAdapter implements IVisualization 
 	 */
 	public Visualization() {
 		this.gameHandlerList = new ArrayList<>();
+		this.mainController = new VisualizationMainController();
 	}
 
 	@Override
@@ -80,12 +87,16 @@ public class Visualization extends ApplicationAdapter implements IVisualization 
 		
 		final IResourceHandler resHandler = new ResourceHandler(ResConst.ATLAS_PATH.getName() + ResConst.ATLAS_NAME.getName() + ".atlas");
 		
-		//obv. just for testing
-		final IGame testGame = TestUtil.createRandomTestGame(2, 4, 3);
-		new TestApp(testGame);	
-		
-		// TODO create RobotGameHandler properly
-		this.gameHandlerList.add(new RobotGameHandler(testGame, resHandler, cam, prefs));
+		/*
+		 * //obv. just for testing
+		 * final IGame testGame = TestUtil.createRandomTestGame(2, 4, 3);
+		 * new TestApp(testGame);	
+		 */
+
+		//TODO handle connect exceptions
+		this.mainController.startMqtt("tcp://localhost");
+
+		this.gameHandlerList.add(new RobotGameHandler(mainController.getGame(), resHandler, cam, prefs));
 	}
 
 	@Override

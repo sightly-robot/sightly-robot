@@ -4,6 +4,11 @@ import de.unihannover.swp2015.robots2.model.interfaces.IField;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
 import de.unihannover.swp2015.robots2.model.interfaces.IStage;
 
+/**
+ * All utility methods related to {@link IStage}.
+ * 
+ * @author Rico Schrage
+ */
 public class StageUtil {
 	
 	/**
@@ -37,7 +42,16 @@ public class StageUtil {
 		return false;
 	}	
 	
-	public static boolean checkDriveDirectionOrNeighbours(final IField model, final IStage stage, final Orientation direction) {
+	/**
+	 * Checks if there is a wall in the drive direction. In this method it does'nt matter if the wall is set in <code>model</code> or
+	 * in one the neighbors of <code>model</code>.
+	 *
+	 * @param model target field
+	 * @param stage parent of the field (stage)
+	 * @param direction direction you want do drive in
+	 * @return true if there is a wall in your way, false otherwise.
+	 */
+	public static boolean checkDriveDirectionOrNeighbors(final IField model, final IStage stage, final Orientation direction) {
 		boolean result = checkDriveDirection(model, direction, stage.getWidth(), stage.getHeight());
 		switch(direction) {
 		case NORTH: 
@@ -60,6 +74,15 @@ public class StageUtil {
 		return result;
 	}
 	
+	/**
+	 * Checks if there is a wall in the drive direction. In this method the wall have to be set in the current field (<code>model</code>)
+	 * <b>and</b> in the regarding neighbor.
+	 * 
+	 * @param model target field
+	 * @param stage parent
+	 * @param direction direction you want to drive in
+	 * @return true if there is a wall in the model in that direction and in the regarding neighbor, false otherwise
+	 */
 	public static boolean checkDriveDirectionAndNeighbours(final IField model, final IStage stage, final Orientation direction) {
 		boolean result = checkDriveDirection(model, direction, stage.getWidth(), stage.getHeight());
 		switch(direction) {
@@ -83,6 +106,12 @@ public class StageUtil {
 		return result;
 	}
 	
+	/**
+	 * Counts the number of true bool's in an array.
+	 * 
+	 * @param boolArray c-style array
+	 * @return number of true booleans in the array
+	 */
 	public static int countTrue(final boolean[] boolArray) {
 		int counter = 0;
 		for (int i = 0; i < boolArray.length; ++i) {
@@ -92,6 +121,15 @@ public class StageUtil {
 		return counter;
 	}
 	
+	/**
+	 * Converts a boolean array in an integer representation:
+	 * <br>
+	 * Bsp.: input {true, false, true}
+	 *       result 101
+	 * 
+	 * @param boolArray regarding array
+	 * @return integer, every digit is either a 1 or a 0
+	 */
 	public static int convertToInt(final boolean[] boolArray) {
 		int result = 0;
 		for (int i = 0; i < boolArray.length; ++i) {

@@ -2,6 +2,11 @@ package de.unihannover.swp2015.robots2.visual.core;
 
 import de.unihannover.swp2015.robots2.visual.util.pref.IPreferencesKey;
 
+/**
+ * Contains all keys, which will be used for instances of {@link de.unihannover.swp2015.robots2.visual.util.pref.IPreferences}.
+ * 
+ * @author Rico Schrage
+ */
 public enum PrefConst implements IPreferencesKey {
 
 	FIELD_WIDTH_KEY("field_width"), 

@@ -1,5 +1,10 @@
 package de.unihannover.swp2015.robots2.visual.resource;
 
+/**
+ * All available keys for resources in {@link IResourceHandler}.
+ * 
+ * @author Rico Schrage
+ */
 public enum ResConst {
 	
 	ATLAS_PATH("assets/texturepacker/"),

@@ -45,21 +45,21 @@ public class StageUtilTest {
 		final Field f6 = (Field) stage.getField(0, 1);
 		f6.setWall(Orientation.WEST, true);
 		
-		assertTrue(StageUtil.checkDriveDirectionOrNeighbours(f1, stage, Orientation.WEST));
-		assertFalse(StageUtil.checkDriveDirectionOrNeighbours(f2, stage, Orientation.WEST));
-		assertFalse(StageUtil.checkDriveDirectionOrNeighbours(f3, stage, Orientation.WEST));
-		assertTrue(StageUtil.checkDriveDirectionOrNeighbours(f4, stage, Orientation.WEST));
-		assertTrue(StageUtil.checkDriveDirectionOrNeighbours(f4, stage, Orientation.EAST));
-		assertTrue(StageUtil.checkDriveDirectionOrNeighbours(stage.getField(1, 0), stage, Orientation.WEST));
-		assertTrue(StageUtil.checkDriveDirectionOrNeighbours(stage.getField(4, 5), stage, Orientation.SOUTH));
-		assertTrue(StageUtil.checkDriveDirectionOrNeighbours(stage.getField(1, 5), stage, Orientation.WEST));
-		assertFalse(StageUtil.checkDriveDirectionOrNeighbours(stage.getField(3, 3), stage, Orientation.SOUTH));
-		assertFalse(StageUtil.checkDriveDirectionOrNeighbours(stage.getField(3, 4), stage, Orientation.SOUTH));
-		assertFalse(StageUtil.checkDriveDirectionOrNeighbours(stage.getField(3, 3), stage, Orientation.WEST));
-		assertFalse(StageUtil.checkDriveDirectionOrNeighbours(stage.getField(3, 4), stage, Orientation.EAST));
-		assertFalse(StageUtil.checkDriveDirectionOrNeighbours(stage.getField(3, 3), stage, Orientation.EAST));
-		assertFalse(StageUtil.checkDriveDirectionOrNeighbours(stage.getField(3, 4), stage, Orientation.WEST));
-		assertFalse(StageUtil.checkDriveDirectionOrNeighbours(stage.getField(4, 4), stage, Orientation.SOUTH));
+		assertTrue(StageUtil.checkDriveDirectionOrNeighbors(f1, stage, Orientation.WEST));
+		assertFalse(StageUtil.checkDriveDirectionOrNeighbors(f2, stage, Orientation.WEST));
+		assertFalse(StageUtil.checkDriveDirectionOrNeighbors(f3, stage, Orientation.WEST));
+		assertTrue(StageUtil.checkDriveDirectionOrNeighbors(f4, stage, Orientation.WEST));
+		assertTrue(StageUtil.checkDriveDirectionOrNeighbors(f4, stage, Orientation.EAST));
+		assertTrue(StageUtil.checkDriveDirectionOrNeighbors(stage.getField(1, 0), stage, Orientation.WEST));
+		assertTrue(StageUtil.checkDriveDirectionOrNeighbors(stage.getField(4, 5), stage, Orientation.SOUTH));
+		assertTrue(StageUtil.checkDriveDirectionOrNeighbors(stage.getField(1, 5), stage, Orientation.WEST));
+		assertFalse(StageUtil.checkDriveDirectionOrNeighbors(stage.getField(3, 3), stage, Orientation.SOUTH));
+		assertFalse(StageUtil.checkDriveDirectionOrNeighbors(stage.getField(3, 4), stage, Orientation.SOUTH));
+		assertFalse(StageUtil.checkDriveDirectionOrNeighbors(stage.getField(3, 3), stage, Orientation.WEST));
+		assertFalse(StageUtil.checkDriveDirectionOrNeighbors(stage.getField(3, 4), stage, Orientation.EAST));
+		assertFalse(StageUtil.checkDriveDirectionOrNeighbors(stage.getField(3, 3), stage, Orientation.EAST));
+		assertFalse(StageUtil.checkDriveDirectionOrNeighbors(stage.getField(3, 4), stage, Orientation.WEST));
+		assertFalse(StageUtil.checkDriveDirectionOrNeighbors(stage.getField(4, 4), stage, Orientation.SOUTH));
 	}
 
 	@Test

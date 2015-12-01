@@ -5,12 +5,18 @@ import java.util.Map;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 
 import de.unihannover.swp2015.robots2.visual.resource.texture.RenderUnit;
 
+/**
+ * Default implementation of {@link IResourceHandler}.
+ * 
+ * @author Rico Schrage
+ */
 public class ResourceHandler implements IResourceHandler {
 
 	/**
@@ -32,6 +38,13 @@ public class ResourceHandler implements IResourceHandler {
 	private final Map<ResConst, Array<TextureRegion>> frameSetMap;
 	
 	/**
+	 * Map key->font.
+	 * 
+	 * @see {@link ResConst} for available keys
+	 */
+	private final Map<ResConst, BitmapFont> fontMap; 
+	
+	/**
 	 * Map key->RendeUnit
 	 * <br>
 	 * Hint: <code>renderUnitMap.keySet() subset of (frameSetMap.keySet() union texMap.keySet())</code>.
@@ -39,7 +52,7 @@ public class ResourceHandler implements IResourceHandler {
 	private final Map<ResConst, RenderUnit> renderUnitMap;
 	
 	/**
-	 * Main textureAtlas
+	 * Main textureAtlas.
 	 */
 	private final TextureAtlas texAtlas;
 		
@@ -55,11 +68,15 @@ public class ResourceHandler implements IResourceHandler {
 		this.texMap = new HashMap<>();
 		this.frameSetMap = new HashMap<>();
 		this.renderUnitMap = new HashMap<>();
+		this.fontMap = new HashMap<>();
 		this.texAtlas = new TextureAtlas(Gdx.files.internal(pathToAtlas), true);
 
 		this.createRegions();
 	}
 	
+	/**
+	 * Helper. Will be replaced soon.
+	 */
 	private void createRegions() {
 		
 		final TextureRegion wallN = texAtlas.findRegion("wall_n");
@@ -191,6 +208,20 @@ public class ResourceHandler implements IResourceHandler {
 	
 	public void loadTexturePack(final String name) {
 		//TODO implement (optional)
+	}
+
+	@Override
+	public BitmapFont getFont(ResConst key) {
+		return fontMap.get(key);
+	}
+
+	@Override
+	public BitmapFont[] getFont(ResConst... keys) {
+		BitmapFont[] regionArray = new BitmapFont[keys.length];
+        for (int i = 0 ; i < keys.length; ++i) {
+            regionArray[i] = fontMap.get(keys[i]);
+        }
+        return regionArray;
 	}
 
 }

@@ -46,15 +46,27 @@ public interface IGameHandler extends IUpdateable, IModelObserver, IRenderable, 
 	IPreferences getPreferences();
 	
 	/**
-	 * Defines what happens on resize.
+	 * Defines what happens on resize. Will be called in the 
+	 * {@link com.badlogic.gdx.ApplicationListener}/{@link com.badlogic.gdx.ApplicationAdapter} or in 
+	 * a subclass of them.
+	 * 
+	 * @param width new width of the window
+	 * @param height new height of the window
 	 */
 	void resize(final int width, final int height);
 	
 	
 	/**
-	 * Returns the current ranking
+	 * Returns the current ranking of the given robot
+	 * 
+	 * @param robot you want the ranking for
 	 */
 	int getRanking(final IRobot robo);
 	
+	/**
+	 * Will be called from {@link #onModelUpdate(IEvent)}, but runs safley in the render thread.
+	 * 
+	 * @param event emitted event
+	 */
 	void onManagedModelUpdate(final IEvent event);
 }

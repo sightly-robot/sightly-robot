@@ -1,5 +1,6 @@
 package de.unihannover.swp2015.robots2.visual.resource;
 
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Disposable;
 
@@ -28,6 +29,23 @@ public interface IResourceHandler extends Disposable {
 	 * @return result[i] = null if there is no region mapped to <code>key[i]</code>
 	 */
 	public TextureRegion[] getRegion(final ResConst... keys);
+
+	/**
+	 * Returns the font, which is mapped to the given key.
+	 * 
+	 * @param key {@link ResConst}
+	 * @return BitmapFont
+	 */
+	public BitmapFont getFont(final ResConst key);
+	
+	/**
+	 * Returns the fonts, which are mapped to the given keyk. Key order defines the order of the resulting texture-regions.
+	 * E.g. input "a", "b"; Result: Font mapped to "a", Font mapped to "b".
+	 * 
+	 * @param keys {@link ResConst}
+	 * @return array of fonts.
+	 */
+	public BitmapFont[] getFont(final ResConst... keys); 
 	
 	/**
 	 * Creates render unit, created with the texture region(s), which are mapped to <code>key</code>. 

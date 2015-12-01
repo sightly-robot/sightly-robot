@@ -9,6 +9,11 @@ import com.bitfire.utils.ShaderLoader;
 import de.unihannover.swp2015.robots2.visual.Visualization;
 import de.unihannover.swp2015.robots2.visual.resource.ResConst;
 
+/**
+ * Starter class for desktop systems.
+ * 
+ * @author Rico Schrage
+ */
 public class DesktopLauncher {
 	
 	public static void main (String[] arg) {

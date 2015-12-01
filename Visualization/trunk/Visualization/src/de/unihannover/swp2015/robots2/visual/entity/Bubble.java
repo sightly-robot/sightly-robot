@@ -14,13 +14,37 @@ import de.unihannover.swp2015.robots2.visual.util.ColorUtil;
 import de.unihannover.swp2015.robots2.visual.util.pref.IPreferencesKey;
 import de.unihannover.swp2015.robots2.visual.util.pref.observer.PreferencesObservable;
 
+/**
+ * Renders the bubble for a given {@link IRobot}. 
+ * 
+ * @author Rico Schrage
+ * @author Daphne Schössow
+ */
 public class Bubble extends Entity {
 
+	/**
+	 * Texture of the bubble.
+	 */
 	private TextureRegion bubble;
 	
+	/**
+	 * Width of the bubble.
+	 */
 	private float width;
+	
+	/**
+	 * Height of the bubble.
+	 */
 	private float height;
+	
+	/**
+	 * Color of the bubble. This value is based on the model.
+	 */
 	private Color color;
+	
+	/**
+	 * 
+	 */
 	private BitmapFont font;
 	private CharSequence points;
 	
