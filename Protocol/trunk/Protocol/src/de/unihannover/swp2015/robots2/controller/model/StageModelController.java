@@ -39,7 +39,8 @@ public class StageModelController {
 		}
 
 		for (int i = 2; i < parts.length; i++) {
-			IFieldWriteable f = this.stage.getFieldWriteable((i - 2) % width, (i - 2) / width);
+			IFieldWriteable f = this.stage.getFieldWriteable((i - 2) % width,
+					(i - 2) / width);
 			for (Orientation o : Orientation.values()) {
 				// Add walls to outer stage borders if not existent
 				boolean stageBorder = false;
@@ -84,11 +85,14 @@ public class StageModelController {
 		int width = Integer.parseInt(parts[0]);
 		int height = Integer.parseInt(parts[1]);
 
-		if (parts.length != width * height + 2 || width != this.stage.getWidth() || height != this.stage.getHeight())
+		if (parts.length != width * height + 2
+				|| width != this.stage.getWidth()
+				|| height != this.stage.getHeight())
 			return;
 
 		for (int i = 2; i < parts.length; i++) {
-			IFieldWriteable f = this.stage.getFieldWriteable((i - 2) % width, (i - 2) / width);
+			IFieldWriteable f = this.stage.getFieldWriteable((i - 2) % width,
+					(i - 2) / width);
 			int food = Integer.parseInt(parts[i]);
 			f.setFood(food);
 			f.emitEvent(UpdateType.FIELD_FOOD);
@@ -113,11 +117,14 @@ public class StageModelController {
 		int width = Integer.parseInt(parts[0]);
 		int height = Integer.parseInt(parts[1]);
 
-		if (parts.length != width * height + 2 || width != this.stage.getWidth() || height != this.stage.getHeight())
+		if (parts.length != width * height + 2
+				|| width != this.stage.getWidth()
+				|| height != this.stage.getHeight())
 			return;
 
 		for (int i = 2; i < parts.length; i++) {
-			IFieldWriteable f = this.stage.getFieldWriteable((i - 2) % width, (i - 2) / width);
+			IFieldWriteable f = this.stage.getFieldWriteable((i - 2) % width,
+					(i - 2) / width);
 			int growingRate = Integer.parseInt(parts[i]);
 			f.setGrowingRate(growingRate);
 			f.emitEvent(UpdateType.GAME_PARAMETER);
@@ -142,7 +149,8 @@ public class StageModelController {
 			int y = Integer.parseInt(coordinates[1]);
 			int food = Integer.parseInt(message);
 
-			if (x >= 0 && x < this.stage.getWidth() && y >= 0 && y < this.stage.getWidth()) {
+			if (x >= 0 && x < this.stage.getWidth() && y >= 0
+					&& y < this.stage.getWidth()) {
 				IFieldWriteable f = this.stage.getFieldWriteable(x, y);
 				f.setFood(food);
 				f.emitEvent(UpdateType.FIELD_FOOD);
@@ -150,4 +158,27 @@ public class StageModelController {
 		}
 	}
 
+	/**
+	 * Handle new startpositions received via MQTT topic MAP_STARTPOSITIONS.
+	 * 
+	 * @param message
+	 *            MQTT message payload containing the new start positions
+	 */
+	public void mqttSetStartpositions(String message) {
+		String[] parts = message.split(",");
+		if (parts.length % 3 != 0)
+			return;
+
+		this.stage.clearStartPositions();
+		for (int i = 0; i < parts.length; i += 3) {
+			int x = Integer.parseInt(parts[i]);
+			int y = Integer.parseInt(parts[i + 1]);
+			Orientation o = Orientation.getBy(parts[i + 2].charAt(0));
+
+			if (x >= 0 && x < this.stage.getWidth() && y >= 0
+					&& y < this.stage.getHeight() && o != null)
+				this.stage.addStartPosition(x, y, o);
+		}
+		this.stage.emitEvent(UpdateType.STAGE_STARTPOSITIONS);
+	}
 }

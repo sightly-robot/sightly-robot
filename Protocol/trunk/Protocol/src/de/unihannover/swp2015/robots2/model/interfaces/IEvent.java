@@ -34,9 +34,14 @@ public interface IEvent {
 
 		/**
 		 * The walls of the fields changed. (A new map was started by the user.)
-		 * Emmited from Stage.
+		 * Emitted from Stage.
 		 */
 		STAGE_WALL,
+		
+		/**
+		 * The start positions were updated. Emitted from Stage.
+		 */
+		STAGE_STARTPOSITIONS,
 
 		/**
 		 * The lock/occupy state of a field changed. Emitted from the affected

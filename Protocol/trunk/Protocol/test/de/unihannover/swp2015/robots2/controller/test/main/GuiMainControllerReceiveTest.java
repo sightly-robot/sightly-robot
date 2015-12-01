@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.fail;
 
 import java.util.Arrays;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -17,6 +18,7 @@ import de.unihannover.swp2015.robots2.model.externalInterfaces.IModelObserver;
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent.UpdateType;
 import de.unihannover.swp2015.robots2.model.interfaces.IField;
+import de.unihannover.swp2015.robots2.model.interfaces.IPosition;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
 import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
 import de.unihannover.swp2015.robots2.model.interfaces.IStage;
@@ -393,6 +395,72 @@ public class GuiMainControllerReceiveTest {
 		assertEquals(7, observer.count);
 		assertEquals(1, stage.getField(0, 0).getFood());
 		assertEquals(7, stage.getField(1, 0).getFood());
+	}
+	
+	@Test
+	public void testStartpositions() throws Exception {
+		class TestStageModelObserver implements IModelObserver {
+			public int count;
+
+			@Override
+			public void onModelUpdate(IEvent event) {
+				switch (event.getType()) {
+				case STAGE_STARTPOSITIONS:
+					this.count++;
+					break;
+				default:
+					break;
+				}
+			}
+		}
+		
+		IStage stage = this.guiController.getGame().getStage();
+		
+		TestStageModelObserver observer = new TestStageModelObserver();
+		stage.observe(observer);
+		
+		// Init walls
+		sender.sendMessage("map/walls", "3,3,,,,,,,,,", false);
+		Thread.sleep(100);
+		assertEquals(3, stage.getWidth());
+		
+		// Test new start positions
+		sender.sendMessage("extension/2/map/startpositions", "1,0,n,2,1,e,0,1,s", false);
+		Thread.sleep(100);
+
+		List<IPosition> sp = stage.getStartPositions();
+		assertEquals(3, sp.size());
+		assertEquals(1, sp.get(0).getX());
+		assertEquals(0, sp.get(0).getY());
+		assertEquals(Orientation.NORTH, sp.get(0).getOrientation());
+		assertEquals(2, sp.get(1).getX());
+		assertEquals(1, sp.get(1).getY());
+		assertEquals(Orientation.EAST, sp.get(1).getOrientation());
+		assertEquals(0, sp.get(2).getX());
+		assertEquals(1, sp.get(2).getY());
+		assertEquals(Orientation.SOUTH, sp.get(2).getOrientation());
+		assertEquals(1, observer.count);
+		
+		// Test discarding of wrong length message
+		sender.sendMessage("extension/2/map/startpositions", "2,1,s,2,1,e,0,1", false);
+		Thread.sleep(100);
+		
+		assertEquals(3, sp.size());
+		assertEquals(1, observer.count);
+		assertEquals(1, sp.get(0).getX());
+		assertEquals(0, sp.get(0).getY());
+		assertEquals(Orientation.NORTH, sp.get(0).getOrientation());
+		
+		// Test discarding of invalid start positions
+		// First too large x, second too large y, third valid, forth invalid Orientation
+		sender.sendMessage("extension/2/map/startpositions", "3,0,n,2,3,e,0,1,s,2,1,b", false);
+		Thread.sleep(100);
+
+		assertEquals(1, sp.size());
+		assertEquals(0, sp.get(0).getX());
+		assertEquals(1, sp.get(0).getY());
+		assertEquals(Orientation.SOUTH, sp.get(0).getOrientation());
+		assertEquals(2, observer.count);		
 	}
 	
 }

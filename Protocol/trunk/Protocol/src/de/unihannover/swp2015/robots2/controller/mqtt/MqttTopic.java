@@ -43,6 +43,8 @@ public enum MqttTopic {
 	MAP_INIT_FOOD("extension/2/map/setfood", false),
 			
 	MAP_INIT_GROWINGRATE("extension/2/map/setgrowrate", true),
+	
+	MAP_STARTPOSITIONS("extension/2/map/startpositions", true),
 
 	FIELD_OCCUPIED_LOCK("map/occupied/lock/+", false),
 

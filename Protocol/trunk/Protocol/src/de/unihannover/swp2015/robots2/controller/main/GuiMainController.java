@@ -43,9 +43,9 @@ public class GuiMainController extends AbstractMainController implements
 			String clientId = "gui_" + UUID.randomUUID().toString();
 			// TODO subscription list
 			String[] subscribeTopics = { "robot/#", "extension/2/robot/#",
-					"map/walls", "map/food", "map/food/+",
-					"map/occupied/+/set", "event/error/robot/#",
-					"extension/2/settings/#", "control/state" };
+					"map/walls", "map/food", "map/food/+", "map/occupied/#",
+					"event/error/robot/#", "extension/2/settings/#",
+					"control/state", "extension/2/map/startpositions" };
 
 			try {
 				this.mqttController = new MqttController(brokerUrl, clientId,
@@ -105,8 +105,16 @@ public class GuiMainController extends AbstractMainController implements
 		case FIELD_FOOD:
 			this.stageModelController.mqttSetFieldFood(key, message);
 			break;
+			
+		case MAP_STARTPOSITIONS:
+			this.stageModelController.mqttSetStartpositions(message);
+			break;
 
 		case FIELD_OCCUPIED_SET:
+			this.fieldStateModelController.mqttFieldOccupy(key, message);
+			break;
+		
+		case FIELD_OCCUPIED_RELEASE:
 			this.fieldStateModelController.mqttFieldOccupy(key, message);
 			break;
 
@@ -166,6 +174,20 @@ public class GuiMainController extends AbstractMainController implements
 		}
 
 		this.sendMqttMessage(MqttTopic.MAP_WALLS, null, sb.toString());
+	}
+
+	@Override
+	public void sendStartPositions(List<IPosition> positions) {
+		StringBuilder sb = new StringBuilder();
+		String prefix = "";
+		for (IPosition p : positions) {
+			sb.append(prefix);
+			prefix = ",";
+			sb.append(p.getX() + "," + p.getY() + ","
+					+ p.getOrientation().toString());
+		}
+
+		this.sendMqttMessage(MqttTopic.MAP_STARTPOSITIONS, null, sb.toString());
 	}
 
 	@Override
@@ -298,12 +320,6 @@ public class GuiMainController extends AbstractMainController implements
 		}
 
 		return sb.toString();
-	}
-
-	@Override
-	public void sendStartPositions(List<IPosition> positions) {
-		// TODO Auto-generated method stub
-		
 	}
 
 }

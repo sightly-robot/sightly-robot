@@ -15,6 +15,8 @@ import de.unihannover.swp2015.robots2.controller.interfaces.IGuiController;
 import de.unihannover.swp2015.robots2.controller.main.GuiMainController;
 import de.unihannover.swp2015.robots2.controller.mqtt.IMqttController;
 import de.unihannover.swp2015.robots2.controller.mqtt.MqttController;
+import de.unihannover.swp2015.robots2.model.implementation.Position;
+import de.unihannover.swp2015.robots2.model.interfaces.IPosition;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
 
 public class GuiMainControllerSendTest {
@@ -184,7 +186,7 @@ public class GuiMainControllerSendTest {
 		Thread.sleep(100);
 
 		assertEquals(2.57f, Float.parseFloat(this.receiveHandler
-				.getValue("robot/virtualspeed")),0.005);
+				.getValue("robot/virtualspeed")), 0.005);
 
 		assertEquals(5000, Integer.parseInt(this.receiveHandler
 				.getValue("extension/2/robot/hesitationtime")));
@@ -196,6 +198,28 @@ public class GuiMainControllerSendTest {
 		this.receiver.deleteRetainedMessage("robot/virtualspeed");
 		this.receiver.deleteRetainedMessage("extension/2/robot/hesitationtime");
 
+	}
+
+	/**
+	 * Test sending new start positions
+	 */
+	@Test
+	public void testStartPositions() throws Exception {
+		// Build start positions
+		List<IPosition> startpositions = new ArrayList<IPosition>();
+		startpositions.add(new Position(0, 0, Orientation.WEST));
+		startpositions.add(new Position(2, 5, Orientation.NORTH));
+		startpositions.add(new Position(6, 3, Orientation.EAST));
+		startpositions.add(new Position(0, 8, Orientation.SOUTH));
+
+		// Test
+		this.guiController.sendStartPositions(startpositions);
+		Thread.sleep(100);
+
+		String expectedString = "0,0,w,2,5,n,6,3,e,0,8,s";
+		assertEquals(expectedString,
+				this.receiveHandler.getValue("extension/2/map/startpositions"));
+		this.receiver.deleteRetainedMessage("extension/2/map/startpositions");
 	}
 
 	/**

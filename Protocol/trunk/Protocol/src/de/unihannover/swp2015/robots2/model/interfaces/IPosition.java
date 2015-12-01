@@ -17,7 +17,7 @@ public interface IPosition {
 	 * Contains the four cardinal points as the possible orientations in the
 	 * labyrinth.
 	 * 
-	 * @version 0.1
+	 * @version 0.2
 	 * @author Patrick Kawczynski
 	 * @author Michael Thies
 	 */
@@ -47,7 +47,7 @@ public interface IPosition {
 		    } else if( c == 'w' ) {
 		    	return WEST;
 		    } else {
-		    	throw new IllegalArgumentException("No constant with representation "+c+" found!");
+		    	return null;
 		    }
 		}
 		
