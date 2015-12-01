@@ -368,11 +368,11 @@ public enum HardwareState implements IState {
 	@Override
 	public IState getStateForDirection(Direction direction) {
 		switch (direction) {
-		case FOREWARD:
+		case FORWARDS:
 			return FOLLOW_LINE;
 		case RIGHT:
 			return TURN_RIGHT_1;
-		case BACKWARD:
+		case BACKWARDS:
 			return TURN_180_1;
 		case LEFT:
 			return TURN_LEFT_1;

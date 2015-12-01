@@ -73,11 +73,11 @@ public enum SoftwareState implements IState {
 		switch (direction) {
 		case LEFT:
 			return SoftwareState.LEFT;
-		case BACKWARD:
+		case BACKWARDS:
 			return SoftwareState.BACKWARD;
 		case RIGHT:
 			return SoftwareState.RIGHT;
-		case FOREWARD:
+		case FORWARDS:
 			return SoftwareState.FOREWARD;
 		}
 		return FOREWARD;

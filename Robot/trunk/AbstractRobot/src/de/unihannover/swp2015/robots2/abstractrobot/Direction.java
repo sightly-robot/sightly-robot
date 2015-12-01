@@ -9,7 +9,7 @@ import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
  */
 public enum Direction {
 
-	FOREWARD, RIGHT, BACKWARD, LEFT;
+	FORWARDS, RIGHT, BACKWARDS, LEFT;
 
 	/**
 	 * Calculates the moving direction of the robot for his current orientation
@@ -29,11 +29,11 @@ public enum Direction {
 			case EAST:
 				return LEFT;
 			case SOUTH:
-				return BACKWARD;
+				return BACKWARDS;
 			case WEST:
 				return RIGHT;
 			case NORTH:
-				return FOREWARD;
+				return FORWARDS;
 			}
 			break;
 		case EAST:
@@ -41,11 +41,11 @@ public enum Direction {
 			case NORTH:
 				return RIGHT;
 			case WEST:
-				return BACKWARD;
+				return BACKWARDS;
 			case SOUTH:
 				return LEFT;
 			case EAST:
-				return FOREWARD;
+				return FORWARDS;
 			}
 			break;
 		case SOUTH:
@@ -53,11 +53,11 @@ public enum Direction {
 			case EAST:
 				return RIGHT;
 			case NORTH:
-				return BACKWARD;
+				return BACKWARDS;
 			case WEST:
 				return LEFT;
 			case SOUTH:
-				return FOREWARD;
+				return FORWARDS;
 			}
 			break;
 		case WEST:
@@ -65,14 +65,14 @@ public enum Direction {
 			case SOUTH:
 				return RIGHT;
 			case EAST:
-				return BACKWARD;
+				return BACKWARDS;
 			case NORTH:
 				return LEFT;
 			case WEST:
-				return FOREWARD;
+				return FORWARDS;
 			}
 			break;
 		}
-		return FOREWARD;
+		return FORWARDS;
 	}
 }
