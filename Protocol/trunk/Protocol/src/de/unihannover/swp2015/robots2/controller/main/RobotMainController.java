@@ -1,6 +1,7 @@
 package de.unihannover.swp2015.robots2.controller.main;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 import org.eclipse.paho.client.mqttv3.MqttException;
@@ -48,7 +49,7 @@ public class RobotMainController extends AbstractMainController implements IRobo
 				String hardwareRobot = (this.myself.isHardwareRobot()) ? "real" : "virtual";
 				this.sendMqttMessage(MqttTopic.ROBOT_TYPE, this.myself.getId(), hardwareRobot);
 				this.sendMqttMessage(MqttTopic.ROBOT_NEW, null, this.myself.getId());
-				this.sendMqttMessage(MqttTopic.ROBOT_DISCOVER, null, null);
+				this.sendMqttMessage(MqttTopic.ROBOT_DISCOVER, null, "");
 
 				return true;
 			} catch (MqttException e) {
@@ -73,7 +74,10 @@ public class RobotMainController extends AbstractMainController implements IRobo
 			break;
 
 		case ROBOT_NEW:
-			// TODO send all occupied fields
+			List<String> ourFields = this.stageModelController.getOurFields();
+			for(String ourField : ourFields) {
+				this.sendMqttMessage(MqttTopic.FIELD_OCCUPIED_SET, ourField, this.myself.getId());
+			}
 			break;
 
 		case ROBOT_TYPE:
@@ -161,7 +165,7 @@ public class RobotMainController extends AbstractMainController implements IRobo
 
 	@Override
 	public void setRobotReady() {
-		// TODO Auto-generated method stub
+		this.sendMqttMessage(MqttTopic.ROBOT_READY, this.myself.getId(), "");
 	}
 
 	@Override
