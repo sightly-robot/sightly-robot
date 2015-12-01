@@ -4,29 +4,38 @@ import de.unihannover.swp2015.robots2.controller.interfaces.IRobotController;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
 
 /**
- * AbstractAi is an abstract class and standard as an interface for the hardware and software robot part.
+ * The AbstractAi is meant to act like an interface between any AI implementation and hardware as well as software robots.
+ * 
  * @author Lenard Spiecker
  */
 public abstract class AbstractAi {
 
 	private AiEventObserver aiEventObserver;
 	protected IRobotController iRobotController;
-	
+
+	/**
+	 * Constructs a new AbstractAi.
+	 * 
+	 * @param iRobotController the controller of the robot this AI belongs to
+	 */
 	public AbstractAi(IRobotController iRobotController) {
 		this.iRobotController = iRobotController;
 	}
 	
 	/**
-	 * To set calculated relative move durations. The Ai can use them to find the fastest way.
-	 * @param foreward
-	 * @param sideward
-	 * @param backward
+	 * Sets calculated relative move durations.<br>
+	 * The AI could use them to find the fastest way.
+	 * 
+	 * @param forwards	the relative move duration for moving forwards
+	 * @param sidewards the relative move duration for moving sidewards
+	 * @param backwards the relative move duration for moving backwards
 	 */
-	public abstract void setRelativeSpeed(double foreward, double sideward, double backward);
+	public abstract void setRelativeSpeed(double forwards, double sidewards, double backwards);
 	
 	/**
-	 * Sets a AiEventObserver for observing direction decisions.
-	 * @param aiEventObserver
+	 * Sets the AiEventObserver for observing the direction decisions.
+	 * 
+	 * @param aiEventObserver the AiEventObserver to set
 	 */
 	public void setAiEventObserver(AiEventObserver aiEventObserver)
 	{
@@ -34,10 +43,10 @@ public abstract class AbstractAi {
 	}
 	
 	/**
-	 * Fires a calculated next direction to the AiEventObserver.
-	 * @param x
-	 * @param y
-	 * @return true, if there is a observer and the observer accepts the event.
+	 * Notifies the AiEventObserver about the calculated next direction.
+	 * 
+	 * @param orientation the orientation of the next position
+	 * @return {@code true} if there is an observer and it accepts the event, {@code false} otherwise
 	 */
 	protected boolean fireNextOrientationEvent(Orientation orientation) {
 		if(aiEventObserver != null)
@@ -48,11 +57,10 @@ public abstract class AbstractAi {
 	}
 	
 	/**
-	 * Fires a calculated next but one direction to the AiEventObserver.
-	 * The next but one direction should not be used for driving.
-	 * So there is no accept return boolean.
-	 * @param x
-	 * @param y
+	 * Notifies the AiEventObserver about the calculated next but one direction.<br>
+	 * The next but one direction should not be used for driving and for this reason it is not needed to check for acceptance.
+	 * 
+	 * @param orientation the orientation of the next but one position.
 	 */
 	protected void fireNextButOneOrientationEvent(Orientation orientation) {
 		if(aiEventObserver != null)
