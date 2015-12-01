@@ -2,6 +2,9 @@ package de.unihannover.swp2015.robots2.hardwarerobot;
 
 import java.awt.Color;
 
+import com.pi4j.io.gpio.event.GpioPinDigitalStateChangeEvent;
+import com.pi4j.io.gpio.event.GpioPinListenerDigital;
+
 import de.unihannover.swp2015.robots2.abstractrobot.AbstractRobot;
 import de.unihannover.swp2015.robots2.hardwarerobot.automate.HardwareAutomate;
 import de.unihannover.swp2015.robots2.hardwarerobot.pi2gocontroller.BlinkLEDAndServoController;
@@ -30,6 +33,15 @@ public class HardwareRobot extends AbstractRobot {
 		// SoundController.getInstance();
 		// ColorSensorController.getInstance();
 		// CompassController.getInstance();
+		Pi2GoGPIOController.getInstance().getButton().addListener(new GpioPinListenerDigital() {
+			@Override
+			public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {
+				if(event.getState().isHigh())
+				{
+					robotController.setRobotReady();
+				}
+			}
+		});
 
 		//blinkOnce();
 
