@@ -23,14 +23,16 @@ public class AI extends AbstractAi implements IModelObserver {
 		super(controller);
 		this.game = controller.getGame();
 		this.game.observe(this);
-		initialize();
+		initialize(); 
 	}
 
 	public void initialize() {
-		try {
-			this.graph = new AIGraph(this.game.getStage());
-		} catch (InvalidStageException e) {
-			e.printStackTrace();
+		if(this.game.getStage().getWidth() != 0 && this.game.getStage().getHeight() != 0) {
+			try {
+				this.graph = new AIGraph(this.game.getStage());
+			} catch (InvalidStageException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -43,6 +45,7 @@ public class AI extends AbstractAi implements IModelObserver {
 		case FIELD_FOOD:
 			break;
 		case STAGE_WALL:
+			initialize();
 			break;
 		case STAGE_SIZE:
 			break;
