@@ -23,6 +23,8 @@ public class AI extends AbstractAi implements IModelObserver {
 		super(controller);
 		this.game = controller.getGame();
 		this.game.observe(this);
+		this.game.getStage().observe(this);
+		this.iRobotController.getMyself().observe(this);
 		initialize(); 
 	}
 
