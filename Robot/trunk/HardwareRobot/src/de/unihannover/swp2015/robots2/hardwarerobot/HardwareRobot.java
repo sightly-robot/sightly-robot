@@ -6,6 +6,7 @@ import com.pi4j.io.gpio.event.GpioPinDigitalStateChangeEvent;
 import com.pi4j.io.gpio.event.GpioPinListenerDigital;
 
 import de.unihannover.swp2015.robots2.abstractrobot.AbstractRobot;
+import de.unihannover.swp2015.robots2.controller.externalInterfaces.IHardwareRobot;
 import de.unihannover.swp2015.robots2.hardwarerobot.automate.HardwareAutomate;
 import de.unihannover.swp2015.robots2.hardwarerobot.pi2gocontroller.BlinkLEDAndServoController;
 import de.unihannover.swp2015.robots2.hardwarerobot.pi2gocontroller.LEDAndServoController;
@@ -47,6 +48,8 @@ public class HardwareRobot extends AbstractRobot {
 
 		automate = new HardwareAutomate(robotController);
 		automate.start();
+		
+		robotController.registerHardwareRobot((IHardwareRobot)automate);
 
 		((HardwareAutomate)automate).blink(robotController.getMyself().getColor());
 		

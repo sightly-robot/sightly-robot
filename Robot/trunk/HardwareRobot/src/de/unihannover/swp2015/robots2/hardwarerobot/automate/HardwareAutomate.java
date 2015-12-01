@@ -2,14 +2,11 @@ package de.unihannover.swp2015.robots2.hardwarerobot.automate;
 
 import java.awt.Color;
 
-import com.pi4j.io.gpio.event.GpioPinDigitalStateChangeEvent;
-import com.pi4j.io.gpio.event.GpioPinListenerDigital;
 import de.unihannover.swp2015.robots2.abstractrobot.automate.AbstractAutomate;
 import de.unihannover.swp2015.robots2.controller.externalInterfaces.IHardwareRobot;
 import de.unihannover.swp2015.robots2.controller.interfaces.IRobotController;
 import de.unihannover.swp2015.robots2.hardwarerobot.pi2gocontroller.BlinkLEDAndServoController;
 import de.unihannover.swp2015.robots2.hardwarerobot.pi2gocontroller.LEDAndServoController;
-import de.unihannover.swp2015.robots2.hardwarerobot.pi2gocontroller.Pi2GoGPIOController;
 
 /**
  * The HardwareAutomate extends the {@link AbstractAutomate} for controlling a
