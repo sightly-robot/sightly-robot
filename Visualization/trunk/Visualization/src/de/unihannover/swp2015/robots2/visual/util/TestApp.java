@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Collection;
 import java.util.Map;
+import java.util.Random;
 import java.util.UUID;
 
 import javax.swing.JButton;
@@ -28,12 +29,13 @@ public class TestApp extends JFrame implements ActionListener {
 
 	
 	private static final long serialVersionUID = 1L;
+	private static final Random rand = new Random();
 	
-	IGame game;
-	JButton changeRobotPos;
-	JButton changeRobots;
-	JButton changeWalls;
-	JButton changeFood;
+	private final IGame game;
+	private final JButton changeRobotPos;
+	private final JButton changeRobots;
+	private final JButton changeWalls;
+	private final JButton changeFood;
 	
 	public TestApp(IGame game) {
 		this.game = game;
@@ -71,7 +73,7 @@ public class TestApp extends JFrame implements ActionListener {
 			for (int x = 0; x < stage.getWidth(); ++x) {
 				for (int y = 0; y < stage.getHeight(); ++y) {
 					final Field f = (Field) stage.getField(x, y);
-					int r = (int)(Math.random()*41);
+					int r = rand.nextInt(42);
 					r -= 30;
 					if (r < 0)
 						r = 0;
@@ -98,7 +100,7 @@ public class TestApp extends JFrame implements ActionListener {
 			final Collection<? extends IRobot> s = r.values();
 			for (IRobot ro : s) {
 				final Robot rob = (Robot) ro;
-				rob.setPosition((int)(Math.random()*game.getStage().getWidth()), (int)(Math.random()*game.getStage().getHeight()), randomOrientation());
+				rob.setPosition(rand.nextInt(game.getStage().getWidth()), (int)(Math.random()*game.getStage().getHeight()), randomOrientation());
 				rob.emitEvent(UpdateType.ROBOT_POSITION);
 			}
 		}
@@ -111,7 +113,7 @@ public class TestApp extends JFrame implements ActionListener {
 	}
 	
 	private Orientation randomOrientation(){
-		int rd = (int)(Math.random()*4);
+		int rd = rand.nextInt(4);
 		switch(rd){
 		case 1:
 			return Orientation.NORTH;
@@ -125,7 +127,7 @@ public class TestApp extends JFrame implements ActionListener {
 	}
 	
 	private boolean rb() {
-		final int des = (int)(Math.random()*10);
+		final int des = (int)rand.nextInt(10);
 		if (des == 9)
 			return true;
 		return false;
