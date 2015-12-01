@@ -7,9 +7,12 @@ import java.util.List;
 import de.unihannover.swp2015.robots2.core.Robot;
 import de.unihannover.swp2015.robots2.exceptions.InvalidStageException;
 import de.unihannover.swp2015.robots2.exceptions.NoValidOrientationException;
+import de.unihannover.swp2015.robots2.model.externalInterfaces.IModelObserver;
+import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
 import de.unihannover.swp2015.robots2.model.interfaces.IField;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
+import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
 import de.unihannover.swp2015.robots2.model.interfaces.IStage;
 
 public class AIGraph {
@@ -22,13 +25,35 @@ public class AIGraph {
 	 * Should be set by the AI class!
 	 */
 	private Robot myself;
+	
+//	private IRobot iMyself;
 
 	private int dimX;
 	private int dimY;
 
-	public AIGraph(IStage stage) throws InvalidStageException {
+	public AIGraph(IStage stage, Robot myself) throws InvalidStageException {
 		this.stage = stage;
 		this.loadFromStage(stage);
+		
+//		iMyself = iRobot;
+		
+		this.myself = myself;
+		
+//		iRobot.observe(new IModelObserver() {	
+//			@Override
+//			public void onModelUpdate(IEvent event) {
+//				switch (event.getType()) {
+//				case ROBOT_POSITION:
+//					myself.setPosition(getNodes()[iMyself.getPosition().getX()][iMyself.getPosition().getY()]);
+//					myself.setOrientation(iMyself.getPosition().getOrientation());
+//					setRobotPosition(myself, iMyself.getPosition());
+//					break;
+//
+//				default:
+//					break;
+//				}
+//			}
+//		});
 	}
 
 	/**
@@ -137,14 +162,14 @@ public class AIGraph {
 		 * Set our and other robots positions
 		 */
 		if (stage.getStartPositions() != null) {
-			for (IPosition pos : stage.getStartPositions()) {
-				Node posNode = this.nodes[pos.getX()][pos.getY()];
-				IField field = stage.getField(pos.getX(), pos.getY());
-				String id = field.getLockedBy();
-				Robot robot = new Robot(id, posNode, pos.getOrientation());
-				this.myself = robot;
-				posNode.setRobot(robot);
-			}
+//			for (IPosition pos : stage.getStartPositions()) {
+//				Node posNode = this.nodes[pos.getX()][pos.getY()];
+//				IField field = stage.getField(pos.getX(), pos.getY());
+//				String id = field.getLockedBy();
+//				Robot robot = new Robot(id, posNode, pos.getOrientation());
+//				this.myself = robot;
+//				posNode.setRobot(robot);
+//			}
 		}
 	}
 
@@ -209,19 +234,22 @@ public class AIGraph {
 	 *            new position
 	 */
 	public void setRobotPosition(Robot robot, IPosition newPosition) {
-		int oldX = robot.getPosition().getX();
-		int oldY = robot.getPosition().getY();
-
-		/*
-		 * Delete robot from old position in graph
-		 */
-		this.nodes[oldX][oldY].setRobot(null);
-		/*
-		 * Set new orientation for robot Set robot on new position in graph
-		 */
-		robot.setOrientation(newPosition.getOrientation());
-		this.nodes[newPosition.getX()][newPosition.getY()].setRobot(robot);
-		robot.setPosition(this.nodes[newPosition.getX()][newPosition.getY()]);
+		if(robot.getPosition() != null)
+		{
+			/*
+			 * Delete robot from old position in graph
+			 */
+			robot.getPosition().setRobot(null);
+		}
+		if(newPosition.getX() != -1)
+		{
+			/*
+			 * Set new orientation for robot Set robot on new position in graph
+			 */
+			robot.setOrientation(newPosition.getOrientation());
+			this.nodes[newPosition.getX()][newPosition.getY()].setRobot(robot);
+			robot.setPosition(this.nodes[newPosition.getX()][newPosition.getY()]);
+		}
 	}
 
 	public void setStartPositions(IStage map) {
