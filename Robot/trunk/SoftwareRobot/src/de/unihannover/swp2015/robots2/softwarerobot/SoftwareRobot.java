@@ -2,6 +2,8 @@ package de.unihannover.swp2015.robots2.softwarerobot;
 
 import de.unihannover.swp2015.robots2.abstractrobot.AbstractRobot;
 import de.unihannover.swp2015.robots2.abstractrobot.automate.AbstractAutomate;
+import de.unihannover.swp2015.robots2.model.externalInterfaces.IModelObserver;
+import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
 import de.unihannover.swp2015.robots2.softwarerobot.automate.SoftwareAutomate;
 
 /**
@@ -13,10 +15,29 @@ import de.unihannover.swp2015.robots2.softwarerobot.automate.SoftwareAutomate;
 public class SoftwareRobot extends AbstractRobot {
 
 	AbstractAutomate automate;
+	
+	boolean ready = true;
 
 	public SoftwareRobot() {
 		super(false);
 
+		robotController.getMyself().observe(new IModelObserver() {
+			
+			@Override
+			public void onModelUpdate(IEvent event) {
+				switch(event.getType())
+				{
+					case ROBOT_POSITION:
+						if(!ready)
+						{
+							robotController.setRobotReady();
+							ready = true;
+						}
+					break;
+				}
+			}
+		});
+		
 		automate = new SoftwareAutomate(robotController);
 		automate.start();
 
