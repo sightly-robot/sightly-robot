@@ -33,7 +33,14 @@ public class HardwareRobot extends AbstractRobot {
 		// CompassController.getInstance();
 
 		robotController = new RobotMainController(true);
-		robotController.startMqtt("localhost");
+		while(!robotController.startMqtt("tcp://10.42.0.1/"))
+		{
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
 
 		blinkOnce();
 
