@@ -23,7 +23,7 @@ public class StageModelController {
 	 *            The MQTT message payload
 	 */
 	public void mqttSetWalls(String message) {
-		String[] parts = message.split(",",-1);
+		String[] parts = message.split(",", -1);
 		if (parts.length < 3)
 			return;
 
@@ -39,12 +39,11 @@ public class StageModelController {
 		}
 
 		for (int i = 2; i < parts.length; i++) {
-			IFieldWriteable f = this.stage.getFieldWriteable((i - 2) % width,
-					(i - 2) / width);
+			IFieldWriteable f = this.stage.getFieldWriteable((i - 2) % width, (i - 2) / width);
 			for (Orientation o : Orientation.values()) {
 				// Add walls to outer stage borders if not existent
 				boolean stageBorder = false;
-				switch(o) {
+				switch (o) {
 				case WEST:
 					stageBorder = (i - 2) % width == 0;
 					break;
@@ -57,8 +56,9 @@ public class StageModelController {
 				case SOUTH:
 					stageBorder = (i - 2) / width == height - 1;
 					break;
-				};
-				
+				}
+				;
+
 				f.setWall(o, parts[i].contains(o.toString()) || stageBorder);
 			}
 		}
@@ -84,17 +84,43 @@ public class StageModelController {
 		int width = Integer.parseInt(parts[0]);
 		int height = Integer.parseInt(parts[1]);
 
-		if (parts.length != width * height + 2
-				|| width != this.stage.getWidth()
-				|| height != this.stage.getHeight())
+		if (parts.length != width * height + 2 || width != this.stage.getWidth() || height != this.stage.getHeight())
 			return;
 
 		for (int i = 2; i < parts.length; i++) {
-			IFieldWriteable f = this.stage.getFieldWriteable((i - 2) % width,
-					(i - 2) / width);
+			IFieldWriteable f = this.stage.getFieldWriteable((i - 2) % width, (i - 2) / width);
 			int food = Integer.parseInt(parts[i]);
 			f.setFood(food);
 			f.emitEvent(UpdateType.FIELD_FOOD);
+		}
+
+	}
+
+	/**
+	 * Handle an update of the growing rate for whole map, received via MQTT
+	 * topic MAP_INIT_GROWINGRATE.
+	 * 
+	 * This method updates all fields.
+	 * 
+	 * @param message
+	 *            The MQTT message payload
+	 */
+	public void mqttSetGrowingrate(String message) {
+		String[] parts = message.split(",");
+		if (parts.length < 3)
+			return;
+
+		int width = Integer.parseInt(parts[0]);
+		int height = Integer.parseInt(parts[1]);
+
+		if (parts.length != width * height + 2 || width != this.stage.getWidth() || height != this.stage.getHeight())
+			return;
+
+		for (int i = 2; i < parts.length; i++) {
+			IFieldWriteable f = this.stage.getFieldWriteable((i - 2) % width, (i - 2) / width);
+			int growingRate = Integer.parseInt(parts[i]);
+			f.setGrowingRate(growingRate);
+			f.emitEvent(UpdateType.GAME_PARAMETER);
 		}
 
 	}
@@ -116,8 +142,7 @@ public class StageModelController {
 			int y = Integer.parseInt(coordinates[1]);
 			int food = Integer.parseInt(message);
 
-			if (x >= 0 && x < this.stage.getWidth() && y >= 0
-					&& y < this.stage.getWidth()) {
+			if (x >= 0 && x < this.stage.getWidth() && y >= 0 && y < this.stage.getWidth()) {
 				IFieldWriteable f = this.stage.getFieldWriteable(x, y);
 				f.setFood(food);
 				f.emitEvent(UpdateType.FIELD_FOOD);
