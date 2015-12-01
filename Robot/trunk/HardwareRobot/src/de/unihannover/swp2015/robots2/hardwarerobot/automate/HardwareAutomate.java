@@ -9,13 +9,18 @@ import de.unihannover.swp2015.robots2.hardwarerobot.pi2gocontroller.BlinkLEDAndS
 import de.unihannover.swp2015.robots2.hardwarerobot.pi2gocontroller.LEDAndServoController;
 
 /**
- * The HardwareAutomate extends the {@link AbstractAutomate} for controlling a hardware
- * robot (Pi2Go) using the {@link HardwareState}s.
+ * The HardwareAutomate extends the {@link AbstractAutomate} for controlling a
+ * hardware robot (Pi2Go) using the {@link HardwareState}s.
  * 
  * @author Philipp Rohde
  */
-public class HardwareAutomate extends AbstractAutomate implements IHardwareRobot{
+public class HardwareAutomate extends AbstractAutomate implements IHardwareRobot {
 
+	/**
+	 * Constructs a new automate for a hardware robot.
+	 * 
+	 * @param robotController the controller of the robot
+	 */
 	public HardwareAutomate(IRobotController robotController) {
 		super(robotController, HardwareState.WAIT);
 	}
@@ -23,7 +28,7 @@ public class HardwareAutomate extends AbstractAutomate implements IHardwareRobot
 	@Override
 	public void setSettings(String settings) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -34,9 +39,9 @@ public class HardwareAutomate extends AbstractAutomate implements IHardwareRobot
 
 	@Override
 	public void blink(Color color) {
-		if(LEDAndServoController.getInstance() instanceof BlinkLEDAndServoController)
-		{
-			((BlinkLEDAndServoController)LEDAndServoController.getInstance()).startBlinking(robot.getColor());
+		if (LEDAndServoController.getInstance() instanceof BlinkLEDAndServoController) {
+//			((BlinkLEDAndServoController) LEDAndServoController.getInstance()).startBlinking(robot.getColor());
+			((BlinkLEDAndServoController) LEDAndServoController.getInstance()).startBlinking(color);
 		}
 	}
 
