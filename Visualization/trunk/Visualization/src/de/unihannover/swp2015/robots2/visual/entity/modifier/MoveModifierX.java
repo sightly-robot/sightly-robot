@@ -11,7 +11,7 @@ import de.unihannover.swp2015.robots2.visual.util.math.function.LinearEaseFuncti
  * 
  * @author Rico Schrage
  */
-public class MoveModifier extends SingleValueEntityModifier {
+public class MoveModifierX extends SingleValueEntityModifier {
 	//TODO implement
 	
 	/**
@@ -22,7 +22,7 @@ public class MoveModifier extends SingleValueEntityModifier {
 	 * @param fromValue start value
 	 * @param toValue end value
 	 */
-	public MoveModifier(IEntity target, float duration, float fromValue, float toValue) {
+	public MoveModifierX(IEntity target, float duration, float fromValue, float toValue) {
 		this(target, duration, fromValue, toValue, LinearEaseFunction.getInstance());
 	}
 	
@@ -35,17 +35,17 @@ public class MoveModifier extends SingleValueEntityModifier {
 	 * @param toValue end value
 	 * @param easeFunction {@link IEaseFunction}
 	 */
-	public MoveModifier(IEntity target, float duration, float fromValue, float toValue, final IEaseFunction easeFunction) {
+	public MoveModifierX(IEntity target, float duration, float fromValue, float toValue, final IEaseFunction easeFunction) {
 		super(target, duration, fromValue, toValue, easeFunction);
 	}
 
 	@Override
-	protected void onSetInitialValue(float value, IEntity scene) {
-		// TODO Auto-generated method stub
+	protected void onSetInitialValue(float value, IEntity target) {
+		target.setPosition(value, target.getPositionY());
 	}
 
 	@Override
-	protected void onSetValue(float value, IEntity scene) {
-		// TODO Auto-generated method stub
+	protected void onSetValue(float value, IEntity target) {
+		target.setPosition(value, target.getPositionY());
 	}
 }

@@ -59,7 +59,7 @@ public class Bubble extends Entity {
 		this.font = new BitmapFont(true);
         this.font.setColor(1-color.r, 1-color.g, 1-color.b,color.a);
         
-        this.points = model.getName()+" : "+model.getScore()+"(-)";
+        this.points = model.getId().substring(0, 4)+" : "+model.getScore()+"(-)";
 		
 		final float fieldWidth = prefs.getFloat(PrefConst.FIELD_WIDTH_KEY, 42);
 		final float fieldHeight = prefs.getFloat(PrefConst.FIELD_HEIGHT_KEY, 42);
@@ -94,7 +94,7 @@ public class Bubble extends Entity {
 				this.renderY = robo.getPosition().getY() * fieldHeight;
 				break;
 			case ROBOT_SCORE:
-				this.points = robo.getName() + "  : " + robo.getScore() +  "(" + gameHandler.getRanking(robo) + ")";
+				this.points =  robo.getId().substring(0, 4) + "  : " + robo.getScore() +  "(" + gameHandler.getRanking(robo) + ")";
 				break;
 			case ROBOT_STATE:
 				break;

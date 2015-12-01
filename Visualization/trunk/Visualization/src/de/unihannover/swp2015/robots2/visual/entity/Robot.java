@@ -42,6 +42,8 @@ public class Robot extends Entity {
 		
 		this.renderX = robModel.getPosition().getX() * fieldWidth + fieldWidth/2 - width/2;
 		this.renderY = robModel.getPosition().getY() * fieldHeight + fieldHeight/2 - height/2;
+		
+		this.updateDirection(robModel);
 	}
 
 	private void updateDirection(final IRobot robo){
@@ -53,10 +55,10 @@ public class Robot extends Entity {
 			direction=0;
 			break;
 		case WEST:
-			direction=90;
+			direction=-90;
 			break;
 		case EAST:
-			direction=-90;
+			direction=90;
 			break;
 		}
 	}
