@@ -52,12 +52,12 @@ public enum HardwareState implements IState {
 	DRIVE_ON_CELL {
 
 		private static final double DRIVE_DURATION = 310.0;
+		private long startTime;
 
 		@Override
 		public void start() {
 			setLED(LEDS_REAR, COLOR_BREAK);
 			setServo(0);
-			setProgress(0.0);
 			startTime = System.currentTimeMillis();
 			this.execute();
 		}
@@ -67,8 +67,8 @@ public enum HardwareState implements IState {
 			boolean left = GPIO.isLineLeft();
 			boolean right = GPIO.isLineRight();
 
-			setProgress((System.currentTimeMillis() - startTime) / DRIVE_DURATION);
-			if (getProgress() >= 1.0) {
+			long runningTime = System.currentTimeMillis() - startTime;
+			if (runningTime >= DRIVE_DURATION) {
 				return WAIT;
 			} else if (left && right) {
 				MOTORS.go(FAST);
@@ -304,7 +304,7 @@ public enum HardwareState implements IState {
 	private final static Color COLOR_BREAK = Color.RED;
 	private final static Color COLOR_DEFAULT = Color.WHITE;
 
-	protected long startTime;
+	
 	private double progress = 0.0;
 
 	@Override
@@ -320,16 +320,6 @@ public enum HardwareState implements IState {
 	@Override
 	public double getProgress() {
 		return progress;
-	}
-
-	/**
-	 * Sets the progress of the current state.
-	 * 
-	 * @param progress
-	 *            0.0 <= progress
-	 */
-	protected void setProgress(double progress) {
-		this.progress = Math.min(1,Math.max(0,progress));
 	}
 
 	/**
