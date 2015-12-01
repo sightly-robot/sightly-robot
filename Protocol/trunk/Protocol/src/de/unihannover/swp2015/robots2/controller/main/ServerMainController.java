@@ -114,6 +114,7 @@ public class ServerMainController extends AbstractMainController implements ISer
 	@Override
 	public void updateScore(String robotId, int score) {
 		this.game.getRobotsWriteable().get(robotId).addScore(score);
+		this.sendMqttMessage(MqttTopic.ROBOT_SCORE, robotId, Integer.toString(score));
 	}
 
 	@Override
