@@ -38,8 +38,8 @@ public class RobotModelController {
 
 			String[] positionParts = message.split(",");
 
-			r.setPosition(Integer.valueOf(positionParts[0]),
-					Integer.valueOf(positionParts[1]),
+			r.setPosition(Integer.parseInt(positionParts[0]),
+					Integer.parseInt(positionParts[1]),
 					Orientation.getBy(positionParts[2]));
 			r.setProgress(0);
 			r.emitEvent(UpdateType.ROBOT_POSITION);

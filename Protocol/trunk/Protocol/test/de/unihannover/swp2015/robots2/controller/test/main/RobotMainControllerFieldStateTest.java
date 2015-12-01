@@ -18,7 +18,7 @@ import de.unihannover.swp2015.robots2.model.interfaces.IField.State;
 
 public class RobotMainControllerFieldStateTest {
 
-	class TestModelObserver implements IModelObserver {
+	private static class TestModelObserver implements IModelObserver {
 		public int count;
 
 		@Override

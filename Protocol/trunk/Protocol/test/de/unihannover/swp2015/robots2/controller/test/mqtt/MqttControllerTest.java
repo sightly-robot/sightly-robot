@@ -20,7 +20,7 @@ import de.unihannover.swp2015.robots2.controller.mqtt.MqttController;
  * @author Michael Thies
  */
 public class MqttControllerTest {
-	class TestReceiveHandler implements IMqttMessageHandler {
+	private static class TestReceiveHandler implements IMqttMessageHandler {
 		Map<String, String> values = new HashMap<String, String>();
 		final String id;
 		

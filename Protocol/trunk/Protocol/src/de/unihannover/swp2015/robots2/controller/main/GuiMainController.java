@@ -82,10 +82,12 @@ public class GuiMainController extends AbstractMainController implements
 
 		case ROBOT_PROGRESS:
 			this.robotModelController.mqttRobotProgress(key, message);
-
+			break;
+				
 		case ROBOT_SCORE:
 			this.robotModelController.mqttScoreUpdate(key, message);
-
+			break;
+			
 		case CONTROL_VIRTUALSPEED:
 			this.gameModelController.mqttSetRobotVirtualspeed(Float
 					.parseFloat(message));
@@ -93,7 +95,8 @@ public class GuiMainController extends AbstractMainController implements
 
 		case CONTROL_HESITATIONTIME:
 			this.gameModelController.mqttSetRobotHesitationTime(message);
-
+			break;
+			
 		case MAP_WALLS:
 			this.stageModelController.mqttSetWalls(message);
 			break;
@@ -270,7 +273,7 @@ public class GuiMainController extends AbstractMainController implements
 		for (int x = 0; x < this.game.getStage().getWidth(); x++) {
 			for (int y = 0; x < this.game.getStage().getHeight(); y++) {
 				IField f = this.game.getStage().getField(x, y);
-				if (f.getState() == State.OCCUPIED && f.getLockedBy() == id)
+				if (f.getState() == State.OCCUPIED && f.getLockedBy().equals(id))
 					this.sendMqttMessage(MqttTopic.FIELD_OCCUPIED_RELEASE, x
 							+ "-" + y, "");
 			}

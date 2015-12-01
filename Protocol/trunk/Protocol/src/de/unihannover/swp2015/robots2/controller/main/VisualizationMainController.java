@@ -72,17 +72,20 @@ public class VisualizationMainController extends AbstractMainController implemen
 
 		case ROBOT_PROGRESS:
 			this.robotModelController.mqttRobotProgress(key, message);
-
+			break;
+			
 		case ROBOT_SCORE:
 			this.robotModelController.mqttScoreUpdate(key, message);
-
+			break;
+			
 		case CONTROL_VIRTUALSPEED:
 			this.gameModelController.mqttSetRobotVirtualspeed(Float.parseFloat(message));
 			break;
 
 		case CONTROL_HESITATIONTIME:
 			this.gameModelController.mqttSetRobotHesitationTime(message);
-
+			break;	
+			
 		case MAP_WALLS:
 			this.stageModelController.mqttSetWalls(message);
 			break;
