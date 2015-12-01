@@ -129,7 +129,7 @@ public class ControlPanel extends Window implements Bindable {
 							// has side effects
 							new MapLoader(controller, file.getAbsolutePath());					
 							
-							visualization.setGame(controller.getGame());
+							visualization.setGame(controller, controller.getGame());
 							visualization.repaint();
 							
 							startGame.setEnabled(true);
