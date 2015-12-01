@@ -61,6 +61,8 @@ public class FieldStateModelController {
 		int x = Integer.parseInt(coord[0]);
 		int y = Integer.parseInt(coord[1]);
 
+		this.resizeStage(x, y);
+		
 		IFieldWriteable f = this.stage.getFieldWriteable(x, y);
 
 		switch (f.getState()) {
@@ -113,6 +115,8 @@ public class FieldStateModelController {
 		int x = Integer.parseInt(coord[0]);
 		int y = Integer.parseInt(coord[1]);
 
+		this.resizeStage(x, y);
+		
 		IFieldWriteable f = this.stage.getFieldWriteable(x,
 				y);
 
@@ -140,6 +144,8 @@ public class FieldStateModelController {
 		int x = Integer.parseInt(coord[0]);
 		int y = Integer.parseInt(coord[1]);
 
+		this.resizeStage(x, y);
+		
 		IFieldWriteable f = this.stage.getFieldWriteable(x,
 				y);
 
@@ -216,5 +222,21 @@ public class FieldStateModelController {
 
 		f.setState(State.FREE);
 		f.emitEvent(UpdateType.FIELD_STATE);
+	}
+	
+	/**
+	 * Resize the stage to fit the given coordinates.
+	 * 
+	 * @param x
+	 *            The x-coordinate.
+	 * @param y
+	 *            The y-coordinate.
+	 */
+	private void resizeStage(int x, int y) {
+		if (x >= this.stage.getWidth() || y >= this.stage.getHeight()) {
+			this.stage.changeSize(Math.max(x + 1, this.stage.getWidth()),
+					Math.max(y + 1, this.stage.getHeight()));
+			this.stage.emitEvent(UpdateType.STAGE_SIZE);
+		}
 	}
 }

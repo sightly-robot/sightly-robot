@@ -37,13 +37,15 @@ public class StageModelController {
 		if (parts.length != width * height + 2)
 			return;
 
-		if (width != this.stage.getWidth() || height != this.stage.getHeight()) {
+		if (width != this.stage.getWidth()
+				|| height != this.stage.getHeight()) {
 			this.stage.changeSize(width, height);
 			this.stage.emitEvent(UpdateType.STAGE_SIZE);
 		}
 
 		for (int i = 2; i < parts.length; i++) {
-			IFieldWriteable f = this.stage.getFieldWriteable((i - 2) % width, (i - 2) / width);
+			IFieldWriteable f = this.stage.getFieldWriteable((i - 2) % width,
+					(i - 2) / width);
 			for (Orientation o : Orientation.values()) {
 				// Add walls to outer stage borders if not existent
 				boolean stageBorder = false;
@@ -88,11 +90,15 @@ public class StageModelController {
 		int width = Integer.parseInt(parts[0]);
 		int height = Integer.parseInt(parts[1]);
 
-		if (parts.length != width * height + 2 || width != this.stage.getWidth() || height != this.stage.getHeight())
+		this.resizeStage(width - 1, height - 1);
+
+		if (parts.length != width * height + 2 || width != this.stage.getWidth()
+				|| height != this.stage.getHeight())
 			return;
 
 		for (int i = 2; i < parts.length; i++) {
-			IFieldWriteable f = this.stage.getFieldWriteable((i - 2) % width, (i - 2) / width);
+			IFieldWriteable f = this.stage.getFieldWriteable((i - 2) % width,
+					(i - 2) / width);
 			int food = Integer.parseInt(parts[i]);
 			f.setFood(food);
 			f.emitEvent(UpdateType.FIELD_FOOD);
@@ -117,11 +123,15 @@ public class StageModelController {
 		int width = Integer.parseInt(parts[0]);
 		int height = Integer.parseInt(parts[1]);
 
-		if (parts.length != width * height + 2 || width != this.stage.getWidth() || height != this.stage.getHeight())
+		this.resizeStage(width - 1, height - 1);
+
+		if (parts.length != width * height + 2 || width != this.stage.getWidth()
+				|| height != this.stage.getHeight())
 			return;
 
 		for (int i = 2; i < parts.length; i++) {
-			IFieldWriteable f = this.stage.getFieldWriteable((i - 2) % width, (i - 2) / width);
+			IFieldWriteable f = this.stage.getFieldWriteable((i - 2) % width,
+					(i - 2) / width);
 			int growingRate = Integer.parseInt(parts[i]);
 			f.setGrowingRate(growingRate);
 			f.emitEvent(UpdateType.GAME_PARAMETER);
@@ -146,7 +156,10 @@ public class StageModelController {
 			int y = Integer.parseInt(coordinates[1]);
 			int food = Integer.parseInt(message);
 
-			if (x >= 0 && x < this.stage.getWidth() && y >= 0 && y < this.stage.getHeight()) {
+			this.resizeStage(x, y);
+
+			if (x >= 0 && x < this.stage.getWidth() && y >= 0
+					&& y < this.stage.getHeight()) {
 				IFieldWriteable f = this.stage.getFieldWriteable(x, y);
 				f.setFood(food);
 				f.emitEvent(UpdateType.FIELD_FOOD);
@@ -171,7 +184,7 @@ public class StageModelController {
 			int y = Integer.parseInt(parts[i + 1]);
 			Orientation o = Orientation.getBy(parts[i + 2].charAt(0));
 
-			if (x >= 0 && x < this.stage.getWidth() && y >= 0 && y < this.stage.getHeight() && o != null)
+			if (x >= 0 && y >= 0 && o != null)
 				this.stage.addStartPosition(x, y, o);
 		}
 		this.stage.emitEvent(UpdateType.STAGE_STARTPOSITIONS);
@@ -194,5 +207,21 @@ public class StageModelController {
 		}
 
 		return occupiedFields;
+	}
+
+	/**
+	 * Resize the stage to fit the given coordinates.
+	 * 
+	 * @param x
+	 *            The x-coordinate.
+	 * @param y
+	 *            The y-coordinate.
+	 */
+	private void resizeStage(int x, int y) {
+		if (x >= this.stage.getWidth() || y >= this.stage.getHeight()) {
+			this.stage.changeSize(Math.max(x + 1, this.stage.getWidth()),
+					Math.max(y + 1, this.stage.getHeight()));
+			this.stage.emitEvent(UpdateType.STAGE_SIZE);
+		}
 	}
 }

@@ -452,8 +452,8 @@ public class GuiMainControllerReceiveTest {
 		assertEquals(Orientation.NORTH, sp.get(0).getOrientation());
 		
 		// Test discarding of invalid start positions
-		// First too large x, second too large y, third valid, forth invalid Orientation
-		sender.sendMessage("extension/2/map/startpositions", "3,0,n,2,3,e,0,1,s,2,1,b", false);
+		// first valid, second invalid Orientation
+		sender.sendMessage("extension/2/map/startpositions", "0,1,s,2,1,b", false);
 		Thread.sleep(100);
 
 		assertEquals(1, sp.size());
