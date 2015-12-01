@@ -74,15 +74,24 @@ public abstract class AbstractAutomate implements AiEventObserver, Runnable {
 			tempState = state.execute();
 
 			if (state != tempState) {
-				if (tempState.isWait()) {
-					// update position only
-					robotController.updatePosition(nextPosition.x, nextPosition.y,
-							robot.getPosition().getOrientation());
-					// measurements
-					progressMeasurements[currentDirection.ordinal()] = System.currentTimeMillis() - lastWaitTime;
-				}
 				state = tempState;
 				state.start();
+				if (tempState.isWait()) {
+					// measurements
+					progressMeasurements[currentDirection.ordinal()] = System.currentTimeMillis() - lastWaitTime;
+					// update position only
+					new Thread(){
+						public void run() {
+							try {
+								Thread.sleep(10);
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							}
+							robotController.updatePosition(nextPosition.x, nextPosition.y,
+									robot.getPosition().getOrientation());
+						};
+					}.start();
+				}
 			}
 
 			if (System.currentTimeMillis() > nextUpdateTime) {
@@ -115,7 +124,7 @@ public abstract class AbstractAutomate implements AiEventObserver, Runnable {
 	}
 
 	@Override
-	public boolean nextOrientationEvent(Orientation orientation) {
+	public boolean nextOrientationEvent(final Orientation orientation) {
 		if (state.isWait()) {
 			nextPosition.setLocation(robot.getPosition().getX(), robot.getPosition().getY());
 			switch (orientation) {
@@ -139,9 +148,18 @@ public abstract class AbstractAutomate implements AiEventObserver, Runnable {
 			state.start();
 			System.out.println(currentDirection.name());
 
-			// update orientation only
-			robotController.updatePosition(robot.getPosition().getX(), robot.getPosition().getY(), orientation);
-
+			new Thread(){
+				public void run() {
+					try {
+						Thread.sleep(10);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					robotController.updatePosition(robot.getPosition().getX(), robot.getPosition().getY(), orientation);
+				};
+			}.start();
+			
 			// measurements
 			lastWaitTime = System.currentTimeMillis();
 
