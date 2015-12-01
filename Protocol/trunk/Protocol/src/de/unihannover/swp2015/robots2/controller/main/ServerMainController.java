@@ -17,7 +17,8 @@ import de.unihannover.swp2015.robots2.model.writeableInterfaces.IRobotWriteable;
  * @version 0.1
  * @author Patrick Kawczynski
  */
-public class ServerMainController extends AbstractMainController implements IServerController {
+public class ServerMainController extends AbstractMainController
+		implements IServerController {
 
 	public ServerMainController() {
 		super();
@@ -29,12 +30,14 @@ public class ServerMainController extends AbstractMainController implements ISer
 	public boolean startMqtt(String brokerUrl) {
 		if (this.mqttController == null) {
 			String clientId = "server";
-			String[] subscribeTopics = { "robot/#", "map/walls", "extension/2/map/setfood",
-					"extension/2/map/setgrowrate", "map/occupied/#", "control/state",
+			String[] subscribeTopics = { "robot/#", "map/walls",
+					"extension/2/map/setfood", "extension/2/map/setgrowrate",
+					"map/occupied/#", "control/state",
 					"extension/2/robot/hesitationtime", "event/error/robot/#" };
 
 			try {
-				this.mqttController = new MqttController(brokerUrl, clientId, this, Arrays.asList(subscribeTopics));
+				this.mqttController = new MqttController(brokerUrl, clientId,
+						this, Arrays.asList(subscribeTopics));
 				return true;
 			} catch (MqttException e) {
 				e.printStackTrace();
@@ -60,22 +63,22 @@ public class ServerMainController extends AbstractMainController implements ISer
 
 		case ROBOT_POSITION:
 		case ROBOT_SETPOSITION:
-			this.robotModelController.mqttRobotPosition(key, message, mqtttopic == MqttTopic.ROBOT_SETPOSITION);
+			this.robotModelController.mqttRobotPosition(key, message,
+					mqtttopic == MqttTopic.ROBOT_SETPOSITION);
 			break;
 
 		case MAP_WALLS:
 			this.stageModelController.mqttSetWalls(message);
+			this.sendInfoMessage(InfoType.INFO, "food",
+					"New walls received - sending current food.");
+			this.echoCompleteFood();
 			break;
 
 		case MAP_INIT_FOOD:
 			this.stageModelController.mqttSetFood(message);
-			this.sendInfoMessage(InfoType.INFO, "food", "New initial food received - echoing.");
-			for (int y = 0; y < this.game.getStage().getHeight(); y++) {
-				for (int x = 0; x < this.game.getStage().getWidth(); x++) {
-					this.sendMqttMessage(MqttTopic.FIELD_FOOD, (x + "-" + y),
-							Integer.toString(this.game.getStage().getField(x, y).getFood()));
-				}
-			}
+			this.sendInfoMessage(InfoType.INFO, "food",
+					"New initial food received - echoing.");
+			this.echoCompleteFood();
 			break;
 
 		case MAP_INIT_GROWINGRATE:
@@ -99,7 +102,8 @@ public class ServerMainController extends AbstractMainController implements ISer
 			break;
 
 		case CONTROL_VIRTUALSPEED:
-			this.gameModelController.mqttSetRobotVirtualspeed(Float.parseFloat(message));
+			this.gameModelController
+					.mqttSetRobotVirtualspeed(Float.parseFloat(message));
 			break;
 
 		case CONTROL_HESITATIONTIME:
@@ -122,28 +126,49 @@ public class ServerMainController extends AbstractMainController implements ISer
 	@Override
 	public void updateScore(String robotId, int score) {
 		this.game.getRobotsWriteable().get(robotId).addScore(score);
-		this.sendMqttMessage(MqttTopic.ROBOT_SCORE, robotId, Integer.toString(score));
+		this.sendMqttMessage(MqttTopic.ROBOT_SCORE, robotId,
+				Integer.toString(score));
 	}
 
 	@Override
 	public void increaseScore(String robotId, int points) {
-		int newScore = this.game.getRobotsWriteable().get(robotId).addScore(points);
-		this.sendMqttMessage(MqttTopic.ROBOT_SCORE, robotId, Integer.toString(newScore));
+		int newScore = this.game.getRobotsWriteable().get(robotId)
+				.addScore(points);
+		this.sendMqttMessage(MqttTopic.ROBOT_SCORE, robotId,
+				Integer.toString(newScore));
 	}
 
 	@Override
 	public void updateFood(int x, int y, int value) {
-		IFieldWriteable f = this.game.getStageWriteable().getFieldWriteable(x, y);
+		IFieldWriteable f = this.game.getStageWriteable().getFieldWriteable(x,
+				y);
 		f.setFood(value);
-		this.sendMqttMessage(MqttTopic.MAP_FOOD, (x + "-" + y), Integer.toString(value));
+		this.sendMqttMessage(MqttTopic.FIELD_FOOD, (x + "-" + y),
+				Integer.toString(value));
 		f.emitEvent(UpdateType.FIELD_FOOD);
 	}
 
 	@Override
 	public void increaseFood(int x, int y, int value) {
-		IFieldWriteable f = this.game.getStageWriteable().getFieldWriteable(x, y);
+		IFieldWriteable f = this.game.getStageWriteable().getFieldWriteable(x,
+				y);
 		int newFood = f.incrementFood(value);
-		this.sendMqttMessage(MqttTopic.MAP_FOOD, (x + "-" + y), Integer.toString(newFood));
+		this.sendMqttMessage(MqttTopic.FIELD_FOOD, (x + "-" + y),
+				Integer.toString(newFood));
 		f.emitEvent(UpdateType.FIELD_FOOD);
+	}
+
+	/**
+	 * Sends current food state for each single field as mqtt message to
+	 * FIELD_FOOD.
+	 */
+	private void echoCompleteFood() {
+		for (int y = 0; y < this.game.getStage().getHeight(); y++) {
+			for (int x = 0; x < this.game.getStage().getWidth(); x++) {
+				this.sendMqttMessage(MqttTopic.FIELD_FOOD, (x + "-" + y),
+						Integer.toString(
+								this.game.getStage().getField(x, y).getFood()));
+			}
+		}
 	}
 }
