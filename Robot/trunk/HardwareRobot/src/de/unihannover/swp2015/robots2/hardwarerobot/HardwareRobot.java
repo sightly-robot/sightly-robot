@@ -3,8 +3,6 @@ package de.unihannover.swp2015.robots2.hardwarerobot;
 import java.awt.Color;
 
 import de.unihannover.swp2015.robots2.abstractrobot.AbstractRobot;
-import de.unihannover.swp2015.robots2.controller.main.RobotMainController;
-import de.unihannover.swp2015.robots2.core.AI;
 import de.unihannover.swp2015.robots2.hardwarerobot.automate.HardwareAutomate;
 import de.unihannover.swp2015.robots2.hardwarerobot.pi2gocontroller.BlinkLEDAndServoController;
 import de.unihannover.swp2015.robots2.hardwarerobot.pi2gocontroller.LEDAndServoController;
@@ -24,6 +22,7 @@ public class HardwareRobot extends AbstractRobot {
 	 * Initializes the sensor controllers, automate and AI.
 	 */
 	public HardwareRobot() {
+		super(true);
 		// PreInitialize Controller Instances:
 		BlinkLEDAndServoController.getInstance();
 		Pi2GoGPIOController.getInstance();
@@ -32,22 +31,13 @@ public class HardwareRobot extends AbstractRobot {
 		// ColorSensorController.getInstance();
 		// CompassController.getInstance();
 
-		robotController = new RobotMainController(true);
-		while(!robotController.startMqtt("tcp://10.42.0.1/"))
-		{
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
-
-		blinkOnce();
+		//blinkOnce();
 
 		automate = new HardwareAutomate(robotController);
 		automate.start();
 
-		ai = new AI(robotController);
+		((HardwareAutomate)automate).blink(robotController.getMyself().getColor());
+		
 		ai.setAiEventObserver(automate);
 	}
 
@@ -57,7 +47,7 @@ public class HardwareRobot extends AbstractRobot {
 	private void blinkOnce() {
 		LEDAndServoController.getInstance().setAllLEDs(robotController.getMyself().getColor());
 		try {
-			Thread.sleep(200);
+			Thread.sleep(1000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
