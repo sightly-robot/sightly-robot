@@ -26,8 +26,8 @@ import de.unihannover.swp2015.robots2.model.writeableInterfaces.IRobotWriteable;
  * @version 0.2
  * @author Michael Thies
  */
-public class GuiMainController extends AbstractMainController implements
-		IGuiController {
+public class GuiMainController extends AbstractMainController
+		implements IGuiController {
 
 	IVisualizationControl visualizationControl;
 	IHardwareRobotControl hardwareRobotControl;
@@ -83,20 +83,20 @@ public class GuiMainController extends AbstractMainController implements
 		case ROBOT_PROGRESS:
 			this.robotModelController.mqttRobotProgress(key, message);
 			break;
-				
+
 		case ROBOT_SCORE:
 			this.robotModelController.mqttScoreUpdate(key, message);
 			break;
-			
+
 		case CONTROL_VIRTUALSPEED:
-			this.gameModelController.mqttSetRobotVirtualspeed(Float
-					.parseFloat(message));
+			this.gameModelController
+					.mqttSetRobotVirtualspeed(Float.parseFloat(message));
 			break;
 
 		case CONTROL_HESITATIONTIME:
 			this.gameModelController.mqttSetRobotHesitationTime(message);
 			break;
-			
+
 		case MAP_WALLS:
 			this.stageModelController.mqttSetWalls(message);
 			break;
@@ -108,7 +108,7 @@ public class GuiMainController extends AbstractMainController implements
 		case FIELD_FOOD:
 			this.stageModelController.mqttSetFieldFood(key, message);
 			break;
-			
+
 		case MAP_STARTPOSITIONS:
 			this.stageModelController.mqttSetStartpositions(message);
 			break;
@@ -116,7 +116,7 @@ public class GuiMainController extends AbstractMainController implements
 		case FIELD_OCCUPIED_SET:
 			this.fieldStateModelController.mqttFieldOccupy(key, message);
 			break;
-		
+
 		case FIELD_OCCUPIED_RELEASE:
 			this.fieldStateModelController.mqttFieldOccupy(key, message);
 			break;
@@ -266,16 +266,21 @@ public class GuiMainController extends AbstractMainController implements
 
 	@Override
 	public void deleteRobot(String id) {
-		this.mqttController.deleteRetainedMessage(MqttTopic.ROBOT_TYPE
-				.toString(id));
+		// Delete robot
+		this.mqttController
+				.deleteRetainedMessage(MqttTopic.ROBOT_TYPE.toString(id));
+
+		this.mqttController
+				.deleteRetainedMessage(MqttTopic.ROBOT_POSITION.toString(id));
 
 		// Release all fields occupied by this robot
 		for (int x = 0; x < this.game.getStage().getWidth(); x++) {
 			for (int y = 0; x < this.game.getStage().getHeight(); y++) {
 				IField f = this.game.getStage().getField(x, y);
-				if (f.getState() == State.OCCUPIED && f.getLockedBy().equals(id))
-					this.sendMqttMessage(MqttTopic.FIELD_OCCUPIED_RELEASE, x
-							+ "-" + y, "");
+				if (f.getState() == State.OCCUPIED
+						&& f.getLockedBy().equals(id))
+					this.sendMqttMessage(MqttTopic.FIELD_OCCUPIED_RELEASE,
+							x + "-" + y, "");
 			}
 		}
 	}

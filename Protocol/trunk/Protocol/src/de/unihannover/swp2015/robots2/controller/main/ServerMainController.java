@@ -59,6 +59,9 @@ public class ServerMainController extends AbstractMainController
 		switch (mqtttopic) {
 		case ROBOT_TYPE:
 			this.gameModelController.mqttAddRobot(key, message);
+			if (message.equals(""))
+				this.mqttController.deleteRetainedMessage(
+						MqttTopic.ROBOT_SCORE.toString(key));
 			break;
 
 		case ROBOT_POSITION:
