@@ -35,7 +35,7 @@ public class AI extends AbstractAi implements IModelObserver {
 		if (this.game.getStage().getWidth() != 0 && this.game.getStage().getHeight() != 0) {
 			try {
 				this.graph = new AIGraph(this.game.getStage(), myself);
-				
+
 				this.graph.setRobotPosition(myself, iRobotController.getMyself().getPosition());
 			} catch (InvalidStageException e) {
 				e.printStackTrace();
@@ -52,9 +52,11 @@ public class AI extends AbstractAi implements IModelObserver {
 		case FIELD_FOOD:
 			break;
 		case STAGE_WALL:
+			System.out.println("WALL");
 			initialize();
 			if (game.isRunning() && myself.getPosition() != null) {
 				try {
+					System.out.println("WALLStart");
 					fireNextOrientationEvent(getNextOrientation());
 				} catch (NoValidOrientationException e) {
 				}
@@ -71,24 +73,36 @@ public class AI extends AbstractAi implements IModelObserver {
 			{
 				IRobot robot = (IRobot) event.getObject();
 				IPosition pos = robot.getPosition();
-
-				this.graph.setRobotPosition(myself, pos);
 				
-				if (this.game.isRunning() && myself.getPosition() != null) {
-					if (robot.getPosition().getX() != this.graph.getMyPosition().getX()
-							|| robot.getPosition().getY() != this.graph.getMyPosition().getY()) {
-						try {
-							fireNextOrientationEvent(getNextOrientation());
-						} catch (NoValidOrientationException e) {
+				if(myself.getPosition() == null || (myself.getPosition() != null && (myself.getPosition().getX() != pos.getX() || myself.getPosition().getY() != pos.getY())))
+				{
+					System.out.println("POS"+pos.getX()+pos.getY());
+					this.graph.setRobotPosition(myself, pos);
+					
+					if (this.game.isRunning() && myself.getPosition() != null) {
+						if (robot == iRobotController.getMyself()) {
+							try {
+								System.out.print("POSStart");
+								Orientation o = getNextOrientation();
+								System.out.println(o.name());
+								fireNextOrientationEvent(o);
+							} catch (NoValidOrientationException e) {
+							}
 						}
 					}
+				}else if(myself.getOrientation() == null || myself.getOrientation() != pos.getOrientation())
+				{
+					System.out.println("Orientation"+pos.getOrientation().name());
+					myself.setOrientation(pos.getOrientation());
 				}
 			}
 			break;
 		case GAME_STATE: // reicht das?
+			System.out.println("Game");
 			IGame game = (IGame) event.getObject();
 			if (game.isRunning() && graph != null && myself.getPosition() != null) {
 				try {
+					System.out.println("GAMEStart");
 					fireNextOrientationEvent(getNextOrientation());
 				} catch (NoValidOrientationException e) {
 				}
