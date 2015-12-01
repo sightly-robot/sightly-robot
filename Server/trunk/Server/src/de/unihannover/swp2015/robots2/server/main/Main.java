@@ -1,6 +1,7 @@
 package de.unihannover.swp2015.robots2.server.main;
 
 import de.unihannover.swp2015.robots2.controller.interfaces.IServerController;
+import de.unihannover.swp2015.robots2.controller.interfaces.InfoType;
 import de.unihannover.swp2015.robots2.controller.main.ServerMainController;
 
 public class Main {
@@ -19,6 +20,7 @@ public class Main {
 		}
 		
 		IServerController controller = new ServerMainController();
+		controller.setInfoLevel(InfoType.DEBUG);
 		
 		Harvester harvester = new Harvester(controller);
 		
