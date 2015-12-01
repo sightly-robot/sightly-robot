@@ -28,8 +28,9 @@ public class ServerMainController extends AbstractMainController implements ISer
 	public boolean startMqtt(String brokerUrl) {
 		if (this.mqttController == null) {
 			String clientId = "server";
-			// TODO subscription list
-			String[] subscribeTopics = {};
+			String[] subscribeTopics = { "robot/#", "map/walls", "extension/2/map/setfood",
+					"extension/2/map/setgrowrate", "map/occupied/#", "control/state",
+					"extension/2/robot/hesitationtime", "event/error/robot/#" };
 
 			try {
 				this.mqttController = new MqttController(brokerUrl, clientId, this, Arrays.asList(subscribeTopics));
@@ -95,9 +96,6 @@ public class ServerMainController extends AbstractMainController implements ISer
 
 		case CONTROL_HESITATIONTIME:
 			this.gameModelController.mqttSetRobotHesitationTime(message);
-			break;
-
-		case EVENT_ERROR_SERVER_CONNECTION:
 			break;
 
 		case EVENT_ERROR_ROBOT_CONNECTION:
