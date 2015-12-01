@@ -36,6 +36,7 @@ public interface IState {
 	 * 
 	 * @return 0.0 <= progress <= 1.0
 	 */
+	@Deprecated
 	public double getProgress();
 
 	/**
