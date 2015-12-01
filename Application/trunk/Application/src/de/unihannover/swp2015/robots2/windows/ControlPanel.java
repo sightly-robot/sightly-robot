@@ -23,12 +23,10 @@ import org.apache.pivot.wtk.TableView;
 import org.apache.pivot.wtk.Window;
 import org.json.JSONException;
 
-import de.unihannover.swp2015.robots2.CardinalDirection;
-import de.unihannover.swp2015.robots2.GameMap;
-import de.unihannover.swp2015.robots2.GameState;
-import de.unihannover.swp2015.robots2.InvalidMapFile;
-import de.unihannover.swp2015.robots2.Robot;
+import de.unihannover.swp2015.robots2.MapLoader;
 import de.unihannover.swp2015.robots2.components.StrategicVisualization;
+import de.unihannover.swp2015.robots2.controller.main.GuiMainController;
+import de.unihannover.swp2015.robots2.exceptions.InvalidMapFile;
 
 import org.apache.pivot.wtk.DesktopApplicationContext;
 import org.apache.pivot.wtk.Display;
@@ -46,6 +44,7 @@ public class ControlPanel extends Window implements Bindable {
 	@BXML private PushButton startProjection;
 	@BXML private PushButton openConfiguration;
 	@BXML private PushButton closeVisualization;
+	@BXML private PushButton connectButton;
 
 	// Participants table
 	@BXML private TableView participantTable; 
@@ -53,8 +52,8 @@ public class ControlPanel extends Window implements Bindable {
 	// Visualization
 	@BXML private StrategicVisualization visualization;
 	
-	// Configurator Window
-	private Configurator configurator = null;
+	private GuiMainController controller;
+	private Configurator configurator;
 	
 	/**
 	 * initialize is called by pivot after creating the object.
@@ -65,12 +64,49 @@ public class ControlPanel extends Window implements Bindable {
 	 */
 	@Override
 	public void initialize(Map<String, Object> namespace, URL location, Resources resources) {
-		//System.out.println(location);
+		createControlPanel();
 		
 		loadMap.getButtonPressListeners().add(loadMapAction);
 		closeVisualization.getButtonPressListeners().add(closeApp);
 		openConfiguration.getButtonPressListeners().add(openConfigurator);
+		startGame.getButtonPressListeners().add(startGameAction);
+		stopGame.getButtonPressListeners().add(stopGameAction);
+		pauseGame.getButtonPressListeners().add(pauseGameAction);
+		connectButton.getButtonPressListeners().add(connectAction);
 	}	
+	
+	/**
+	 * Creates the control panel controller.
+	 */
+	private void createControlPanel()
+	{
+		try {
+			BXMLSerializer bxmlSerializer = new BXMLSerializer();
+	        bxmlSerializer.getNamespace().put("application", this);
+	        this.configurator = (Configurator)bxmlSerializer.readObject(getClass().getResource("/de/unihannover/swp2015/robots2/Configurator.bxml"));
+			configurator.setPreferredSize(initialWidth, initialHeight);
+		} catch (IOException e) {
+			e.printStackTrace();
+			Alert.alert(MessageType.INFO, e.getMessage(), ControlPanel.this);
+			return;
+		} catch (SerializationException e) {
+			e.printStackTrace();
+			Alert.alert(MessageType.INFO, "Could not parse: \n" + e.getMessage(), ControlPanel.this);
+			return;
+		} catch (Exception e) {
+			e.printStackTrace();
+			Alert.alert(MessageType.INFO, "Other exception: \n" + e.getMessage(), ControlPanel.this);
+			return;
+		}
+	}
+	
+	/**
+	 * Sets the network controller.
+	 * @param controller GuiController
+	 */
+	public void setController(GuiMainController controller) {
+		this.controller = controller;
+	}
 	
 	/**
 	 * Action performed when loadMap button is clicked.
@@ -90,30 +126,22 @@ public class ControlPanel extends Window implements Bindable {
 					if (sheet.getResult()) {
 						File file = fileBrowserSheet.getSelectedFile();
 						try {
-							GameMap map = new GameMap(file.getAbsolutePath());
-							GameState.getInstance().setMap(map);
+							// has side effects
+							new MapLoader(controller, file.getAbsolutePath());					
 							
-							// REMOVE ME START
-							GameState.getInstance().addRobot(new Robot(
-								4, 2, CardinalDirection.EAST, true
-							));
-							GameState.getInstance().addRobot(new Robot(
-								4, 3, CardinalDirection.EAST, false
-							));
-							// REMOVE ME END							
-							
-							visualization.loadState(GameState.getInstance());
+							visualization.setGame(controller.getGame());
 							visualization.repaint();
+							
+							startGame.setEnabled(true);
+							pauseGame.setEnabled(true);
+							stopGame.setEnabled(true);
 						} catch (JSONException e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 							Alert.alert(MessageType.ERROR, "The json file is not valid json!\n" + e.getMessage(), ControlPanel.this);
 						} catch (InvalidMapFile e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 							Alert.alert(MessageType.ERROR, e.getMessage(), ControlPanel.this);
 						} catch (FileNotFoundException e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 							Alert.alert(MessageType.ERROR, e.getMessage(), ControlPanel.this);
 						}
@@ -130,6 +158,53 @@ public class ControlPanel extends Window implements Bindable {
 		@Override
 		public void buttonPressed(Button button) {
 			DesktopApplicationContext.exit();
+		}
+	};
+	
+	/**
+	 * Connects with the MQTT server.
+	 */
+	private ButtonPressListener connectAction = new ButtonPressListener() {
+		@Override
+		public void buttonPressed(Button button) {
+			try {
+				if (!controller.startMqtt("tcp://" + configurator.getGeneralOptions().getRemoteUrl()))
+					Alert.alert(MessageType.ERROR, "Could not connect", ControlPanel.this);
+				else
+					loadMap.setEnabled(true);
+			} catch (IllegalArgumentException exc) {
+			}
+		}
+	};
+	
+	/**
+	 * Button press action to start the game
+	 */
+	private ButtonPressListener startGameAction = new ButtonPressListener() {
+		@Override
+		public void buttonPressed(Button button) {
+			controller.startGame();
+		}
+	};
+	
+	/**
+	 * Button press action to pause the game
+	 */
+	private ButtonPressListener pauseGameAction = new ButtonPressListener() {
+		@Override
+		public void buttonPressed(Button button) {
+			controller.stopGame();
+		}
+	};
+	
+	/**
+	 * Button press action to stop the game
+	 */
+	private ButtonPressListener stopGameAction = new ButtonPressListener() {
+		@Override
+		public void buttonPressed(Button button) {
+			controller.stopGame();
+			controller.resetGame();
 		}
 	};
 	
@@ -156,25 +231,7 @@ public class ControlPanel extends Window implements Bindable {
 				}
 				@Override
 				public void hostWindowOpened(Display display) {
-					try {
-						BXMLSerializer bxmlSerializer = new BXMLSerializer();
-				        bxmlSerializer.getNamespace().put("application", this);
-				        configurator = (Configurator)bxmlSerializer.readObject(getClass().getResource("/de/unihannover/swp2015/robots2/Configurator.bxml"));
-						configurator.setPreferredSize(initialWidth, initialHeight);
-						configurator.open(display);		
-					} catch (IOException e) {
-						e.printStackTrace();
-						Alert.alert(MessageType.INFO, e.getMessage(), ControlPanel.this);
-						return;
-					} catch (SerializationException e) {
-						e.printStackTrace();
-						Alert.alert(MessageType.INFO, "Could not parse: \n" + e.getMessage(), ControlPanel.this);
-						return;
-					} catch (Exception e) {
-						e.printStackTrace();
-						Alert.alert(MessageType.INFO, "Other exception: \n" + e.getMessage(), ControlPanel.this);
-						return;
-					}
+					configurator.open(display);
 				}	        	
 	        });        			
 		}		

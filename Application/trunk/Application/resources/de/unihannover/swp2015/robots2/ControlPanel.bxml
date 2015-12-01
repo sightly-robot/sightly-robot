@@ -24,13 +24,14 @@
 								</columns>
 								
 								<TablePane.Row height="24">
-									<PushButton bxml:id="loadMap" buttonData="Karte Laden" styles="{font:{size:16}, color:'#FFFFFF', backgroundColor:'#505050'}"/>
+									<PushButton bxml:id="connectButton" buttonData="Verbinden" styles="{font:{size:16}, color:'#FFFFFF', backgroundColor:'#505050'}"/>
+									<PushButton bxml:id="loadMap" enabled="false" buttonData="Karte Laden" styles="{font:{size:16}, color:'#FFFFFF', backgroundColor:'#505050'}"/>
 								</TablePane.Row>
 								
 								<TablePane.Row height="24">
-									<PushButton bxml:id="startGame" styles="{font:{size:16}, color:'#FFFFFF', backgroundColor:'#505050'}" buttonData="Start"/>
-									<PushButton bxml:id="pauseGame" styles="{font:{size:16}, color:'#FFFFFF', backgroundColor:'#505050'}" buttonData="Pause"/>
-									<PushButton bxml:id="stopGame" styles="{font:{size:16}, color:'#FFFFFF', backgroundColor:'#505050'}" buttonData="Stop"/>
+									<PushButton bxml:id="startGame" enabled="false" styles="{font:{size:16}, color:'#FFFFFF', backgroundColor:'#505050'}" buttonData="Start"/>
+									<PushButton bxml:id="pauseGame" enabled="false" styles="{font:{size:16}, color:'#FFFFFF', backgroundColor:'#505050'}" buttonData="Pause"/>
+									<PushButton bxml:id="stopGame" enabled="false" styles="{font:{size:16}, color:'#FFFFFF', backgroundColor:'#505050'}" buttonData="Stop"/>
 								</TablePane.Row>
 								
 							</TablePane>

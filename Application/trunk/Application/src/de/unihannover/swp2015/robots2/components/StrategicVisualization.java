@@ -13,14 +13,13 @@ import org.apache.pivot.wtk.Component;
 import org.apache.pivot.wtk.Menu;
 import org.apache.pivot.wtk.MenuHandler;
 import org.apache.pivot.wtk.Panel;
-import org.apache.pivot.wtk.Prompt;
 import org.apache.pivot.wtk.media.Drawing;
 import org.apache.pivot.wtk.media.SVGDiagramSerializer;
 import org.apache.pivot.beans.Bindable;
 
 import com.kitfox.svg.SVGDiagram;
 
-import de.unihannover.swp2015.robots2.GameState;
+import de.unihannover.swp2015.robots2.model.interfaces.IGame;
 import de.unihannover.swp2015.robots2.svg.SvgConstructor;
 
 /**
@@ -29,8 +28,8 @@ import de.unihannover.swp2015.robots2.svg.SvgConstructor;
  */
 public class StrategicVisualization extends Panel implements Bindable {
 	private Drawing drawing; // svg drawing
-	private GameState state;
 	private SvgConstructor svgConstructor;
+	private IGame game;
 	
 	/**
 	 * Constructor loads default svg.
@@ -39,10 +38,20 @@ public class StrategicVisualization extends Panel implements Bindable {
 	public StrategicVisualization() throws IOException {		
 		super();
 		
-		state = null;
-		
 		// load default svg
 		loadDefault();	
+	}
+	
+	/**
+	 * Puts the game into the visualization.
+	 * @param game
+	 */
+	public void setGame(IGame game) {
+		this.game = game;
+		svgConstructor = new SvgConstructor(game);
+		update();
+		generateDrawing();
+		setMenuHandler(menuHandler);
 	}
 	
 	/**
@@ -51,7 +60,7 @@ public class StrategicVisualization extends Panel implements Bindable {
 	private MenuHandler menuHandler = new MenuHandler.Adapter() {
 		@Override
 		public boolean configureContextMenu(Component component, Menu menu, final int x, final int y) {
-			final Component descendant = getDescendantAt(x, y);
+			//final Component descendant = getDescendantAt(x, y);
 			
 			// Section for field control
 			Menu.Section menuSection = new Menu.Section();
@@ -61,9 +70,9 @@ public class StrategicVisualization extends Panel implements Bindable {
             getCoord.setAction(new Action() {
                 @Override
                 public void perform(Component source) {
-                	System.out.print((int)(state.getMap().getWidth() * (double)x / (double)StrategicVisualization.this.getWidth()));
+                	System.out.print((int)(game.getStage().getWidth() * (double)x / (double)StrategicVisualization.this.getWidth()));
                 	System.out.print(":");
-                	System.out.println((int)(state.getMap().getWidth() * (double)y / (double)StrategicVisualization.this.getHeight()));
+                	System.out.println((int)(game.getStage().getWidth() * (double)y / (double)StrategicVisualization.this.getHeight()));
                 }
             });
  
@@ -71,18 +80,6 @@ public class StrategicVisualization extends Panel implements Bindable {
 			return false;
 		}
 	};
-	
-	/**
-	 * Loads GameState, which contains all robots and the map.
-	 * @param state
-	 */
-	public void loadState(GameState state) {
-		this.state = state;
-		svgConstructor = new SvgConstructor(state);
-		update();
-		generateDrawing();
-		setMenuHandler(menuHandler);
-	}
 	
 	/**
 	 * Loads a default svg into the viewport. We cannot display a map before the user loaded any.
@@ -101,7 +98,7 @@ public class StrategicVisualization extends Panel implements Bindable {
 	 * Generates an svg graphic from data.
 	 */
 	private void generateDrawing() {
-		if (state == null)
+		if (game == null)
 			return;
 		
 		SVGDiagram diagram = svgConstructor.getDiagram();
@@ -116,7 +113,7 @@ public class StrategicVisualization extends Panel implements Bindable {
 		svgConstructor.drawResources();
 		svgConstructor.drawWalls();
 		
-		if (!state.isRunning())
+		if (!game.isRunning())
 			svgConstructor.drawStartPositions();
 		
 		svgConstructor.drawRobots();

@@ -7,6 +7,7 @@ import java.io.Reader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.kitfox.svg.Group;
@@ -19,15 +20,15 @@ import com.kitfox.svg.SVGException;
 import com.kitfox.svg.SVGUniverse;
 import com.kitfox.svg.animation.AnimationElement;
 
-import de.unihannover.swp2015.robots2.CardinalDirection;
-import de.unihannover.swp2015.robots2.Field;
-import de.unihannover.swp2015.robots2.GameState;
-import de.unihannover.swp2015.robots2.Position;
-import de.unihannover.swp2015.robots2.Robot;
+import de.unihannover.swp2015.robots2.model.interfaces.IField;
+import de.unihannover.swp2015.robots2.model.interfaces.IGame;
+import de.unihannover.swp2015.robots2.model.interfaces.IPosition;
+import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
+import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
 import de.unihannover.swp2015.robots2.util.ResourceLoader;
 
 public class SvgConstructor {
-	private GameState state;
+	private IGame game;
 	private SVGDiagram diagram;
 	private SVGUniverse universe;
 	
@@ -41,9 +42,9 @@ public class SvgConstructor {
 	 * @param state The game state class.
 	 * @param diagram A diagram to put the things into.
 	 */
-	public SvgConstructor(GameState state) {
+	public SvgConstructor(IGame game) {
 		this.universe = new SVGUniverse();
-		this.state = state;
+		this.game = game;
 		resetSvg();
 	}
 	
@@ -86,24 +87,22 @@ public class SvgConstructor {
 		}
 		
 		try {
-			double width = state.getMap().getWidth();
-			double height = state.getMap().getHeight();		
+			double width = game.getStage().getWidth();
+			double height = game.getStage().getHeight();		
 			double fieldWidth = svgWidth / width;
 			double fieldHeight = svgHeight / height;
 			
 			// Draw resources
-			List<List<Field>> fields = state.getMap().getFields();
-			for (int y = 0; y < fields.size(); y++) {
-				List <Field> row = fields.get(y);
-				for (int x = 0; x < row.size(); ++x) {
-					Field field = row.get(x);
+			for (int y = 0; y < game.getStage().getHeight(); y++) {
+				for (int x = 0; x < game.getStage().getWidth(); ++x) {
+					IField field = game.getStage().getField(x, y);
 					
 					Rect rect = new Rect();
 					rect.addAttribute("x", AnimationElement.AT_XML, Double.toString(x * fieldWidth));
 					rect.addAttribute("y", AnimationElement.AT_XML, Double.toString(y * fieldHeight));
 					rect.addAttribute("width", AnimationElement.AT_XML, Double.toString(fieldWidth));
 					rect.addAttribute("height", AnimationElement.AT_XML, Double.toString(fieldHeight));
-					rect.addAttribute("fill", AnimationElement.AT_XML, (new colorStyleBuilder()).getColorStyle(1. - (double)field.getResources() / 10.));
+					rect.addAttribute("fill", AnimationElement.AT_XML, (new colorStyleBuilder()).getColorStyle(1. - (double)field.getFood() / 10.));
 					
 					Group resources = (Group)diagram.getElement("resources");
 					resources.loaderAddChild(null, rect);
@@ -121,29 +120,24 @@ public class SvgConstructor {
 	/**
 	 * Draws all walls onto the svg
 	 */
-	public void drawWalls() {		
-		List<List<Field>> fields = state.getMap().getFields();
-		
-		double width = state.getMap().getWidth();
-		double height = state.getMap().getHeight();		
-		double fieldWidth = svgWidth / width;
-		double fieldHeight = svgHeight / height;
+	public void drawWalls() {
+		double fieldWidth = svgWidth / game.getStage().getWidth();
+		double fieldHeight = svgHeight / game.getStage().getHeight();
 
 		try {
-			for (int y = 0; y < fields.size(); y++) {
-				List <Field> row = fields.get(y);
-				for (int x = 0; x < row.size(); ++x) {
-					Field field = row.get(x);
+			for (int y = 0; y < game.getStage().getHeight(); y++) {
+				for (int x = 0; x < game.getStage().getWidth(); ++x) {
+					IField field = game.getStage().getField(x, y);
 					
-					Set<CardinalDirection> fieldWalls = field.getWalls();
+					Set<Orientation> fieldWalls = field.getWalls();
 					
-					for (CardinalDirection wall : fieldWalls) {
+					for (Orientation wall : fieldWalls) {
 						double Ax = x * fieldWidth;
 						double Ay = y * fieldHeight;
-						double x1 = Ax + (wall == CardinalDirection.EAST ? fieldWidth : 0);
-						double x2 = Ax + (wall == CardinalDirection.WEST ? 0 : fieldWidth);
-						double y1 = Ay + (wall == CardinalDirection.SOUTH ? fieldHeight : 0);
-						double y2 = Ay + (wall == CardinalDirection.NORTH ? 0 : fieldHeight);
+						double x1 = Ax + (wall == Orientation.EAST ? fieldWidth : 0);
+						double x2 = Ax + (wall == Orientation.WEST ? 0 : fieldWidth);
+						double y1 = Ay + (wall == Orientation.SOUTH ? fieldHeight : 0);
+						double y2 = Ay + (wall == Orientation.NORTH ? 0 : fieldHeight);
 						
 						Line line = new Line();
 						line.addAttribute("x1", AnimationElement.AT_XML, Double.toString(x1));
@@ -171,16 +165,14 @@ public class SvgConstructor {
 	 * Draws all real robots onto the svg
 	 */
 	public void drawRobots() {
-		List <Robot> robots = state.getRobots();
+		Map<String, ? extends IRobot> robots = game.getRobots();
 
-		double width = state.getMap().getWidth();
-		double height = state.getMap().getHeight();		
-		double fieldWidth = svgWidth / width;
-		double fieldHeight = svgHeight / height;
+		double fieldWidth = svgWidth / game.getStage().getWidth();
+		double fieldHeight = svgHeight / game.getStage().getHeight();
 		
 		try {			
-			for (Robot r : robots) {
-				if (r.isVirtual())
+			for (IRobot r : robots.values()) {
+				if (!r.isHardwareRobot())
 					continue; 
 				
 				ImageSVG robot = new ImageSVG();			
@@ -197,7 +189,7 @@ public class SvgConstructor {
 				} catch (URISyntaxException e) {}
 				
 				robot.addAttribute("transform", AnimationElement.AT_XML, 
-					TransformationStringBuilder.getObjectRotationTransformation(r.getPosition(), CardinalDirection.NORTH, fieldWidth, fieldHeight)
+					TransformationStringBuilder.getObjectRotationTransformation(r.getPosition(), Orientation.NORTH, fieldWidth, fieldHeight)
 				);
 				
 				Group robos = (Group)diagram.getElement("robots");
@@ -215,16 +207,14 @@ public class SvgConstructor {
 	 * Draws all virtual robots onto the svg
 	 */
 	public void drawVirtualRobots() {		
-		List <Robot> robots = state.getRobots();
+		Map<String, ? extends IRobot> robots = game.getRobots();
 
-		double width = state.getMap().getWidth();
-		double height = state.getMap().getHeight();		
-		double fieldWidth = svgWidth / width;
-		double fieldHeight = svgHeight / height;
+		double fieldWidth = svgWidth / game.getStage().getWidth();
+		double fieldHeight = svgHeight / game.getStage().getHeight();
 		
 		try {			
-			for (Robot r : robots) {
-				if (!r.isVirtual())
+			for (IRobot r : robots.values()) {
+				if (r.isHardwareRobot())
 					continue; 
 				
 				ImageSVG robot = new ImageSVG();			
@@ -241,7 +231,7 @@ public class SvgConstructor {
 				} catch (URISyntaxException e) {}
 				
 				robot.addAttribute("transform", AnimationElement.AT_XML, 
-					TransformationStringBuilder.getObjectRotationTransformation(r.getPosition(), CardinalDirection.WEST, fieldWidth, fieldHeight)
+					TransformationStringBuilder.getObjectRotationTransformation(r.getPosition(), Orientation.WEST, fieldWidth, fieldHeight)
 				);
 				
 				Group robos = (Group)diagram.getElement("virtualRobots");
@@ -258,18 +248,14 @@ public class SvgConstructor {
 	/**
 	 * Draws all start positions as arrows into the svg.
 	 */
-	public void drawStartPositions() {		
-		
-		
-		List <Position> startPositions = state.getMap().getStartPositions();
-		
-		double width = state.getMap().getWidth();
-		double height = state.getMap().getHeight();		
-		double fieldWidth = svgWidth / width;
-		double fieldHeight = svgHeight / height;
+	public void drawStartPositions() {
+		List <IPosition> startPositions = game.getStage().getStartPositions();
+
+		double fieldWidth = svgWidth / game.getStage().getWidth();
+		double fieldHeight = svgHeight / game.getStage().getHeight();
 		
 		try {
-			for (Position pos : startPositions) {
+			for (IPosition pos : startPositions) {
 				Path path = new Path();
 				try {
 					path.addAttribute("d", AnimationElement.AT_XML, ResourceLoader.loadResourceAsString("/de/unihannover/swp2015/robots2/Arrow.txt"));
@@ -284,7 +270,7 @@ public class SvgConstructor {
 				path.addAttribute("stroke-linejoin", AnimationElement.AT_XML, "round");
 				path.addAttribute("fill", AnimationElement.AT_XML, "#FF0000");
 				path.addAttribute("transform", AnimationElement.AT_XML, 
-					TransformationStringBuilder.getObjectRotationTransformation(pos, CardinalDirection.EAST, fieldWidth, fieldHeight)
+					TransformationStringBuilder.getObjectRotationTransformation(pos, Orientation.EAST, fieldWidth, fieldHeight)
 				);
 				
 				Group positions = (Group)diagram.getElement("startPositions");

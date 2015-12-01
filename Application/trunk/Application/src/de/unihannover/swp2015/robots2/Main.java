@@ -6,11 +6,13 @@ import org.apache.pivot.wtk.Application;
 import org.apache.pivot.wtk.DesktopApplicationContext;
 import org.apache.pivot.wtk.Display;
 
+import de.unihannover.swp2015.robots2.controller.main.GuiMainController;
 import de.unihannover.swp2015.robots2.windows.ControlPanel;
 
 public class Main implements Application {
 	
 	private ControlPanel window;
+	private GuiMainController controller;
 	
 	/**
 	 * Application entry function main.
@@ -28,11 +30,13 @@ public class Main implements Application {
 	 * @param display An Apache Pivot display 
 	 */
 	@Override
-    public void startup(Display display, Map<String, String> properties) throws Exception { 
+    public void startup(Display display, Map<String, String> properties) throws Exception {		
         BXMLSerializer bxmlSerializer = new BXMLSerializer();
         bxmlSerializer.getNamespace().put("application", this);
-        
-        window = (ControlPanel)bxmlSerializer.readObject(getClass().getResource("/de/unihannover/swp2015/robots2/ControlPanel.bxml"));        
+
+	    this.controller = new GuiMainController();
+        window = (ControlPanel)bxmlSerializer.readObject(getClass().getResource("/de/unihannover/swp2015/robots2/ControlPanel.bxml"));
+        window.setController(controller);
         window.setPreferredSize(900, 600);
         window.open(display);
     }
