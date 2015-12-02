@@ -44,8 +44,6 @@ public class HardwareRobot extends AbstractRobot {
 			}
 		});
 
-		//blinkOnce();
-
 		automate = new HardwareAutomate(robotController);
 		automate.start();
 		
@@ -54,18 +52,5 @@ public class HardwareRobot extends AbstractRobot {
 		((HardwareAutomate)automate).blink(robotController.getMyself().getColor());
 		
 		ai.setAiEventObserver(automate);
-	}
-
-	/**
-	 * Blinks once using the color of the robot.
-	 */
-	private void blinkOnce() {
-		LEDAndServoController.getInstance().setAllLEDs(robotController.getMyself().getColor());
-		try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		LEDAndServoController.getInstance().setAllLEDs(Color.BLACK);
 	}
 }

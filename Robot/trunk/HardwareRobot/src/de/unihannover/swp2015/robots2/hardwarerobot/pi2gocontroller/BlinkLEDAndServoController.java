@@ -61,7 +61,7 @@ public class BlinkLEDAndServoController extends LEDAndServoController {
 					try {
 						// Savety delay
 						sleep(50);
-						while (System.currentTimeMillis() < blinkUntil && currentBlink < 3) {
+						while (System.currentTimeMillis() < blinkUntil || currentBlink < 3) {
 							for (double i = 0; i < 1; i += 1.0/STEPS_PER_HALFSECOND) {
 								c = new Color((int)(color.getRed()*i),(int)( color.getGreen()*i), (int) (color.getBlue()*i));
 								setBlinkingLEDs(c);
