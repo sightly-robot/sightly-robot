@@ -122,19 +122,22 @@ public class StageUtil {
 	}
 	
 	/**
-	 * Converts a boolean array in an integer representation:
+	 * Converts a boolean array to an integer representation:
 	 * <br>
-	 * Bsp.: input {true, false, true}
+	 * Bsp. (radix: 10): input {true, false, true}
 	 *       result 101
+	 * <br>
+	 * Bsp. (radix: 2) : input (true, false, true)
+	 * 		 result 5
 	 * 
 	 * @param boolArray regarding array
 	 * @return integer, every digit is either a 1 or a 0
 	 */
-	public static int convertToInt(final boolean[] boolArray) {
+	public static int convertToInt(final boolean[] boolArray, final int radix) {
 		int result = 0;
 		for (int i = 0; i < boolArray.length; ++i) {
 			if (boolArray[i])
-				result += Math.pow(10, i);
+				result += Math.pow(radix, i);
 		}
 		return result;
 	}

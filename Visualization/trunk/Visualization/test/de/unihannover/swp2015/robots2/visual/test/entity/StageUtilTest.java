@@ -69,10 +69,15 @@ public class StageUtilTest {
 		boolean[] b2 =  {true, true, true, false};
 		boolean[] b3 = {true, false, false, true};
 		
-		assertEquals(StageUtil.convertToInt(b0), 101);
-		assertEquals(StageUtil.convertToInt(b1), 100);
-		assertEquals(StageUtil.convertToInt(b2), 111);
-		assertEquals(StageUtil.convertToInt(b3), 1001);
+		assertEquals(StageUtil.convertToInt(b0, 10), 101);
+		assertEquals(StageUtil.convertToInt(b1, 10), 100);
+		assertEquals(StageUtil.convertToInt(b2, 10), 111);
+		assertEquals(StageUtil.convertToInt(b3, 10), 1001);
+		
+		assertEquals(StageUtil.convertToInt(b0, 2), 5);
+		assertEquals(StageUtil.convertToInt(b1, 2), 4);
+		assertEquals(StageUtil.convertToInt(b2, 2), 7);
+		assertEquals(StageUtil.convertToInt(b3, 2), 9);
 	}
 	
 }

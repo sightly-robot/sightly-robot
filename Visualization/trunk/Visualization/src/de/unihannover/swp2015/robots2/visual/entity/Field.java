@@ -56,16 +56,19 @@ public class Field extends Entity {
 		final boolean[] dir = new boolean[4];
 		final Orientation[] enums = new Orientation[4];
 		
+		//have to ensure that the order is exactly like I'm expecting
 		enums[0] = Orientation.EAST;
 		enums[1] = Orientation.WEST;
 		enums[2] = Orientation.NORTH;
 		enums[3] = Orientation.SOUTH;
 		
+		//checks for every direction if there is a double wall.
 		for (int i = 0; i < 4; ++i) {
 			dir[i] = StageUtil.checkDriveDirectionAndNeighbours(model, parent, enums[i]);
 		}
-			
-		switch(StageUtil.convertToInt(dir)) {
+		
+		//selects the correct texture + rotation depending on the booleans
+		switch(StageUtil.convertToInt(dir, 2)) {
 			case 0:
 				field = resHandler.getRegion(ResConst.DEFAULT_FIELD_4);
 				fieldRotation = 0;
@@ -74,59 +77,59 @@ public class Field extends Entity {
 				field = resHandler.getRegion(ResConst.DEFAULT_FIELD_3_E);
 				fieldRotation = -90;
 				break;
-			case 10:
+			case 2:
 				field = resHandler.getRegion(ResConst.DEFAULT_FIELD_3_W);
 				fieldRotation = 90;
 				break;
-			case 11:
+			case 3:
 				field = resHandler.getRegion(ResConst.DEFAULT_FIELD_2_E);
 				fieldRotation = 90;
 				break;
-			case 100:
+			case 4:
 				field = resHandler.getRegion(ResConst.DEFAULT_FIELD_3_N);
 				fieldRotation = 180;
 				break;
-			case 101:
+			case 5:
 				field = resHandler.getRegion(ResConst.DEFAULT_FIELD_C_NE);
 				fieldRotation = -90;
 				break;
-			case 110:
+			case 6:
 				field = resHandler.getRegion(ResConst.DEFAULT_FIELD_C_WN);
 				fieldRotation = 180;
 				break;
-			case 111:
+			case 7:
 				field = resHandler.getRegion(ResConst.DEFAULT_FIELD_1_S);
 				fieldRotation = 180;
 				break;
-			case 1000:
+			case 8:
 				field = resHandler.getRegion(ResConst.DEFAULT_FIELD_3_S);
 				fieldRotation = 0;
 				break;
-			case 1001:
+			case 9:
 				field = resHandler.getRegion(ResConst.DEFAULT_FIELD_C_ES);
 				fieldRotation = 0;
 				break;
-			case 1010:
+			case 10:
 				field = resHandler.getRegion(ResConst.DEFAULT_FIELD_C_SW);
 				fieldRotation = 90;
 				break;
-			case 1011:
+			case 11:
 				field = resHandler.getRegion(ResConst.DEFAULT_FIELD_1_N);
 				fieldRotation = 0;
 				break;
-			case 1100:
+			case 12:
 				field = resHandler.getRegion(ResConst.DEFAULT_FIELD_2_N);
 				fieldRotation = 0;
 				break;
-			case 1101:
+			case 13:
 				field = resHandler.getRegion(ResConst.DEFAULT_FIELD_1_W);
 				fieldRotation = -90;
 				break;
-			case 1110:
+			case 14:
 				field = resHandler.getRegion(ResConst.DEFAULT_FIELD_1_E);
 				fieldRotation = 90;
 				break;
-			case 1111:
+			case 15:
 				field = resHandler.getRegion(ResConst.DEFAULT_FIELD);
 				fieldRotation = 0;
 				break;

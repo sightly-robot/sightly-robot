@@ -30,7 +30,7 @@ import de.unihannover.swp2015.robots2.visual.util.pref.FlexPreferences;
  */
 public class Visualization extends ApplicationAdapter implements IVisualization {
 
-	private final String CONNECTION_IP = "tcp://192.168.1.66";
+	private static final String CONNECTION_IP = "tcp://192.168.1.66";
 	
 	/**
 	 * List of all {@link IGameHandler}.
@@ -66,7 +66,7 @@ public class Visualization extends ApplicationAdapter implements IVisualization 
 	/**
 	 * Constructs a Visualization object.
 	 * 
-	 * Important: Don't do OpenGL related things here! Use {@link create}
+	 * Important: Don't do OpenGL related things here! Use {@link #create()}
 	 * instead.
 	 */
 	public Visualization() {
