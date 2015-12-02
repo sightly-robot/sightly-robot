@@ -71,38 +71,29 @@ public abstract class AbstractAutomate implements AiEventObserver, Runnable {
 	public void run() {
 		IState tempState = state;
 		while (!Thread.interrupted()) {
-			tempState = state.execute();
+			synchronized (state) {
+				tempState = state.execute();
 
-			if (state != tempState) {
-				state = tempState;
-				state.start();
-				if (tempState.isWait()) {
-					// measurements
-					progressMeasurements[currentDirection.ordinal()] = System.currentTimeMillis() - lastWaitTime;
-					// update position only
-					new Thread(){
-						public void run() {
-							try {
-								Thread.sleep(10);
-							} catch (InterruptedException e) {
-								e.printStackTrace();
-							}
-							robotController.updatePosition(nextPosition.x, nextPosition.y,
-									robot.getPosition().getOrientation());
-						};
-					}.start();
+				if (state != tempState) {
+					state = tempState;
+					state.start();
+					if (state.isWait()) {
+						// measurements
+						progressMeasurements[currentDirection.ordinal()] = System.currentTimeMillis() - lastWaitTime;
+						// update position only
+						updatePostition(nextPosition.x, nextPosition.y);
+					}
+				}
+
+				if (System.currentTimeMillis() > nextUpdateTime) {
+					int currentProgress = calcProgress();
+					if (currentProgress != lastProgress) {
+						updateProgress(currentProgress);
+						lastProgress = currentProgress;
+					}
+					nextUpdateTime = System.currentTimeMillis() + PROGRESS_UPDATE_DURATION;
 				}
 			}
-
-			if (System.currentTimeMillis() > nextUpdateTime) {
-				int currentProgress = calcProgress();
-				if (currentProgress != lastProgress) {
-					robotController.updatePositionProgress(currentProgress);
-					lastProgress = currentProgress;
-				}
-				nextUpdateTime = System.currentTimeMillis() + PROGRESS_UPDATE_DURATION;
-			}
-
 			synchronized (automation) {
 				try {
 					automation.wait(LOOP_WAIT_MS);
@@ -111,6 +102,30 @@ public abstract class AbstractAutomate implements AiEventObserver, Runnable {
 				}
 			}
 		}
+	}
+
+	private void updatePostition(final int x, final int y) {
+		new Thread() {
+			public void run() {
+				robotController.updatePosition(x, y, robot.getPosition().getOrientation());
+			};
+		}.start();
+	}
+
+	private void updateOrientation(final Orientation orientation) {
+		new Thread() {
+			public void run() {
+				robotController.updatePosition(robot.getPosition().getX(), robot.getPosition().getY(), orientation);
+			};
+		}.start();
+	}
+
+	private void updateProgress(final int progress) {
+		new Thread() {
+			public void run() {
+				robotController.updatePositionProgress(progress);
+			};
+		}.start();
 	}
 
 	private int calcProgress() {
@@ -124,51 +139,43 @@ public abstract class AbstractAutomate implements AiEventObserver, Runnable {
 	}
 
 	@Override
-	public boolean nextOrientationEvent(final Orientation orientation) {
-		if (state.isWait()) {
-			nextPosition.setLocation(robot.getPosition().getX(), robot.getPosition().getY());
-			switch (orientation) {
-			case NORTH:
-				nextPosition.translate(0, -1);
-				break;
-			case EAST:
-				nextPosition.translate(+1, 0);
-				break;
-			case SOUTH:
-				nextPosition.translate(0, +1);
-				break;
-			case WEST:
-				nextPosition.translate(-1, 0);
-				break;
+	public boolean nextOrientationEvent(Orientation orientation) {
+		synchronized (state) {
+			if (state.isWait()) {
+				nextPosition.setLocation(robot.getPosition().getX(), robot.getPosition().getY());
+				switch (orientation) {
+				case NORTH:
+					nextPosition.translate(0, -1);
+					break;
+				case EAST:
+					nextPosition.translate(+1, 0);
+					break;
+				case SOUTH:
+					nextPosition.translate(0, +1);
+					break;
+				case WEST:
+					nextPosition.translate(-1, 0);
+					break;
+				}
+
+				// set new state
+				currentDirection = Direction.calcDirection(robot.getPosition().getOrientation(), orientation);
+				state = state.getStateForDirection(currentDirection);
+				state.start();
+				System.out.println(currentDirection.name());
+
+				updateOrientation(orientation);
+
+				// measurements
+				lastWaitTime = System.currentTimeMillis();
+
+				synchronized (automation) {
+					automation.notify();
+				}
+				return true;
 			}
-
-			// set new state
-			currentDirection = Direction.calcDirection(robot.getPosition().getOrientation(), orientation);
-			state = state.getStateForDirection(currentDirection);
-			state.start();
-			System.out.println(currentDirection.name());
-
-			new Thread(){
-				public void run() {
-					try {
-						Thread.sleep(10);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					robotController.updatePosition(robot.getPosition().getX(), robot.getPosition().getY(), orientation);
-				};
-			}.start();
-			
-			// measurements
-			lastWaitTime = System.currentTimeMillis();
-
-			synchronized (automation) {
-				automation.notify();
-			}
-			return true;
+			return false;
 		}
-		return false;
 	}
 
 	@Override
