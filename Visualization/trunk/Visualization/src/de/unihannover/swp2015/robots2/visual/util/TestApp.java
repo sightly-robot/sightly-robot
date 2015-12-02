@@ -36,6 +36,7 @@ public class TestApp extends JFrame implements ActionListener {
 	private final JButton changeRobots;
 	private final JButton changeWalls;
 	private final JButton changeFood;
+	private final JButton changeSize;
 	
 	public TestApp(IGame game) {
 		this.game = game;
@@ -57,14 +58,20 @@ public class TestApp extends JFrame implements ActionListener {
 		changeFood.setBounds(0, 150, 200, 50);
 		changeFood.addActionListener(this);
 
+		this.changeSize = new JButton("changeSize");
+		changeSize.setBounds(0, 200, 200, 50);
+		changeSize.addActionListener(this);
+
 		this.add(changeRobotPos);
 		this.add(changeRobots);
 		this.add(changeWalls);
 		this.add(changeFood);
+		this.add(changeSize);
 		
 		this.setSize(400, 400);
 		this.setVisible(true);
 	}
+
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -74,7 +81,7 @@ public class TestApp extends JFrame implements ActionListener {
 				for (int y = 0; y < stage.getHeight(); ++y) {
 					final Field f = (Field) stage.getField(x, y);
 					int r = rand.nextInt(42);
-					r -= 30;
+					r -= 32;
 					if (r < 0)
 						r = 0;
 					f.setFood(r);
@@ -109,6 +116,11 @@ public class TestApp extends JFrame implements ActionListener {
 			final Robot robo = new Robot(UUID.randomUUID().toString(),true,true); 
 			g.addRobot(robo);
 			g.emitEvent(UpdateType.ROBOT_ADD, robo);
+		}
+		else if (e.getSource() == this.changeSize) {
+			final Stage g = (Stage) game.getStage();
+			g.changeSize(10, 10);
+			g.emitEvent(UpdateType.STAGE_SIZE);
 		}
 	}
 	

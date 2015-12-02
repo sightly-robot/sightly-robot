@@ -3,7 +3,6 @@ package de.unihannover.swp2015.robots2.visual.entity;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
@@ -13,6 +12,7 @@ import de.unihannover.swp2015.robots2.model.interfaces.IField;
 import de.unihannover.swp2015.robots2.model.interfaces.IStage;
 import de.unihannover.swp2015.robots2.visual.core.IGameHandler;
 import de.unihannover.swp2015.robots2.visual.core.PrefConst;
+import de.unihannover.swp2015.robots2.visual.desktop.DesktopLauncher;
 import de.unihannover.swp2015.robots2.visual.util.pref.IPreferencesKey;
 import de.unihannover.swp2015.robots2.visual.util.pref.observer.PreferencesObservable;
 
@@ -63,12 +63,9 @@ public class Map extends Entity {
 			this.fieldList.clear();
 			this.prefs.putInt(PrefConst.MAP_ROWS_KEY, model.getWidth());
 			this.prefs.putInt(PrefConst.MAP_COLS_KEY, model.getHeight());
-			this.prefs.putFloat(PrefConst.FIELD_WIDTH_KEY, ((float) Gdx.graphics.getWidth()) / model.getWidth());
-			this.prefs.putFloat(PrefConst.FIELD_HEIGHT_KEY, ((float) Gdx.graphics.getHeight()) / model.getHeight());
-			System.out.println(model.getHeight());
-			System.out.println(model.getWidth());
+			this.prefs.putFloat(PrefConst.FIELD_WIDTH_KEY, ((float) DesktopLauncher.viewWidth) / model.getWidth());
+			this.prefs.putFloat(PrefConst.FIELD_HEIGHT_KEY, ((float) DesktopLauncher.viewHeight) / model.getHeight());
 			this.init(model);
-			System.out.println("dss");
 			break;
 			
 		case STAGE_WALL:

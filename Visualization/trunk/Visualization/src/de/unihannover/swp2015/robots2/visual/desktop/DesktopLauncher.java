@@ -16,6 +16,9 @@ import de.unihannover.swp2015.robots2.visual.resource.ResConst;
  */
 public class DesktopLauncher {
 	
+	public static final float viewWidth = 800;
+	public static final float viewHeight = 800;
+	
 	public static void main (String[] arg) {
 
 		ShaderLoader.BasePath = "resources/shaders/";
@@ -27,8 +30,8 @@ public class DesktopLauncher {
 		TexturePacker.process(packSettings, "assets/tex", ResConst.ATLAS_PATH.getName(), ResConst.ATLAS_NAME.getName());
 		
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		config.width = 800;
-		config.height = 800;
+		config.width = (int) viewWidth;
+		config.height = (int) viewHeight;
 		config.foregroundFPS = 0;
 		config.backgroundFPS = 0;
 		config.vSyncEnabled = false;

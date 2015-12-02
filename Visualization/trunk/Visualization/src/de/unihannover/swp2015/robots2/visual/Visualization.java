@@ -97,7 +97,7 @@ public class Visualization extends ApplicationAdapter implements IVisualization 
 
 		//TODO handle connect exceptions
 		this.mainController.startMqtt(CONNECTION_IP);
-		System.out.println("asd");
+
 		this.gameHandlerList.add(new RobotGameHandler(mainController.getGame(), resHandler, cam, prefs));
 	}
 
