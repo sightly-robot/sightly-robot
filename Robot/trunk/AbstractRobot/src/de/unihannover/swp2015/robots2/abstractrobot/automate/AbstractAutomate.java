@@ -22,7 +22,7 @@ public abstract class AbstractAutomate implements AiEventObserver, Runnable {
 	protected IRobot robot;
 
 	// thread
-	protected Thread automation = new Thread(this);
+	private Thread automation = new Thread(this);
 	private static final long LOOP_WAIT_MS = 30;
 
 	// state
@@ -181,5 +181,9 @@ public abstract class AbstractAutomate implements AiEventObserver, Runnable {
 	@Override
 	public void nextButOneOrientationEvent(Orientation orientation) {
 		// TODO Blinking right or left.
+	}
+
+	public Thread getAutomation() {
+		return automation;
 	}
 }
