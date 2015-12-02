@@ -1,15 +1,11 @@
 package de.unihannover.swp2015.robots2.hardwarerobot;
 
-import java.awt.Color;
-
 import com.pi4j.io.gpio.event.GpioPinDigitalStateChangeEvent;
 import com.pi4j.io.gpio.event.GpioPinListenerDigital;
-
 import de.unihannover.swp2015.robots2.abstractrobot.AbstractRobot;
 import de.unihannover.swp2015.robots2.controller.externalInterfaces.IHardwareRobot;
 import de.unihannover.swp2015.robots2.hardwarerobot.automate.HardwareAutomate;
 import de.unihannover.swp2015.robots2.hardwarerobot.pi2gocontroller.BlinkLEDAndServoController;
-import de.unihannover.swp2015.robots2.hardwarerobot.pi2gocontroller.LEDAndServoController;
 import de.unihannover.swp2015.robots2.hardwarerobot.pi2gocontroller.MotorController;
 import de.unihannover.swp2015.robots2.hardwarerobot.pi2gocontroller.Pi2GoGPIOController;
 
@@ -34,6 +30,22 @@ public class HardwareRobot extends AbstractRobot {
 		// SoundController.getInstance();
 		// ColorSensorController.getInstance();
 		// CompassController.getInstance();
+		
+		automate = new HardwareAutomate(robotController);
+		automate.start();
+		robotController.registerHardwareRobot((IHardwareRobot)automate);
+		ai.setAiEventObserver(automate);
+		
+		initializeGPIOs();
+
+		((HardwareAutomate)automate).blink(robotController.getMyself().getColor());
+	}
+	
+	/**
+	 * Initializes GPIO Event-handling.
+	 */
+	private void initializeGPIOs()
+	{
 		Pi2GoGPIOController.getInstance().getButton().addListener(new GpioPinListenerDigital() {
 			@Override
 			public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {
@@ -43,14 +55,14 @@ public class HardwareRobot extends AbstractRobot {
 				}
 			}
 		});
-
-		automate = new HardwareAutomate(robotController);
-		automate.start();
-		
-		robotController.registerHardwareRobot((IHardwareRobot)automate);
-
-		((HardwareAutomate)automate).blink(robotController.getMyself().getColor());
-		
-		ai.setAiEventObserver(automate);
+		GpioPinListenerDigital gChangeEvent = new GpioPinListenerDigital() {
+			@Override
+			public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {
+				((HardwareAutomate)automate).getAutomation().notify();
+			}
+		};
+		Pi2GoGPIOController.getInstance().getLineLeft().addListener(gChangeEvent);
+		Pi2GoGPIOController.getInstance().getLineRight().addListener(gChangeEvent);
 	}
 }
+

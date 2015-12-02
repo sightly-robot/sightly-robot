@@ -24,23 +24,6 @@ public class HardwareAutomate extends AbstractAutomate implements IHardwareRobot
 	 */
 	public HardwareAutomate(IRobotController robotController) {
 		super(robotController, HardwareState.WAIT);
-		// create and register gpio pin listener
-//		Pi2GoGPIOController.getInstance().getLineLeft().addListener(new GpioPinListenerDigital() {
-//			@Override
-//			public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {
-//				synchronized (automation) {
-//					automation.notify();
-//				}
-//			}
-//		});
-//		Pi2GoGPIOController.getInstance().getLineRight().addListener(new GpioPinListenerDigital() {
-//			@Override
-//			public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {
-//				synchronized (automation) {
-//					automation.notify();
-//				}
-//			}
-//		});
 	}
 
 	@Override
