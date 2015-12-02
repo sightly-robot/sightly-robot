@@ -67,7 +67,7 @@ public class Bubble extends Entity {
 		this.renderX = model.getPosition().getX() * fieldWidth;
 		this.renderY = model.getPosition().getY() * fieldHeight;
 		
-		this.width = fieldWidth * 0.5f;
+		this.width = fieldWidth * 0.75f;
 		this.height = fieldHeight * 0.2f;
 	}
 

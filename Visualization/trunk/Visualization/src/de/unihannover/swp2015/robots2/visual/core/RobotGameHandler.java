@@ -175,7 +175,7 @@ public class RobotGameHandler extends GameHandler {
 		{
 			for(int i=0; i<robots.length-h; i++)
 			{
-				System.out.println(robots[i].getScore());//TODO fix Nullpointer
+				System.out.println(robots[i].getScore());
 				if(robots[i].getScore()>robots[i+1].getScore())
 				{
 					temp = robots[i];
@@ -189,7 +189,7 @@ public class RobotGameHandler extends GameHandler {
 			if(robots[i]==robo)
 				return i+1;
 		}
-		return 0;
+		return 1;//TODO fix this
 	}
 	
 
