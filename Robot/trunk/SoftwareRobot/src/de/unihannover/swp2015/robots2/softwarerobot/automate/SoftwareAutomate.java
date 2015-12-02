@@ -19,7 +19,7 @@ public class SoftwareAutomate extends AbstractAutomate {
 			public void onModelUpdate(IEvent event) {
 				switch (event.getType()) {
 				case GAME_PARAMETER:
-						SoftwareState.setVSpeed(SoftwareAutomate.this.robotController.getGame().getVRobotSpeed());
+						//SoftwareState.setVSpeed(SoftwareAutomate.this.robotController.getGame().getVRobotSpeed());
 					break;
 				default:
 					break;

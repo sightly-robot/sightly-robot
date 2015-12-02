@@ -16,7 +16,7 @@ public class SoftwareRobot extends AbstractRobot {
 
 	AbstractAutomate automate;
 	
-	boolean ready = true;
+	boolean ready = false;
 
 	public SoftwareRobot() {
 		super(false);
