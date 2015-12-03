@@ -1,6 +1,5 @@
 package de.unihannover.swp2015.robots2.robot.abstractrobot;
 
-import de.unihannover.swp2015.robots2.aiinterface.AbstractAi;
 import de.unihannover.swp2015.robots2.controller.interfaces.IRobotController;
 import de.unihannover.swp2015.robots2.controller.main.RobotMainController;
 import de.unihannover.swp2015.robots2.core.AI;
@@ -8,6 +7,7 @@ import de.unihannover.swp2015.robots2.model.externalInterfaces.IModelObserver;
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
 import de.unihannover.swp2015.robots2.robot.abstractrobot.automate.AbstractAutomate;
+import de.unihannover.swp2015.robots2.robot.interfaces.AbstractAi;
 
 /**
  * The AbstractRobot is the base class for all hardware (real) and software

@@ -1,4 +1,4 @@
-package de.unihannover.swp2015.robots2.aiinterface;
+package de.unihannover.swp2015.robots2.robot.interfaces;
 
 import de.unihannover.swp2015.robots2.controller.interfaces.IRobotController;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;

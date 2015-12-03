@@ -2,10 +2,10 @@ package de.unihannover.swp2015.robots2.robot.abstractrobot.automate;
 
 import java.awt.Point;
 
-import de.unihannover.swp2015.robots2.aiinterface.AiEventObserver;
 import de.unihannover.swp2015.robots2.controller.interfaces.IRobotController;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
 import de.unihannover.swp2015.robots2.robot.abstractrobot.Direction;
+import de.unihannover.swp2015.robots2.robot.interfaces.AiEventObserver;
 import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
 
 /**

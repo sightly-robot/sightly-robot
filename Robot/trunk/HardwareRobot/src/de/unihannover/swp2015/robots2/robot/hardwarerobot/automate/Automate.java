@@ -5,10 +5,10 @@ import java.awt.Point;
 import com.pi4j.io.gpio.event.GpioPinDigitalStateChangeEvent;
 import com.pi4j.io.gpio.event.GpioPinListenerDigital;
 
-import de.unihannover.swp2015.robots2.aiinterface.AiEventObserver;
 import de.unihannover.swp2015.robots2.controller.interfaces.IRobotController;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
 import de.unihannover.swp2015.robots2.robot.hardwarerobot.pi2gocontroller.Pi2GoGPIOController;
+import de.unihannover.swp2015.robots2.robot.interfaces.AiEventObserver;
 import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
 
 /**

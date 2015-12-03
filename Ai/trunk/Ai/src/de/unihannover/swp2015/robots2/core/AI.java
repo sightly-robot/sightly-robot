@@ -1,6 +1,5 @@
 package de.unihannover.swp2015.robots2.core;
 
-import de.unihannover.swp2015.robots2.aiinterface.AbstractAi;
 import de.unihannover.swp2015.robots2.controller.interfaces.IRobotController;
 import de.unihannover.swp2015.robots2.exceptions.InvalidStageException;
 import de.unihannover.swp2015.robots2.exceptions.NoValidOrientationException;
@@ -11,6 +10,7 @@ import de.unihannover.swp2015.robots2.model.interfaces.IField;
 import de.unihannover.swp2015.robots2.model.interfaces.IGame;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
+import de.unihannover.swp2015.robots2.robot.interfaces.AbstractAi;
 import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
 
 public class AI extends AbstractAi implements IModelObserver {
