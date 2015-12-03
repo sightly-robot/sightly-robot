@@ -87,7 +87,6 @@ public class Visualization extends ApplicationAdapter implements IVisualization 
 		this.fitViewport = new FitViewport(appWidth, appHeight, cam);
 		this.pp = new PostProcessor(false, false, true);
 		this.pp.addEffect(new Fxaa(appWidth, appHeight));
-		
 		final IResourceHandler resHandler = new ResourceHandler(ResConst.ATLAS_PATH.getName() + ResConst.ATLAS_NAME.getName() + ".atlas");
 		
 		/*
@@ -100,7 +99,7 @@ public class Visualization extends ApplicationAdapter implements IVisualization 
 		//this.mainController.startMqtt(CONNECTION_IP);
 		
 		new TestApp(mainController.getGame());
-		this.gameHandlerList.add(new RobotGameHandler(mainController.getGame(), resHandler, cam, prefs));
+		this.gameHandlerList.add(new RobotGameHandler(mainController.getGame(), resHandler, fitViewport, prefs));
 	}
 
 	@Override

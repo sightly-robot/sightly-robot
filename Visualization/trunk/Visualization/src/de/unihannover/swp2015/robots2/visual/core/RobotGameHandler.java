@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
 import de.unihannover.swp2015.robots2.model.interfaces.IGame;
@@ -49,7 +49,7 @@ public class RobotGameHandler extends GameHandler {
 	/**
 	 * Main camera
 	 */
-	protected OrthographicCamera cam;
+	protected Viewport view;
 	
 	/**
 	 * Overview of robots for ranking
@@ -62,15 +62,15 @@ public class RobotGameHandler extends GameHandler {
 	 * @param game root of the model
 	 * @param resourceHandler {@link IResourceHandler}
 	 */
-	public RobotGameHandler(final IGame game, final IResourceHandler resourceHandler, final OrthographicCamera cam, final IPreferences prefs) {
+	public RobotGameHandler(final IGame game, final IResourceHandler resourceHandler, final Viewport view, final IPreferences prefs) {
 		super(resourceHandler, prefs);
 		
 		this.modifierList = new ArrayList<>();
 		this.entityList = new ArrayList<>();
 		this.game = game;
 		this.spriteBatch = new SpriteBatch();
-		this.cam = cam;
-		this.spriteBatch.setProjectionMatrix(this.cam.combined);
+		this.view = view;
+		this.spriteBatch.setProjectionMatrix(this.view.getCamera().combined);
 		this.game.observe(this);
 		
 		this.init();
