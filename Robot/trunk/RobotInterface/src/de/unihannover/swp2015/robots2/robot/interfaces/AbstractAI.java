@@ -8,7 +8,7 @@ import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
  * 
  * @author Lenard Spiecker
  */
-public abstract class AbstractAi {
+public abstract class AbstractAI {
 
 	private AiEventObserver aiEventObserver;
 	protected IRobotController iRobotController;
@@ -18,7 +18,7 @@ public abstract class AbstractAi {
 	 * 
 	 * @param iRobotController the controller of the robot this AI belongs to
 	 */
-	public AbstractAi(IRobotController iRobotController) {
+	public AbstractAI(IRobotController iRobotController) {
 		this.iRobotController = iRobotController;
 	}
 	

@@ -35,7 +35,7 @@ public class AbstractAiTest {
 			}
 		};
 		
-		AbstractAi ai = new AbstractAi(null) {	// the iRobotController is not needed for the test
+		AbstractAI ai = new AbstractAI(null) {	// the iRobotController is not needed for the test
 			
 			@Override
 			public void setRelativeSpeed(double forwards, double sidewards, double backwards) {

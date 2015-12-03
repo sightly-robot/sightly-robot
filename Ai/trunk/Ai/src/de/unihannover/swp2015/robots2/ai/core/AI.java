@@ -10,10 +10,10 @@ import de.unihannover.swp2015.robots2.model.interfaces.IField;
 import de.unihannover.swp2015.robots2.model.interfaces.IGame;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
-import de.unihannover.swp2015.robots2.robot.interfaces.AbstractAi;
+import de.unihannover.swp2015.robots2.robot.interfaces.AbstractAI;
 import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
 
-public class AI extends AbstractAi implements IModelObserver {
+public class AI extends AbstractAI implements IModelObserver {
 
 	private IField nextField;
 	private AIGraph graph;

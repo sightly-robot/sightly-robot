@@ -4,7 +4,7 @@ import de.unihannover.swp2015.robots2.ai.core.AI;
 import de.unihannover.swp2015.robots2.controller.interfaces.IRobotController;
 import de.unihannover.swp2015.robots2.controller.main.RobotMainController;
 import de.unihannover.swp2015.robots2.robot.abstractrobot.automate.AbstractAutomate;
-import de.unihannover.swp2015.robots2.robot.interfaces.AbstractAi;
+import de.unihannover.swp2015.robots2.robot.interfaces.AbstractAI;
 
 /**
  * The AbstractRobot is the base class for all hardware (real) and software
@@ -19,7 +19,7 @@ public abstract class AbstractRobot {
 	protected IRobotController robotController;
 
 	/** The AI of the robot. */
-	protected AbstractAi ai;
+	protected AbstractAI ai;
 
 	/** The automate of the robot. */
 	protected AbstractAutomate automate;
