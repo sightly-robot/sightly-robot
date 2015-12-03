@@ -41,7 +41,8 @@ public enum ResConst {
 	DEFAULT_RES_9("default_res_09"),
 	DEFAULT_RES_10("default_res_10"),
 	DEFAULT_ROBO_NORTH("default_robo_north"),
-	DEFAULT_BUBBLE("default_bubble");
+	DEFAULT_BUBBLE("default_bubble"),
+	DEFAULT_FONT("default_font");
 	
 	private final String name;
 	

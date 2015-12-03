@@ -72,8 +72,9 @@ public class ResourceHandler implements IResourceHandler {
 		this.texAtlas = new TextureAtlas(Gdx.files.internal(pathToAtlas), true);
 
 		this.createRegions();
+		this.createFonts();
 	}
-	
+
 	/**
 	 * Helper. Will be replaced soon.
 	 */
@@ -136,6 +137,14 @@ public class ResourceHandler implements IResourceHandler {
 		this.texMap.put(ResConst.DEFAULT_FIELD_C_ES, wayC);
 		this.texMap.put(ResConst.DEFAULT_FIELD_C_SW, wayC);
 		this.texMap.put(ResConst.DEFAULT_FIELD_C_WN, wayC);
+	}
+	
+	/**
+	 * Creates all fonts, that can be used.
+	 */
+	private void createFonts() {
+		final BitmapFont defFont = new BitmapFont(true);
+		this.fontMap.put(ResConst.DEFAULT_FONT, defFont);
 	}
 
 	@Override

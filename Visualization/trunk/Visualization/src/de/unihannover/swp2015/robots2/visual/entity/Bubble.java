@@ -56,8 +56,7 @@ public class Bubble extends Entity {
 		//temporary
 		this.color = color.set(color.r, color.g, color.b, color.a * 0.7f);
 		
-		this.font = new BitmapFont(true);
-        this.font.setColor(1-color.r, 1-color.g, 1-color.b,color.a);
+		this.font = resHandler.getFont(ResConst.DEFAULT_FONT);
         
         this.points = model.getId().substring(0, 4)+" : "+model.getScore()+"(-)";
 		
@@ -75,8 +74,12 @@ public class Bubble extends Entity {
 	public void render() {
 		
 		batch.setColor(color);
+		
 		batch.draw(bubble, renderX, renderY, width, height);
+        
+		font.setColor(1-color.r, 1-color.g, 1-color.b,color.a);
 		font.draw(batch, points, renderX+5, renderY+5);
+		
 		batch.setColor(Color.WHITE);
 	}
 

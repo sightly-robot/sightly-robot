@@ -21,6 +21,7 @@ import de.unihannover.swp2015.robots2.visual.resource.IResourceHandler;
 import de.unihannover.swp2015.robots2.visual.resource.ResConst;
 import de.unihannover.swp2015.robots2.visual.resource.ResourceHandler;
 import de.unihannover.swp2015.robots2.visual.util.pref.IPreferences;
+import de.unihannover.swp2015.robots2.visual.util.TestApp;
 import de.unihannover.swp2015.robots2.visual.util.pref.FlexPreferences;
 
 /**
@@ -96,8 +97,9 @@ public class Visualization extends ApplicationAdapter implements IVisualization 
 		 */
 
 		//TODO handle connect exceptions
-		this.mainController.startMqtt(CONNECTION_IP);
-
+		//this.mainController.startMqtt(CONNECTION_IP);
+		
+		new TestApp(mainController.getGame());
 		this.gameHandlerList.add(new RobotGameHandler(mainController.getGame(), resHandler, cam, prefs));
 	}
 
@@ -110,7 +112,7 @@ public class Visualization extends ApplicationAdapter implements IVisualization 
 
 	@Override
 	public void render() {
-				
+			
 		Gdx.gl.glClearColor(0f, 0f, 0f, 0f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -132,7 +134,7 @@ public class Visualization extends ApplicationAdapter implements IVisualization 
 		this.fitViewport.update(width, height, true);
 		this.pp.setViewport(new Rectangle(fitViewport.getScreenX(), fitViewport.getScreenY(),
 				fitViewport.getScreenWidth(), fitViewport.getScreenHeight()));
-		
+
 		for (int i = 0; i < gameHandlerList.size(); ++i) {
 			gameHandlerList.get(i).resize(width, height);
 		}

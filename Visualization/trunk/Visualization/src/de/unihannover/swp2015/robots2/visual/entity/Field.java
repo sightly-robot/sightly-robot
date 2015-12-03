@@ -22,7 +22,16 @@ import de.unihannover.swp2015.robots2.visual.util.pref.observer.PreferencesObser
  * @author Daphne Schössow
  */
 public class Field extends Entity {
-	
+
+	private static final ResConst[] FIELD_TEXTURE_LOOKUP = { ResConst.DEFAULT_FIELD_4, ResConst.DEFAULT_FIELD_3_E,
+			ResConst.DEFAULT_FIELD_3_W, ResConst.DEFAULT_FIELD_2_E, ResConst.DEFAULT_FIELD_3_N,
+			ResConst.DEFAULT_FIELD_C_NE, ResConst.DEFAULT_FIELD_C_WN, ResConst.DEFAULT_FIELD_1_S,
+			ResConst.DEFAULT_FIELD_3_S, ResConst.DEFAULT_FIELD_C_ES, ResConst.DEFAULT_FIELD_C_SW,
+			ResConst.DEFAULT_FIELD_1_N, ResConst.DEFAULT_FIELD_2_N, ResConst.DEFAULT_FIELD_1_W,
+			ResConst.DEFAULT_FIELD_1_E, ResConst.DEFAULT_FIELD };
+
+	private static final int[] FIELD_ROTATION_LOOKUP = { 0, -90, 90, 90, 180, -90, 180, 180, 0, 0, 90, 0, 0, -90, 90, 0 };
+
 	private final IStage parent;
 	private final TextureRegion[] texWall;
 	private final Resource food;
@@ -68,74 +77,9 @@ public class Field extends Entity {
 		}
 		
 		//selects the correct texture + rotation depending on the booleans
-		switch(StageUtil.convertToInt(dir, 2)) {
-			case 0:
-				field = resHandler.getRegion(ResConst.DEFAULT_FIELD_4);
-				fieldRotation = 0;
-				break;
-			case 1:
-				field = resHandler.getRegion(ResConst.DEFAULT_FIELD_3_E);
-				fieldRotation = -90;
-				break;
-			case 2:
-				field = resHandler.getRegion(ResConst.DEFAULT_FIELD_3_W);
-				fieldRotation = 90;
-				break;
-			case 3:
-				field = resHandler.getRegion(ResConst.DEFAULT_FIELD_2_E);
-				fieldRotation = 90;
-				break;
-			case 4:
-				field = resHandler.getRegion(ResConst.DEFAULT_FIELD_3_N);
-				fieldRotation = 180;
-				break;
-			case 5:
-				field = resHandler.getRegion(ResConst.DEFAULT_FIELD_C_NE);
-				fieldRotation = -90;
-				break;
-			case 6:
-				field = resHandler.getRegion(ResConst.DEFAULT_FIELD_C_WN);
-				fieldRotation = 180;
-				break;
-			case 7:
-				field = resHandler.getRegion(ResConst.DEFAULT_FIELD_1_S);
-				fieldRotation = 180;
-				break;
-			case 8:
-				field = resHandler.getRegion(ResConst.DEFAULT_FIELD_3_S);
-				fieldRotation = 0;
-				break;
-			case 9:
-				field = resHandler.getRegion(ResConst.DEFAULT_FIELD_C_ES);
-				fieldRotation = 0;
-				break;
-			case 10:
-				field = resHandler.getRegion(ResConst.DEFAULT_FIELD_C_SW);
-				fieldRotation = 90;
-				break;
-			case 11:
-				field = resHandler.getRegion(ResConst.DEFAULT_FIELD_1_N);
-				fieldRotation = 0;
-				break;
-			case 12:
-				field = resHandler.getRegion(ResConst.DEFAULT_FIELD_2_N);
-				fieldRotation = 0;
-				break;
-			case 13:
-				field = resHandler.getRegion(ResConst.DEFAULT_FIELD_1_W);
-				fieldRotation = -90;
-				break;
-			case 14:
-				field = resHandler.getRegion(ResConst.DEFAULT_FIELD_1_E);
-				fieldRotation = 90;
-				break;
-			case 15:
-				field = resHandler.getRegion(ResConst.DEFAULT_FIELD);
-				fieldRotation = 0;
-				break;
-			default:
-				break;
-		}
+		final int result = StageUtil.convertToInt(dir, 2);
+		this.field = resHandler.getRegion(FIELD_TEXTURE_LOOKUP[result]);
+		this.fieldRotation = FIELD_ROTATION_LOOKUP[result];
 	}
 	
 	@Override
