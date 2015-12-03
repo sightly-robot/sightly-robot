@@ -5,10 +5,10 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.unihannover.swp2015.robots2.core.Robot;
-import de.unihannover.swp2015.robots2.exceptions.NoValidOrientationException;
-import de.unihannover.swp2015.robots2.graph.AIGraph;
-import de.unihannover.swp2015.robots2.graph.Node;
+import de.unihannover.swp2015.robots2.ai.core.Robot;
+import de.unihannover.swp2015.robots2.ai.exceptions.NoValidOrientationException;
+import de.unihannover.swp2015.robots2.ai.graph.AIGraph;
+import de.unihannover.swp2015.robots2.ai.graph.Node;
 import de.unihannover.swp2015.robots2.model.implementation.Position;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
 

@@ -1,8 +1,8 @@
 package de.unihannover.swp2015.robots2.robot.abstractrobot;
 
-import de.unihannover.swp2015.robots2.ai.core.AI;
 import de.unihannover.swp2015.robots2.controller.interfaces.IRobotController;
 import de.unihannover.swp2015.robots2.controller.main.RobotMainController;
+import de.unihannover.swp2015.robots2.ai.core.AI;
 import de.unihannover.swp2015.robots2.robot.abstractrobot.automate.AbstractAutomate;
 import de.unihannover.swp2015.robots2.robot.interfaces.AbstractAi;
 

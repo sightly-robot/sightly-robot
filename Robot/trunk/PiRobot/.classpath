@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
+	<classpathentry kind="lib" path="/LibrariesAndBuilds/pi4j/pi4j-core.jar"/>
+	<classpathentry kind="lib" path="/LibrariesAndBuilds/pi4j/pi4j-device.jar"/>
+	<classpathentry kind="lib" path="/LibrariesAndBuilds/pi4j/pi4j-gpio-extension.jar"/>
+	<classpathentry kind="lib" path="/LibrariesAndBuilds/pi4j/pi4j-service.jar"/>
+	<classpathentry kind="lib" path="/Protocol/lib/org.eclipse.paho.client.mqttv3-1.0.2.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="http://www.eclipse.org/paho/files/javadoc"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

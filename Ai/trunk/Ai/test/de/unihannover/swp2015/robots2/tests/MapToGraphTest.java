@@ -1,8 +1,8 @@
 package de.unihannover.swp2015.robots2.tests;
 
-import de.unihannover.swp2015.robots2.exceptions.InvalidStageException;
-import de.unihannover.swp2015.robots2.graph.AIGraph;
-import de.unihannover.swp2015.robots2.graph.Node;
+import de.unihannover.swp2015.robots2.ai.exceptions.InvalidStageException;
+import de.unihannover.swp2015.robots2.ai.graph.AIGraph;
+import de.unihannover.swp2015.robots2.ai.graph.Node;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
 import junit.framework.TestCase;
