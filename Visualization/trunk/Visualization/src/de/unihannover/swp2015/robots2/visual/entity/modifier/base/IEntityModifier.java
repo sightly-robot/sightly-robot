@@ -36,7 +36,7 @@ public interface IEntityModifier extends IUpdateable {
     public void addFinishListener(final IFinishListener finishListener);
     
     /**
-     * Describes what happens on init (first tick).
+     * Describes what happens on init (before first tick).
      */
     public void onInit();
 	

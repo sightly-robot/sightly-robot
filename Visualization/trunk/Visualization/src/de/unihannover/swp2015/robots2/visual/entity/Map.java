@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 import de.unihannover.swp2015.robots2.model.interfaces.IAbstractModel;
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
@@ -24,19 +23,31 @@ import de.unihannover.swp2015.robots2.visual.util.pref.observer.PreferencesObser
  */
 public class Map extends Entity {
 
+	/**
+	 * List of field-entities, which will be rendered by this entity.
+	 */
 	private final List<Field> fieldList;
-	private final ShapeRenderer shapeRenderer;
 	
+	/**
+	 * Constructs a map.
+	 * 
+	 * @param model data model of the map
+	 * @param batch batch, which should be used to render the map
+	 * @param gameHandler parent
+	 */
 	public Map(IStage model, SpriteBatch batch, IGameHandler gameHandler) {
 		super(model, batch, gameHandler);
 	
 		this.fieldList = new ArrayList<>(model.getWidth() * model.getHeight());
-		this.shapeRenderer = new ShapeRenderer();
-		this.shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
 		
 		this.init(model);
 	}
 	
+	/**
+	 * Creates all field-entities.
+	 * 
+	 * @param model data model of the map
+	 */
 	private void init(final IStage model) {
 		for (int x = 0; x < model.getWidth(); ++x) {
 			for (int y = 0; y < model.getHeight(); ++y) {

@@ -106,7 +106,9 @@ public class RobotGameHandler extends GameHandler {
 	
 	@Override
 	public void update() {
-		//TODO modifier
+		for (int i = 0; i < entityList.size(); ++i) {
+			this.entityList.get(i).update();
+		}
 	}
 	
 	@Override

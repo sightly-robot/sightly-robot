@@ -11,7 +11,7 @@ import de.unihannover.swp2015.robots2.visual.util.math.function.LinearEaseFuncti
  * 
  * @author Rico Schrage
  */
-public class MoveModifierX extends SingleValueEntityModifier {
+public class RotationModifier extends SingleValueEntityModifier {
 	
 	/**
 	 * Constructs a MoveModifier using {@link LinearEaseFunction}.
@@ -21,7 +21,7 @@ public class MoveModifierX extends SingleValueEntityModifier {
 	 * @param fromValue start value
 	 * @param toValue end value
 	 */
-	public MoveModifierX(IEntity target, float duration, float fromValue, float toValue) {
+	public RotationModifier(IEntity target, float duration, float fromValue, float toValue) {
 		this(target, duration, fromValue, toValue, LinearEaseFunction.getInstance());
 	}
 	
@@ -34,17 +34,17 @@ public class MoveModifierX extends SingleValueEntityModifier {
 	 * @param toValue end value
 	 * @param easeFunction {@link IEaseFunction}
 	 */
-	public MoveModifierX(IEntity target, float duration, float fromValue, float toValue, final IEaseFunction easeFunction) {
+	public RotationModifier(IEntity target, float duration, float fromValue, float toValue, final IEaseFunction easeFunction) {
 		super(target, duration, fromValue, toValue, easeFunction);
 	}
 
 	@Override
 	protected void onSetInitialValue(float value, IEntity target) {
-		target.setPosition(value, target.getPositionY());
+		target.setRotation(value);
 	}
 
 	@Override
 	protected void onSetValue(float value, IEntity target) {
-		target.setPosition(value, target.getPositionY());
+		target.setRotation(value);
 	}
 }

@@ -1,6 +1,7 @@
 package de.unihannover.swp2015.robots2.visual.entity;
 
-
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
@@ -8,7 +9,13 @@ import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
 import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
 import de.unihannover.swp2015.robots2.visual.core.IGameHandler;
 import de.unihannover.swp2015.robots2.visual.core.PrefConst;
+import de.unihannover.swp2015.robots2.visual.entity.modifier.MoveModifierX;
+import de.unihannover.swp2015.robots2.visual.entity.modifier.MoveModifierY;
+import de.unihannover.swp2015.robots2.visual.entity.modifier.RotationModifier;
+import de.unihannover.swp2015.robots2.visual.entity.modifier.base.IEntityModifier;
+import de.unihannover.swp2015.robots2.visual.entity.modifier.base.IFinishListener;
 import de.unihannover.swp2015.robots2.visual.resource.ResConst;
+import de.unihannover.swp2015.robots2.visual.util.ColorUtil;
 import de.unihannover.swp2015.robots2.visual.util.pref.IPreferencesKey;
 import de.unihannover.swp2015.robots2.visual.util.pref.observer.PreferencesObservable;
 
@@ -21,52 +28,164 @@ import de.unihannover.swp2015.robots2.visual.util.pref.observer.PreferencesObser
 public class Robot extends Entity {
 
 	// private boolean isVirtual; //TODO Einbauen
+	
+	/**
+	 * Visual representation of the entity.
+	 */
 	private final TextureRegion robo;
+	
+	/**
+	 * Data of the bubble.
+	 */
 	private final Bubble bubble;
 	
+	/**
+	 * Width of the robot.
+	 */
 	private float width;
+	
+	/**
+	 * Height of the robot.
+	 */
 	private float height;
-	private float direction=0;
 		
+	/**
+	 * Constructs a robot entity using given parameters.
+	 * 
+	 * @param robModel data model of the {@link Robot}
+	 * @param batch for drawing the robot
+	 * @param gameHandler parent
+	 */
 	public Robot(final IRobot robModel, SpriteBatch batch, IGameHandler gameHandler) {
 		super(robModel, batch, gameHandler);
 
-		this.bubble = new Bubble(robModel, batch, gameHandler);
 		this.robo = resHandler.getRegion(ResConst.DEFAULT_ROBO_NORTH);
-		
+		this.bubble = new Bubble();
+
 		final float fieldWidth = prefs.getFloat(PrefConst.FIELD_WIDTH_KEY, 42);
 		final float fieldHeight = prefs.getFloat(PrefConst.FIELD_HEIGHT_KEY, 42);
 
 		this.width = fieldWidth * EntityConst.ROBOT_SCALE;
 		this.height = fieldHeight * EntityConst.ROBOT_SCALE;
-		
 		this.renderX = robModel.getPosition().getX() * fieldWidth + fieldWidth/2 - width/2;
 		this.renderY = robModel.getPosition().getY() * fieldHeight + fieldHeight/2 - height/2;
 		
-		this.updateDirection(robModel);
+		this.initDirection(robModel);
+		this.initBubble(robModel, fieldWidth, fieldHeight);
 	}
-
-	private void updateDirection(final IRobot robo){
-		switch (robo.getPosition().getOrientation()) {
+	
+	/**
+	 * Initializes the data of the bubble.
+	 * 
+	 * @param robo data model of the robot
+	 * @param fieldWidth field width
+	 * @param fieldHeight field height
+	 */
+	private void initBubble(final IRobot robo, final float fieldWidth, final float fieldHeight) {
+		this.bubble.tex = resHandler.getRegion(ResConst.DEFAULT_BUBBLE);
+		this.bubble.color = ColorUtil.fromAwtColor(robo.getColor());
+		this.bubble.color = bubble.color.set(bubble.color.r, bubble.color.g, bubble.color.b, bubble.color.a * 0.7f);
+		this.bubble.font = resHandler.getFont(ResConst.DEFAULT_FONT);
+        this.bubble.points = robo.getId().substring(0, 4) + " : " + robo.getScore() + "(-)";
+		this.bubble.x = robo.getPosition().getX() * fieldWidth - renderX;
+		this.bubble.y = robo.getPosition().getY() * fieldHeight - renderX;
+		this.bubble.width = fieldWidth * 0.75f;
+		this.bubble.height = fieldHeight * 0.2f;
+	}
+	
+	/**
+	 * Initializes the <code>rotation</code> of the robot.
+	 * 
+	 * @param robo data model of the robot
+	 */
+	private void initDirection(final IRobot robo) {
+		switch(robo.getPosition().getOrientation()) {
 		case SOUTH:
-			direction=180;
+			this.rotation = 180;
 			break;
 		case NORTH:
-			direction=0;
+			this.rotation = 0;
 			break;
 		case WEST:
-			direction=-90;
+			this.rotation = -90;
 			break;
 		case EAST:
-			direction=90;
+			this.rotation = 90;
+			break;
+		default:
 			break;
 		}
+	}
+
+	/**
+	 * Updates x/y-coordinate of the robot. This method uses entityModifier for a smooth transition.
+	 * 
+	 * @see IEntityModifier
+	 * @param robo data model of the robot
+	 */
+	private void updateRobot(final IRobot robo) {
+
+		if (modList != null)
+			modList.clear();
+		
+		IEntityModifier mod = null;
+		
+		//TODO dynamic duration
+		//TODO use progress
+		switch (robo.getPosition().getOrientation()) {
+		case SOUTH:
+			mod = new RotationModifier(this, 0.1f, rotation, 180);
+			break;
+		case NORTH:
+			mod = new RotationModifier(this, 0.1f, rotation, 0);
+			break;
+		case WEST:
+			mod = new RotationModifier(this, 0.1f, rotation, -90);
+			break;
+		case EAST:
+			mod = new RotationModifier(this, 0.1f, rotation, 90);
+			break;
+		default:
+			mod = new RotationModifier(this, 0.1f, rotation, 90);
+			break;
+		}
+		
+		mod.addFinishListener(new IFinishListener() {
+			@Override
+			public void onFinish() {
+				Robot.this.updatePosition(robo);
+			}
+		});
+		this.registerModifier(mod);
+	}
+	
+	/**
+	 * Updated the position of the robot using {@link IEntityModifier}.
+	 * 
+	 * @param robo model of the robot
+	 */
+	private void updatePosition(final IRobot robo) { 
+		final float fieldWidth = prefs.getFloat(PrefConst.FIELD_WIDTH_KEY, 42);
+		final float fieldHeight = prefs.getFloat(PrefConst.FIELD_HEIGHT_KEY, 42);
+		
+		final float newRenderX = robo.getPosition().getX() * fieldWidth + fieldWidth/2 - width/2;
+		final float newRenderY = robo.getPosition().getY() * fieldHeight + fieldHeight/2 - height/2;
+		
+		if (renderX > newRenderX || newRenderX > renderX) 
+			this.registerModifier(new MoveModifierX(this, 0.4f, renderX, newRenderX));
+		if (renderY > newRenderY || newRenderY > renderY) 
+			this.registerModifier(new MoveModifierY(this, 0.4f, renderY, newRenderY));
 	}
 	
 	@Override
 	public void render() {
-		batch.draw(robo, renderX, renderY, width/2f, height/2f, width, height, 1f, 1f, direction);	
-		bubble.render();
+		batch.draw(robo, renderX, renderY, width/2f, height/2f, width, height, 1f, 1f, rotation);	
+
+		batch.setColor(bubble.color);		
+		batch.draw(bubble.tex, renderX + bubble.x, renderY + bubble.y, bubble.width, bubble.height);
+		bubble.font.setColor(1-bubble.color.r, 1-bubble.color.g, 1-bubble.color.b, bubble.color.a);
+		bubble.font.draw(batch, bubble.points, renderX + 5 + bubble.x, renderY + 5 + bubble.y);
+		batch.setColor(Color.WHITE);
 	}
 
 	@Override
@@ -74,17 +193,18 @@ public class Robot extends Entity {
 		IRobot robo = (IRobot) model;
 		
 		switch(event.getType()) {
+		
 			case ROBOT_ADD:
 				break;
+				
 			case ROBOT_POSITION:
-				final float fieldWidth = prefs.getFloat(PrefConst.FIELD_WIDTH_KEY, 42);
-				final float fieldHeight = prefs.getFloat(PrefConst.FIELD_HEIGHT_KEY, 42);
-				this.renderX = robo.getPosition().getX() * fieldWidth + fieldWidth/2 - width/2;
-				this.renderY = robo.getPosition().getY() * fieldHeight + fieldHeight/2 - height/2;
-				updateDirection(robo);
+				this.updateRobot(robo);
 				break;
+				
 			case ROBOT_SCORE:
+				this.bubble.points =  robo.getId().substring(0, 4) + "  : " + robo.getScore() +  "(" + gameHandler.getRanking(robo) + ")";
 				break;
+				
 			case ROBOT_STATE:
 				break;
 			default:
@@ -98,13 +218,69 @@ public class Robot extends Entity {
 			final float fieldWidth = prefs.getFloat(PrefConst.FIELD_WIDTH_KEY, 42);
 			final float fieldHeight = prefs.getFloat(PrefConst.FIELD_HEIGHT_KEY, 42);
 
+			this.modList.clear();
+			final IRobot r = (IRobot) model;
+
 			this.width = fieldWidth * EntityConst.ROBOT_SCALE;
 			this.height = fieldHeight * EntityConst.ROBOT_SCALE;
-			
-			final IRobot r = (IRobot) model;
 			this.renderX = r.getPosition().getX() * fieldWidth + fieldWidth/2 - width/2;
 			this.renderY = r.getPosition().getY() * fieldHeight + fieldHeight/2 - height/2;
+			
+			this.bubble.width = fieldWidth * 0.75f;
+			this.bubble.height = fieldHeight * 0.2f;
+			this.bubble.x = r.getPosition().getX() * fieldWidth - renderX;
+			this.bubble.y = r.getPosition().getY() * fieldHeight - renderX;
 		}
+	}
+	
+	/**
+	 * Model for a bubble.
+	 * 
+	 * @author Rico Schrage
+	 * @author Daphne Schössow
+	 */
+	protected static class Bubble {
+	
+		/**
+		 * Texture of the bubble.
+		 */
+		public TextureRegion tex;
+		
+		/**
+		 * Width of the bubble.
+		 */
+		public float width;
+		
+		/**
+		 * Height of the bubble.
+		 */
+		public float height;
+		
+		/**
+		 * Color of the bubble. This value is based on the model.
+		 */
+		public Color color;
+		
+		/**
+		 * Font of the name/score/rank.
+		 */
+		public BitmapFont font;
+		
+		/**
+		 * Points as string.
+		 */
+		public CharSequence points;
+		
+		/**
+		 * X-position on (virtual) screen relative to the robot.
+		 */
+		public float x;
+	
+		/**
+		 * Y-position on (virtual) screen relative to the robot.
+		 */
+		public float y;
+	
 	}
 
 }

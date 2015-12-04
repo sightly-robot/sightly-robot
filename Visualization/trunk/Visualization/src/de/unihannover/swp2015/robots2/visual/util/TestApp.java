@@ -22,8 +22,8 @@ import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
 
 /**
  * One-class swing app to test the reaction of the visualization when making changes to the IGame object.
- * @author rschr
- *
+ * 
+ * @author Rico Schrage
  */
 public class TestApp extends JFrame implements ActionListener {
 
@@ -114,6 +114,7 @@ public class TestApp extends JFrame implements ActionListener {
 		else if (e.getSource() == this.changeRobots) {
 			final Game g = (Game) game;
 			final Robot robo = new Robot(UUID.randomUUID().toString(),true,true); 
+			robo.setPosition(1, 1, Orientation.EAST);
 			g.addRobot(robo);
 			g.emitEvent(UpdateType.ROBOT_ADD, robo);
 		}

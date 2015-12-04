@@ -19,8 +19,18 @@ import de.unihannover.swp2015.robots2.visual.util.pref.observer.PreferencesObser
  */
 public class Resource extends Entity {
 
+	/**
+	 * Visual representation of the different stages of the food.
+	 */
 	private final TextureRegion[] tex;
 
+	/**
+	 * Constructs a resource entity.
+	 * 
+	 * @param model data model of the resource.
+	 * @param batch batch, which will be used to draw the entity.
+	 * @param gameHandler parent
+	 */
 	public Resource(final IField model, SpriteBatch batch, IGameHandler gameHandler) {
 		super(model, batch, gameHandler);
 		

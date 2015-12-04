@@ -23,6 +23,9 @@ import de.unihannover.swp2015.robots2.visual.util.pref.observer.PreferencesObser
  */
 public class Field extends Entity {
 
+	/**
+	 * Lookup table for the ground texture. 
+	 */
 	private static final ResConst[] FIELD_TEXTURE_LOOKUP = { ResConst.DEFAULT_FIELD_4, ResConst.DEFAULT_FIELD_3_E,
 			ResConst.DEFAULT_FIELD_3_W, ResConst.DEFAULT_FIELD_2_E, ResConst.DEFAULT_FIELD_3_N,
 			ResConst.DEFAULT_FIELD_C_NE, ResConst.DEFAULT_FIELD_C_WN, ResConst.DEFAULT_FIELD_1_S,
@@ -30,15 +33,39 @@ public class Field extends Entity {
 			ResConst.DEFAULT_FIELD_1_N, ResConst.DEFAULT_FIELD_2_N, ResConst.DEFAULT_FIELD_1_W,
 			ResConst.DEFAULT_FIELD_1_E, ResConst.DEFAULT_FIELD };
 
+	/**
+	 * Lookup table for the rotation.
+	 */
 	private static final int[] FIELD_ROTATION_LOOKUP = { 0, -90, 90, 90, 180, -90, 180, 180, 0, 0, 90, 0, 0, -90, 90, 0 };
 
+	/**
+	 * Stage, the field belongs to.
+	 */
 	private final IStage parent;
+	
+	/**
+	 * Visual representations of the walls.
+	 */
 	private final TextureRegion[] texWall;
+	
+	/**
+	 * Resource as entity, based on this <code>model</code>.
+	 */
 	private final Resource food;
 	
+	/**
+	 * Visual representation of the ground.
+	 */
 	private TextureRegion field;
-	private float fieldRotation = 0;
 	
+	/**
+	 * Constructs a field-entity, which belongs to <code>parent</code>.
+	 * 
+	 * @param parent stage, the <code>model</code> is part of
+	 * @param model data model of the field
+	 * @param renderer batch, which should be used to render the entity
+	 * @param gameHandler {@link IGameHandler}, which should own this entity.
+	 */
 	public Field(final IStage parent, final IField model, final SpriteBatch renderer, final IGameHandler gameHandler){
 		super(model, renderer, gameHandler);
 		
@@ -59,6 +86,11 @@ public class Field extends Entity {
 		this.determineFieldTexture(model);
 	}
 	
+	/**
+	 * Updates {@link #field} and {@link #rotation}.
+	 * 
+	 * @param model data model of the field.
+	 */
 	private void determineFieldTexture(final IField model) {
 
 		//3:SOUTH  2:NORTH  1:WEST  0:EAST
@@ -79,7 +111,7 @@ public class Field extends Entity {
 		//selects the correct texture + rotation depending on the booleans
 		final int result = StageUtil.convertToInt(dir, 2);
 		this.field = resHandler.getRegion(FIELD_TEXTURE_LOOKUP[result]);
-		this.fieldRotation = FIELD_ROTATION_LOOKUP[result];
+		this.rotation = FIELD_ROTATION_LOOKUP[result];
 	}
 	
 	@Override
@@ -88,7 +120,7 @@ public class Field extends Entity {
 		final float fieldWidth = prefs.getFloat(PrefConst.FIELD_WIDTH_KEY, 50);
 		final float fieldHeight = prefs.getFloat(PrefConst.FIELD_HEIGHT_KEY, 50);
 				
-		batch.draw(field, renderX, renderY, fieldWidth/2f, fieldHeight/2f, fieldWidth, fieldHeight, 1f, 1f, fieldRotation);
+		batch.draw(field, renderX, renderY, fieldWidth/2f, fieldHeight/2f, fieldWidth, fieldHeight, 1f, 1f, rotation);
 		
 		food.render();
 				
