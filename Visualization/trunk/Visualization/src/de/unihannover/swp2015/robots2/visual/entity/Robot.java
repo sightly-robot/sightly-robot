@@ -88,7 +88,7 @@ public class Robot extends Entity {
 		this.bubble.font = resHandler.getFont(ResConst.DEFAULT_FONT);
         this.bubble.points = robo.getId().substring(0, 4) + " : " + robo.getScore() + "(-)";
 		this.bubble.x = robo.getPosition().getX() * fieldWidth - renderX;
-		this.bubble.y = robo.getPosition().getY() * fieldHeight - renderX;
+		this.bubble.y = robo.getPosition().getY() * fieldHeight - renderY;
 		this.bubble.width = fieldWidth * 0.75f;
 		this.bubble.height = fieldHeight * 0.2f;
 	}
@@ -218,7 +218,9 @@ public class Robot extends Entity {
 			final float fieldWidth = prefs.getFloat(PrefConst.FIELD_WIDTH_KEY, 42);
 			final float fieldHeight = prefs.getFloat(PrefConst.FIELD_HEIGHT_KEY, 42);
 
-			this.modList.clear();
+			if (modList != null)
+				this.modList.clear();
+			
 			final IRobot r = (IRobot) model;
 
 			this.width = fieldWidth * EntityConst.ROBOT_SCALE;
@@ -229,7 +231,7 @@ public class Robot extends Entity {
 			this.bubble.width = fieldWidth * 0.75f;
 			this.bubble.height = fieldHeight * 0.2f;
 			this.bubble.x = r.getPosition().getX() * fieldWidth - renderX;
-			this.bubble.y = r.getPosition().getY() * fieldHeight - renderX;
+			this.bubble.y = r.getPosition().getY() * fieldHeight - renderY;
 		}
 	}
 	
