@@ -8,16 +8,17 @@ import java.util.List;
 
 import org.junit.Test;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.Batch;
 
 import de.unihannover.swp2015.robots2.model.implementation.Field;
+import de.unihannover.swp2015.robots2.model.implementation.Robot;
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
 import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
 import de.unihannover.swp2015.robots2.visual.core.IGameHandler;
 import de.unihannover.swp2015.robots2.visual.entity.Entity;
 import de.unihannover.swp2015.robots2.visual.entity.IEntity;
 import de.unihannover.swp2015.robots2.visual.resource.IResourceHandler;
-import de.unihannover.swp2015.robots2.visual.util.EntityUtil;
+import de.unihannover.swp2015.robots2.visual.util.SortUtil;
 import de.unihannover.swp2015.robots2.visual.util.pref.IPreferences;
 import de.unihannover.swp2015.robots2.visual.util.pref.IPreferencesKey;
 import de.unihannover.swp2015.robots2.visual.util.pref.observer.IPreferencesObserver;
@@ -27,33 +28,11 @@ public class EntitySortTest {
 
 	public static class TestEntity extends Entity {
 
-		public TestEntity(SpriteBatch batch, IGameHandler gameHandler) {
-			super(new Field(0,0), batch, gameHandler);
-		}
-
-		@Override
-		public void render() {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public void onModelUpdate(IEvent event) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public void onUpdatePreferences(PreferencesObservable o, IPreferencesKey updatedKey) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public void onManagedModelUpdate(IEvent event) {
-			// TODO Auto-generated method stub
-			
-		}
+		public TestEntity(IGameHandler gameHandler) {super(new Field(0,0), gameHandler);}
+		public void draw(Batch b) {}
+		public void onModelUpdate(IEvent event) {}
+		public void onUpdatePreferences(PreferencesObservable o, IPreferencesKey updatedKey) {}
+		public void onManagedModelUpdate(IEvent event) {}
 
 	}	
 	
@@ -87,34 +66,26 @@ public class EntitySortTest {
 		public void dispatchEvent(IEvent event, IEntity source) {}
 		public IPreferences getPreferences() {	return new TestPref();}
 		public void resize(int width, int height) {	}
-		@Override
-		public int getRanking(IRobot robo) {
-			// TODO Auto-generated method stub
-			return 0;
-		}
-		@Override
-		public void onManagedModelUpdate(IEvent event) {
-			// TODO Auto-generated method stub
-			
-		}
+		public int getRanking(IRobot robo) {return 0;}
+		public void onManagedModelUpdate(IEvent event) {}
 		
 	}
 
 	@Test
 	public void testSortEntities() {
-		final IEntity entity = new TestEntity(null, new GH());
+		final IEntity entity = new TestEntity(new GH());
 		entity.setZIndex(5);
 
-		final IEntity entity_two = new TestEntity(null, new GH());
+		final IEntity entity_two = new TestEntity(new GH());
 		entity_two.setZIndex(0);
 
-		final IEntity entity_three = new TestEntity(null, new GH());
+		final IEntity entity_three = new TestEntity(new GH());
 		entity_three.setZIndex(42);
 
-		final IEntity entity_four = new TestEntity(null, new GH());
+		final IEntity entity_four = new TestEntity(new GH());
 		entity_four.setZIndex(1);
 
-		final IEntity entity_five = new TestEntity(null, new GH());
+		final IEntity entity_five = new TestEntity(new GH());
 		entity_five.setZIndex(9);
 
 		final List<IEntity> list = new ArrayList<>(5);
@@ -126,7 +97,7 @@ public class EntitySortTest {
 
 		final List<IEntity> expected = Arrays.asList(entity_two, entity_four, entity, entity_five, entity_three);
 
-		EntityUtil.sortEntities(list);
+		SortUtil.sortEntities(list);
 
 		assertTrue("Expect that 'list' and 'expected' are equal \n 'list' = " + list + "\n 'expected = " + expected,
 				list.equals(expected));
@@ -134,30 +105,61 @@ public class EntitySortTest {
 	
 	@Test
 	public void testInsertionSortEntities() {
-		final IEntity entity = new TestEntity(null, new GH());
+		final IEntity entity = new TestEntity(new GH());
 		entity.setZIndex(5);
 
-		final IEntity entity_two = new TestEntity(null, new GH());
+		final IEntity entity_two = new TestEntity(new GH());
 		entity_two.setZIndex(0);
 
-		final IEntity entity_three = new TestEntity(null, new GH());
+		final IEntity entity_three = new TestEntity(new GH());
 		entity_three.setZIndex(42);
 
-		final IEntity entity_four = new TestEntity(null, new GH());
+		final IEntity entity_four = new TestEntity(new GH());
 		entity_four.setZIndex(1);
 
-		final IEntity entity_five = new TestEntity(null, new GH());
+		final IEntity entity_five = new TestEntity(new GH());
 		entity_five.setZIndex(9);
 
 		final List<IEntity> list = new ArrayList<>(5);
 
-		EntityUtil.addEntitySorted(entity, list);
-		EntityUtil.addEntitySorted(entity_two, list);
-		EntityUtil.addEntitySorted(entity_three, list);
-		EntityUtil.addEntitySorted(entity_four, list);
-		EntityUtil.addEntitySorted(entity_five, list);
+		SortUtil.addEntitySorted(entity, list);
+		SortUtil.addEntitySorted(entity_two, list);
+		SortUtil.addEntitySorted(entity_three, list);
+		SortUtil.addEntitySorted(entity_four, list);
+		SortUtil.addEntitySorted(entity_five, list);
 
 		final List<IEntity> expected = Arrays.asList(entity_two, entity_four, entity, entity_five, entity_three);
+
+		assertTrue("Expect that 'list' and 'expected' are equal \n 'list' = " + list + "\n 'expected = " + expected,
+				list.equals(expected));
+	}
+	
+	@Test
+	public void testInsertionSortRobot() {
+		final Robot roboOne = new Robot("asd",true, true);
+		roboOne.setScore(0);
+
+		final Robot roboTwo = new Robot("assd",true, true);
+		roboTwo.setScore(1);
+		
+		final Robot roboThree = new Robot("asssd",true, true);
+		roboThree.setScore(42);
+		
+		final Robot roboFour = new Robot("asssssd",true, true);
+		roboFour.setScore(500);
+		
+		final Robot roboFive = new Robot("asssssssd",true, true);
+		roboFive.setScore(4);
+
+		final List<IRobot> list = new ArrayList<>(5);
+
+		SortUtil.addRobotSorted(roboOne, list);
+		SortUtil.addRobotSorted(roboTwo, list);
+		SortUtil.addRobotSorted(roboThree, list);
+		SortUtil.addRobotSorted(roboFour, list);
+		SortUtil.addRobotSorted(roboFive, list);
+
+		final List<Robot> expected = Arrays.asList(roboFour, roboThree, roboFive, roboTwo, roboOne);
 
 		assertTrue("Expect that 'list' and 'expected' are equal \n 'list' = " + list + "\n 'expected = " + expected,
 				list.equals(expected));

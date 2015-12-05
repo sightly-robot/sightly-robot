@@ -1,6 +1,6 @@
 package de.unihannover.swp2015.robots2.visual.entity;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
@@ -66,14 +66,14 @@ public class Field extends Entity {
 	 * @param renderer batch, which should be used to render the entity
 	 * @param gameHandler {@link IGameHandler}, which should own this entity.
 	 */
-	public Field(final IStage parent, final IField model, final SpriteBatch renderer, final IGameHandler gameHandler){
-		super(model, renderer, gameHandler);
+	public Field(final IStage parent, final IField model, final IGameHandler gameHandler){
+		super(model, gameHandler);
 		
 		this.model = model;
 		this.model.observe(this);
 		this.parent = parent;
 		
-		this.food = new Resource(model, renderer, gameHandler);
+		this.food = new Resource(model, gameHandler);
 		this.texWall = resHandler.getRegion(ResConst.DEFAULT_WALL_N, ResConst.DEFAULT_WALL_E, ResConst.DEFAULT_WALL_S, ResConst.DEFAULT_WALL_W); 
 		this.field = resHandler.getRegion(ResConst.DEFAULT_FIELD); 
 
@@ -115,14 +115,19 @@ public class Field extends Entity {
 	}
 	
 	@Override
-	public void render() {
+	public void draw(final Batch batch) {
 		
 		final float fieldWidth = prefs.getFloat(PrefConst.FIELD_WIDTH_KEY, 50);
 		final float fieldHeight = prefs.getFloat(PrefConst.FIELD_HEIGHT_KEY, 50);
-				
-		batch.draw(field, renderX, renderY, fieldWidth/2f, fieldHeight/2f, fieldWidth, fieldHeight, 1f, 1f, rotation);
 		
-		food.render();
+		if (rotation == -90)
+			batch.draw(field, renderX-(fieldWidth-fieldHeight)/2, renderY-(fieldWidth-fieldHeight)/2, fieldWidth/2f, fieldHeight/2f, fieldHeight, fieldWidth, 1f, 1f, rotation);
+		else if (rotation == 90)
+			batch.draw(field, renderX+(fieldWidth-fieldHeight)/2, renderY+(fieldWidth-fieldHeight)/2, fieldWidth/2f, fieldHeight/2f, fieldHeight, fieldWidth, 1f, 1f, rotation);
+		else
+			batch.draw(field, renderX, renderY, fieldWidth/2f, fieldHeight/2f, fieldWidth, fieldHeight, 1f, 1f, rotation);
+
+		food.draw(batch);
 				
 		final IField field = (IField) model;
 		

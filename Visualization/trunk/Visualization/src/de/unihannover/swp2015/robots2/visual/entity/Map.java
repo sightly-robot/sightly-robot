@@ -3,7 +3,7 @@ package de.unihannover.swp2015.robots2.visual.entity;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.Batch;
 
 import de.unihannover.swp2015.robots2.model.interfaces.IAbstractModel;
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
@@ -35,8 +35,8 @@ public class Map extends Entity {
 	 * @param batch batch, which should be used to render the map
 	 * @param gameHandler parent
 	 */
-	public Map(IStage model, SpriteBatch batch, IGameHandler gameHandler) {
-		super(model, batch, gameHandler);
+	public Map(IStage model, IGameHandler gameHandler) {
+		super(model, gameHandler);
 	
 		this.fieldList = new ArrayList<>(model.getWidth() * model.getHeight());
 		
@@ -52,15 +52,15 @@ public class Map extends Entity {
 		for (int x = 0; x < model.getWidth(); ++x) {
 			for (int y = 0; y < model.getHeight(); ++y) {
 				final IField field = model.getField(x, y);
-				this.fieldList.add(new Field(model, field, batch, gameHandler));
+				this.fieldList.add(new Field(model, field, gameHandler));
 			}
 		}
 	}
 	
 	@Override
-	public void render() {
+	public void draw(final Batch batch) {
 		for (int i = 0 ; i < fieldList.size() ; ++i) {
-			fieldList.get(i).render();
+			fieldList.get(i).draw(batch);
 		}
 	}
 	

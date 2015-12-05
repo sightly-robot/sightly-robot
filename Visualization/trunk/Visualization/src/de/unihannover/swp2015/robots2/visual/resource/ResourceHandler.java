@@ -8,6 +8,8 @@ import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.utils.Array;
 
 import de.unihannover.swp2015.robots2.visual.resource.texture.RenderUnit;
@@ -143,8 +145,24 @@ public class ResourceHandler implements IResourceHandler {
 	 * Creates all fonts, that can be used.
 	 */
 	private void createFonts() {
-		final BitmapFont defFont = new BitmapFont(true);
-		this.fontMap.put(ResConst.DEFAULT_FONT, defFont);
+		final FreeTypeFontGenerator defFontGen = new FreeTypeFontGenerator(Gdx.files.internal("assets/font/Roboto-Regular.ttf"));
+		final FreeTypeFontParameter defPara = new FreeTypeFontParameter();
+		defPara.characters = "abcdefghijklmnopqrstuvxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789()";
+		defPara.size = 15;
+		defPara.flip = true;
+		this.fontMap.put(ResConst.DEFAULT_FONT, defFontGen.generateFont(defPara));
+		
+		final FreeTypeFontParameter bigDefFont = new FreeTypeFontParameter();
+		bigDefFont.characters = "abcdefghijklmnopqrstuvxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789()";
+		bigDefFont.size = 28;
+		bigDefFont.flip = true;
+		this.fontMap.put(ResConst.DEFAULT_FONT_BIG, defFontGen.generateFont(bigDefFont));
+
+		final FreeTypeFontParameter titleDefFont = new FreeTypeFontParameter();
+		titleDefFont.characters = "abcdefghijklmnopqrstuvxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789()";
+		titleDefFont.size = 36;
+		titleDefFont.flip = true;
+		this.fontMap.put(ResConst.DEFAULT_FONT_TITLE, defFontGen.generateFont(titleDefFont));
 	}
 
 	@Override

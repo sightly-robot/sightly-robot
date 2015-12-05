@@ -24,5 +24,7 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="libs/gdx-tools-1.7.2.jar"/>
 	<classpathentry kind="lib" path="libs/json-org.jar" sourcepath="libs/src/json-sources.jar"/>
+	<classpathentry kind="lib" path="libs/gdx-freetype-natives.jar"/>
+	<classpathentry kind="lib" path="libs/gdx-freetype.jar" sourcepath="libs/src/gdx-freetype-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

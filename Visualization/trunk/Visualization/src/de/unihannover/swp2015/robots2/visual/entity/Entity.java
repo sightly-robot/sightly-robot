@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import de.unihannover.swp2015.robots2.model.interfaces.IAbstractModel;
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
@@ -67,12 +66,7 @@ public abstract class Entity implements IEntity {
      * GameHandler, which owns the entity.
      */
     protected final IGameHandler gameHandler;
-    
-    /**
-     * Batch, which should be used to draw the entity.
-     */
-    protected final SpriteBatch batch;
-    
+        
     /**
      * Constructs an entity. The constructor will make the entity observe the <code>model</code> and the preference-object of the <code>gameHandler</code>
      * 
@@ -80,8 +74,7 @@ public abstract class Entity implements IEntity {
      * @param batch batch for drawing
      * @param gameHandler parent
      */
-    public Entity(final IAbstractModel model, final SpriteBatch batch, final IGameHandler gameHandler) {
-    	this.batch = batch;
+    public Entity(final IAbstractModel model, final IGameHandler gameHandler) {
     	this.gameHandler = gameHandler;
     	this.resHandler = gameHandler.getResourceHandler();
 

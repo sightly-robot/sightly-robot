@@ -1,6 +1,6 @@
 package de.unihannover.swp2015.robots2.visual.entity;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
@@ -31,8 +31,8 @@ public class Resource extends Entity {
 	 * @param batch batch, which will be used to draw the entity.
 	 * @param gameHandler parent
 	 */
-	public Resource(final IField model, SpriteBatch batch, IGameHandler gameHandler) {
-		super(model, batch, gameHandler);
+	public Resource(final IField model, IGameHandler gameHandler) {
+		super(model, gameHandler);
 		
 		this.model.observe(this);
 		
@@ -49,7 +49,7 @@ public class Resource extends Entity {
 	}
 
 	@Override
-	public void render() {
+	public void draw(final Batch batch) {
 
 		final IField field = (IField) model;
 		

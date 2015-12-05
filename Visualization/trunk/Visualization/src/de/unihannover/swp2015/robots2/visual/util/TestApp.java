@@ -10,6 +10,8 @@ import java.util.UUID;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 
+import com.badlogic.gdx.Gdx;
+
 import de.unihannover.swp2015.robots2.model.implementation.Field;
 import de.unihannover.swp2015.robots2.model.implementation.Game;
 import de.unihannover.swp2015.robots2.model.implementation.Robot;
@@ -37,6 +39,7 @@ public class TestApp extends JFrame implements ActionListener {
 	private final JButton changeWalls;
 	private final JButton changeFood;
 	private final JButton changeSize;
+	private final JButton startstop;
 	
 	public TestApp(IGame game) {
 		this.game = game;
@@ -61,12 +64,17 @@ public class TestApp extends JFrame implements ActionListener {
 		this.changeSize = new JButton("changeSize");
 		changeSize.setBounds(0, 200, 200, 50);
 		changeSize.addActionListener(this);
+		
+		this.startstop = new JButton("startstop");
+		startstop.setBounds(0, 250, 200, 50);
+		startstop.addActionListener(this);
 
 		this.add(changeRobotPos);
 		this.add(changeRobots);
 		this.add(changeWalls);
 		this.add(changeFood);
 		this.add(changeSize);
+		this.add(startstop);
 		
 		this.setSize(400, 400);
 		this.setVisible(true);
@@ -122,6 +130,18 @@ public class TestApp extends JFrame implements ActionListener {
 			final Stage g = (Stage) game.getStage();
 			g.changeSize(10, 10);
 			g.emitEvent(UpdateType.STAGE_SIZE);
+		}
+		else if (e.getSource() == this.startstop) {
+			final Game g = (Game) game;
+			Gdx.app.postRunnable(new Runnable() {
+
+				@Override
+				public void run() {
+					g.setRunning(!g.isRunning());
+					g.emitEvent(UpdateType.GAME_STATE);
+				}
+				
+			});
 		}
 	}
 	

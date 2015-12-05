@@ -7,11 +7,8 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.bitfire.postprocessing.PostProcessor;
-import com.bitfire.postprocessing.effects.Fxaa;
 
 import de.unihannover.swp2015.robots2.controller.externalInterfaces.IVisualization;
 import de.unihannover.swp2015.robots2.controller.main.VisualizationMainController;
@@ -31,6 +28,9 @@ import de.unihannover.swp2015.robots2.visual.util.pref.FlexPreferences;
  */
 public class Visualization extends ApplicationAdapter implements IVisualization {
 
+	/**
+	 * Broker-IP
+	 */
 	private static final String CONNECTION_IP = "tcp://192.168.1.66";
 	
 	/**
@@ -53,17 +53,12 @@ public class Visualization extends ApplicationAdapter implements IVisualization 
 	 * Handles virtual display. Furthermore it makes the application keep the aspect ratio.
 	 */
 	private Viewport fitViewport;
-	
-	/**
-	 * Handles post-processing.
-	 */
-	private PostProcessor pp;
-	
+		
 	/**
 	 * Handles all MQTT stuff. Contains main model.
 	 */
 	private final VisualizationMainController mainController;
-	
+		
 	/**
 	 * Constructs a Visualization object.
 	 * 
@@ -80,13 +75,13 @@ public class Visualization extends ApplicationAdapter implements IVisualization 
 
 		int appWidth = Gdx.graphics.getWidth();
 		int appHeight = Gdx.graphics.getHeight();
-				
+			
 		this.prefs = new FlexPreferences("prefs");
 		this.cam = new OrthographicCamera();
 		this.cam.setToOrtho(true, appWidth, appHeight);
 		this.fitViewport = new FitViewport(appWidth, appHeight, cam);
-		this.pp = new PostProcessor(false, false, true);
-		this.pp.addEffect(new Fxaa(appWidth, appHeight));
+		this.fitViewport.update(appWidth, appHeight, true);
+		
 		final IResourceHandler resHandler = new ResourceHandler(ResConst.ATLAS_PATH.getName() + ResConst.ATLAS_NAME.getName() + ".atlas");
 		
 		/*
@@ -115,24 +110,19 @@ public class Visualization extends ApplicationAdapter implements IVisualization 
 		Gdx.gl.glClearColor(0f, 0f, 0f, 0f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-		pp.capture();
-
 		for (int i = 0; i < gameHandlerList.size(); ++i) {
 			gameHandlerList.get(i).update();
 		}
-
+				
 		for (int i = 0; i < gameHandlerList.size(); ++i) {
 			gameHandlerList.get(i).render();
 		}
-		
-		pp.render();
+
 	}
 	
 	@Override
 	public void resize(final int width, final int height) {
-		this.fitViewport.update(width, height, true);
-		this.pp.setViewport(new Rectangle(fitViewport.getScreenX(), fitViewport.getScreenY(),
-				fitViewport.getScreenWidth(), fitViewport.getScreenHeight()));
+		this.fitViewport.update(width, height);
 
 		for (int i = 0; i < gameHandlerList.size(); ++i) {
 			gameHandlerList.get(i).resize(width, height);

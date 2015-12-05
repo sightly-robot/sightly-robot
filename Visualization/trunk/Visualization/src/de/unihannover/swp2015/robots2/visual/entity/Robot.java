@@ -1,12 +1,13 @@
 package de.unihannover.swp2015.robots2.visual.entity;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
 import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
+import de.unihannover.swp2015.robots2.visual.core.GameConst;
 import de.unihannover.swp2015.robots2.visual.core.IGameHandler;
 import de.unihannover.swp2015.robots2.visual.core.PrefConst;
 import de.unihannover.swp2015.robots2.visual.entity.modifier.MoveModifierX;
@@ -56,8 +57,8 @@ public class Robot extends Entity {
 	 * @param batch for drawing the robot
 	 * @param gameHandler parent
 	 */
-	public Robot(final IRobot robModel, SpriteBatch batch, IGameHandler gameHandler) {
-		super(robModel, batch, gameHandler);
+	public Robot(final IRobot robModel, IGameHandler gameHandler) {
+		super(robModel, gameHandler);
 
 		this.robo = resHandler.getRegion(ResConst.DEFAULT_ROBO_NORTH);
 		this.bubble = new Bubble();
@@ -65,8 +66,8 @@ public class Robot extends Entity {
 		final float fieldWidth = prefs.getFloat(PrefConst.FIELD_WIDTH_KEY, 42);
 		final float fieldHeight = prefs.getFloat(PrefConst.FIELD_HEIGHT_KEY, 42);
 
-		this.width = fieldWidth * EntityConst.ROBOT_SCALE;
-		this.height = fieldHeight * EntityConst.ROBOT_SCALE;
+		this.width = fieldWidth * GameConst.ROBOT_SCALE;
+		this.height = fieldHeight * GameConst.ROBOT_SCALE;
 		this.renderX = robModel.getPosition().getX() * fieldWidth + fieldWidth/2 - width/2;
 		this.renderY = robModel.getPosition().getY() * fieldHeight + fieldHeight/2 - height/2;
 		
@@ -86,7 +87,7 @@ public class Robot extends Entity {
 		this.bubble.color = ColorUtil.fromAwtColor(robo.getColor());
 		this.bubble.color = bubble.color.set(bubble.color.r, bubble.color.g, bubble.color.b, bubble.color.a * 0.7f);
 		this.bubble.font = resHandler.getFont(ResConst.DEFAULT_FONT);
-        this.bubble.points = robo.getId().substring(0, 4) + " : " + robo.getScore() + "(-)";
+        this.bubble.points = robo.getId().substring(0, 4) + " : " + robo.getScore() + "(" + gameHandler.getRanking(robo) + ")";
 		this.bubble.x = robo.getPosition().getX() * fieldWidth - renderX;
 		this.bubble.y = robo.getPosition().getY() * fieldHeight - renderY;
 		this.bubble.width = fieldWidth * 0.75f;
@@ -178,7 +179,7 @@ public class Robot extends Entity {
 	}
 	
 	@Override
-	public void render() {
+	public void draw(final Batch batch) {
 		batch.draw(robo, renderX, renderY, width/2f, height/2f, width, height, 1f, 1f, rotation);	
 
 		batch.setColor(bubble.color);		
@@ -223,8 +224,8 @@ public class Robot extends Entity {
 			
 			final IRobot r = (IRobot) model;
 
-			this.width = fieldWidth * EntityConst.ROBOT_SCALE;
-			this.height = fieldHeight * EntityConst.ROBOT_SCALE;
+			this.width = fieldWidth * GameConst.ROBOT_SCALE;
+			this.height = fieldHeight * GameConst.ROBOT_SCALE;
 			this.renderX = r.getPosition().getX() * fieldWidth + fieldWidth/2 - width/2;
 			this.renderY = r.getPosition().getY() * fieldHeight + fieldHeight/2 - height/2;
 			

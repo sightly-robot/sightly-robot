@@ -13,7 +13,9 @@ public enum PrefConst implements IPreferencesKey {
 	FIELD_HEIGHT_KEY("field_height"), 
 	MAP_ROWS_KEY("map_rows"), 
 	MAP_COLS_KEY("map_cols"), 
-	WALL_THICK_KEY("wall_thick");
+	WALL_THICK_KEY("wall_thick"),
+	VIEW_WIDTH("view_width"), 
+	VIEW_HEIGHT("view_height");
 	
 	private final String key;
 	

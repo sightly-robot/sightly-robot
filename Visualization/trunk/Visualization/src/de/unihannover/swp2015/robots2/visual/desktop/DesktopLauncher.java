@@ -27,6 +27,7 @@ public class DesktopLauncher {
 		packSettings.maxWidth = 1024*4;
 		packSettings.maxHeight = 1024*4;
 		packSettings.pot = true;
+		packSettings.duplicatePadding = true;
 		TexturePacker.process(packSettings, "assets/tex", ResConst.ATLAS_PATH.getName(), ResConst.ATLAS_NAME.getName());
 		
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();

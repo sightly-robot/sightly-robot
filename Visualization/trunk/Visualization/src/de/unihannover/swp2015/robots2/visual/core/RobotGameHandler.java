@@ -3,9 +3,12 @@ package de.unihannover.swp2015.robots2.visual.core;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.bitfire.postprocessing.PostProcessor;
+import com.bitfire.postprocessing.effects.Bloom;
+import com.bitfire.postprocessing.effects.Fxaa;
 
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
 import de.unihannover.swp2015.robots2.model.interfaces.IGame;
@@ -16,7 +19,8 @@ import de.unihannover.swp2015.robots2.visual.entity.Map;
 import de.unihannover.swp2015.robots2.visual.entity.Robot;
 import de.unihannover.swp2015.robots2.visual.entity.modifier.base.IEntityModifier;
 import de.unihannover.swp2015.robots2.visual.resource.IResourceHandler;
-import de.unihannover.swp2015.robots2.visual.util.EntityUtil;
+import de.unihannover.swp2015.robots2.visual.ui.UI;
+import de.unihannover.swp2015.robots2.visual.util.SortUtil;
 import de.unihannover.swp2015.robots2.visual.util.pref.IPreferences;
 
 /**
@@ -47,24 +51,40 @@ public class RobotGameHandler extends GameHandler {
 	protected SpriteBatch spriteBatch;
 		
 	/**
+	 * Capable to render post-processing effects. For the map.
+	 */
+	protected PostProcessor pp;
+	
+	/**
+	 * Effect, which blurs the screen when game is stopped.
+	 */
+	protected Bloom bloom;
+	
+	/**
+	 * UI, which will be displayed if {@link IGame#isRunning()} == false
+	 */
+	protected UI ui;
+	
+	/**
 	 * Main camera
 	 */
 	protected Viewport view;
-	
+			
 	/**
 	 * Overview of robots for ranking
 	 */
-	private IRobot[] robots;
-	private int robotsIndex;
+	private final List<IRobot> robots;
 	
 	/**
 	 * Construct a new RobotGameHandler and connects this handler (means it will directly observe the model) to the given model <code>game</code>
+	 * 
 	 * @param game root of the model
 	 * @param resourceHandler {@link IResourceHandler}
 	 */
 	public RobotGameHandler(final IGame game, final IResourceHandler resourceHandler, final Viewport view, final IPreferences prefs) {
 		super(resourceHandler, prefs);
 		
+		this.robots = new ArrayList<>();
 		this.modifierList = new ArrayList<>();
 		this.entityList = new ArrayList<>();
 		this.game = game;
@@ -72,7 +92,15 @@ public class RobotGameHandler extends GameHandler {
 		this.view = view;
 		this.spriteBatch.setProjectionMatrix(this.view.getCamera().combined);
 		this.game.observe(this);
-		
+		this.pp = new PostProcessor(false, true, true);
+		this.bloom = new Bloom(view.getScreenWidth(), view.getScreenHeight());
+		this.bloom.setBaseIntesity(0);
+		this.bloom.setThreshold(0);
+		this.bloom.setBloomSaturation(0.3f);
+		this.bloom.setEnabled(!game.isRunning());
+		this.pp.addEffect(bloom);
+		this.pp.addEffect(new Fxaa(view.getScreenWidth()*2, view.getScreenHeight()*2));
+
 		this.init();
 	}
 	
@@ -81,27 +109,27 @@ public class RobotGameHandler extends GameHandler {
 	 */
 	private void init() {
 		final IStage stage = game.getStage();
-
-		this.robots = new IRobot[game.getRobots().size()];
-		this.robotsIndex = 0;
 		
 		//set preferences !have to happen before creating entities!
 		this.prefs.putInt(PrefConst.MAP_ROWS_KEY, stage.getWidth());
 		this.prefs.putInt(PrefConst.MAP_COLS_KEY, stage.getHeight());
-		this.prefs.putFloat(PrefConst.FIELD_WIDTH_KEY, ((float) Gdx.graphics.getWidth()) / stage.getWidth());
-		this.prefs.putFloat(PrefConst.FIELD_HEIGHT_KEY, ((float) Gdx.graphics.getHeight()) / stage.getHeight());
+		this.prefs.putFloat(PrefConst.FIELD_WIDTH_KEY, ((float) view.getScreenWidth()) / stage.getWidth());
+		this.prefs.putFloat(PrefConst.FIELD_HEIGHT_KEY, ((float) view.getScreenWidth()) / stage.getHeight());
+		this.prefs.putFloat(PrefConst.VIEW_WIDTH, view.getScreenWidth());
+		this.prefs.putFloat(PrefConst.VIEW_HEIGHT, view.getScreenHeight());
 		
-		//create entites
-		for (final IRobot robot : game.getRobots().values()) {
-			final Robot robo = new Robot(robot, spriteBatch, this);
+		//create entities
+		for (final IRobot roboModel : game.getRobots().values()) {
+			final Robot robo = new Robot(roboModel, this);
 			robo.setZIndex(1);
 			this.entityList.add(robo);
-			this.robots[robotsIndex]=robot;
-			robotsIndex++;
+			this.robots.add(roboModel);
 		}
-		this.entityList.add(new Map(stage, spriteBatch, this));
+		this.entityList.add(new Map(stage, this));
+		SortUtil.sortEntities(entityList);
 		
-		EntityUtil.sortEntities(entityList);
+		//create ui
+		this.ui = new UI(robots, spriteBatch, this);
 	}
 	
 	@Override
@@ -110,14 +138,24 @@ public class RobotGameHandler extends GameHandler {
 			this.entityList.get(i).update();
 		}
 	}
-	
+		
 	@Override
 	public void render() {
+			
+		pp.capture();
+		
 		spriteBatch.begin();
 		for (int i = 0; i < entityList.size(); ++i) {
-			this.entityList.get(i).render();
+			this.entityList.get(i).draw(spriteBatch);
 		}
 		spriteBatch.end();
+		
+		pp.render();
+		
+		if (!game.isRunning()) {
+			ui.render();
+		}	
+				
 	}
 
 	@Override
@@ -128,18 +166,22 @@ public class RobotGameHandler extends GameHandler {
 			break;
 			
 		case GAME_STATE:
+			bloom.setEnabled(!game.isRunning());
+			ui.setDisplay(true);
 			break;
 			
 		case ROBOT_ADD:
 			if (event.getObject() instanceof IRobot) {
 				final IRobot robot = (IRobot) event.getObject();
-				final Robot roboEntity = new Robot(robot, spriteBatch, this);
+				final Robot roboEntity = new Robot(robot, this);
 				roboEntity.setZIndex(1);
-				EntityUtil.addEntitySorted(roboEntity, entityList);
+				SortUtil.addEntitySorted(roboEntity, entityList);
+				SortUtil.addRobotSorted(robot, robots);
 			}
 			break;
 			
 		case ROBOT_DELETE:
+			this.robots.remove(event.getObject());
 			for (int i = entityList.size()-1; i >= 0 ; i--) {
 				if (entityList.get(i).getModel() == event.getObject()) {
 					this.entityList.remove(i);
@@ -167,31 +209,17 @@ public class RobotGameHandler extends GameHandler {
 	
 	@Override
 	public void resize(int width, int height) {
+		this.pp.setViewport(new Rectangle(view.getScreenX(), view.getScreenY(),
+				view.getScreenWidth(), view.getScreenHeight()));
 	}
 	
 	@Override
 	public int getRanking(final IRobot robo) {
-		IRobot temp;
-		
-		for(int h=0; h<robots.length-1; h++)
-		{
-			for(int i=0; i<robots.length-h; i++)
-			{
-				System.out.println(robots[i].getScore());
-				if(robots[i].getScore()>robots[i+1].getScore())
-				{
-					temp = robots[i];
-					robots[i] = robots[i+1];
-					robots[i+1]=temp;
-				}
-			}
-		}
-		for(int i=0; i<robots.length; i++)
-		{
-			if(robots[i]==robo)
+		for (int i = 0; i < robots.size(); ++i) {
+			if (robots.get(i) == robo)
 				return i+1;
 		}
-		return 1;//TODO fix this
+		return -1;
 	}
 	
 
