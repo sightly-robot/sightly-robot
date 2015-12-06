@@ -45,12 +45,15 @@ public class TransformationStringBuilder {
 	 * @param fieldHeight The height of a field
 	 * @return A string that can be passed to a svg transformation attribute.
 	 */
-	public static String getObjectRotationTransformation(IPosition pos, Orientation baseDirection, double fieldWidth, double fieldHeight) {
+	public static String getObjectTransformation(IPosition pos, Orientation baseDirection, double fieldWidth, double fieldHeight) {
 		StringBuilder builder = new StringBuilder();
-		builder.append("translate(").append(pos.getX() * fieldWidth).append(" ")
-	           .append(pos.getY() * fieldHeight)
-	       	   .append(") rotate(").append(getRotationFromDirection(pos.getOrientation(), baseDirection))
-		       .append(" ").append(fieldWidth / 2).append(" ").append(fieldHeight / 2).append(")")
+		// assumes standard width and height of 100 of objects
+		builder
+			.append("translate(").append(pos.getX() * fieldWidth).append(" ").append(pos.getY() * fieldHeight).append(") ")	
+			//.append("scale(").append(1.).append(" ").append(1.).append(") ")	
+			.append("rotate(").append(getRotationFromDirection(pos.getOrientation(), baseDirection))
+			.append(" ").append(fieldWidth / 2).append(" ").append(fieldHeight / 2).append(")")
+			.append("scale(").append(fieldWidth / 100).append(" ").append(fieldHeight / 100).append(") ")	
 		;
 		return builder.toString();
 	}
