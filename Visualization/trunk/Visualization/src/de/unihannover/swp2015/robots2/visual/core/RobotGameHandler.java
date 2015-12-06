@@ -3,7 +3,10 @@ package de.unihannover.swp2015.robots2.visual.core;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.bitfire.postprocessing.PostProcessor;
@@ -54,6 +57,10 @@ public class RobotGameHandler extends GameHandler {
 	 * Capable to render post-processing effects. For the map.
 	 */
 	protected PostProcessor pp;
+	/**
+	 * Capable to render post-processing effects. For the map.
+	 */
+	protected PostProcessor pp2;
 	
 	/**
 	 * Effect, which blurs the screen when game is stopped.
@@ -76,6 +83,17 @@ public class RobotGameHandler extends GameHandler {
 	private final List<IRobot> robots;
 	
 	/**
+	 * FBO, part of a workaround for a bug in the PP-lib.
+	 */
+	private final FrameBuffer fbo;
+	
+	/**
+	 * TextureRegion, part of a workaround for a bug in the PP-lib.
+	 * Describes the resulting texture of the FBO as texture region.
+	 */
+	private final TextureRegion reg;
+	
+	/**
 	 * Construct a new RobotGameHandler and connects this handler (means it will directly observe the model) to the given model <code>game</code>
 	 * 
 	 * @param game root of the model
@@ -93,13 +111,16 @@ public class RobotGameHandler extends GameHandler {
 		this.spriteBatch.setProjectionMatrix(this.view.getCamera().combined);
 		this.game.observe(this);
 		this.pp = new PostProcessor(false, true, true);
+		this.pp2 = new PostProcessor(false, true, true);
 		this.bloom = new Bloom(view.getScreenWidth(), view.getScreenHeight());
 		this.bloom.setBaseIntesity(0);
 		this.bloom.setThreshold(0);
 		this.bloom.setBloomSaturation(0.3f);
 		this.bloom.setEnabled(!game.isRunning());
 		this.pp.addEffect(bloom);
-		this.pp.addEffect(new Fxaa(view.getScreenWidth()*2, view.getScreenHeight()*2));
+		this.pp2.addEffect(new Fxaa(view.getScreenWidth()*2, view.getScreenHeight()*2));
+		this.fbo = new FrameBuffer(Pixmap.Format.RGBA4444, 800, 800, false);
+		this.reg = new TextureRegion(fbo.getColorBufferTexture());
 
 		this.init();
 	}
@@ -138,24 +159,41 @@ public class RobotGameHandler extends GameHandler {
 			this.entityList.get(i).update();
 		}
 	}
-		
+			
 	@Override
 	public void render() {
-			
-		pp.capture();
-		
-		spriteBatch.begin();
-		for (int i = 0; i < entityList.size(); ++i) {
-			this.entityList.get(i).draw(spriteBatch);
-		}
-		spriteBatch.end();
-		
-		pp.render();
 		
 		if (!game.isRunning()) {
+			//TODO check whether the performance drop in this branch is acceptable.
+			//approx. 50% slower than the other branch.
+			pp.capture();
+			
+			spriteBatch.begin();
+			for (int i = 0; i < entityList.size(); ++i) {
+				this.entityList.get(i).draw(spriteBatch);
+			}
+			spriteBatch.end();
+			
+			pp.render(fbo);
+			pp2.capture();
+			
+			spriteBatch.begin();
+			spriteBatch.draw(reg, 0, 0);
+			spriteBatch.end();
+			
 			ui.render();
-		}	
-				
+			
+			pp2.render();
+		}
+		else {
+			pp2.capture();
+			spriteBatch.begin();
+			for (int i = 0; i < entityList.size(); ++i) {
+				this.entityList.get(i).draw(spriteBatch);
+			}
+			spriteBatch.end();
+			pp2.render();
+		}
 	}
 
 	@Override

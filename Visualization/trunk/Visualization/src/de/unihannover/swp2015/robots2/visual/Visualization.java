@@ -103,7 +103,7 @@ public class Visualization extends ApplicationAdapter implements IVisualization 
 			gameHandlerList.get(i).dispose();
 		}
 	}
-
+	float c = 5;
 	@Override
 	public void render() {
 			
@@ -118,6 +118,11 @@ public class Visualization extends ApplicationAdapter implements IVisualization 
 			gameHandlerList.get(i).render();
 		}
 
+		c-=Gdx.graphics.getDeltaTime();
+		if (c <0) {
+			c = 5;
+			System.out.println(Gdx.graphics.getFramesPerSecond());
+		}
 	}
 	
 	@Override
