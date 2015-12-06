@@ -14,6 +14,7 @@ import org.apache.pivot.collections.Map;
 import org.apache.pivot.serialization.SerializationException;
 import org.apache.pivot.util.Resources;
 import org.apache.pivot.wtk.Alert;
+import org.apache.pivot.wtk.ApplicationContext;
 import org.apache.pivot.wtk.Button;
 import org.apache.pivot.wtk.ButtonPressListener;
 import org.apache.pivot.wtk.FileBrowserSheet;
@@ -26,6 +27,7 @@ import org.apache.pivot.wtk.Window;
 import org.json.JSONException;
 
 import de.unihannover.swp2015.robots2.application.MapLoader;
+import de.unihannover.swp2015.robots2.application.VisualizationUpdater;
 import de.unihannover.swp2015.robots2.application.components.StrategicVisualization;
 import de.unihannover.swp2015.robots2.application.exceptions.InvalidMapFile;
 import de.unihannover.swp2015.robots2.controller.main.GuiMainController;
@@ -53,6 +55,7 @@ public class ControlPanel extends Window implements Bindable {
 	
 	// Visualization
 	@BXML private StrategicVisualization visualization;
+	private VisualizationUpdater updater;
 	
 	private GuiMainController controller;
 	private Configurator configurator;
@@ -129,10 +132,8 @@ public class ControlPanel extends Window implements Bindable {
 						File file = fileBrowserSheet.getSelectedFile();
 						try {
 							// has side effects
-							new MapLoader(controller, file.getAbsolutePath());					
-							
-							visualization.setGame(controller, controller.getGame());
-							visualization.repaint();
+							startVisualizationOnce();
+							new MapLoader(controller, file.getAbsolutePath());
 							
 							startGame.setEnabled(true);
 							pauseGame.setEnabled(true);
@@ -152,6 +153,28 @@ public class ControlPanel extends Window implements Bindable {
 			});
 		}
 	};
+	
+	/**
+	 * Start visualization and automatic updating.
+	 * Won't restart it if already runs.
+	 */
+	public void startVisualizationOnce() {
+		visualization.setGame(controller, controller.getGame());
+		
+		if (updater != null)
+			return;
+		
+		updater = new VisualizationUpdater(visualization);	
+		controller.getGame().observe(updater);
+		updater.start();
+		
+		ApplicationContext.scheduleRecurringCallback(new Runnable() {
+			@Override
+			public void run() {
+				visualization.repaint();
+			}
+		}, 100);
+	}
 	
 	/**
 	 * Button press action to end application.

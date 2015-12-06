@@ -18,6 +18,10 @@ import de.unihannover.swp2015.robots2.model.implementation.Position;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
 
+/**
+ * A class all for loading the map. It will send it through the network.
+ * @author Tim Ebbeke
+ */
 public class MapLoader {
 	private GuiMainController controller;
 	private GameParameters gameParameters;
@@ -113,6 +117,7 @@ public class MapLoader {
 
 		controller.sendWalls(walls);
 		controller.sendGameParameters((float)gameParameters.getMovementSpeed(), gameParameters.getMaxStayTime());
+		controller.sendStartPositions(startPositions);
 		controller.sendFood(food);
 		controller.sendGrowingRates(growingRates);
 	}

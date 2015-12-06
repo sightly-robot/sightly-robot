@@ -18,7 +18,6 @@ import org.apache.pivot.wtk.Menu;
 import org.apache.pivot.wtk.MenuHandler;
 import org.apache.pivot.wtk.MessageType;
 import org.apache.pivot.wtk.Panel;
-import org.apache.pivot.wtk.Window;
 import org.apache.pivot.wtk.media.Drawing;
 import org.apache.pivot.wtk.media.SVGDiagramSerializer;
 import org.apache.pivot.beans.Bindable;
@@ -28,7 +27,6 @@ import com.kitfox.svg.SVGDiagram;
 import de.unihannover.swp2015.robots2.application.dialogs.DialogFactory;
 import de.unihannover.swp2015.robots2.application.dialogs.InputDialog;
 import de.unihannover.swp2015.robots2.application.svg.SvgConstructor;
-import de.unihannover.swp2015.robots2.application.windows.ControlPanel;
 import de.unihannover.swp2015.robots2.controller.main.GuiMainController;
 import de.unihannover.swp2015.robots2.model.implementation.Position;
 import de.unihannover.swp2015.robots2.model.implementation.Robot;
@@ -166,9 +164,12 @@ public class StrategicVisualization extends Panel implements Bindable {
 	/**
 	 * Reconstructs the svg. Warning! Expensive!
 	 */
-	public void update() {
+	public synchronized void update() {		
 		svgConstructor.resetSvg();
+		
+		// NOTE! The order is not important, the template dictates the order.
 		svgConstructor.drawResources();
+		svgConstructor.drawGrid();
 		svgConstructor.drawWalls();
 		
 		if (!game.isRunning())
@@ -183,7 +184,7 @@ public class StrategicVisualization extends Panel implements Bindable {
 	 * @param graphics AWT Graphics2D painter.
 	 */
 	@Override
-	public void paint(Graphics2D graphics) {
+	public synchronized void paint(Graphics2D graphics) {
 		graphics.scale((double)getWidth() / (double)drawing.getWidth(), (double)getHeight() / (double)drawing.getHeight());
 		
 		// reconstruct the svg from state.

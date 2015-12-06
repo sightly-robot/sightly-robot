@@ -9,6 +9,10 @@ import org.apache.pivot.wtk.Display;
 import de.unihannover.swp2015.robots2.application.windows.ControlPanel;
 import de.unihannover.swp2015.robots2.controller.main.GuiMainController;
 
+/**
+ * Main class. Only loads the control panel GUI.
+ * @author Tim Ebbeke
+ */
 public class Main implements Application {
 	
 	private ControlPanel window;

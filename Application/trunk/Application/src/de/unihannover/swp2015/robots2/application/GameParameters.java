@@ -3,7 +3,7 @@ package de.unihannover.swp2015.robots2.application;
 /**
  * A holder for game paramters (loaded from the map).
  *  
- * @author Tim
+ * @author Tim Ebbeke
  */
 public class GameParameters {
 	private double movementSpeed = 0.; // in ?
