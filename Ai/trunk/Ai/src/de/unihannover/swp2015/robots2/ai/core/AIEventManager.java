@@ -92,4 +92,19 @@ public class AIEventManager extends Thread implements Runnable {
 			break;
 		}
 	}
+
+	/**
+	 * Checks if event can be handled properly
+	 * 
+	 * @return
+	 */
+	private boolean checkConditions() {
+		switch (this.event.getType()) {
+		case STAGE_WALL:
+			break;
+		default:
+			return false;
+		}
+		return false;
+	}
 }
