@@ -24,27 +24,17 @@ public class ServerMainController extends AbstractMainController implements
 		super();
 
 		this.infoComponent = "server";
-	}
 
-	@Override
-	public boolean startMqtt(String brokerUrl) {
-		if (this.mqttController == null) {
+		try {
 			String clientId = "server";
 			String[] subscribeTopics = { "robot/#", "map/walls",
 					"extension/2/map/setfood", "extension/2/map/setgrowrate",
 					"map/occupied/#", "control/state",
 					"extension/2/robot/hesitationtime", "event/error/robot/#" };
 
-			try {
-				this.mqttController = new MqttController(brokerUrl, clientId,
-						this, Arrays.asList(subscribeTopics));
-				return true;
-			} catch (MqttException e) {
-				e.printStackTrace();
-				return false;
-			}
-		} else {
-			return true;
+			this.mqttController = new MqttController(clientId,
+					this, Arrays.asList(subscribeTopics));
+		} catch (MqttException e) {
 		}
 	}
 
@@ -60,8 +50,7 @@ public class ServerMainController extends AbstractMainController implements
 		case ROBOT_TYPE:
 			this.gameModelController.mqttAddRobot(key, message);
 			if (message.equals(""))
-				this.mqttController.deleteRetainedMessage(MqttTopic.ROBOT_SCORE
-						.toString(key));
+				this.sendMqttMessage(MqttTopic.ROBOT_SCORE, key, null);
 			break;
 
 		case ROBOT_POSITION:
@@ -216,9 +205,7 @@ public class ServerMainController extends AbstractMainController implements
 		if (newHeight < oldHeight) {
 			for (int y = oldHeight - 1; y > newHeight - 1; y--) {
 				for (int x = 0; x < oldWidth; x++) {
-					this.mqttController
-							.deleteRetainedMessage(MqttTopic.FIELD_FOOD
-									.toString(x + "-" + y));
+					this.sendMqttMessage(MqttTopic.FIELD_FOOD, (x + "-" + y), null);
 				}
 			}
 			// ... or send food for new rows
@@ -239,9 +226,7 @@ public class ServerMainController extends AbstractMainController implements
 			// Delete retained food for obsolete fields at the end
 			if (newWidth < oldWidth) {
 				for (int x = oldWidth - 1; x > newWidth - 1; x--) {
-					this.mqttController
-							.deleteRetainedMessage(MqttTopic.FIELD_FOOD
-									.toString(x + "-" + y));
+					this.sendMqttMessage(MqttTopic.FIELD_FOOD, (x + "-" + y), null);
 				}
 				// Send food for new fields
 			} else if (newWidth > oldWidth) {

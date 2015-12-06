@@ -26,8 +26,8 @@ import de.unihannover.swp2015.robots2.model.writeableInterfaces.IRobotWriteable;
  * @version 0.2
  * @author Michael Thies
  */
-public class GuiMainController extends AbstractMainController
-		implements IGuiController {
+public class GuiMainController extends AbstractMainController implements
+		IGuiController {
 
 	IVisualizationControl visualizationControl;
 	IHardwareRobotControl hardwareRobotControl;
@@ -35,28 +35,17 @@ public class GuiMainController extends AbstractMainController
 	public GuiMainController() {
 		super();
 		this.infoComponent = "gui";
-	}
 
-	@Override
-	public boolean startMqtt(String brokerUrl) {
-		if (this.mqttController == null) {
-			String clientId = "gui_" + UUID.randomUUID().toString();
-			// TODO subscription list
+		// Start MQTTController
+		try {
+			String clientId = "gui_" + UUID.randomUUID().toString().substring(0,8);
 			String[] subscribeTopics = { "robot/#", "extension/2/robot/#",
 					"map/walls", "map/food", "map/food/+", "map/occupied/#",
 					"event/error/robot/#", "extension/2/settings/#",
 					"control/state", "extension/2/map/startpositions" };
-
-			try {
-				this.mqttController = new MqttController(brokerUrl, clientId,
-						this, Arrays.asList(subscribeTopics));
-				return true;
-			} catch (MqttException e) {
-				e.printStackTrace();
-				return false;
-			}
-		} else {
-			return true;
+			this.mqttController = new MqttController(clientId, this,
+					Arrays.asList(subscribeTopics));
+		} catch (MqttException e) {
 		}
 	}
 
@@ -67,7 +56,7 @@ public class GuiMainController extends AbstractMainController
 			return;
 
 		String key = mqtttopic.getKey(topic);
-
+		
 		switch (mqtttopic) {
 
 		case ROBOT_TYPE:
@@ -89,8 +78,8 @@ public class GuiMainController extends AbstractMainController
 			break;
 
 		case CONTROL_VIRTUALSPEED:
-			this.gameModelController
-					.mqttSetRobotVirtualspeed(Float.parseFloat(message));
+			this.gameModelController.mqttSetRobotVirtualspeed(Float
+					.parseFloat(message));
 			break;
 
 		case CONTROL_HESITATIONTIME:
@@ -267,11 +256,9 @@ public class GuiMainController extends AbstractMainController
 	@Override
 	public void deleteRobot(String id) {
 		// Delete robot
-		this.mqttController
-				.deleteRetainedMessage(MqttTopic.ROBOT_TYPE.toString(id));
+		this.sendMqttMessage(MqttTopic.ROBOT_TYPE, id, null);
 
-		this.mqttController
-				.deleteRetainedMessage(MqttTopic.ROBOT_POSITION.toString(id));
+		this.sendMqttMessage(MqttTopic.ROBOT_POSITION, id, null);
 
 		// Release all fields occupied by this robot
 		for (int x = 0; x < this.game.getStage().getWidth(); x++) {
@@ -279,8 +266,8 @@ public class GuiMainController extends AbstractMainController
 				IField f = this.game.getStage().getField(x, y);
 				if (f.getState() == State.OCCUPIED
 						&& f.getLockedBy().equals(id))
-					this.sendMqttMessage(MqttTopic.FIELD_OCCUPIED_RELEASE,
-							x + "-" + y, "");
+					this.sendMqttMessage(MqttTopic.FIELD_OCCUPIED_RELEASE, x
+							+ "-" + y, "");
 			}
 		}
 	}

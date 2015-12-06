@@ -14,21 +14,40 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 public class MqttSender implements Runnable {
 	private final BlockingQueue<MqttFullMessage> queue;
 	private final MqttClient client;
+	private final Object waitForConnect;
 
-	public MqttSender(BlockingQueue<MqttFullMessage> queue, MqttClient client) {
+	public MqttSender(BlockingQueue<MqttFullMessage> queue, MqttClient client, Object waitObject) {
 		this.queue = queue;
 		this.client = client;
+		this.waitForConnect = waitObject;
 	}
 
 	@Override
 	public void run() {
-		while (true) {
-			try {
+		try {
+			while (true) {
+				// Take message from queue or wait till one is available
 				MqttFullMessage message = this.queue.take();
-				client.publish(message.getTopic(), message.getMessage());
-			} catch (InterruptedException | MqttException e) {
-				e.printStackTrace();
+				
+				// Wait until MQTT connected
+				while(!client.isConnected()) {
+					synchronized(this.waitForConnect) {
+						this.waitForConnect.wait();
+					}
+				}
+				
+				// (Re)try sending
+				while(true) {
+					try{
+						client.publish(message.getTopic(), message.getMessage());
+						break;
+					} catch (MqttException e) {
+						Thread.sleep(500);
+					}
+				}
 			}
+		} catch (InterruptedException e) {
+			e.printStackTrace();
 		}
 	}
 }

@@ -36,19 +36,21 @@ public class RobotModelController {
 		// reset position.
 		if (r != null && (setPosition || !r.isMyself())) {
 
-			String[] positionParts = message.split(",");
+			try {
+				String[] positionParts = message.split(",");
 
-			r.setPosition(Integer.parseInt(positionParts[0]),
-					Integer.parseInt(positionParts[1]),
-					Orientation.getBy(positionParts[2]));
-			r.setProgress(0);
-			r.emitEvent(UpdateType.ROBOT_POSITION);
+				r.setPosition(Integer.parseInt(positionParts[0]),
+						Integer.parseInt(positionParts[1]),
+						Orientation.getBy(positionParts[2]));
+				r.setProgress(0);
+				r.emitEvent(UpdateType.ROBOT_POSITION);
 
-			if (setPosition) {
-				r.setSetupState(true);
-				r.emitEvent(UpdateType.ROBOT_STATE);
+				if (setPosition) {
+					r.setSetupState(true);
+					r.emitEvent(UpdateType.ROBOT_STATE);
+				}
+			} catch (NumberFormatException e) {
 			}
-
 		}
 	}
 
@@ -63,10 +65,13 @@ public class RobotModelController {
 	 */
 	public void mqttRobotProgress(String key, String message) {
 		IRobotWriteable r = this.robots.get(key);
-		
+
 		if (r != null && !r.isMyself()) {
-			r.setProgress(Integer.parseInt(message));
-			r.emitEvent(UpdateType.ROBOT_POSITION);
+			try {
+				r.setProgress(Integer.parseInt(message));
+				r.emitEvent(UpdateType.ROBOT_POSITION);
+			} catch (NumberFormatException e) {
+			}
 		}
 	}
 
@@ -83,7 +88,10 @@ public class RobotModelController {
 		if (r == null)
 			return;
 
-		r.setScore(Integer.parseInt(message));
-		r.emitEvent(UpdateType.ROBOT_SCORE);
+		try {
+			r.setScore(Integer.parseInt(message));
+			r.emitEvent(UpdateType.ROBOT_SCORE);
+		} catch (NumberFormatException e) {
+		}
 	}
 }

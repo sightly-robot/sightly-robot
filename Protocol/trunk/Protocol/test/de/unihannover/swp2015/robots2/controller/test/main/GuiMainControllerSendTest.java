@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -57,7 +58,7 @@ public class GuiMainControllerSendTest {
 		assertEquals("stopped", receiveHandler.getValue("control/state"));
 
 		// Cleanup retained message
-		this.receiver.deleteRetainedMessage("control/state");
+		this.receiver.sendMessage("control/state", null, true);
 	}
 
 	/**
@@ -112,7 +113,7 @@ public class GuiMainControllerSendTest {
 		assertEquals(1, this.receiveHandler.getKeysSorted().length);
 
 		// Cleanup retained message
-		this.receiver.deleteRetainedMessage("map/walls");
+		this.receiver.sendMessage("map/walls", null, true);
 
 	}
 
@@ -173,12 +174,12 @@ public class GuiMainControllerSendTest {
 		assertEquals(1, this.receiveHandler.getKeysSorted().length);
 
 		// Cleanup retained message
-		this.receiver.deleteRetainedMessage("extension/2/map/setgrowrate");
+		this.receiver.sendMessage("extension/2/map/setgrowrate", null, true);
 
 	}
 
 	/**
-	 * Test sending new game parameters (virtualspeed, hesitationtime)
+	 * Test sending new game parameters (virtual speed, hesitation time)
 	 */
 	@Test
 	public void testGameParameters() throws Exception {
@@ -195,8 +196,9 @@ public class GuiMainControllerSendTest {
 		assertEquals(2, this.receiveHandler.getKeysSorted().length);
 
 		// Cleanup retained message
-		this.receiver.deleteRetainedMessage("robot/virtualspeed");
-		this.receiver.deleteRetainedMessage("extension/2/robot/hesitationtime");
+		this.receiver.sendMessage("robot/virtualspeed", null, true);
+		this.receiver.sendMessage("extension/2/robot/hesitationtime", null,
+				true);
 
 	}
 
@@ -219,7 +221,9 @@ public class GuiMainControllerSendTest {
 		String expectedString = "0,0,w,2,5,n,6,3,e,0,8,s";
 		assertEquals(expectedString,
 				this.receiveHandler.getValue("extension/2/map/startpositions"));
-		this.receiver.deleteRetainedMessage("extension/2/map/startpositions");
+
+		this.receiver.sendMessage("extension/2/robot/startpositions", null,
+				true);
 	}
 
 	/**
@@ -227,8 +231,9 @@ public class GuiMainControllerSendTest {
 	 */
 	private void restartReceiver() throws Exception {
 		this.receiveHandler = new TestReceiveHandler();
-		this.receiver = new MqttController("tcp://localhost", "junit_receiver",
-				receiveHandler, Arrays.asList(new String[] { "#" }));
+		this.receiver = new MqttController("junit_receiver" + UUID.randomUUID().toString(), receiveHandler,
+				Arrays.asList(new String[] { "#" }));
+		this.receiver.connect("tcp://localhost");
 	}
 
 }

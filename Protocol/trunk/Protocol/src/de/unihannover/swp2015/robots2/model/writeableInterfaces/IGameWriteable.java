@@ -49,6 +49,15 @@ public interface IGameWriteable extends IGame, IAbstractModelWriteable {
 	public void setRunning(boolean running);
 
 	/**
+	 * Set the sync state of the model. True if an MQTT connection is
+	 * established, false if not.
+	 * 
+	 * @param synced
+	 *            If the model is synchronized via MQTT
+	 */
+	public void setSynced(boolean synced);
+
+	/**
 	 * Set the maximum speed of virtual Robots in this Game.
 	 * 
 	 * @param vRobotSpeed

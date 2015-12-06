@@ -28,4 +28,8 @@ class TestReceiveHandler implements IMqttMessageHandler {
 		this.values.remove(key);
 	}
 
+	@Override
+	public void onMqttStateChange(boolean connected) {
+	}
+
 }

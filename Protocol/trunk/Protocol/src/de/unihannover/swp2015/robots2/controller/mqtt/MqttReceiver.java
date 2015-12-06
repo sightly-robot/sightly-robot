@@ -25,8 +25,16 @@ public class MqttReceiver implements Runnable {
 		while (true) {
 			try {
 				MqttFullMessage message = this.queue.take();
-				handler.handleMqttMessage(message.getTopic(), new String(
-						message.getMessage().getPayload(),StandardCharsets.UTF_8));
+				try {
+					handler.handleMqttMessage(message.getTopic(), new String(
+							message.getMessage().getPayload(),StandardCharsets.UTF_8));
+				} catch (Exception e) {
+					System.out.println("Uncaught Exception while prossessing the following MQTT message:");
+					System.out.println(message.getTopic());
+					System.out.println(new String(message.getMessage().getPayload(),StandardCharsets.UTF_8));
+					e.printStackTrace();
+					System.out.println();
+				}
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

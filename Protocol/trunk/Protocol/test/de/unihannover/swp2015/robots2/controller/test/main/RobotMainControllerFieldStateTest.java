@@ -3,7 +3,9 @@ package de.unihannover.swp2015.robots2.controller.test.main;
 import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
+import java.util.UUID;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -37,9 +39,10 @@ public class RobotMainControllerFieldStateTest {
 	public void setup() throws Exception {
 		// Setup sender and IRobotController
 		this.otherPartHandler = new TestReceiveHandler();
-		this.otherPart = new MqttController("tcp://localhost",
-				"junit_otherPart", this.otherPartHandler,
+		this.otherPart = new MqttController("junit_otherPart"
+				+ UUID.randomUUID().toString(), this.otherPartHandler,
 				Arrays.asList(new String[] { "#" }));
+		this.otherPart.connect("tcp://localhost");
 
 		this.robotController = new RobotMainController(false);
 		this.robotController.startMqtt("tcp://localhost");
@@ -50,6 +53,11 @@ public class RobotMainControllerFieldStateTest {
 		Thread.sleep(100);
 		this.robotController.getGame().getStage().getField(1, 0)
 				.observe(observer);
+	}
+
+	@After
+	public void cleanUp() {
+		this.robotController.releaseField(1, 0);
 	}
 
 	@Test
@@ -214,7 +222,7 @@ public class RobotMainControllerFieldStateTest {
 		// Other part sends new lock after (too) short time
 		Thread.sleep(20);
 		this.otherPart.sendMessage("map/occupied/lock/1-0", "1a2b3c4d", false);
-		Thread.sleep(20);
+		Thread.sleep(100);
 
 		assertEquals(State.LOCKED, f.getState());
 		assertEquals("1a2b3c4d", f.getLockedBy());

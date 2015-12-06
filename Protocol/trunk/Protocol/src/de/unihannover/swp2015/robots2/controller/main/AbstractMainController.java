@@ -1,5 +1,7 @@
 package de.unihannover.swp2015.robots2.controller.main;
 
+import org.eclipse.paho.client.mqttv3.MqttException;
+
 import de.unihannover.swp2015.robots2.controller.interfaces.IController;
 import de.unihannover.swp2015.robots2.controller.interfaces.InfoType;
 import de.unihannover.swp2015.robots2.controller.model.FieldStateModelController;
@@ -10,6 +12,7 @@ import de.unihannover.swp2015.robots2.controller.mqtt.IMqttController;
 import de.unihannover.swp2015.robots2.controller.mqtt.IMqttMessageHandler;
 import de.unihannover.swp2015.robots2.controller.mqtt.MqttTopic;
 import de.unihannover.swp2015.robots2.model.implementation.Game;
+import de.unihannover.swp2015.robots2.model.interfaces.IEvent.UpdateType;
 import de.unihannover.swp2015.robots2.model.interfaces.IGame;
 import de.unihannover.swp2015.robots2.model.writeableInterfaces.IGameWriteable;
 
@@ -82,4 +85,14 @@ public abstract class AbstractMainController implements IController,
 		}
 	}
 
+	@Override
+	public void onMqttStateChange(boolean connected) {
+		this.game.setSynced(connected);
+		this.game.emitEvent(UpdateType.MODEL_SYNC_STATE);
+	}
+	
+	@Override
+	public void startMqtt(String brokerUrl) throws MqttException {
+		this.mqttController.connect(brokerUrl);
+	}
 }

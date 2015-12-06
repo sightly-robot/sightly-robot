@@ -6,6 +6,7 @@ import static org.junit.Assert.fail;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -30,8 +31,10 @@ public class GuiMainControllerReceiveTest {
 	@Before
 	public void prepare() throws Exception {
 		IMqttMessageHandler receiveHandler = new TestReceiveHandler();
-		this.sender = new MqttController("tcp://localhost", "junit_sender",
-				receiveHandler, Arrays.asList(new String[] {}));
+		this.sender = new MqttController("junit_sender_"
+				+ UUID.randomUUID().toString(), receiveHandler,
+				Arrays.asList(new String[] {}));
+		this.sender.connect("tcp://localhost");
 
 		this.guiController = new GuiMainController();
 		this.guiController.startMqtt("tcp://localhost");
@@ -154,6 +157,8 @@ public class GuiMainControllerReceiveTest {
 			}
 		}
 
+		Thread.sleep(100);
+
 		// Add robot
 		sender.sendMessage("robot/type/1a2b3c4d", "virtual", false);
 		Thread.sleep(100);
@@ -187,7 +192,7 @@ public class GuiMainControllerReceiveTest {
 				}
 			}
 		}
-		
+
 		TestGameModelObserver observer = new TestGameModelObserver();
 		this.guiController.getGame().observe(observer);
 
@@ -217,7 +222,7 @@ public class GuiMainControllerReceiveTest {
 				}
 			}
 		}
-		
+
 		TestGameModelObserver observer = new TestGameModelObserver();
 		this.guiController.getGame().observe(observer);
 
@@ -227,7 +232,6 @@ public class GuiMainControllerReceiveTest {
 
 		assertEquals(true, this.guiController.getGame().isRunning());
 		assertEquals(1, observer.count);
-		
 
 		sender.sendMessage("control/state", "stopped", false);
 		Thread.sleep(100);
@@ -256,12 +260,12 @@ public class GuiMainControllerReceiveTest {
 				}
 			}
 		}
-		
+
 		IStage stage = this.guiController.getGame().getStage();
-		
+
 		TestStageModelObserver observer = new TestStageModelObserver();
 		stage.observe(observer);
-		
+
 		// Test normal walls
 		sender.sendMessage("map/walls", "2,3,en,enw,w,,ew,es", false);
 		Thread.sleep(100);
@@ -277,35 +281,35 @@ public class GuiMainControllerReceiveTest {
 		assertEquals(false, stage.getField(0, 1).isWall(Orientation.NORTH));
 		assertEquals(true, stage.getField(0, 2).isWall(Orientation.EAST));
 		assertEquals(false, stage.getField(1, 2).isWall(Orientation.WEST));
-		
+
 		// Proof border plausibility check
 		assertEquals(true, stage.getField(0, 0).isWall(Orientation.WEST));
 		assertEquals(true, stage.getField(0, 2).isWall(Orientation.SOUTH));
 		assertEquals(true, stage.getField(1, 1).isWall(Orientation.EAST));
-		
+
 		// Check negative size change
 		sender.sendMessage("map/walls", "1,2,ensw,ensw", false);
 		Thread.sleep(100);
-		
+
 		assertEquals(1, stage.getWidth());
 		assertEquals(2, stage.getHeight());
 		assertEquals(2, observer.countSizeUpdate);
 		assertEquals(2, observer.countWallUpdate);
 		assertEquals(true, stage.getField(0, 1).isWall(Orientation.NORTH));
-		
+
 		try {
 			stage.getField(0, 2);
 			fail();
 		} catch (IndexOutOfBoundsException e) {
-			
+
 		}
 		try {
 			stage.getField(1, 1);
 			fail();
 		} catch (IndexOutOfBoundsException e) {
-			
+
 		}
-		
+
 		// Test normal override
 		sender.sendMessage("map/walls", "1,2,enw,esw", false);
 		Thread.sleep(100);
@@ -329,7 +333,6 @@ public class GuiMainControllerReceiveTest {
 		assertEquals(false, stage.getField(0, 1).isWall(Orientation.NORTH));
 	}
 
-
 	@Test
 	public void testFood() throws Exception {
 		class TestStageModelObserver implements IModelObserver {
@@ -341,28 +344,28 @@ public class GuiMainControllerReceiveTest {
 				switch (event.getType()) {
 				case FIELD_FOOD:
 					this.count++;
-					this.field = (IField)event.getObject();
+					this.field = (IField) event.getObject();
 					break;
 				default:
 					break;
 				}
 			}
 		}
-		
+
 		IStage stage = this.guiController.getGame().getStage();
-		
+
 		TestStageModelObserver observer = new TestStageModelObserver();
 		stage.observe(observer);
-		
+
 		// Init walls & observe fields
 		sender.sendMessage("map/walls", "2,3,,,,,,", false);
 		Thread.sleep(100);
-		for(int i = 0; i < 2; i++) {
+		for (int i = 0; i < 2; i++) {
 			for (int j = 0; j < 3; j++) {
 				stage.getField(i, j).observe(observer);
 			}
 		}
-		
+
 		// Test full food
 		sender.sendMessage("map/food", "2,3,1,10,5,7,0,10", false);
 		Thread.sleep(100);
@@ -372,22 +375,14 @@ public class GuiMainControllerReceiveTest {
 		assertEquals(10, stage.getField(1, 0).getFood());
 		assertEquals(5, stage.getField(0, 1).getFood());
 		assertEquals(10, stage.getField(1, 2).getFood());
-		
+
 		// Test single field food
 		sender.sendMessage("map/food/1-0", "7", false);
 		Thread.sleep(100);
 		assertEquals(7, observer.count);
 		assertEquals(7, stage.getField(1, 0).getFood());
-		assertEquals(stage.getField(1, 0),observer.field);
-		
-		// Test discarding of wrong stage size message
-		sender.sendMessage("map/food", "2,1,7,5", false);
-		Thread.sleep(100);
+		assertEquals(stage.getField(1, 0), observer.field);
 
-		assertEquals(7, observer.count);
-		assertEquals(1, stage.getField(0, 0).getFood());
-		assertEquals(7, stage.getField(1, 0).getFood());
-		
 		// Test discarding of invalid message
 		sender.sendMessage("map/food", "2,3,7,5,3,5,6,7,9", false);
 		Thread.sleep(100);
@@ -396,7 +391,7 @@ public class GuiMainControllerReceiveTest {
 		assertEquals(1, stage.getField(0, 0).getFood());
 		assertEquals(7, stage.getField(1, 0).getFood());
 	}
-	
+
 	@Test
 	public void testStartpositions() throws Exception {
 		class TestStageModelObserver implements IModelObserver {
@@ -413,19 +408,20 @@ public class GuiMainControllerReceiveTest {
 				}
 			}
 		}
-		
+
 		IStage stage = this.guiController.getGame().getStage();
-		
+
 		TestStageModelObserver observer = new TestStageModelObserver();
 		stage.observe(observer);
-		
+
 		// Init walls
 		sender.sendMessage("map/walls", "3,3,,,,,,,,,", false);
 		Thread.sleep(100);
 		assertEquals(3, stage.getWidth());
-		
+
 		// Test new start positions
-		sender.sendMessage("extension/2/map/startpositions", "1,0,n,2,1,e,0,1,s", false);
+		sender.sendMessage("extension/2/map/startpositions",
+				"1,0,n,2,1,e,0,1,s", false);
 		Thread.sleep(100);
 
 		List<IPosition> sp = stage.getStartPositions();
@@ -440,27 +436,29 @@ public class GuiMainControllerReceiveTest {
 		assertEquals(1, sp.get(2).getY());
 		assertEquals(Orientation.SOUTH, sp.get(2).getOrientation());
 		assertEquals(1, observer.count);
-		
+
 		// Test discarding of wrong length message
-		sender.sendMessage("extension/2/map/startpositions", "2,1,s,2,1,e,0,1", false);
+		sender.sendMessage("extension/2/map/startpositions", "2,1,s,2,1,e,0,1",
+				false);
 		Thread.sleep(100);
-		
+
 		assertEquals(3, sp.size());
 		assertEquals(1, observer.count);
 		assertEquals(1, sp.get(0).getX());
 		assertEquals(0, sp.get(0).getY());
 		assertEquals(Orientation.NORTH, sp.get(0).getOrientation());
-		
+
 		// Test discarding of invalid start positions
 		// first valid, second invalid Orientation
-		sender.sendMessage("extension/2/map/startpositions", "0,1,s,2,1,b", false);
+		sender.sendMessage("extension/2/map/startpositions", "0,1,s,2,1,b",
+				false);
 		Thread.sleep(100);
 
 		assertEquals(1, sp.size());
 		assertEquals(0, sp.get(0).getX());
 		assertEquals(1, sp.get(0).getY());
 		assertEquals(Orientation.SOUTH, sp.get(0).getOrientation());
-		assertEquals(2, observer.count);		
+		assertEquals(2, observer.count);
 	}
-	
+
 }
