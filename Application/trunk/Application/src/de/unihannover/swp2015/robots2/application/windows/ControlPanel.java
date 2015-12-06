@@ -206,7 +206,7 @@ public class ControlPanel extends Window implements Bindable {
 		@Override
 		public void buttonPressed(Button button) {
 			controller.stopGame();
-			controller.resetGame();
+			//controller.resetGame();
 		}
 	};
 	

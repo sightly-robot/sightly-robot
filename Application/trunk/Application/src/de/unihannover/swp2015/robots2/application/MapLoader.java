@@ -110,10 +110,10 @@ public class MapLoader {
 			throw new InvalidMapFile("The field height is inconsitent with the array, or zero");
 		
 		walls = fixBorders(walls);
-		
+
+		controller.sendWalls(walls);
 		controller.sendGameParameters((float)gameParameters.getMovementSpeed(), gameParameters.getMaxStayTime());
 		controller.sendFood(food);
-		controller.sendWalls(walls);
 		controller.sendGrowingRates(growingRates);
 	}
 	
