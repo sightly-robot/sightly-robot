@@ -1,0 +1,300 @@
+{
+	"map": {
+		"version": 1,
+		"width": 8,
+		"height": 6,
+		"fields": [[{
+			"growthRate": 9669,
+			"initialResources": 1,
+			"walls": "nw",
+			"possibleDirections": "es"
+		},
+		{
+			"growthRate": 9303,
+			"initialResources": 1,
+			"walls": "n",
+			"startPosition": "n",
+			"possibleDirections": "esw"
+		},
+		{
+			"growthRate": 9617,
+			"initialResources": 1,
+			"walls": "ne",
+			"possibleDirections": "sw"
+		},
+		{
+			"growthRate": 9874,
+			"initialResources": 1,
+			"walls": "nw",
+			"possibleDirections": "es"
+		},
+		{
+			"growthRate": 10392,
+			"initialResources": 1,
+			"walls": "ns",
+			"possibleDirections": "ew"
+		},
+		{
+			"growthRate": 11468,
+			"initialResources": 1,
+			"walls": "n",
+			"possibleDirections": "esw"
+		},
+		{
+			"growthRate": 12912,
+			"initialResources": 0,
+			"walls": "ns",
+			"possibleDirections": "ew"
+		},
+		{
+			"growthRate": 14618,
+			"initialResources": 0,
+			"walls": "ne",
+			"possibleDirections": "sw"
+		}],
+		[{
+			"growthRate": 6200,
+			"initialResources": 2,
+			"walls": "ew",
+			"possibleDirections": "ns"
+		},
+		{
+			"growthRate": 6421,
+			"initialResources": 2,
+			"walls": "ew",
+			"possibleDirections": "ns"
+		},
+		{
+			"growthRate": 7576,
+			"initialResources": 1,
+			"walls": "ew",
+			"possibleDirections": "ns"
+		},
+		{
+			"growthRate": 7412,
+			"initialResources": 1,
+			"walls": "w",
+			"possibleDirections": "nes"
+		},
+		{
+			"growthRate": 7706,
+			"initialResources": 1,
+			"walls": "n",
+			"possibleDirections": "esw"
+		},
+		{
+			"growthRate": 9253,
+			"initialResources": 1,
+			"walls": "",
+			"possibleDirections": "nesw"
+		},
+		{
+			"growthRate": 10921,
+			"initialResources": 1,
+			"walls": "n",
+			"possibleDirections": "esw"
+		},
+		{
+			"growthRate": 12786,
+			"initialResources": 0,
+			"walls": "e",
+			"possibleDirections": "nsw"
+		}],
+		[{
+			"growthRate": 4416,
+			"initialResources": 3,
+			"walls": "w",
+			"possibleDirections": "nes"
+		},
+		{
+			"growthRate": 5128,
+			"initialResources": 3,
+			"walls": "",
+			"possibleDirections": "nesw"
+		},
+		{
+			"growthRate": 6550,
+			"initialResources": 2,
+			"walls": "",
+			"possibleDirections": "nesw"
+		},
+		{
+			"growthRate": 5122,
+			"initialResources": 3,
+			"walls": "s",
+			"possibleDirections": "new"
+		},
+		{
+			"growthRate": 4896,
+			"initialResources": 3,
+			"walls": "e",
+			"possibleDirections": "nsw"
+		},
+		{
+			"growthRate": 7495,
+			"initialResources": 1,
+			"walls": "w",
+			"possibleDirections": "nes"
+		},
+		{
+			"growthRate": 9072,
+			"initialResources": 1,
+			"walls": "",
+			"possibleDirections": "nesw"
+		},
+		{
+			"growthRate": 11082,
+			"initialResources": 1,
+			"walls": "e",
+			"possibleDirections": "nsw"
+		}],
+		[{
+			"growthRate": 3842,
+			"initialResources": 4,
+			"walls": "w",
+			"possibleDirections": "nes"
+		},
+		{
+			"growthRate": 5757,
+			"initialResources": 2,
+			"walls": "e",
+			"possibleDirections": "nsw"
+		},
+		{
+			"growthRate": 6817,
+			"initialResources": 2,
+			"walls": "sw",
+			"possibleDirections": "ne"
+		},
+		{
+			"growthRate": 6232,
+			"initialResources": 2,
+			"walls": "n",
+			"possibleDirections": "esw"
+		},
+		{
+			"growthRate": 5909,
+			"initialResources": 2,
+			"walls": "s",
+			"possibleDirections": "new"
+		},
+		{
+			"growthRate": 6137,
+			"initialResources": 2,
+			"walls": "s",
+			"possibleDirections": "new"
+		},
+		{
+			"growthRate": 6901,
+			"initialResources": 2,
+			"walls": "se",
+			"possibleDirections": "nw"
+		},
+		{
+			"growthRate": 9519,
+			"initialResources": 1,
+			"walls": "ew",
+			"possibleDirections": "ns"
+		}],
+		[{
+			"growthRate": 7869,
+			"initialResources": 1,
+			"walls": "w",
+			"possibleDirections": "nes"
+		},
+		{
+			"growthRate": 7740,
+			"initialResources": 1,
+			"walls": "es",
+			"possibleDirections": "nw"
+		},
+		{
+			"growthRate": 7849,
+			"initialResources": 1,
+			"walls": "nw",
+			"possibleDirections": "es"
+		},
+		{
+			"growthRate": 7232,
+			"initialResources": 1,
+			"walls": "",
+			"possibleDirections": "nesw"
+		},
+		{
+			"growthRate": 6016,
+			"initialResources": 2,
+			"walls": "n",
+			"possibleDirections": "esw"
+		},
+		{
+			"growthRate": 4521,
+			"initialResources": 3,
+			"walls": "n",
+			"possibleDirections": "esw"
+		},
+		{
+			"growthRate": 4580,
+			"initialResources": 3,
+			"walls": "ns",
+			"possibleDirections": "ew"
+		},
+		{
+			"growthRate": 8735,
+			"initialResources": 1,
+			"walls": "e",
+			"possibleDirections": "nsw"
+		}],
+		[{
+			"growthRate": 10539,
+			"initialResources": 1,
+			"walls": "sw",
+			"possibleDirections": "ne"
+		},
+		{
+			"growthRate": 9806,
+			"initialResources": 1,
+			"walls": "sn",
+			"possibleDirections": "ew"
+		},
+		{
+			"growthRate": 9213,
+			"initialResources": 1,
+			"walls": "se",
+			"possibleDirections": "nw"
+		},
+		{
+			"growthRate": 8147,
+			"initialResources": 1,
+			"walls": "sw",
+			"possibleDirections": "ne"
+		},
+		{
+			"growthRate": 5980,
+			"initialResources": 2,
+			"walls": "s",
+			"possibleDirections": "new"
+		},
+		{
+			"growthRate": 3764,
+			"initialResources": 4,
+			"walls": "s",
+			"possibleDirections": "new"
+		},
+		{
+			"growthRate": 6699,
+			"initialResources": 2,
+			"walls": "ns",
+			"possibleDirections": "ew"
+		},
+		{
+			"growthRate": 9579,
+			"initialResources": 1,
+			"walls": "es",
+			"possibleDirections": "nw"
+		}]],
+		"gameParameters": {
+			"movementSpeed": 0.8,
+			"maxStayTime": 3500
+		}
+	}
+}
