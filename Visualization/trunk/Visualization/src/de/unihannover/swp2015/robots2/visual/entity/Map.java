@@ -11,7 +11,6 @@ import de.unihannover.swp2015.robots2.model.interfaces.IField;
 import de.unihannover.swp2015.robots2.model.interfaces.IStage;
 import de.unihannover.swp2015.robots2.visual.core.IGameHandler;
 import de.unihannover.swp2015.robots2.visual.core.PrefConst;
-import de.unihannover.swp2015.robots2.visual.desktop.DesktopLauncher;
 import de.unihannover.swp2015.robots2.visual.util.pref.IPreferencesKey;
 import de.unihannover.swp2015.robots2.visual.util.pref.observer.PreferencesObservable;
 
@@ -71,11 +70,12 @@ public class Map extends Entity {
 		switch(event.getType()) {
 		
 		case STAGE_SIZE:
+			//TODO dynamic world-size
 			this.fieldList.clear();
 			this.prefs.putInt(PrefConst.MAP_ROWS_KEY, model.getWidth());
 			this.prefs.putInt(PrefConst.MAP_COLS_KEY, model.getHeight());
-			this.prefs.putFloat(PrefConst.FIELD_WIDTH_KEY, ((float) DesktopLauncher.viewWidth) / model.getWidth());
-			this.prefs.putFloat(PrefConst.FIELD_HEIGHT_KEY, ((float) DesktopLauncher.viewHeight) / model.getHeight());
+			this.prefs.putFloat(PrefConst.FIELD_WIDTH_KEY, prefs.getFloat(PrefConst.VIEW_WIDTH, 1) / model.getWidth());
+			this.prefs.putFloat(PrefConst.FIELD_HEIGHT_KEY, prefs.getFloat(PrefConst.VIEW_HEIGHT, 1) / model.getHeight());
 			this.init(model);
 			break;
 			

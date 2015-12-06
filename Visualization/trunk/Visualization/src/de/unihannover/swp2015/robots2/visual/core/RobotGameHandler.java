@@ -110,15 +110,16 @@ public class RobotGameHandler extends GameHandler {
 		this.view = view;
 		this.spriteBatch.setProjectionMatrix(this.view.getCamera().combined);
 		this.game.observe(this);
+		
 		this.pp = new PostProcessor(false, true, true);
 		this.pp2 = new PostProcessor(false, true, true);
-		this.bloom = new Bloom(view.getScreenWidth(), view.getScreenHeight());
+		this.bloom = new Bloom((int) (view.getWorldWidth()/2f), (int)(view.getWorldHeight()/2f));
 		this.bloom.setBaseIntesity(0);
 		this.bloom.setThreshold(0);
 		this.bloom.setBloomSaturation(0.3f);
 		this.bloom.setEnabled(!game.isRunning());
 		this.pp.addEffect(bloom);
-		this.pp2.addEffect(new Fxaa(view.getScreenWidth()*2, view.getScreenHeight()*2));
+		this.pp2.addEffect(new Fxaa((int) (view.getWorldWidth() * 2), (int) (view.getWorldHeight() * 2)));
 		this.fbo = new FrameBuffer(Pixmap.Format.RGBA4444, 800, 800, false);
 		this.reg = new TextureRegion(fbo.getColorBufferTexture());
 
@@ -134,10 +135,10 @@ public class RobotGameHandler extends GameHandler {
 		//set preferences !have to happen before creating entities!
 		this.prefs.putInt(PrefConst.MAP_ROWS_KEY, stage.getWidth());
 		this.prefs.putInt(PrefConst.MAP_COLS_KEY, stage.getHeight());
-		this.prefs.putFloat(PrefConst.FIELD_WIDTH_KEY, ((float) view.getScreenWidth()) / stage.getWidth());
-		this.prefs.putFloat(PrefConst.FIELD_HEIGHT_KEY, ((float) view.getScreenWidth()) / stage.getHeight());
-		this.prefs.putFloat(PrefConst.VIEW_WIDTH, view.getScreenWidth());
-		this.prefs.putFloat(PrefConst.VIEW_HEIGHT, view.getScreenHeight());
+		this.prefs.putFloat(PrefConst.FIELD_WIDTH_KEY, ((float) view.getWorldWidth()) / stage.getWidth());
+		this.prefs.putFloat(PrefConst.FIELD_HEIGHT_KEY, ((float) view.getWorldWidth()) / stage.getHeight());
+		this.prefs.putFloat(PrefConst.VIEW_WIDTH, view.getWorldWidth());
+		this.prefs.putFloat(PrefConst.VIEW_HEIGHT, view.getWorldHeight());
 		
 		//create entities
 		for (final IRobot roboModel : game.getRobots().values()) {

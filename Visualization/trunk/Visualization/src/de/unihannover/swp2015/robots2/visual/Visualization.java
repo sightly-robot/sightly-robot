@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -107,6 +108,11 @@ public class Visualization extends ApplicationAdapter implements IVisualization 
 	@Override
 	public void render() {
 			
+		if (Gdx.input.isKeyPressed(Keys.F))
+			Gdx.graphics.setDisplayMode(1920, 1080, true);
+		else if (Gdx.input.isKeyPressed(Keys.E))
+			Gdx.graphics.setDisplayMode((int) fitViewport.getWorldWidth(), (int) fitViewport.getWorldHeight(), false);	
+		
 		Gdx.gl.glClearColor(0f, 0f, 0f, 0f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
