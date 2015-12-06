@@ -184,16 +184,59 @@ public class SvgConstructor {
 					robot.addAttribute(
 						"xlink:href", 
 						AnimationElement.AT_XML, 
-						SvgConstructor.class.getResource("/de/unihannover/swp2015/robots2/Roboter.svg").toURI().toString()
+						SvgConstructor.class.getResource("/de/unihannover/swp2015/robots2/application/Roboter.svg").toURI().toString()
 					);
 				} catch (URISyntaxException e) {}
 				
 				robot.addAttribute("transform", AnimationElement.AT_XML, 
-					TransformationStringBuilder.getObjectRotationTransformation(r.getPosition(), Orientation.NORTH, fieldWidth, fieldHeight)
+					TransformationStringBuilder.getObjectTransformation(r.getPosition(), Orientation.NORTH, fieldWidth, fieldHeight)
 				);
 				
 				Group robos = (Group)diagram.getElement("robots");
 				robos.loaderAddChild(null, robot);
+			}
+			
+			diagram.updateTime(0.);
+		} catch (SVGException e) {
+			// ignore
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Draws a grid to counteract the random lines between fields... which are ugly.
+	 */
+	public void drawGrid() {
+		double fieldWidth = svgWidth / game.getStage().getWidth();
+		double fieldHeight = svgHeight / game.getStage().getHeight();
+		
+		try {
+			for (int y = 0; y < game.getStage().getHeight() - 1; ++y) {
+				Line line = new Line();
+				
+				line.addAttribute("x1", AnimationElement.AT_XML, "0");
+				line.addAttribute("y1", AnimationElement.AT_XML, Double.toString((y+1) * fieldHeight));
+				line.addAttribute("x2", AnimationElement.AT_XML, Integer.toString(svgWidth));
+				line.addAttribute("y2", AnimationElement.AT_XML, Double.toString((y+1) * fieldHeight));
+				line.addAttribute("stroke", AnimationElement.AT_XML, "rgb(240,240,240)");
+				line.addAttribute("stroke-width", AnimationElement.AT_XML, Integer.toString(1));
+				
+				Group grid = (Group)diagram.getElement("grid");
+				grid.loaderAddChild(null, line);
+			}
+			
+			for (int x = 0; x < game.getStage().getWidth() - 1; ++x) {
+				Line line = new Line();
+				
+				line.addAttribute("x1", AnimationElement.AT_XML, Double.toString((x+1) * fieldWidth));
+				line.addAttribute("y1", AnimationElement.AT_XML, "0");
+				line.addAttribute("x2", AnimationElement.AT_XML, Double.toString((x+1) * fieldWidth));
+				line.addAttribute("y2", AnimationElement.AT_XML, Integer.toString(svgHeight));	
+				line.addAttribute("stroke", AnimationElement.AT_XML, "rgb(240,240,240)");
+				line.addAttribute("stroke-width", AnimationElement.AT_XML, Integer.toString(1));
+				
+				Group grid = (Group)diagram.getElement("grid");
+				grid.loaderAddChild(null, line);		
 			}
 			
 			diagram.updateTime(0.);
@@ -226,12 +269,12 @@ public class SvgConstructor {
 					robot.addAttribute(
 						"xlink:href", 
 						AnimationElement.AT_XML, 
-						SvgConstructor.class.getResource("/de/unihannover/swp2015/robots2/Virtual.svg").toURI().toString()
+						SvgConstructor.class.getResource("/de/unihannover/swp2015/robots2/application/Virtual.svg").toURI().toString()
 					);
 				} catch (URISyntaxException e) {}
 				
 				robot.addAttribute("transform", AnimationElement.AT_XML, 
-					TransformationStringBuilder.getObjectRotationTransformation(r.getPosition(), Orientation.WEST, fieldWidth, fieldHeight)
+					TransformationStringBuilder.getObjectTransformation(r.getPosition(), Orientation.WEST, fieldWidth, fieldHeight)
 				);
 				
 				Group robos = (Group)diagram.getElement("virtualRobots");
@@ -258,7 +301,7 @@ public class SvgConstructor {
 			for (IPosition pos : startPositions) {
 				Path path = new Path();
 				try {
-					path.addAttribute("d", AnimationElement.AT_XML, ResourceLoader.loadResourceAsString("/de/unihannover/swp2015/robots2/Arrow.txt"));
+					path.addAttribute("d", AnimationElement.AT_XML, ResourceLoader.loadResourceAsString("/de/unihannover/swp2015/robots2/application/Arrow.txt"));
 				} catch (IOException | URISyntaxException e) {
 					// ignore - cannot happen
 					e.printStackTrace();
@@ -270,7 +313,7 @@ public class SvgConstructor {
 				path.addAttribute("stroke-linejoin", AnimationElement.AT_XML, "round");
 				path.addAttribute("fill", AnimationElement.AT_XML, "#FF0000");
 				path.addAttribute("transform", AnimationElement.AT_XML, 
-					TransformationStringBuilder.getObjectRotationTransformation(pos, Orientation.EAST, fieldWidth, fieldHeight)
+					TransformationStringBuilder.getObjectTransformation(pos, Orientation.EAST, fieldWidth, fieldHeight)
 				);
 				
 				Group positions = (Group)diagram.getElement("startPositions");
