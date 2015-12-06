@@ -25,20 +25,21 @@ public class StageModelController {
 	 * 
 	 * @param message
 	 *            The MQTT message payload
+	 * @return An array containing the new stage size [width,height] or NULL if
+	 *         message was not valid.
 	 */
-	public void mqttSetWalls(String message) {
+	public int[] mqttSetWalls(String message) {
 		String[] parts = message.split(",", -1);
 		if (parts.length < 3)
-			return;
+			return null;
 
 		int width = Integer.parseInt(parts[0]);
 		int height = Integer.parseInt(parts[1]);
 
 		if (parts.length != width * height + 2)
-			return;
+			return null;
 
-		if (width != this.stage.getWidth()
-				|| height != this.stage.getHeight()) {
+		if (width != this.stage.getWidth() || height != this.stage.getHeight()) {
 			this.stage.changeSize(width, height);
 			this.stage.emitEvent(UpdateType.STAGE_SIZE);
 		}
@@ -69,7 +70,7 @@ public class StageModelController {
 			}
 		}
 		this.stage.emitEvent(UpdateType.STAGE_WALL);
-
+		return new int[]{width,height};
 	}
 
 	/**
@@ -81,20 +82,23 @@ public class StageModelController {
 	 * 
 	 * @param message
 	 *            The MQTT message payload
+	 * @return An array containing the size of the updated field [width,height]
+	 *         or NULL if message was not valid.
 	 */
-	public void mqttSetFood(String message) {
+	public int[] mqttSetFood(String message) {
 		String[] parts = message.split(",");
 		if (parts.length < 3)
-			return;
+			return null;
 
 		int width = Integer.parseInt(parts[0]);
 		int height = Integer.parseInt(parts[1]);
 
 		this.resizeStage(width - 1, height - 1);
 
-		if (parts.length != width * height + 2 || width != this.stage.getWidth()
+		if (parts.length != width * height + 2
+				|| width != this.stage.getWidth()
 				|| height != this.stage.getHeight())
-			return;
+			return null;
 
 		for (int i = 2; i < parts.length; i++) {
 			IFieldWriteable f = this.stage.getFieldWriteable((i - 2) % width,
@@ -103,7 +107,7 @@ public class StageModelController {
 			f.setFood(food);
 			f.emitEvent(UpdateType.FIELD_FOOD);
 		}
-
+		return new int[] { width, height };
 	}
 
 	/**
@@ -125,7 +129,8 @@ public class StageModelController {
 
 		this.resizeStage(width - 1, height - 1);
 
-		if (parts.length != width * height + 2 || width != this.stage.getWidth()
+		if (parts.length != width * height + 2
+				|| width != this.stage.getWidth()
 				|| height != this.stage.getHeight())
 			return;
 
