@@ -1,4 +1,4 @@
-package de.unihannover.swp2015.robots2;
+package de.unihannover.swp2015.robots2.application;
 
 /**
  * A holder for game paramters (loaded from the map).

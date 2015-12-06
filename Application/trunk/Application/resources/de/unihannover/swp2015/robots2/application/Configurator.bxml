@@ -1,7 +1,7 @@
 <windows:Configurator title="Configurator" maximized="false"
 	xmlns:bxml="http://pivot.apache.org/bxml"    
 	xmlns:content="org.apache.pivot.wtk.content"
-    xmlns:windows="de.unihannover.swp2015.robots2.windows"
+    xmlns:windows="de.unihannover.swp2015.robots2.application.windows"
     xmlns="org.apache.pivot.wtk">
 	<FillPane>
 		<Border styles="{color:'#000000'}">

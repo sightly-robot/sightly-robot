@@ -1,4 +1,4 @@
-package de.unihannover.swp2015.robots2.svg;
+package de.unihannover.swp2015.robots2.application.svg;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,12 +20,12 @@ import com.kitfox.svg.SVGException;
 import com.kitfox.svg.SVGUniverse;
 import com.kitfox.svg.animation.AnimationElement;
 
+import de.unihannover.swp2015.robots2.application.util.ResourceLoader;
 import de.unihannover.swp2015.robots2.model.interfaces.IField;
 import de.unihannover.swp2015.robots2.model.interfaces.IGame;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
 import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
-import de.unihannover.swp2015.robots2.util.ResourceLoader;
 
 public class SvgConstructor {
 	private IGame game;
@@ -54,7 +54,7 @@ public class SvgConstructor {
 	 * @param name The svg name in the resources.
 	 */
 	private URI loadSvgResource(String name) {
-		InputStream stream = ResourceLoader.loadResourceAsInputStream("/de/unihannover/swp2015/robots2/" + name + ".svg");		
+		InputStream stream = ResourceLoader.loadResourceAsInputStream("/de/unihannover/swp2015/robots2/application/" + name + ".svg");		
 		Reader rd = new InputStreamReader(stream); 
 		return universe.loadSVG(rd, "/" + name);
 	}

@@ -1,4 +1,4 @@
-package de.unihannover.swp2015.robots2.components;
+package de.unihannover.swp2015.robots2.application.components;
 
 import java.awt.Graphics2D;
 import java.io.IOException;
@@ -25,16 +25,16 @@ import org.apache.pivot.beans.Bindable;
 
 import com.kitfox.svg.SVGDiagram;
 
+import de.unihannover.swp2015.robots2.application.dialogs.DialogFactory;
+import de.unihannover.swp2015.robots2.application.dialogs.InputDialog;
+import de.unihannover.swp2015.robots2.application.svg.SvgConstructor;
+import de.unihannover.swp2015.robots2.application.windows.ControlPanel;
 import de.unihannover.swp2015.robots2.controller.main.GuiMainController;
-import de.unihannover.swp2015.robots2.dialogs.DialogFactory;
-import de.unihannover.swp2015.robots2.dialogs.InputDialog;
 import de.unihannover.swp2015.robots2.model.implementation.Position;
 import de.unihannover.swp2015.robots2.model.implementation.Robot;
 import de.unihannover.swp2015.robots2.model.interfaces.IGame;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
-import de.unihannover.swp2015.robots2.svg.SvgConstructor;
-import de.unihannover.swp2015.robots2.windows.ControlPanel;
 
 /**
  * An apache pivot component for displaying a game. 
@@ -144,7 +144,7 @@ public class StrategicVisualization extends Panel implements Bindable {
 	 * @throws IOException Throws if the svg is invalid.
 	 */
 	private void loadDefault() throws IOException {
-		InputStream stream = ClassLoader.class.getResourceAsStream("/de/unihannover/swp2015/robots2/LoadMap.svg");
+		InputStream stream = ClassLoader.class.getResourceAsStream("/de/unihannover/swp2015/robots2/application/LoadMap.svg");
 		
 		SVGDiagramSerializer serializer = new SVGDiagramSerializer();
 		SVGDiagram diagram;

@@ -1,6 +1,6 @@
 <dialogs:InputDialog bxml:id="dialog" title="Dialog" modal="true"
     xmlns:bxml="http://pivot.apache.org/bxml"
-    xmlns:dialogs="de.unihannover.swp2015.robots2.dialogs"
+    xmlns:dialogs="de.unihannover.swp2015.robots2.application.dialogs"
     xmlns="org.apache.pivot.wtk"
 	preferredWidth="350"
 >	

@@ -1,4 +1,4 @@
-package de.unihannover.swp2015.robots2.windows;
+package de.unihannover.swp2015.robots2.application.windows;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -23,10 +23,10 @@ import org.apache.pivot.wtk.TableView;
 import org.apache.pivot.wtk.Window;
 import org.json.JSONException;
 
-import de.unihannover.swp2015.robots2.MapLoader;
-import de.unihannover.swp2015.robots2.components.StrategicVisualization;
+import de.unihannover.swp2015.robots2.application.MapLoader;
+import de.unihannover.swp2015.robots2.application.components.StrategicVisualization;
+import de.unihannover.swp2015.robots2.application.exceptions.InvalidMapFile;
 import de.unihannover.swp2015.robots2.controller.main.GuiMainController;
-import de.unihannover.swp2015.robots2.exceptions.InvalidMapFile;
 
 import org.apache.pivot.wtk.DesktopApplicationContext;
 import org.apache.pivot.wtk.Display;
@@ -83,7 +83,7 @@ public class ControlPanel extends Window implements Bindable {
 		try {
 			BXMLSerializer bxmlSerializer = new BXMLSerializer();
 	        bxmlSerializer.getNamespace().put("application", this);
-	        this.configurator = (Configurator)bxmlSerializer.readObject(getClass().getResource("/de/unihannover/swp2015/robots2/Configurator.bxml"));
+	        this.configurator = (Configurator)bxmlSerializer.readObject(getClass().getResource("/de/unihannover/swp2015/robots2/application/Configurator.bxml"));
 			configurator.setPreferredSize(initialWidth, initialHeight);
 		} catch (IOException e) {
 			e.printStackTrace();

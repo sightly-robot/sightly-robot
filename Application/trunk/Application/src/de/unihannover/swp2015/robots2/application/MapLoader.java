@@ -1,4 +1,4 @@
-package de.unihannover.swp2015.robots2;
+package de.unihannover.swp2015.robots2.application;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -12,8 +12,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
+import de.unihannover.swp2015.robots2.application.exceptions.InvalidMapFile;
 import de.unihannover.swp2015.robots2.controller.main.GuiMainController;
-import de.unihannover.swp2015.robots2.exceptions.InvalidMapFile;
 import de.unihannover.swp2015.robots2.model.implementation.Position;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;

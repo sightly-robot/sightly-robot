@@ -1,4 +1,4 @@
-package de.unihannover.swp2015.robots2.exceptions;
+package de.unihannover.swp2015.robots2.application.exceptions;
 
 /**
  * This exception is throw whenever the map file contains inconsistent

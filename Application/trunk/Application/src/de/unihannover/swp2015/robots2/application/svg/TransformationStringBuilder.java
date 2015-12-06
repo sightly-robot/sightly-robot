@@ -1,4 +1,4 @@
-package de.unihannover.swp2015.robots2.svg;
+package de.unihannover.swp2015.robots2.application.svg;
 
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;

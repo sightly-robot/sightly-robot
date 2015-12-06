@@ -1,4 +1,4 @@
-package de.unihannover.swp2015.robots2.util;
+package de.unihannover.swp2015.robots2.application.util;
 
 import java.io.IOException;
 import java.io.InputStream;

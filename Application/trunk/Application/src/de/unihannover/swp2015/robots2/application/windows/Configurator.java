@@ -1,4 +1,4 @@
-package de.unihannover.swp2015.robots2.windows;
+package de.unihannover.swp2015.robots2.application.windows;
 
 import java.net.URL;
 
@@ -11,7 +11,7 @@ import org.apache.pivot.wtk.TabPane;
 import org.apache.pivot.wtk.Window;
 import org.apache.pivot.wtk.skin.terra.TerraTabPaneSkin;
 
-import de.unihannover.swp2015.robots2.models.GeneralOptions;
+import de.unihannover.swp2015.robots2.application.models.GeneralOptions;
 
 public class Configurator extends Window implements Bindable
 {

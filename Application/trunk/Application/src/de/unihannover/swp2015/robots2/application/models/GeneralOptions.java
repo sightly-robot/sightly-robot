@@ -1,4 +1,4 @@
-package de.unihannover.swp2015.robots2.models;
+package de.unihannover.swp2015.robots2.application.models;
 
 public class GeneralOptions {
 	private String remoteUrl;

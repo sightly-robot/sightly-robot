@@ -1,4 +1,4 @@
-package de.unihannover.swp2015.robots2;
+package de.unihannover.swp2015.robots2.application;
 
 import org.apache.pivot.beans.BXMLSerializer;
 import org.apache.pivot.collections.Map;
@@ -6,8 +6,8 @@ import org.apache.pivot.wtk.Application;
 import org.apache.pivot.wtk.DesktopApplicationContext;
 import org.apache.pivot.wtk.Display;
 
+import de.unihannover.swp2015.robots2.application.windows.ControlPanel;
 import de.unihannover.swp2015.robots2.controller.main.GuiMainController;
-import de.unihannover.swp2015.robots2.windows.ControlPanel;
 
 public class Main implements Application {
 	
@@ -33,7 +33,7 @@ public class Main implements Application {
     public void startup(Display display, Map<String, String> properties) throws Exception {		
         BXMLSerializer bxmlSerializer = new BXMLSerializer();
         bxmlSerializer.getNamespace().put("application", this);
-        window = (ControlPanel)bxmlSerializer.readObject(getClass().getResource("/de/unihannover/swp2015/robots2/ControlPanel.bxml"));
+        window = (ControlPanel)bxmlSerializer.readObject(getClass().getResource("/de/unihannover/swp2015/robots2/application/ControlPanel.bxml"));
 
 	    this.controller = new GuiMainController();
         window.setController(controller);
