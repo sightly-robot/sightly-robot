@@ -24,11 +24,13 @@ public class Main {
 		
 		Harvester harvester = new Harvester(controller);
 		
-		if (!controller.startMqtt(args[0])) {
-			System.out.println("Connection could not connect to broker.");
+		try {
+			controller.startMqtt(args[0]);
+		} catch (Exception e) {
+			System.out.println("Could not connect to broker.");
+			System.out.println(e.toString());
 			return;
 		}
-		
 		
 		
 		try {
