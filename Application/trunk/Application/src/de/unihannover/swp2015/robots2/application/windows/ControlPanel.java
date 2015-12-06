@@ -5,6 +5,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 
+import org.eclipse.paho.client.mqttv3.MqttException;
+
 import org.apache.pivot.beans.BXML;
 import org.apache.pivot.beans.BXMLSerializer;
 import org.apache.pivot.beans.Bindable;
@@ -168,11 +170,11 @@ public class ControlPanel extends Window implements Bindable {
 		@Override
 		public void buttonPressed(Button button) {
 			try {
-				if (!controller.startMqtt("tcp://" + configurator.getGeneralOptions().getRemoteUrl()))
-					Alert.alert(MessageType.ERROR, "Could not connect", ControlPanel.this);
-				else
-					loadMap.setEnabled(true);
-			} catch (IllegalArgumentException exc) {
+				controller.startMqtt("tcp://" + configurator.getGeneralOptions().getRemoteUrl());
+				loadMap.setEnabled(true);
+			}
+			catch (MqttException exc) {
+				Alert.alert(MessageType.ERROR, exc.getMessage(), ControlPanel.this);
 			}
 		}
 	};
