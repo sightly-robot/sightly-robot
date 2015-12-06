@@ -16,7 +16,7 @@ import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
 public class AI extends AbstractAI implements IModelObserver {
 
 	private IField nextField;
-	private AIGraph graph;
+	private AIGraph graph; //volatile
 	private IGame game;
 
 	private Robot myself;
