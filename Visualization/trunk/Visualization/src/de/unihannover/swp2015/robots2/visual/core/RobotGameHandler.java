@@ -17,6 +17,7 @@ import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
 import de.unihannover.swp2015.robots2.model.interfaces.IGame;
 import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
 import de.unihannover.swp2015.robots2.model.interfaces.IStage;
+import de.unihannover.swp2015.robots2.visual.core.base.GameHandler;
 import de.unihannover.swp2015.robots2.visual.entity.IEntity;
 import de.unihannover.swp2015.robots2.visual.entity.Map;
 import de.unihannover.swp2015.robots2.visual.entity.Robot;
@@ -49,6 +50,11 @@ public class RobotGameHandler extends GameHandler {
 	protected final IGame game;
 	
 	/**
+	 * Viewport of the game.
+	 */
+	protected final Viewport view;
+	
+	/**
 	 * SpriteBatch for rendering textures.
 	 */
 	protected SpriteBatch spriteBatch;
@@ -71,11 +77,6 @@ public class RobotGameHandler extends GameHandler {
 	 * UI, which will be displayed if {@link IGame#isRunning()} == false
 	 */
 	protected UI ui;
-	
-	/**
-	 * Main camera
-	 */
-	protected Viewport view;
 			
 	/**
 	 * Overview of robots for ranking
@@ -99,16 +100,16 @@ public class RobotGameHandler extends GameHandler {
 	 * @param game root of the model
 	 * @param resourceHandler {@link IResourceHandler}
 	 */
-	public RobotGameHandler(final IGame game, final IResourceHandler resourceHandler, final Viewport view, final IPreferences prefs) {
+	public RobotGameHandler(final IGame game, final Viewport view, final IResourceHandler resourceHandler, final IPreferences prefs) {
 		super(resourceHandler, prefs);
 		
 		this.robots = new ArrayList<>();
 		this.modifierList = new ArrayList<>();
 		this.entityList = new ArrayList<>();
 		this.game = game;
-		this.spriteBatch = new SpriteBatch();
 		this.view = view;
-		this.spriteBatch.setProjectionMatrix(this.view.getCamera().combined);
+		this.spriteBatch = new SpriteBatch();
+		this.spriteBatch.setProjectionMatrix(view.getCamera().combined);
 		this.game.observe(this);
 		
 		this.pp = new PostProcessor(false, true, true);
@@ -135,10 +136,8 @@ public class RobotGameHandler extends GameHandler {
 		//set preferences !have to happen before creating entities!
 		this.prefs.putInt(PrefConst.MAP_ROWS_KEY, stage.getWidth());
 		this.prefs.putInt(PrefConst.MAP_COLS_KEY, stage.getHeight());
-		this.prefs.putFloat(PrefConst.FIELD_WIDTH_KEY, ((float) view.getWorldWidth()) / stage.getWidth());
-		this.prefs.putFloat(PrefConst.FIELD_HEIGHT_KEY, ((float) view.getWorldWidth()) / stage.getHeight());
-		this.prefs.putFloat(PrefConst.VIEW_WIDTH, view.getWorldWidth());
-		this.prefs.putFloat(PrefConst.VIEW_HEIGHT, view.getWorldHeight());
+		this.prefs.putFloat(PrefConst.FIELD_WIDTH_KEY, view.getWorldWidth() / stage.getWidth());
+		this.prefs.putFloat(PrefConst.FIELD_HEIGHT_KEY, view.getWorldWidth() / stage.getHeight());
 		
 		//create entities
 		for (final IRobot roboModel : game.getRobots().values()) {
@@ -152,6 +151,19 @@ public class RobotGameHandler extends GameHandler {
 		
 		//create ui
 		this.ui = new UI(robots, spriteBatch, this);
+	}
+	
+	/**
+	 * Returns the current ranking of the given robot
+	 * 
+	 * @param robot you want the ranking for
+	 */
+	public int getRanking(final IRobot robo) {
+		for (int i = 0; i < robots.size(); ++i) {
+			if (robots.get(i) == robo)
+				return i+1;
+		}
+		return -1;
 	}
 	
 	@Override
@@ -235,31 +247,19 @@ public class RobotGameHandler extends GameHandler {
 	}
 
 	@Override
-	public void dispatchEvent(final IEvent event, final IEntity source) {
-		
-	}
-
-	@Override
 	public void dispose() {
 		super.dispose();
 		
 		this.spriteBatch.dispose();
+		this.pp.dispose();
+		this.pp2.dispose();
+		this.fbo.dispose();
 	}
 	
 	@Override
 	public void resize(int width, int height) {
 		this.pp.setViewport(new Rectangle(view.getScreenX(), view.getScreenY(),
-				view.getScreenWidth(), view.getScreenHeight()));
+				view.getWorldWidth(), view.getWorldHeight()));
 	}
 	
-	@Override
-	public int getRanking(final IRobot robo) {
-		for (int i = 0; i < robots.size(); ++i) {
-			if (robots.get(i) == robo)
-				return i+1;
-		}
-		return -1;
-	}
-	
-
 }

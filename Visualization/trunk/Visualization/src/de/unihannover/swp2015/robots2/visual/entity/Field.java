@@ -8,8 +8,8 @@ import de.unihannover.swp2015.robots2.model.interfaces.IField;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
 import de.unihannover.swp2015.robots2.model.interfaces.IStage;
-import de.unihannover.swp2015.robots2.visual.core.IGameHandler;
 import de.unihannover.swp2015.robots2.visual.core.PrefConst;
+import de.unihannover.swp2015.robots2.visual.core.RobotGameHandler;
 import de.unihannover.swp2015.robots2.visual.resource.ResConst;
 import de.unihannover.swp2015.robots2.visual.util.StageUtil;
 import de.unihannover.swp2015.robots2.visual.util.pref.IPreferencesKey;
@@ -66,7 +66,7 @@ public class Field extends Entity {
 	 * @param renderer batch, which should be used to render the entity
 	 * @param gameHandler {@link IGameHandler}, which should own this entity.
 	 */
-	public Field(final IStage parent, final IField model, final IGameHandler gameHandler){
+	public Field(final IStage parent, final IField model, final RobotGameHandler gameHandler){
 		super(model, gameHandler);
 		
 		this.model = model;

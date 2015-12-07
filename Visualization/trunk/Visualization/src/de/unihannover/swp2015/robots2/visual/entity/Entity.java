@@ -7,7 +7,7 @@ import com.badlogic.gdx.Gdx;
 
 import de.unihannover.swp2015.robots2.model.interfaces.IAbstractModel;
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
-import de.unihannover.swp2015.robots2.visual.core.IGameHandler;
+import de.unihannover.swp2015.robots2.visual.core.base.IGameHandler;
 import de.unihannover.swp2015.robots2.visual.entity.modifier.base.IEntityModifier;
 import de.unihannover.swp2015.robots2.visual.resource.IResourceHandler;
 import de.unihannover.swp2015.robots2.visual.util.pref.IPreferences;

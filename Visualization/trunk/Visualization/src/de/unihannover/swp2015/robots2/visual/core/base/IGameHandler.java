@@ -1,11 +1,9 @@
-package de.unihannover.swp2015.robots2.visual.core;
+package de.unihannover.swp2015.robots2.visual.core.base;
 
 import com.badlogic.gdx.utils.Disposable;
 
 import de.unihannover.swp2015.robots2.model.externalInterfaces.IModelObserver;
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
-import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
-import de.unihannover.swp2015.robots2.visual.entity.IEntity;
 import de.unihannover.swp2015.robots2.visual.resource.IResourceHandler;
 import de.unihannover.swp2015.robots2.visual.util.pref.IPreferences;
 
@@ -32,13 +30,6 @@ public interface IGameHandler extends IUpdateable, IModelObserver, IRenderable, 
 	IResourceHandler getResourceHandler();
 	
 	/**
-	 * Dispatches an event from the model.
-	 * 
-	 * @param event {@link de.unihannover.swp2015.robots2.model.interfaces.IEvent}
-	 */
-	void dispatchEvent(final IEvent event, final IEntity source);
-	
-	/**
 	 * {@link IPreferences}
 	 * 
 	 * @return preferences object
@@ -54,15 +45,7 @@ public interface IGameHandler extends IUpdateable, IModelObserver, IRenderable, 
 	 * @param height new height of the window
 	 */
 	void resize(final int width, final int height);
-	
-	
-	/**
-	 * Returns the current ranking of the given robot
-	 * 
-	 * @param robot you want the ranking for
-	 */
-	int getRanking(final IRobot robo);
-	
+		
 	/**
 	 * Will be called from {@link #onModelUpdate(IEvent)}, but runs safley in the render thread.
 	 * 

@@ -8,8 +8,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
 import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
 import de.unihannover.swp2015.robots2.visual.core.GameConst;
-import de.unihannover.swp2015.robots2.visual.core.IGameHandler;
 import de.unihannover.swp2015.robots2.visual.core.PrefConst;
+import de.unihannover.swp2015.robots2.visual.core.RobotGameHandler;
 import de.unihannover.swp2015.robots2.visual.entity.modifier.MoveModifierX;
 import de.unihannover.swp2015.robots2.visual.entity.modifier.MoveModifierY;
 import de.unihannover.swp2015.robots2.visual.entity.modifier.RotationModifier;
@@ -57,7 +57,7 @@ public class Robot extends Entity {
 	 * @param batch for drawing the robot
 	 * @param gameHandler parent
 	 */
-	public Robot(final IRobot robModel, IGameHandler gameHandler) {
+	public Robot(final IRobot robModel, RobotGameHandler gameHandler) {
 		super(robModel, gameHandler);
 
 		this.robo = resHandler.getRegion(ResConst.DEFAULT_ROBO_NORTH);
@@ -87,7 +87,7 @@ public class Robot extends Entity {
 		this.bubble.color = ColorUtil.fromAwtColor(robo.getColor());
 		this.bubble.color = bubble.color.set(bubble.color.r, bubble.color.g, bubble.color.b, bubble.color.a * 0.7f);
 		this.bubble.font = resHandler.getFont(ResConst.DEFAULT_FONT);
-        this.bubble.points = robo.getId().substring(0, 4) + " : " + robo.getScore() + "(" + gameHandler.getRanking(robo) + ")";
+        this.bubble.points = robo.getId().substring(0, 4) + " : " + robo.getScore() + "(" + ((RobotGameHandler) gameHandler).getRanking(robo) + ")";
 		this.bubble.x = robo.getPosition().getX() * fieldWidth - renderX;
 		this.bubble.y = robo.getPosition().getY() * fieldHeight - renderY;
 		this.bubble.width = fieldWidth * 0.75f;
@@ -192,6 +192,7 @@ public class Robot extends Entity {
 	@Override
 	public void onManagedModelUpdate(IEvent event) {
 		IRobot robo = (IRobot) model;
+		RobotGameHandler handler = (RobotGameHandler) gameHandler;
 		
 		switch(event.getType()) {
 		
@@ -203,7 +204,7 @@ public class Robot extends Entity {
 				break;
 				
 			case ROBOT_SCORE:
-				this.bubble.points =  robo.getId().substring(0, 4) + "  : " + robo.getScore() +  "(" + gameHandler.getRanking(robo) + ")";
+				this.bubble.points =  robo.getId().substring(0, 4) + "  : " + robo.getScore() +  "(" + handler.getRanking(robo) + ")";
 				break;
 				
 			case ROBOT_STATE:

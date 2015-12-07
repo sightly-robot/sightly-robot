@@ -14,7 +14,7 @@ import de.unihannover.swp2015.robots2.model.implementation.Field;
 import de.unihannover.swp2015.robots2.model.implementation.Robot;
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
 import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
-import de.unihannover.swp2015.robots2.visual.core.IGameHandler;
+import de.unihannover.swp2015.robots2.visual.core.base.IGameHandler;
 import de.unihannover.swp2015.robots2.visual.entity.Entity;
 import de.unihannover.swp2015.robots2.visual.entity.IEntity;
 import de.unihannover.swp2015.robots2.visual.resource.IResourceHandler;

@@ -11,10 +11,10 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-import de.unihannover.swp2015.robots2.controller.externalInterfaces.IVisualization;
-import de.unihannover.swp2015.robots2.controller.main.VisualizationMainController;
-import de.unihannover.swp2015.robots2.visual.core.IGameHandler;
+import de.unihannover.swp2015.robots2.visual.core.MqttHandler;
+import de.unihannover.swp2015.robots2.visual.core.PrefConst;
 import de.unihannover.swp2015.robots2.visual.core.RobotGameHandler;
+import de.unihannover.swp2015.robots2.visual.core.base.IGameHandler;
 import de.unihannover.swp2015.robots2.visual.resource.IResourceHandler;
 import de.unihannover.swp2015.robots2.visual.resource.ResConst;
 import de.unihannover.swp2015.robots2.visual.resource.ResourceHandler;
@@ -27,18 +27,28 @@ import de.unihannover.swp2015.robots2.visual.util.pref.FlexPreferences;
  * 
  * @author Rico Schrage
  */
-public class Visualization extends ApplicationAdapter implements IVisualization {
+public class Visualization extends ApplicationAdapter {
 
+	/**
+	 * Indicates whether this build is a debug build.
+	 */
+	public static final boolean DEBUG = true;
+	
 	/**
 	 * Broker-IP
 	 */
-	private static final String CONNECTION_IP = "tcp://192.168.1.66";
+	private static final String CONNECTION_IP = "192.168.1.66";
 	
 	/**
 	 * List of all {@link IGameHandler}.
 	 */
 	private final List<IGameHandler> gameHandlerList;
 
+	/**
+	 * MqttHandler, handles connection fails.
+	 */
+	private final MqttHandler mqttHandler;
+	
 	/**
 	 * Settings received via MQTT
 	 */
@@ -56,11 +66,6 @@ public class Visualization extends ApplicationAdapter implements IVisualization 
 	private Viewport fitViewport;
 		
 	/**
-	 * Handles all MQTT stuff. Contains main model.
-	 */
-	private final VisualizationMainController mainController;
-		
-	/**
 	 * Constructs a Visualization object.
 	 * 
 	 * Important: Don't do OpenGL related things here! Use {@link #create()}
@@ -68,7 +73,7 @@ public class Visualization extends ApplicationAdapter implements IVisualization 
 	 */
 	public Visualization() {
 		this.gameHandlerList = new ArrayList<>();
-		this.mainController = new VisualizationMainController();
+		this.mqttHandler = new MqttHandler();
 	}
 
 	@Override
@@ -82,20 +87,20 @@ public class Visualization extends ApplicationAdapter implements IVisualization 
 		this.cam.setToOrtho(true, appWidth, appHeight);
 		this.fitViewport = new FitViewport(appWidth, appHeight, cam);
 		this.fitViewport.update(appWidth, appHeight, true);
+
+		this.prefs.putFloat(PrefConst.VIEW_WIDTH, appWidth);
+		this.prefs.putFloat(PrefConst.VIEW_HEIGHT, appHeight);
 		
 		final IResourceHandler resHandler = new ResourceHandler(ResConst.ATLAS_PATH.getName() + ResConst.ATLAS_NAME.getName() + ".atlas");
 		
-		/*
-		 * //obv. just for testing
-		 * final IGame testGame = TestUtil.createRandomTestGame(2, 4, 3);
-		 * new TestApp(testGame);	
-		 */
-
-		//TODO handle connect exceptions
-		//this.mainController.startMqtt(CONNECTION_IP);
+		if (DEBUG) {
+			new TestApp(mqttHandler.getGame());
+		}
+		else {
+			this.mqttHandler.startMqtt(CONNECTION_IP);
+		}
 		
-		new TestApp(mainController.getGame());
-		this.gameHandlerList.add(new RobotGameHandler(mainController.getGame(), resHandler, fitViewport, prefs));
+		this.gameHandlerList.add(new RobotGameHandler(mqttHandler.getGame(), fitViewport, resHandler, prefs));
 	}
 
 	@Override
@@ -138,17 +143,6 @@ public class Visualization extends ApplicationAdapter implements IVisualization 
 		for (int i = 0; i < gameHandlerList.size(); ++i) {
 			gameHandlerList.get(i).resize(width, height);
 		}
-	}
-
-	@Override
-	public void setSettings(String settings) {
-		//TODO json->preferences
-	}
-
-	@Override
-	public String getSettings() {
-		//TODO preferences->json
-		return null;
 	}
 
 }

@@ -1,6 +1,6 @@
 package de.unihannover.swp2015.robots2.visual.entity.modifier.base;
 
-import de.unihannover.swp2015.robots2.visual.core.IUpdateable;
+import de.unihannover.swp2015.robots2.visual.core.base.IUpdateable;
 
 /**
  * An EntityModifier can be created to successively update an entity.  

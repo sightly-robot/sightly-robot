@@ -9,8 +9,8 @@ import de.unihannover.swp2015.robots2.model.interfaces.IAbstractModel;
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
 import de.unihannover.swp2015.robots2.model.interfaces.IField;
 import de.unihannover.swp2015.robots2.model.interfaces.IStage;
-import de.unihannover.swp2015.robots2.visual.core.IGameHandler;
 import de.unihannover.swp2015.robots2.visual.core.PrefConst;
+import de.unihannover.swp2015.robots2.visual.core.RobotGameHandler;
 import de.unihannover.swp2015.robots2.visual.util.pref.IPreferencesKey;
 import de.unihannover.swp2015.robots2.visual.util.pref.observer.PreferencesObservable;
 
@@ -34,7 +34,7 @@ public class Map extends Entity {
 	 * @param batch batch, which should be used to render the map
 	 * @param gameHandler parent
 	 */
-	public Map(IStage model, IGameHandler gameHandler) {
+	public Map(IStage model, RobotGameHandler gameHandler) {
 		super(model, gameHandler);
 	
 		this.fieldList = new ArrayList<>(model.getWidth() * model.getHeight());
@@ -51,7 +51,7 @@ public class Map extends Entity {
 		for (int x = 0; x < model.getWidth(); ++x) {
 			for (int y = 0; y < model.getHeight(); ++y) {
 				final IField field = model.getField(x, y);
-				this.fieldList.add(new Field(model, field, gameHandler));
+				this.fieldList.add(new Field(model, field, (RobotGameHandler) gameHandler));
 			}
 		}
 	}

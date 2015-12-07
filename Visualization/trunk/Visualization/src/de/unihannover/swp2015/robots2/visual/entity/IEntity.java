@@ -3,8 +3,8 @@ package de.unihannover.swp2015.robots2.visual.entity;
 import de.unihannover.swp2015.robots2.model.externalInterfaces.IModelObserver;
 import de.unihannover.swp2015.robots2.model.interfaces.IAbstractModel;
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
-import de.unihannover.swp2015.robots2.visual.core.IDrawable;
-import de.unihannover.swp2015.robots2.visual.core.IUpdateable;
+import de.unihannover.swp2015.robots2.visual.core.base.IDrawable;
+import de.unihannover.swp2015.robots2.visual.core.base.IUpdateable;
 import de.unihannover.swp2015.robots2.visual.entity.modifier.base.IEntityModifier;
 import de.unihannover.swp2015.robots2.visual.util.pref.observer.IPreferencesObserver;
 

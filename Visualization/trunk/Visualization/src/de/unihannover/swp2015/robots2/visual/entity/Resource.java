@@ -5,8 +5,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
 import de.unihannover.swp2015.robots2.model.interfaces.IField;
-import de.unihannover.swp2015.robots2.visual.core.IGameHandler;
 import de.unihannover.swp2015.robots2.visual.core.PrefConst;
+import de.unihannover.swp2015.robots2.visual.core.RobotGameHandler;
 import de.unihannover.swp2015.robots2.visual.resource.ResConst;
 import de.unihannover.swp2015.robots2.visual.util.pref.IPreferencesKey;
 import de.unihannover.swp2015.robots2.visual.util.pref.observer.PreferencesObservable;
@@ -31,7 +31,7 @@ public class Resource extends Entity {
 	 * @param batch batch, which will be used to draw the entity.
 	 * @param gameHandler parent
 	 */
-	public Resource(final IField model, IGameHandler gameHandler) {
+	public Resource(final IField model, RobotGameHandler gameHandler) {
 		super(model, gameHandler);
 		
 		this.model.observe(this);
