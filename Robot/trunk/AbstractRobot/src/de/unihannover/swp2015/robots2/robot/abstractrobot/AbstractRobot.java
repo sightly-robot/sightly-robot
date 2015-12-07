@@ -6,6 +6,8 @@ import de.unihannover.swp2015.robots2.controller.main.RobotMainController;
 import de.unihannover.swp2015.robots2.robot.abstractrobot.automate.AbstractAutomate;
 import de.unihannover.swp2015.robots2.robot.interfaces.AbstractAI;
 
+import org.eclipse.paho.client.mqttv3.MqttException;
+
 /**
  * The AbstractRobot is the base class for all hardware (real) and software
  * (virtual) robots.
@@ -23,6 +25,8 @@ public abstract class AbstractRobot {
 
 	/** The automate of the robot. */
 	protected AbstractAutomate automate;
+	
+	private boolean connected = false;
 
 	/**
 	 * Initializes the AbstractRobot instance by initializing the robot
@@ -31,6 +35,23 @@ public abstract class AbstractRobot {
 	public AbstractRobot(boolean isHardware) {
 
 		robotController = new RobotMainController(isHardware);
+		
+		while (!connected) {
+			try {
+				robotController.startMqtt("tcp://192.168.1.66");	
+				connected = true;
+			} catch (MqttException me) {
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+		}
+/*		
 		while(!robotController.startMqtt("tcp://192.168.1.66"))
 		{
 			try {
@@ -38,7 +59,7 @@ public abstract class AbstractRobot {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-		}
+		}*/
 		
 //		IModelObserver mo = new IModelObserver() {
 //			@Override
