@@ -1,5 +1,7 @@
 package de.unihannover.swp2015.robots2.visual.entity;
 
+import java.util.List;
+
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
@@ -18,13 +20,13 @@ import de.unihannover.swp2015.robots2.visual.util.pref.observer.PreferencesObser
 /**
  * An entity used for the visualization of the underground and walls
  * 
- * @version 0.2
+ * @version 1.0
  * @author Daphne Schössow
  */
 public class Field extends Entity {
 
 	/**
-	 * Lookup table for the ground texture. 
+	 * Lookup table for the ground texture, which depends on the placement of walls. 
 	 */
 	private static final ResConst[] FIELD_TEXTURE_LOOKUP = { ResConst.DEFAULT_FIELD_4, ResConst.DEFAULT_FIELD_3_E,
 			ResConst.DEFAULT_FIELD_3_W, ResConst.DEFAULT_FIELD_2_E, ResConst.DEFAULT_FIELD_3_N,
@@ -58,6 +60,10 @@ public class Field extends Entity {
 	 */
 	private TextureRegion field;
 	
+	private final TextureRegion startpos;
+	
+	private boolean startp = false;
+	
 	/**
 	 * Constructs a field-entity, which belongs to <code>parent</code>.
 	 * 
@@ -76,6 +82,7 @@ public class Field extends Entity {
 		this.food = new Resource(model, gameHandler);
 		this.texWall = resHandler.getRegion(ResConst.DEFAULT_WALL_N, ResConst.DEFAULT_WALL_E, ResConst.DEFAULT_WALL_S, ResConst.DEFAULT_WALL_W); 
 		this.field = resHandler.getRegion(ResConst.DEFAULT_FIELD); 
+		this.startpos = resHandler.getRegion(ResConst.DEFAULT_STARTPOS);
 
 		final float fieldWidth = prefs.getFloat(PrefConst.FIELD_WIDTH_KEY, 50);
 		final float fieldHeight = prefs.getFloat(PrefConst.FIELD_HEIGHT_KEY, 50);
@@ -84,6 +91,34 @@ public class Field extends Entity {
 		this.renderY = model.getY() * fieldHeight;
 
 		this.determineFieldTexture(model);
+		this.drawStartPositions();
+		
+	}
+	
+	private void drawStartPositions(){
+		final List<IPosition> startposition = parent.getStartPositions();
+		for (IPosition pos : startposition) {
+			if (pos.getX() == renderX && pos.getY() == renderY) {
+				this.startp = true;
+				switch(pos.getOrientation()){
+				case SOUTH:
+					this.rotation = 180;
+					break;
+				case NORTH:
+					this.rotation = 0;
+					break;
+				case WEST:
+					this.rotation = -90;
+					break;
+				case EAST:
+					this.rotation = 90;
+					break;
+				default:
+					break;
+				}
+				break;
+			}
+		}
 	}
 	
 	/**
@@ -117,6 +152,8 @@ public class Field extends Entity {
 	@Override
 	public void draw(final Batch batch) {
 		
+		
+		
 		final float fieldWidth = prefs.getFloat(PrefConst.FIELD_WIDTH_KEY, 50);
 		final float fieldHeight = prefs.getFloat(PrefConst.FIELD_HEIGHT_KEY, 50);
 		
@@ -142,6 +179,9 @@ public class Field extends Entity {
 		
 		if(field.isWall(IPosition.Orientation.WEST))
 			batch.draw(texWall[3], renderX, renderY, fieldWidth, fieldHeight);
+		
+		if(startp) // TODO stop showing when game started or robot is positioned
+			batch.draw(startpos, renderX, renderY, fieldWidth, fieldHeight);
 	}
 	
 	@Override
@@ -151,6 +191,9 @@ public class Field extends Entity {
 		switch(event.getType()) {
 		case STAGE_WALL:
 			determineFieldTexture(field);
+			break;
+		case ROBOT_ADD:
+			drawStartPositions();
 			break;
 		default:
 			break;

@@ -12,9 +12,9 @@ import de.unihannover.swp2015.robots2.visual.util.pref.IPreferencesKey;
 import de.unihannover.swp2015.robots2.visual.util.pref.observer.PreferencesObservable;
 
 /**
- * An entity used for the visualization of resources
+ * An entity used for the visualization of resources/food
  * 
- * @version 0.1
+ * @version 1.0
  * @author Daphne Schössow
  */
 public class Resource extends Entity {

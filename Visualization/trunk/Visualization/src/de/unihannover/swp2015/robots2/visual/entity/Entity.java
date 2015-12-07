@@ -15,9 +15,10 @@ import de.unihannover.swp2015.robots2.visual.util.pref.IPreferences;
 /**
  * The base class of all objects displayed at the (beamer) visualization
  *
- * Every object has placement coordinates, an image and a value to determine whether it's shown.
+ * Every object has placement coordinates (3-dimensional, so they get rendered in the right order),
+ * a rotation and a model that contains all information about the object.
  * 
- * @version 0.1
+ * @version 1.0
  * @author Daphne Schössow
  */
 public abstract class Entity implements IEntity {

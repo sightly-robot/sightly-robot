@@ -40,8 +40,9 @@ public enum ResConst {
 	DEFAULT_RES_8("default_res_08"),
 	DEFAULT_RES_9("default_res_09"),
 	DEFAULT_RES_10("default_res_10"),
-	DEFAULT_ROBO_NORTH("default_robo_north"),
+	DEFAULT_ROBO("default_robo"),
 	DEFAULT_BUBBLE("default_bubble"),
+	DEFAULT_STARTPOS("default_startpos"),
 	
 	DEFAULT_FONT("default_font"),
 	DEFAULT_FONT_BIG("default_font_big"),

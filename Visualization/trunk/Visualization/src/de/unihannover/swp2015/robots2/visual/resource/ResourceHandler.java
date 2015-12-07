@@ -97,6 +97,9 @@ public class ResourceHandler implements IResourceHandler {
 		final TextureRegion wallVRegion = texAtlas.findRegion("wall_v");
 		this.texMap.put(ResConst.DEFAULT_BUBBLE, wallVRegion);
 		
+		final TextureRegion startpos = texAtlas.findRegion("startpos_white");
+		this.texMap.put(ResConst.DEFAULT_STARTPOS, startpos);
+		
 		final Array<TextureAtlas.AtlasRegion> food = texAtlas.findRegions("food");
 		this.texMap.put(ResConst.DEFAULT_RES_1, food.get(0));
 		this.texMap.put(ResConst.DEFAULT_RES_2, food.get(1));
@@ -110,7 +113,7 @@ public class ResourceHandler implements IResourceHandler {
 		this.texMap.put(ResConst.DEFAULT_RES_10, food.get(9));
 		
 		final TextureRegion robo = texAtlas.findRegion("robo");
-		this.texMap.put(ResConst.DEFAULT_ROBO_NORTH, robo);
+		this.texMap.put(ResConst.DEFAULT_ROBO, robo);
 		
 		final TextureRegion noWay = texAtlas.findRegion("0_way_tile_tiled");
 		this.texMap.put(ResConst.DEFAULT_FIELD, noWay);

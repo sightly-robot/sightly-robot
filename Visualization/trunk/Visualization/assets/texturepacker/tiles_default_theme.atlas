@@ -41,7 +41,7 @@ repeat: none
   index: -1
 circle
   rotate: false
-  xy: 3013, 1919
+  xy: 2009, 413
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
@@ -130,9 +130,16 @@ robo
   orig: 500, 500
   offset: 0, 0
   index: -1
-wall_e
+startpos_white
   rotate: false
   xy: 2511, 1519
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: -1
+wall_e
+  rotate: false
+  xy: 1507, 13
   size: 500, 500
   orig: 500, 500
   offset: 0, 0
@@ -146,28 +153,28 @@ wall_h
   index: -1
 wall_n
   rotate: false
-  xy: 1507, 13
+  xy: 2009, 515
   size: 500, 500
   orig: 500, 500
   offset: 0, 0
   index: -1
 wall_s
   rotate: false
-  xy: 2009, 515
+  xy: 2511, 1017
   size: 500, 500
   orig: 500, 500
   offset: 0, 0
   index: -1
 wall_v
   rotate: false
-  xy: 2009, 413
+  xy: 2511, 915
   size: 10, 100
   orig: 10, 100
   offset: 0, 0
   index: -1
 wall_w
   rotate: false
-  xy: 2511, 1017
+  xy: 3013, 1519
   size: 500, 500
   orig: 500, 500
   offset: 0, 0

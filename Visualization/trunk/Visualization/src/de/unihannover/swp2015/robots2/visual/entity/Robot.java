@@ -23,12 +23,15 @@ import de.unihannover.swp2015.robots2.visual.util.pref.observer.PreferencesObser
 /**
  * An entity used for the visualization of robots
  * 
- * @version 0.2
+ * @version 1.0
  * @author Daphne Schössow
  */
 public class Robot extends Entity {
 
-	// private boolean isVirtual; //TODO Einbauen
+	/**
+	 * Determine if it's a virtual or real robot
+	 */
+	 private boolean isVirtual; //TODO 
 	
 	/**
 	 * Visual representation of the entity.
@@ -36,7 +39,7 @@ public class Robot extends Entity {
 	private final TextureRegion robo;
 	
 	/**
-	 * Data of the bubble.
+	 * Data of the information bubble.
 	 */
 	private final Bubble bubble;
 	
@@ -60,7 +63,7 @@ public class Robot extends Entity {
 	public Robot(final IRobot robModel, RobotGameHandler gameHandler) {
 		super(robModel, gameHandler);
 
-		this.robo = resHandler.getRegion(ResConst.DEFAULT_ROBO_NORTH);
+		this.robo = resHandler.getRegion(ResConst.DEFAULT_ROBO);
 		this.bubble = new Bubble();
 
 		final float fieldWidth = prefs.getFloat(PrefConst.FIELD_WIDTH_KEY, 42);
@@ -76,7 +79,7 @@ public class Robot extends Entity {
 	}
 	
 	/**
-	 * Initializes the data of the bubble.
+	 * Initializes the data of the information bubble.
 	 * 
 	 * @param robo data model of the robot
 	 * @param fieldWidth field width
@@ -238,7 +241,7 @@ public class Robot extends Entity {
 	}
 	
 	/**
-	 * Model for a bubble.
+	 * Model for an information bubble.
 	 * 
 	 * @author Rico Schrage
 	 * @author Daphne Schössow

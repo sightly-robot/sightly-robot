@@ -15,9 +15,9 @@ import de.unihannover.swp2015.robots2.visual.util.pref.IPreferencesKey;
 import de.unihannover.swp2015.robots2.visual.util.pref.observer.PreferencesObservable;
 
 /**
- * An entity used for the visualization of 
+ * An entity, which is used for the construction of the map and that creates all field entities
  * 
- * @version 0.0
+ * @version 1.0
  * @author Daphne Schössow
  */
 public class Map extends Entity {
