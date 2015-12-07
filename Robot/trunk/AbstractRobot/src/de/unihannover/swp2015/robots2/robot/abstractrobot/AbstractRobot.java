@@ -26,8 +26,6 @@ public abstract class AbstractRobot {
 	/** The automate of the robot. */
 	protected AbstractAutomate automate;
 	
-	private boolean connected = false;
-
 	/**
 	 * Initializes the AbstractRobot instance by initializing the robot
 	 * controller and AI.
@@ -36,10 +34,9 @@ public abstract class AbstractRobot {
 
 		robotController = new RobotMainController(isHardware);
 		
-		while (!connected) {
+		while (!robotController.getGame().isSynced()) {
 			try {
 				robotController.startMqtt("tcp://192.168.1.66");	
-				connected = true;
 			} catch (MqttException me) {
 				try {
 					Thread.sleep(1000);
