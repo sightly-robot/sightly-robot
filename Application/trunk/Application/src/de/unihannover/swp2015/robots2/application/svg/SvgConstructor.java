@@ -184,7 +184,7 @@ public class SvgConstructor {
 					robot.addAttribute(
 						"xlink:href", 
 						AnimationElement.AT_XML, 
-						SvgConstructor.class.getResource("/de/unihannover/swp2015/robots2/application/Roboter.svg").toURI().toString()
+						SvgConstructor.class.getResource("/de/unihannover/swp2015/robots2/application/Lawnmower.svg").toURI().toString()
 					);
 				} catch (URISyntaxException e) {}
 				
