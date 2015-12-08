@@ -1,11 +1,14 @@
 package de.unihannover.swp2015.robots2.visual.entity;
 
+import java.util.List;
+
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
+import de.unihannover.swp2015.robots2.model.interfaces.IPosition;
 import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
 import de.unihannover.swp2015.robots2.visual.core.GameConst;
 import de.unihannover.swp2015.robots2.visual.core.PrefConst;
@@ -27,11 +30,6 @@ import de.unihannover.swp2015.robots2.visual.util.pref.observer.PreferencesObser
  * @author Daphne Schössow
  */
 public class Robot extends Entity {
-
-	/**
-	 * Determine if it's a virtual or real robot
-	 */
-	 private boolean isVirtual; //TODO 
 	
 	/**
 	 * Visual representation of the entity.
@@ -52,6 +50,16 @@ public class Robot extends Entity {
 	 * Height of the robot.
 	 */
 	private float height;
+	
+	
+	private final TextureRegion startpos;
+	
+	private boolean startp = false;
+	
+	int arrowrot=0;
+	
+	float fieldWidth;
+	float fieldHeight;
 		
 	/**
 	 * Constructs a robot entity using given parameters.
@@ -65,9 +73,11 @@ public class Robot extends Entity {
 
 		this.robo = resHandler.getRegion(ResConst.DEFAULT_ROBO);
 		this.bubble = new Bubble();
+		 
+		this.startpos = resHandler.getRegion(ResConst.DEFAULT_STARTPOS);
 
-		final float fieldWidth = prefs.getFloat(PrefConst.FIELD_WIDTH_KEY, 42);
-		final float fieldHeight = prefs.getFloat(PrefConst.FIELD_HEIGHT_KEY, 42);
+		fieldWidth = prefs.getFloat(PrefConst.FIELD_WIDTH_KEY, 42);
+		fieldHeight = prefs.getFloat(PrefConst.FIELD_HEIGHT_KEY, 42);
 
 		this.width = fieldWidth * GameConst.ROBOT_SCALE;
 		this.height = fieldHeight * GameConst.ROBOT_SCALE;
@@ -76,6 +86,10 @@ public class Robot extends Entity {
 		
 		this.initDirection(robModel);
 		this.initBubble(robModel, fieldWidth, fieldHeight);
+		if(robModel.isSetupState()){
+			//System.out.println("setup...");
+			this.drawStartPositions(robModel);
+		}
 	}
 	
 	/**
@@ -95,6 +109,27 @@ public class Robot extends Entity {
 		this.bubble.y = robo.getPosition().getY() * fieldHeight - renderY;
 		this.bubble.width = fieldWidth * 0.75f;
 		this.bubble.height = fieldHeight * 0.2f;
+	}
+	
+	
+	private void drawStartPositions(final IRobot robo){
+		this.startp = true;
+		switch(robo.getPosition().getOrientation()){
+		case SOUTH:
+			this.arrowrot = 180;
+			break;
+		case NORTH:
+			this.arrowrot = 0;
+			break;
+		case WEST:
+			this.arrowrot = -90;
+			break;
+		case EAST:
+			this.arrowrot = 90;
+			break;
+		default:
+			break;
+		}
 	}
 	
 	/**
@@ -169,8 +204,8 @@ public class Robot extends Entity {
 	 * @param robo model of the robot
 	 */
 	private void updatePosition(final IRobot robo) { 
-		final float fieldWidth = prefs.getFloat(PrefConst.FIELD_WIDTH_KEY, 42);
-		final float fieldHeight = prefs.getFloat(PrefConst.FIELD_HEIGHT_KEY, 42);
+		 fieldWidth = prefs.getFloat(PrefConst.FIELD_WIDTH_KEY, 42);
+		 fieldHeight = prefs.getFloat(PrefConst.FIELD_HEIGHT_KEY, 42);
 		
 		final float newRenderX = robo.getPosition().getX() * fieldWidth + fieldWidth/2 - width/2;
 		final float newRenderY = robo.getPosition().getY() * fieldHeight + fieldHeight/2 - height/2;
@@ -183,13 +218,17 @@ public class Robot extends Entity {
 	
 	@Override
 	public void draw(final Batch batch) {
-		batch.draw(robo, renderX, renderY, width/2f, height/2f, width, height, 1f, 1f, rotation);	
-
-		batch.setColor(bubble.color);		
-		batch.draw(bubble.tex, renderX + bubble.x, renderY + bubble.y, bubble.width, bubble.height);
-		bubble.font.setColor(1-bubble.color.r, 1-bubble.color.g, 1-bubble.color.b, bubble.color.a);
-		bubble.font.draw(batch, bubble.points, renderX + 5 + bubble.x, renderY + 5 + bubble.y);
-		batch.setColor(Color.WHITE);
+		if(this.startp) // TODO check in whole game
+			batch.draw(startpos, renderX, renderY, fieldWidth/2f, fieldHeight/2f, fieldWidth, fieldHeight, 1f, 1f, arrowrot);
+		else{
+			batch.draw(robo, renderX, renderY, width/2f, height/2f, width, height, 1f, 1f, rotation);	
+	
+			batch.setColor(bubble.color);		
+			batch.draw(bubble.tex, renderX + bubble.x, renderY + bubble.y, bubble.width, bubble.height);
+			bubble.font.setColor(1-bubble.color.r, 1-bubble.color.g, 1-bubble.color.b, bubble.color.a);
+			bubble.font.draw(batch, bubble.points, renderX + 5 + bubble.x, renderY + 5 + bubble.y);
+			batch.setColor(Color.WHITE);
+		}
 	}
 
 	@Override
@@ -209,8 +248,20 @@ public class Robot extends Entity {
 			case ROBOT_SCORE:
 				this.bubble.points =  robo.getId().substring(0, 4) + "  : " + robo.getScore() +  "(" + handler.getRanking(robo) + ")";
 				break;
-				
+
 			case ROBOT_STATE:
+				final List <IRobot> robos = gameHandler.getRobots();
+				for (IRobot rob : robos) {
+					if(!rob.isSetupState()){
+						if((this.renderX/fieldWidth)==rob.getPosition().getX() && (this.renderY/fieldHeight)==rob.getPosition().getY()){
+							//System.out.println("No setup");
+							this.startp = false;
+						}
+					}
+				}				
+				break;
+			case STAGE_STARTPOSITIONS:	
+				drawStartPositions(robo);
 				break;
 			default:
 				break;

@@ -3,6 +3,7 @@ package de.unihannover.swp2015.robots2.visual.util;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
@@ -18,6 +19,7 @@ import de.unihannover.swp2015.robots2.model.implementation.Robot;
 import de.unihannover.swp2015.robots2.model.implementation.Stage;
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent.UpdateType;
 import de.unihannover.swp2015.robots2.model.interfaces.IGame;
+import de.unihannover.swp2015.robots2.model.interfaces.IPosition;
 import de.unihannover.swp2015.robots2.model.interfaces.IStage;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
 import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
@@ -49,7 +51,7 @@ public class TestApp extends JFrame implements ActionListener {
 		changeRobotPos.setBounds(0, 0, 200, 50);
 		changeRobotPos.addActionListener(this);
 		
-		this.changeRobots = new JButton("changeRobots");
+		this.changeRobots = new JButton("addRobot");
 		changeRobots.setBounds(0, 50, 200, 50);
 		changeRobots.addActionListener(this);
 		
@@ -122,14 +124,23 @@ public class TestApp extends JFrame implements ActionListener {
 		else if (e.getSource() == this.changeRobots) {
 			final Game g = (Game) game;
 			final Robot robo = new Robot(UUID.randomUUID().toString(),true,true); 
-			robo.setPosition(1, 1, Orientation.EAST);
+			if(!game.getStage().getStartPositions().isEmpty()){
+				final List<IPosition> startposition = game.getStage().getStartPositions();
+				for (IPosition pos : startposition) {
+					robo.setPosition(pos.getX(), pos.getY(), pos.getOrientation());
+					break;
+				}
+			}
+			else{
+				robo.setPosition(1, 1, Orientation.EAST);	
+			}
 			g.addRobot(robo);
 			g.emitEvent(UpdateType.ROBOT_ADD, robo);
 		}
 		else if (e.getSource() == this.changeSize) {
 			final Stage g = (Stage) game.getStage();
 			g.changeSize(4, 4);
-			g.addStartPosition(2, 2, Orientation.SOUTH);
+			g.addStartPosition(2, 2, Orientation.EAST);
 			g.emitEvent(UpdateType.STAGE_SIZE);
 		}
 		else if (e.getSource() == this.startstop) {
