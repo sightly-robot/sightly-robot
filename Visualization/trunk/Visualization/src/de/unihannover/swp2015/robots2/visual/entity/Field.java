@@ -9,6 +9,7 @@ import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
 import de.unihannover.swp2015.robots2.model.interfaces.IField;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
+import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
 import de.unihannover.swp2015.robots2.model.interfaces.IStage;
 import de.unihannover.swp2015.robots2.visual.core.PrefConst;
 import de.unihannover.swp2015.robots2.visual.core.RobotGameHandler;
@@ -64,6 +65,11 @@ public class Field extends Entity {
 	
 	private boolean startp = false;
 	
+	int arrowrot=0;
+	
+	final float fieldWidth = prefs.getFloat(PrefConst.FIELD_WIDTH_KEY, 50);
+	final float fieldHeight = prefs.getFloat(PrefConst.FIELD_HEIGHT_KEY, 50);
+	
 	/**
 	 * Constructs a field-entity, which belongs to <code>parent</code>.
 	 * 
@@ -84,8 +90,8 @@ public class Field extends Entity {
 		this.field = resHandler.getRegion(ResConst.DEFAULT_FIELD); 
 		this.startpos = resHandler.getRegion(ResConst.DEFAULT_STARTPOS);
 
-		final float fieldWidth = prefs.getFloat(PrefConst.FIELD_WIDTH_KEY, 50);
-		final float fieldHeight = prefs.getFloat(PrefConst.FIELD_HEIGHT_KEY, 50);
+		//final float fieldWidth = prefs.getFloat(PrefConst.FIELD_WIDTH_KEY, 50);
+		//final float fieldHeight = prefs.getFloat(PrefConst.FIELD_HEIGHT_KEY, 50);
 		
 		this.renderX = model.getX() * fieldWidth;
 		this.renderY = model.getY() * fieldHeight;
@@ -98,20 +104,22 @@ public class Field extends Entity {
 	private void drawStartPositions(){
 		final List<IPosition> startposition = parent.getStartPositions();
 		for (IPosition pos : startposition) {
-			if (pos.getX() == renderX && pos.getY() == renderY) {
+			if (pos.getX() == (this.renderX/fieldWidth) && pos.getY() == this.renderY/fieldHeight) {
+				System.out.println("startp");
+				
 				this.startp = true;
 				switch(pos.getOrientation()){
 				case SOUTH:
-					this.rotation = 180;
+					this.arrowrot = 180;
 					break;
 				case NORTH:
-					this.rotation = 0;
+					this.arrowrot = 0;
 					break;
 				case WEST:
-					this.rotation = -90;
+					this.arrowrot = -90;
 					break;
 				case EAST:
-					this.rotation = 90;
+					this.arrowrot = 90;
 					break;
 				default:
 					break;
@@ -154,8 +162,8 @@ public class Field extends Entity {
 		
 		
 		
-		final float fieldWidth = prefs.getFloat(PrefConst.FIELD_WIDTH_KEY, 50);
-		final float fieldHeight = prefs.getFloat(PrefConst.FIELD_HEIGHT_KEY, 50);
+		//final float fieldWidth = prefs.getFloat(PrefConst.FIELD_WIDTH_KEY, 50);
+		//final float fieldHeight = prefs.getFloat(PrefConst.FIELD_HEIGHT_KEY, 50);
 		
 		if (rotation == -90)
 			batch.draw(field, renderX-(fieldWidth-fieldHeight)/2, renderY-(fieldWidth-fieldHeight)/2, fieldWidth/2f, fieldHeight/2f, fieldHeight, fieldWidth, 1f, 1f, rotation);
@@ -180,23 +188,33 @@ public class Field extends Entity {
 		if(field.isWall(IPosition.Orientation.WEST))
 			batch.draw(texWall[3], renderX, renderY, fieldWidth, fieldHeight);
 		
-		if(startp) // TODO stop showing when game started or robot is positioned
-			batch.draw(startpos, renderX, renderY, fieldWidth, fieldHeight);
-	}
+		if(startp) // TODO check in whole game
+			batch.draw(startpos, renderX, renderY, fieldWidth/2f, fieldHeight/2f, fieldWidth, fieldHeight, 1f, 1f, arrowrot);
+	} 
 	
 	@Override
 	public void onManagedModelUpdate(IEvent event) {
 		final IField field = (IField) model;
 		
 		switch(event.getType()) {
-		case STAGE_WALL:
-			determineFieldTexture(field);
-			break;
-		case ROBOT_ADD:
-			drawStartPositions();
-			break;
-		default:
-			break;
+			case STAGE_WALL:
+				determineFieldTexture(field);
+				break;
+			case ROBOT_STATE:
+				final List <IRobot> robos = gameHandler.getRobots();
+				for (IRobot rob : robos) {
+					if(!rob.isSetupState()){
+						if(this.renderX==rob.getPosition().getX() && this.renderY==rob.getPosition().getY()){
+							this.startp = false;
+						}
+					}
+				}				
+				break;
+			case STAGE_STARTPOSITIONS:	
+				//drawStartPositions();
+				break;
+			default:
+				break;
 		}		
 	}
 

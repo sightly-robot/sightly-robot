@@ -262,4 +262,13 @@ public class RobotGameHandler extends GameHandler {
 				view.getWorldWidth(), view.getWorldHeight()));
 	}
 	
+	/**
+	 * 
+	 * @return list of robots in game
+	 */
+	
+	public List<IRobot> getRobots(){
+		return robots;
+	}
+	
 }

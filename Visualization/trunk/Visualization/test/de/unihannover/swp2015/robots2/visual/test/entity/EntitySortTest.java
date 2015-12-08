@@ -68,6 +68,7 @@ public class EntitySortTest {
 		public void resize(int width, int height) {	}
 		public int getRanking(IRobot robo) {return 0;}
 		public void onManagedModelUpdate(IEvent event) {}
+		public List<IRobot> getRobots() {return null;}
 		
 	}
 
