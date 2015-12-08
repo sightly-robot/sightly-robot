@@ -1,5 +1,11 @@
 package de.unihannover.swp2015.robots2.robot.abstractrobot;
 
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Properties;
+
 import org.eclipse.paho.client.mqttv3.MqttException;
 
 import de.unihannover.swp2015.robots2.ai.core.AI;
@@ -34,9 +40,24 @@ public abstract class AbstractRobot {
 
 		robotController = new RobotMainController(isHardware);
 
+		// read broker IP from properties
+		Properties properties = new Properties();
+		BufferedInputStream is;
+		try {
+			is = new BufferedInputStream(new FileInputStream("config.properties"));
+			properties.load(is);
+			is.close();
+
+		} catch (FileNotFoundException fnfe) {
+			fnfe.printStackTrace();
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
+		}
+		String brokerIP = properties.getProperty("brokerIP");
+
 		while (!robotController.getGame().isSynced()) {
 			try {
-				robotController.startMqtt("tcp://192.168.1.66");
+				robotController.startMqtt("tcp://" + brokerIP);
 			} catch (MqttException me) {
 				try {
 					Thread.sleep(1000);
