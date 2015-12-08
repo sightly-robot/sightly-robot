@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
-import de.unihannover.swp2015.robots2.model.interfaces.IPosition;
 import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
 import de.unihannover.swp2015.robots2.visual.core.GameConst;
 import de.unihannover.swp2015.robots2.visual.core.PrefConst;
@@ -112,7 +111,7 @@ public class Robot extends Entity {
 	}
 	
 	
-	private void drawStartPositions(final IRobot robo){
+	private void drawStartPositions(final IRobot robo) {
 		this.startp = true;
 		switch(robo.getPosition().getOrientation()){
 		case SOUTH:

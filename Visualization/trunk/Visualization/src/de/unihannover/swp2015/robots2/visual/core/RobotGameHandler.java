@@ -259,7 +259,9 @@ public class RobotGameHandler extends GameHandler {
 	@Override
 	public void resize(int width, int height) {
 		this.pp.setViewport(new Rectangle(view.getScreenX(), view.getScreenY(),
-				view.getWorldWidth(), view.getWorldHeight()));
+				view.getScreenWidth(), view.getScreenHeight()));
+		this.pp2.setViewport(new Rectangle(view.getScreenX(), view.getScreenY(),
+				view.getScreenWidth(), view.getScreenHeight()));
 	}
 	
 	/**
