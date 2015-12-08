@@ -12,7 +12,7 @@
 						<content:ButtonData text="Allgemeine Optionen"/>
 					</TabPane.tabData>
 					
-					<bxml:include src="GeneralOptions.bxml"/>
+					<bxml:include inline="true" src="GeneralOptions.bxml"/>
 				</FillPane>
 				
 				<FillPane styles="{backgroundColor:'#303030'}">
@@ -20,7 +20,7 @@
 						<content:ButtonData text="Visualisierungsoptionen"/>
 					</TabPane.tabData>
 					
-					<bxml:include src="VisualizationOptions.bxml"/>
+					<bxml:include inline="true" src="VisualizationOptions.bxml"/>
 				</FillPane>
 				
 			</TabPane>

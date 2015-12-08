@@ -16,7 +16,7 @@
 					<Label text="IP" styles="{font:{size:16}, color:'#FFFFFF'}"/>
 				</Border>
 				<Border styles="{color:10}">
-					<TextArea text="192.168.2.110" maximumLength="15" styles="{font:{size:16}, color:'#000000', acceptsEnter:false}"/>
+					<TextArea bxml:id="ipTextArea" text="127.0.0.1" maximumLength="15" styles="{font:{size:16}, color:'#000000', acceptsEnter:false}"/>
 				</Border>
 			</TablePane.Row>
 			
@@ -26,7 +26,7 @@
 					<Label text="Port" styles="{font:{size:16}, color:'#FFFFFF'}"/>
 				</Border>
 				<Border styles="{color:10}">
-					<TextArea text="80" maximumLength="5" styles="{font:{size:16}, color:'#000000', acceptsEnter:false}"/>
+					<TextArea bxml:id="portTextArea" enabled="false" text="1883" maximumLength="5" styles="{font:{size:16}, color:'#000000', acceptsEnter:false}"/>
 				</Border>
 			</TablePane.Row>
 		</TablePane>
