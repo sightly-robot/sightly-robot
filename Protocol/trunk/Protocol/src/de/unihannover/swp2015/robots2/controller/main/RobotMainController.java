@@ -148,6 +148,7 @@ public class RobotMainController extends AbstractMainController implements IRobo
 	public void updatePositionProgress(int progress) {
 		this.sendMqttMessage(MqttTopic.ROBOT_PROGRESS, this.myself.getId(), String.valueOf(progress));
 		this.myself.setProgress(progress);
+		// TODO emit
 	}
 
 	@Override
