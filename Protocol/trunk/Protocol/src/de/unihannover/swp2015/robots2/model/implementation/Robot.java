@@ -145,7 +145,7 @@ public class Robot extends AbstractModel implements IRobot, IRobotWriteable {
 
 	@Override
 	public Color getColor() {
-		float hue = Integer.parseInt(this.id.substring(0,1), 16) / 255f;
+		float hue = Integer.parseInt(this.id.substring(0,2), 16) / 255f;
 		return new Color(Color.HSBtoRGB(hue, 1, 1));
 	}
 
