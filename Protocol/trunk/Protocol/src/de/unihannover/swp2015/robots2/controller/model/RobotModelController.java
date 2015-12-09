@@ -44,6 +44,7 @@ public class RobotModelController {
 						Orientation.getBy(positionParts[2]));
 				r.setProgress(0);
 				r.emitEvent(UpdateType.ROBOT_POSITION);
+				r.emitEvent(UpdateType.ROBOT_PROGRESS);
 
 				if (setPosition) {
 					r.setSetupState(true);
@@ -69,7 +70,7 @@ public class RobotModelController {
 		if (r != null && !r.isMyself()) {
 			try {
 				r.setProgress(Integer.parseInt(message));
-				r.emitEvent(UpdateType.ROBOT_POSITION);
+				r.emitEvent(UpdateType.ROBOT_PROGRESS);
 			} catch (NumberFormatException e) {
 			}
 		}

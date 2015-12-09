@@ -142,13 +142,14 @@ public class RobotMainController extends AbstractMainController implements IRobo
 		this.sendMqttMessage(MqttTopic.ROBOT_POSITION, this.myself.getId(), x + "," + y + "," + orientation.toString());
 		this.myself.setPosition(x, y, orientation);
 		this.myself.emitEvent(UpdateType.ROBOT_POSITION);
+		this.myself.emitEvent(UpdateType.ROBOT_PROGRESS);
 	}
 
 	@Override
 	public void updatePositionProgress(int progress) {
 		this.sendMqttMessage(MqttTopic.ROBOT_PROGRESS, this.myself.getId(), String.valueOf(progress));
 		this.myself.setProgress(progress);
-		// TODO emit
+		this.myself.emitEvent(UpdateType.ROBOT_PROGRESS);
 	}
 
 	@Override
@@ -173,6 +174,7 @@ public class RobotMainController extends AbstractMainController implements IRobo
 
 	@Override
 	public void setRobotReady() {
+		this.myself.setSetupState(false);
 		this.sendMqttMessage(MqttTopic.ROBOT_READY, this.myself.getId(), "");
 	}
 
