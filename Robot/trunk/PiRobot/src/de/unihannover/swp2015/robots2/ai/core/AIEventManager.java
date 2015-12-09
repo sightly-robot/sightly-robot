@@ -54,7 +54,7 @@ public class AIEventManager extends Thread implements Runnable {
 					this.ai.getGraph().setRobotPosition(this.ai.getMyself(), pos);
 
 					if (this.ai.getGame().isRunning() && this.ai.getMyself().getPosition() != null) {
-						if (robot == this.ai.getController().getMyself()) {
+						if (robot == this.ai.getController().getMyself()) {		// ABC!!
 							try {
 								System.out.print("POSStart");
 								Orientation o = this.ai.getNextOrientation();
