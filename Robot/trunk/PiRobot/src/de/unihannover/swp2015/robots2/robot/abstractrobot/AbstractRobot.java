@@ -44,7 +44,7 @@ public abstract class AbstractRobot {
 		Properties properties = new Properties();
 		BufferedInputStream is;
 		try {
-			is = new BufferedInputStream(new FileInputStream("config.properties"));
+			is = new BufferedInputStream(new FileInputStream("../config.properties"));
 			properties.load(is);
 			is.close();
 
@@ -54,13 +54,15 @@ public abstract class AbstractRobot {
 			ioe.printStackTrace();
 		}
 		String brokerIP = properties.getProperty("brokerIP");
-
+		System.out.println("Loaded IP: " + brokerIP);
+		
 		while (!robotController.getGame().isSynced()) {
 			try {
+				System.out.println("Try to connect");
 				robotController.startMqtt("tcp://" + brokerIP);
 			} catch (MqttException me) {
 				try {
-					Thread.sleep(1000);
+					Thread.sleep(2000);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
