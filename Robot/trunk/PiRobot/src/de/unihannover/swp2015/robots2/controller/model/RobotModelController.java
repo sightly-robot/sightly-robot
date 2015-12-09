@@ -94,4 +94,12 @@ public class RobotModelController {
 		} catch (NumberFormatException e) {
 		}
 	}
+	
+	public void mqttRobotReady(String key) {
+		IRobotWriteable r = this.robots.get(key);
+		if( r != null ) {
+			r.setSetupState(false);
+			r.emitEvent(UpdateType.ROBOT_STATE);
+		}
+	}
 }

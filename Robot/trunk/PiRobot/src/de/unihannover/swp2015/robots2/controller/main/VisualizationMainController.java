@@ -61,6 +61,10 @@ public class VisualizationMainController extends AbstractMainController
 			this.robotModelController.mqttRobotPosition(key, message,
 					mqtttopic == MqttTopic.ROBOT_SETPOSITION);
 			break;
+			
+		case ROBOT_READY:
+			this.robotModelController.mqttRobotReady(key);
+			break;
 
 		case ROBOT_PROGRESS:
 			this.robotModelController.mqttRobotProgress(key, message);
