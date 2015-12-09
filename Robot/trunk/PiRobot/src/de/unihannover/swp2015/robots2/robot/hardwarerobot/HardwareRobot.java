@@ -22,8 +22,8 @@ public class HardwareRobot extends AbstractRobot {
 	/**
 	 * Initializes the sensor controllers, automate and AI.
 	 */
-	public HardwareRobot() {
-		super(true);
+	public HardwareRobot(String brokerIP) {
+		super(true,brokerIP);
 		// PreInitialize Controller Instances:
 		BlinkLEDAndServoController.getInstance();
 		Pi2GoGPIOController.getInstance();
@@ -60,7 +60,9 @@ public class HardwareRobot extends AbstractRobot {
 		GpioPinListenerDigital gChangeEvent = new GpioPinListenerDigital() {
 			@Override
 			public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {
-				((HardwareAutomate)automate).getAutomation().notify();
+				synchronized (((HardwareAutomate)automate).getAutomation()) {
+					((HardwareAutomate)automate).getAutomation().notify();
+				}
 			}
 		};
 		Pi2GoGPIOController.getInstance().getLineLeft().addListener(gChangeEvent);

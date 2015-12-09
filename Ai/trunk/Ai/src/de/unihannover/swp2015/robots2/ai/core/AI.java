@@ -55,7 +55,7 @@ public class AI extends AbstractAI implements IModelObserver {
 		case STAGE_WALL:
 			System.out.println("WALL");
 			initialize();
-			if (game.isRunning() && myself.getPosition() != null) {
+			if (game.isRunning() && myself.getPosition() != null && !getController().getMyself().isSetupState()) {
 				try {
 					System.out.println("WALLStart");
 					fireNextOrientationEvent(getNextOrientation());
@@ -79,7 +79,7 @@ public class AI extends AbstractAI implements IModelObserver {
 					System.out.println("POS" + pos.getX() + pos.getY());
 					this.graph.setRobotPosition(myself, pos);
 
-					if (this.game.isRunning() && myself.getPosition() != null) {
+					if (this.game.isRunning() && myself.getPosition() != null  && !getController().getMyself().isSetupState()) {
 						if (robot == iRobotController.getMyself()) {
 							try {
 								System.out.print("POSStart");
@@ -99,7 +99,7 @@ public class AI extends AbstractAI implements IModelObserver {
 		case GAME_STATE: // reicht das?
 			System.out.println("Game");
 			IGame game = (IGame) event.getObject();
-			if (game.isRunning() && graph != null && myself.getPosition() != null) {
+			if (game.isRunning() && graph != null && myself.getPosition() != null  && !getController().getMyself().isSetupState()) {
 				try {
 					System.out.println("GAMEStart");
 					fireNextOrientationEvent(getNextOrientation());
@@ -112,6 +112,13 @@ public class AI extends AbstractAI implements IModelObserver {
 		case ROBOT_ADD:
 			break;
 		case ROBOT_STATE:
+			if (getController().getGame().isRunning() && graph != null && myself.getPosition() != null  && !getController().getMyself().isSetupState()) {
+				try {
+					System.out.println("GAMEStart");
+					fireNextOrientationEvent(getNextOrientation());
+				} catch (NoValidOrientationException e) {
+				}
+			}
 			break;
 		default:
 			break;

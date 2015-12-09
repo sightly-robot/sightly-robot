@@ -23,7 +23,7 @@ public class LEDAndServoController {
 	/** The Singleton instance of the LEDAndServoController. */
 	protected static LEDAndServoController instance;
 
-	private static final boolean DEBUG = true;
+	private static final boolean DEBUG = false;
 
 	// Registers/etc.
 	private static final int __SUBADR1 = 0x02;

@@ -16,10 +16,9 @@ public class SoftwareRobot extends AbstractRobot {
 
 	AbstractAutomate automate;
 	
-	boolean ready = false;
 
-	public SoftwareRobot() {
-		super(false);
+	public SoftwareRobot(String brokerIP) {
+		super(false,brokerIP);
 
 		robotController.getMyself().observe(new IModelObserver() {
 			
@@ -27,11 +26,11 @@ public class SoftwareRobot extends AbstractRobot {
 			public void onModelUpdate(IEvent event) {
 				switch(event.getType())
 				{
-					case ROBOT_POSITION:
-						if(!ready)
+					case ROBOT_STATE:
+						if(robotController.getMyself().isSetupState())
 						{
+							System.out.println("READY!");
 							robotController.setRobotReady();
-							ready = true;
 						}
 					break;
 				}

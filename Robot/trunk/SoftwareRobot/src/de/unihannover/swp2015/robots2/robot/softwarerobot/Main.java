@@ -8,6 +8,6 @@ package de.unihannover.swp2015.robots2.robot.softwarerobot;
 public class Main {
 
 	public static void main(String[] args) {
-		new SoftwareRobot();
+		new SoftwareRobot(args.length>1?args[1]:null);
 	}
 }

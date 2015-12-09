@@ -14,6 +14,6 @@ public class Main {
 	 *            the command-line arguments
 	 */
 	public static void main(String[] args) {
-		new HardwareRobot();
+		new HardwareRobot(args.length>1?args[1]:null);
 	}
 }

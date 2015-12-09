@@ -36,24 +36,29 @@ public abstract class AbstractRobot {
 	 * Initializes the AbstractRobot instance by initializing the robot
 	 * controller and AI.
 	 */
-	public AbstractRobot(boolean isHardware) {
+	public AbstractRobot(boolean isHardware,String brokerIP) {
 
 		robotController = new RobotMainController(isHardware);
 
-		// read broker IP from properties
-		Properties properties = new Properties();
-		BufferedInputStream is;
-		try {
-			is = new BufferedInputStream(new FileInputStream("../config.properties"));
-			properties.load(is);
-			is.close();
-
-		} catch (FileNotFoundException fnfe) {
-			fnfe.printStackTrace();
-		} catch (IOException ioe) {
-			ioe.printStackTrace();
+		System.out.println("My ID: "+robotController.getMyself().getId());
+		
+		if(brokerIP == null)
+		{
+			// read broker IP from properties
+			Properties properties = new Properties();
+			BufferedInputStream is;
+			try {
+				is = new BufferedInputStream(new FileInputStream("../config.properties"));
+				properties.load(is);
+				is.close();
+	
+			} catch (FileNotFoundException fnfe) {
+				fnfe.printStackTrace();
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
+			}
+			brokerIP = properties.getProperty("brokerIP");
 		}
-		String brokerIP = properties.getProperty("brokerIP");
 		System.out.println("Loaded IP: " + brokerIP);
 		
 		while (!robotController.getGame().isSynced()) {
