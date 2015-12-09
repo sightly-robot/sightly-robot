@@ -68,4 +68,8 @@ public abstract class AbstractAI {
 			aiEventObserver.nextButOneOrientationEvent(orientation);
 		}
 	}
+	
+	public IRobotController getController() {
+		return this.iRobotController;
+	}
 }
