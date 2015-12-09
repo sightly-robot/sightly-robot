@@ -284,25 +284,25 @@ public enum HardwareState implements IState {
 	};
 
 	// speed configuration
-	private final static int FAST = 40;
-	private final static int TURN = 20;
-	private final static int SLOW = 15;
-	private final static int STOP = 0;
+	private static final int FAST = 40;
+	private static final int TURN = 20;
+	private static final int SLOW = 15;
+	private static final int STOP = 0;
 
 	// Pi2GO controller
-	private final static LEDAndServoController LEDS = LEDAndServoController.getInstance();
-	private final static Pi2GoGPIOController GPIO = Pi2GoGPIOController.getInstance();
-	private final static MotorController MOTORS = MotorController.getInstance();
+	private static final LEDAndServoController LEDS = LEDAndServoController.getInstance();
+	private static final Pi2GoGPIOController GPIO = Pi2GoGPIOController.getInstance();
+	private static final MotorController MOTORS = MotorController.getInstance();
 
 	// LEDs
-	private final static int LEDS_FRONT = LEDAndServoController.FRONT;
-	private final static int LEDS_REAR = LEDAndServoController.REAR;
-	private final static int LEDS_LEFT = LEDAndServoController.LEFT;
-	private final static int LEDS_RIGHT = LEDAndServoController.RIGHT;
+	private static final int LEDS_FRONT = LEDAndServoController.FRONT;
+	private static final int LEDS_REAR = LEDAndServoController.REAR;
+	private static final int LEDS_LEFT = LEDAndServoController.LEFT;
+	private static final int LEDS_RIGHT = LEDAndServoController.RIGHT;
 
 	// LED colors
-	private final static Color COLOR_BREAK = Color.RED;
-	private final static Color COLOR_DEFAULT = Color.WHITE;
+	private static final Color COLOR_BREAK = Color.RED;
+	private static final Color COLOR_DEFAULT = Color.WHITE;
 
 	/**
 	 * Returns whether the current state is the wait state or not.

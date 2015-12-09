@@ -17,16 +17,16 @@ import de.unihannover.swp2015.robots2.robot.abstractrobot.Direction;
 public class DirectionTest {
 
 	// the moving directions
-	private final static Direction FORWARDS = Direction.FORWARDS;
-	private final static Direction RIGHT = Direction.RIGHT;
-	private final static Direction BACKWARDS = Direction.BACKWARDS;
-	private final static Direction LEFT = Direction.LEFT;
+	private static final Direction FORWARDS = Direction.FORWARDS;
+	private static final Direction RIGHT = Direction.RIGHT;
+	private static final Direction BACKWARDS = Direction.BACKWARDS;
+	private static final Direction LEFT = Direction.LEFT;
 	
 	// the orientations
-	private final static Orientation NORTH = Orientation.NORTH;
-	private final static Orientation EAST = Orientation.EAST;
-	private final static Orientation SOUTH = Orientation.SOUTH;
-	private final static Orientation WEST = Orientation.WEST;
+	private static final Orientation NORTH = Orientation.NORTH;
+	private static final Orientation EAST = Orientation.EAST;
+	private static final Orientation SOUTH = Orientation.SOUTH;
+	private static final Orientation WEST = Orientation.WEST;
 	
 	/**
 	 * Tests the moving directions for moving north.
