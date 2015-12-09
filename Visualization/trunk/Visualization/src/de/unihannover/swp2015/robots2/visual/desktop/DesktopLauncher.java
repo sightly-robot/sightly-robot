@@ -21,6 +21,11 @@ public class DesktopLauncher {
 	
 	public static void main (String[] arg) {
 
+		if (arg.length > 0) {
+			if (arg[0].equals("debug"))
+				Visualization.debug = true;
+		}
+		
 		ShaderLoader.BasePath = "resources/shaders/";
 
 		Settings packSettings = new Settings();

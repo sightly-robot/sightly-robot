@@ -31,8 +31,9 @@ public class Visualization extends ApplicationAdapter {
 
 	/**
 	 * Indicates whether this build is a debug build.
+	 * Have to be set before the application will be created.
 	 */
-	public static final boolean DEBUG = true;
+	public static boolean debug = false;
 	
 	/**
 	 * Broker-IP
@@ -93,7 +94,7 @@ public class Visualization extends ApplicationAdapter {
 		
 		final IResourceHandler resHandler = new ResourceHandler(ResConst.ATLAS_PATH.getName() + ResConst.ATLAS_NAME.getName() + ".atlas");
 		
-		if (DEBUG) {
+		if (debug) {
 			new TestApp(mqttHandler.getGame());
 		}
 		else {
