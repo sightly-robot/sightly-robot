@@ -23,6 +23,11 @@ public interface IEvent {
 		 */
 		GAME_STATE,
 
+		/**
+		 * The state of the MQTT connection changed and so the model sync state.
+		 */
+		MODEL_SYNC_STATE,
+
 		/** The global parameters of the game changed. Emitted from Game. */
 		GAME_PARAMETER,
 
@@ -37,7 +42,13 @@ public interface IEvent {
 		 * Emitted from Stage.
 		 */
 		STAGE_WALL,
-		
+
+		/**
+		 * The growingrates of the fields changed. (A new map was started by the
+		 * user.) Emitted from Stage.
+		 */
+		STAGE_GROWINGRATE,
+
 		/**
 		 * The start positions were updated. Emitted from Stage.
 		 */

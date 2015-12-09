@@ -32,14 +32,6 @@ public interface IState {
 	public boolean isWait();
 
 	/**
-	 * Gets the progress of the current state.
-	 * 
-	 * @return 0.0 <= progress <= 1.0
-	 */
-	@Deprecated
-	public double getProgress();
-
-	/**
 	 * Returns the state for driving into the specified direction.
 	 * 
 	 * @param direction

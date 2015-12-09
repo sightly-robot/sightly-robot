@@ -28,6 +28,15 @@ public interface IGame extends IAbstractModel {
 	public boolean isRunning();
 
 	/**
+	 * Returns True if the local model is synchronized via MQTT. This flag will
+	 * be set to FALSE before the MQTT connection was established of after the
+	 * connection to the MQTT broker was lost.
+	 * 
+	 * @return If the model is in sync
+	 */
+	public boolean isSynced();
+
+	/**
 	 * Returns the maximum speed for virtual robots.
 	 * 
 	 * @return The speed in fields per second.

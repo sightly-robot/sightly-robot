@@ -1,5 +1,7 @@
 package de.unihannover.swp2015.robots2.controller.mqtt;
 
+import org.eclipse.paho.client.mqttv3.MqttException;
+
 /**
  * Provides a simple interface for the MqttController to send MQTT messages.
  * 
@@ -7,12 +9,15 @@ package de.unihannover.swp2015.robots2.controller.mqtt;
  */
 public interface IMqttController {
 	/**
-	 * Send an MQTT message with the given payload to the given MQTT topic.
+	 * Send an MQTT message with the given payload to the given MQTT topic. The
+	 * message will be converted to an UTF-8 encoded byte array.
 	 * 
 	 * @param topic
 	 *            The MQTT topic to send the message to
 	 * @param message
-	 *            The payload of the MQTT message
+	 *            The payload of the MQTT message as String. If null, a message
+	 *            with zero length payload will be sent (which will delete
+	 *            retained messages of the given topic).
 	 * @param retained
 	 *            Send the message as retained message, so the MQTT broker will
 	 *            store the value for new connected clients.
@@ -20,12 +25,17 @@ public interface IMqttController {
 	public void sendMessage(String topic, String message, boolean retained);
 
 	/**
-	 * Publish a message with empty payload to the given topic. This will delete
-	 * a retained message that was sent previously to the broker using this
-	 * topic.
+	 * Try to connect to the MQTT broker at the given URL.
 	 * 
-	 * @param topic
-	 *            MQTT topic to delete the retained message from
+	 * After connection error the MQTTController will try to reconnect by
+	 * itself. Each following call of this function after a successfull connect
+	 * will disconnect the MQTT client and connect to a new broker.
+	 * 
+	 * @param brokerUrl
+	 *            hostname or URL of the MQTT broker. Format examples:
+	 *            tcp://hostname ssl://127.0.0.1
+	 * @throws MqttException
+	 *             when the connect attempt fails.
 	 */
-	public void deleteRetainedMessage(String topic);
+	public void connect(String brokerUrl) throws MqttException;
 }

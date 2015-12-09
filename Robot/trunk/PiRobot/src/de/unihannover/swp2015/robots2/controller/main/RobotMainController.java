@@ -37,31 +37,26 @@ public class RobotMainController extends AbstractMainController implements IRobo
 
 		this.fieldStateModelController.setFieldTimerCallback(this);
 		this.infoComponent = "robot/" + id;
-	}
-
-	@Override
-	public boolean startMqtt(String brokerUrl) {
-		if (this.mqttController == null) {
+		
+		// Start MQTTController
+		try {
 			String clientId = "robot_" + this.myself.getId();
 			String[] subscribeTopics = { "robot/#", "map/walls", "map/food", "map/food/+", "map/occupied/#",
 					"control/state" };
-
-			try {
-				this.mqttController = new MqttController(brokerUrl, clientId, this, Arrays.asList(subscribeTopics));
-
-				String hardwareRobot = (this.myself.isHardwareRobot()) ? "real" : "virtual";
-				this.sendMqttMessage(MqttTopic.ROBOT_TYPE, this.myself.getId(), hardwareRobot);
-				this.sendMqttMessage(MqttTopic.ROBOT_NEW, null, this.myself.getId());
-				this.sendMqttMessage(MqttTopic.ROBOT_DISCOVER, null, "");
-
-				return true;
-			} catch (MqttException e) {
-				e.printStackTrace();
-				return false;
-			}
-		} else {
-			return true;
+			this.mqttController = new MqttController(clientId, this, Arrays.asList(subscribeTopics));
+		} catch (MqttException e) {
 		}
+	}
+
+	@Override
+	public void startMqtt(String brokerUrl) throws MqttException {
+			
+		this.mqttController.connect(brokerUrl);
+
+		String hardwareRobot = (this.myself.isHardwareRobot()) ? "real" : "virtual";
+		this.sendMqttMessage(MqttTopic.ROBOT_TYPE, this.myself.getId(), hardwareRobot);
+		this.sendMqttMessage(MqttTopic.ROBOT_NEW, null, this.myself.getId());
+		this.sendMqttMessage(MqttTopic.ROBOT_DISCOVER, null, "");
 	}
 
 	@Override

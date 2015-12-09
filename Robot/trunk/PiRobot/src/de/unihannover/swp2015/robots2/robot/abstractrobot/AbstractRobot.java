@@ -1,10 +1,18 @@
 package de.unihannover.swp2015.robots2.robot.abstractrobot;
 
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Properties;
+
+import org.eclipse.paho.client.mqttv3.MqttException;
+
+import de.unihannover.swp2015.robots2.ai.core.AI;
 import de.unihannover.swp2015.robots2.controller.interfaces.IRobotController;
 import de.unihannover.swp2015.robots2.controller.main.RobotMainController;
-import de.unihannover.swp2015.robots2.ai.core.AI;
 import de.unihannover.swp2015.robots2.robot.abstractrobot.automate.AbstractAutomate;
-import de.unihannover.swp2015.robots2.robot.interfaces.AbstractAi;
+import de.unihannover.swp2015.robots2.robot.interfaces.AbstractAI;
 
 /**
  * The AbstractRobot is the base class for all hardware (real) and software
@@ -19,7 +27,7 @@ public abstract class AbstractRobot {
 	protected IRobotController robotController;
 
 	/** The AI of the robot. */
-	protected AbstractAi ai;
+	protected AbstractAI ai;
 
 	/** The automate of the robot. */
 	protected AbstractAutomate automate;
@@ -31,24 +39,51 @@ public abstract class AbstractRobot {
 	public AbstractRobot(boolean isHardware) {
 
 		robotController = new RobotMainController(isHardware);
-		while(!robotController.startMqtt("tcp://192.168.1.66"))
-		{
+
+		// read broker IP from properties
+		Properties properties = new Properties();
+		BufferedInputStream is;
+		try {
+			is = new BufferedInputStream(new FileInputStream("config.properties"));
+			properties.load(is);
+			is.close();
+
+		} catch (FileNotFoundException fnfe) {
+			fnfe.printStackTrace();
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
+		}
+		String brokerIP = properties.getProperty("brokerIP");
+
+		while (!robotController.getGame().isSynced()) {
 			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
+				robotController.startMqtt("tcp://" + brokerIP);
+			} catch (MqttException me) {
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
+
 		}
-		
-//		IModelObserver mo = new IModelObserver() {
-//			@Override
-//			public void onModelUpdate(IEvent event) {
-//				System.out.println(event.getType().name());
-//			}
-//		};
-//		
-//		robotController.getGame().observe(mo);
-//		robotController.getGame().getStage().observe(mo);
+		/*
+		 * while(!robotController.startMqtt("tcp://192.168.1.66")) { try {
+		 * Thread.sleep(1000); } catch (InterruptedException e) {
+		 * e.printStackTrace(); } }
+		 */
+
+		// IModelObserver mo = new IModelObserver() {
+		// @Override
+		// public void onModelUpdate(IEvent event) {
+		// System.out.println(event.getType().name());
+		// }
+		// };
+		//
+		// robotController.getGame().observe(mo);
+		// robotController.getGame().getStage().observe(mo);
 
 		// TODO Init AbstractAI
 		ai = new AI(robotController);

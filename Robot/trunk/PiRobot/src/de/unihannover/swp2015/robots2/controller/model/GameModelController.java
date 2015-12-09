@@ -69,7 +69,10 @@ public class GameModelController {
 	 * @param message
 	 */
 	public void mqttSetRobotHesitationTime(String message) {
-		this.game.setHesitationTime(Integer.parseInt(message));
-		this.game.emitEvent(UpdateType.GAME_PARAMETER);
+		try {
+			this.game.setHesitationTime(Integer.parseInt(message));
+			this.game.emitEvent(UpdateType.GAME_PARAMETER);
+		} catch (NumberFormatException e) {
+		}
 	}
 }

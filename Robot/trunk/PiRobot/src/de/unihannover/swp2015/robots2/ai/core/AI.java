@@ -10,13 +10,14 @@ import de.unihannover.swp2015.robots2.model.interfaces.IField;
 import de.unihannover.swp2015.robots2.model.interfaces.IGame;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
-import de.unihannover.swp2015.robots2.robot.interfaces.AbstractAi;
+import de.unihannover.swp2015.robots2.robot.interfaces.AbstractAI;
 import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
 
-public class AI extends AbstractAi implements IModelObserver {
+public class AI extends AbstractAI implements IModelObserver {
 
 	private IField nextField;
-	private AIGraph graph;
+	private AIGraph graph; //volatile
+
 	private IGame game;
 
 	private Robot myself;
@@ -69,16 +70,15 @@ public class AI extends AbstractAi implements IModelObserver {
 		case ROBOT_SCORE:
 			break;
 		case ROBOT_POSITION:
-			if(graph != null)
-			{
+			if (graph != null) {
 				IRobot robot = (IRobot) event.getObject();
 				IPosition pos = robot.getPosition();
-				
-				if(myself.getPosition() == null || (myself.getPosition() != null && (myself.getPosition().getX() != pos.getX() || myself.getPosition().getY() != pos.getY())))
-				{
-					System.out.println("POS"+pos.getX()+pos.getY());
+
+				if (myself.getPosition() == null || (myself.getPosition() != null
+						&& (myself.getPosition().getX() != pos.getX() || myself.getPosition().getY() != pos.getY()))) {
+					System.out.println("POS" + pos.getX() + pos.getY());
 					this.graph.setRobotPosition(myself, pos);
-					
+
 					if (this.game.isRunning() && myself.getPosition() != null) {
 						if (robot == iRobotController.getMyself()) {
 							try {
@@ -90,9 +90,8 @@ public class AI extends AbstractAi implements IModelObserver {
 							}
 						}
 					}
-				}else if(myself.getOrientation() == null || myself.getOrientation() != pos.getOrientation())
-				{
-					System.out.println("Orientation"+pos.getOrientation().name());
+				} else if (myself.getOrientation() == null || myself.getOrientation() != pos.getOrientation()) {
+					System.out.println("Orientation" + pos.getOrientation().name());
 					myself.setOrientation(pos.getOrientation());
 				}
 			}
@@ -150,11 +149,39 @@ public class AI extends AbstractAi implements IModelObserver {
 		return isOccupied;
 	}
 
+	public void nextField(Orientation o) {
+		fireNextOrientationEvent(o);
+	}
+
 	public IField getNextField() {
 		return nextField;
 	}
 
 	public void setNextField(IField nextField) {
 		this.nextField = nextField;
+	}
+
+	public AIGraph getGraph() {
+		return graph;
+	}
+
+	public void setGraph(AIGraph graph) {
+		this.graph = graph;
+	}
+
+	public Robot getMyself() {
+		return myself;
+	}
+
+	public void setMyself(Robot myself) {
+		this.myself = myself;
+	}
+
+	public IGame getGame() {
+		return game;
+	}
+
+	public void setGame(IGame game) {
+		this.game = game;
 	}
 }

@@ -16,9 +16,10 @@ public interface IController {
 	 * 
 	 * @param brokerUrl
 	 *            URL of the MQTT broker. Format should be "tcp://IpOrHostName".
-	 * @return True if the MQTT client is running.
+	 * @throws Exception
+	 *             when an error occurs while connecting to the MQTT broker.
 	 */
-	public boolean startMqtt(String brokerUrl);
+	public void startMqtt(String brokerUrl) throws Exception;
 
 	/**
 	 * Returns a read-only IGame, which holds all important model-classes

@@ -29,6 +29,8 @@ public class Game extends AbstractModel implements IGame, IGameWriteable {
 	 * scores are occasionally increased.)
 	 */
 	private volatile boolean running;
+	/** True if the Model is currently synchronized via MQTT. */
+	private volatile boolean synced;
 	/** Maximum speed of virtual robots in seconds / field. */
 	private volatile float vRobotSpeed;
 	/** Maximum allowed hesitation time of a robot on a field. */
@@ -67,6 +69,11 @@ public class Game extends AbstractModel implements IGame, IGameWriteable {
 	}
 
 	@Override
+	public void setSynced(boolean synced) {
+		this.synced = synced;
+	}
+
+	@Override
 	public Map<String, IRobotWriteable> getRobotsWriteable() {
 		return this.robots;
 	}
@@ -79,6 +86,11 @@ public class Game extends AbstractModel implements IGame, IGameWriteable {
 	@Override
 	public boolean isRunning() {
 		return this.running;
+	}
+
+	@Override
+	public boolean isSynced() {
+		return this.synced;
 	}
 
 	@Override

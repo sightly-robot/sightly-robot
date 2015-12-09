@@ -24,9 +24,24 @@ import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
  * @author Michael Thies
  */
 public class MqttController implements IMqttController {
+	/** Queue of received messages waiting for processing */
 	private final BlockingQueue<MqttFullMessage> receiveQueue;
+	/** Queue of messages waiting to be sent */
 	private final BlockingQueue<MqttFullMessage> sendQueue;
+	/** The MQTT client */
 	private final MqttClient client;
+	/* Object used to notify the send worker about an established connection */
+	private final Object waitForConnect = new Object();
+
+	/** The Connection options including broker URL and last will */
+	private final MqttConnectOptions connOpt;
+	/**
+	 * The Callback handler that is able to process messages and will be
+	 * informed about connection status changes
+	 */
+	private final IMqttMessageHandler receiveHandler;
+	/** List of topics to subscribe after successful connection establishment */
+	private final List<String> subscribeTopics;
 
 	/**
 	 * Initialize a new MqttController.
@@ -43,35 +58,32 @@ public class MqttController implements IMqttController {
 	 * @param receiveHandler
 	 *            A Controller to call a method for each received MQTT message
 	 *            and encountered errors on.
-	 * @param subscribeTopcis
+	 * @param subscribeTopics
 	 *            A list of MQTT topic names to subscribe. May contain wildcards
 	 *            according to the MQTT standard.
 	 */
-	public MqttController(String mqttBrokerUrl, String mqttClientId,
-			IMqttMessageHandler receiveHandler, List<String> subscribeTopcis)
+	public MqttController(String mqttClientId,
+			IMqttMessageHandler receiveHandler, List<String> subscribeTopics)
 			throws MqttException {
 
-		this.client = new MqttClient(mqttBrokerUrl, mqttClientId,
+		this.receiveHandler = receiveHandler;
+		this.subscribeTopics = subscribeTopics;
+
+		// The broker url is only temprorary and will be specified finally via
+		// the MQTTConnectOptions in connect().
+		this.client = new MqttClient("tcp://localhost", mqttClientId,
 				new MemoryPersistence());
 
 		// mqtt connection options
-		MqttConnectOptions connOpt = new MqttConnectOptions();
+		this.connOpt = new MqttConnectOptions();
 		connOpt.setCleanSession(true);
-		connOpt.setKeepAliveInterval(10);
+		connOpt.setKeepAliveInterval(5);
 		// TODO Set last will
 		// connOpt.setWill("error/connection",
 		// "The important client lost its connection.".getBytes(), 0, false);
 		connOpt.setMqttVersion(MqttConnectOptions.MQTT_VERSION_3_1);
 
-		// mqttclient connect
-		client.connect(connOpt);
-
-		// mqttclient subscribes
-		for (String topic : subscribeTopcis) {
-			client.subscribe(topic);
-		}
-
-		// mqtt client callbacks
+		// MQTT client callback methods
 		client.setCallback(new MqttCallback() {
 
 			@Override
@@ -80,7 +92,6 @@ public class MqttController implements IMqttController {
 					MqttController.this.receiveQueue.put(new MqttFullMessage(
 							topic, message));
 				} catch (InterruptedException e) {
-					e.printStackTrace();
 				}
 			}
 
@@ -91,48 +102,85 @@ public class MqttController implements IMqttController {
 
 			@Override
 			public void connectionLost(Throwable arg0) {
-				// TODO propagate to MessageHandler and Model
-				// TODO try reconnect by interval and propagate on successful reconnect
+				MqttController.this.receiveHandler.onMqttStateChange(false);
+
+				// Try to reconnect every 2 seconds
+				try {
+					while (!client.isConnected()) {
+						Thread.sleep(2000);
+						try {
+							MqttController.this.connect(null);
+						} catch (MqttException e) {
+						}
+					}
+				} catch (InterruptedException e) {
+				}
 			}
 		});
 
 		// message queues
 		this.sendQueue = new LinkedBlockingQueue<MqttFullMessage>();
 		this.receiveQueue = new LinkedBlockingQueue<MqttFullMessage>();
-		
+
 		// send- and receive worker threads
 		Thread receiveWorker = new Thread(new MqttReceiver(receiveQueue,
 				receiveHandler));
 		receiveWorker.start();
-		Thread sendWorker = new Thread(new MqttSender(sendQueue, client));
+		Thread sendWorker = new Thread(new MqttSender(sendQueue, client,
+				this.waitForConnect));
 		sendWorker.start();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * This method adds the message to send queue which is processed
-	 * by the send worker thread.
+	 * If the given broker URL is null, the broker URL of the last call is used
+	 * (or "tcp://localhost" if there weren't any).
+	 */
+	@Override
+	public void connect(String brokerUrl) throws MqttException {
+		// Disconnect if connected
+		if (this.client.isConnected()) {
+			this.client.disconnect();
+			this.receiveHandler.onMqttStateChange(false);
+		}
+
+		// Set broker URL
+		if (brokerUrl != null)
+			this.connOpt.setServerURIs(new String[] { brokerUrl });
+
+		// MQTT client connect
+		client.connect(connOpt);
+
+		for (String topic : this.subscribeTopics) {
+			client.subscribe(topic);
+		}
+
+		// Notify send worker and Main Controller
+		synchronized (this.waitForConnect) {
+			this.waitForConnect.notifyAll();
+		}
+		receiveHandler.onMqttStateChange(true);
+
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * This method adds the message to send queue which is processed by the send
+	 * worker thread.
 	 */
 	@Override
 	public void sendMessage(String topic, String message, boolean retained) {
-		MqttMessage mqttMessage = new MqttMessage(message.getBytes(StandardCharsets.UTF_8));
+		byte[] rawMessage = (message == null) ? new byte[] {} : message
+				.getBytes(StandardCharsets.UTF_8);
+
+		MqttMessage mqttMessage = new MqttMessage(rawMessage);
 		mqttMessage.setRetained(retained);
+
 		try {
 			this.sendQueue.put(new MqttFullMessage(topic, mqttMessage));
 		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	@Override
-	public void deleteRetainedMessage(String topic) {
-		MqttMessage mqttMessage = new MqttMessage();
-		mqttMessage.setRetained(true);
-		try {
-			this.sendQueue.put(new MqttFullMessage(topic, mqttMessage));
-		} catch (InterruptedException e) {
-			e.printStackTrace();
 		}
 	}
 

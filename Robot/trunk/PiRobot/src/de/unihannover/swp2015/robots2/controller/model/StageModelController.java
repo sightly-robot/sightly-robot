@@ -25,20 +25,27 @@ public class StageModelController {
 	 * 
 	 * @param message
 	 *            The MQTT message payload
+	 * @return An array containing the new stage size [width,height] or NULL if
+	 *         message was not valid.
 	 */
-	public void mqttSetWalls(String message) {
+	public int[] mqttSetWalls(String message) {
 		String[] parts = message.split(",", -1);
 		if (parts.length < 3)
-			return;
+			return null;
 
-		int width = Integer.parseInt(parts[0]);
-		int height = Integer.parseInt(parts[1]);
+		int width;
+		int height;
+		try {
+			width = Integer.parseInt(parts[0]);
+			height = Integer.parseInt(parts[1]);
+		} catch (NumberFormatException e) {
+			return null;
+		}
 
 		if (parts.length != width * height + 2)
-			return;
+			return null;
 
-		if (width != this.stage.getWidth()
-				|| height != this.stage.getHeight()) {
+		if (width != this.stage.getWidth() || height != this.stage.getHeight()) {
 			this.stage.changeSize(width, height);
 			this.stage.emitEvent(UpdateType.STAGE_SIZE);
 		}
@@ -63,13 +70,12 @@ public class StageModelController {
 					stageBorder = (i - 2) / width == height - 1;
 					break;
 				}
-				;
 
 				f.setWall(o, parts[i].contains(o.toString()) || stageBorder);
 			}
 		}
 		this.stage.emitEvent(UpdateType.STAGE_WALL);
-
+		return new int[] { width, height };
 	}
 
 	/**
@@ -81,29 +87,42 @@ public class StageModelController {
 	 * 
 	 * @param message
 	 *            The MQTT message payload
+	 * @return An array containing the size of the updated field [width,height]
+	 *         or NULL if message was not valid.
 	 */
-	public void mqttSetFood(String message) {
+	public int[] mqttSetFood(String message) {
 		String[] parts = message.split(",");
 		if (parts.length < 3)
-			return;
+			return null;
 
-		int width = Integer.parseInt(parts[0]);
-		int height = Integer.parseInt(parts[1]);
+		// Try to get food field size and skip message if invalid
+		int width;
+		int height;
+		try {
+			width = Integer.parseInt(parts[0]);
+			height = Integer.parseInt(parts[1]);
+		} catch (NumberFormatException e) {
+			return null;
+		}
+
+		if (parts.length != width * height + 2)
+			return null;
 
 		this.resizeStage(width - 1, height - 1);
 
-		if (parts.length != width * height + 2 || width != this.stage.getWidth()
-				|| height != this.stage.getHeight())
-			return;
-
+		// Set food for each individual field
 		for (int i = 2; i < parts.length; i++) {
-			IFieldWriteable f = this.stage.getFieldWriteable((i - 2) % width,
-					(i - 2) / width);
-			int food = Integer.parseInt(parts[i]);
-			f.setFood(food);
-			f.emitEvent(UpdateType.FIELD_FOOD);
-		}
+			try {
+				IFieldWriteable f = this.stage.getFieldWriteable((i - 2)
+						% width, (i - 2) / width);
+				int food = Integer.parseInt(parts[i]);
+				f.setFood(food);
+				f.emitEvent(UpdateType.FIELD_FOOD);
+			} catch (NumberFormatException e) {
 
+			}
+		}
+		return new int[] { width, height };
 	}
 
 	/**
@@ -120,23 +139,28 @@ public class StageModelController {
 		if (parts.length < 3)
 			return;
 
-		int width = Integer.parseInt(parts[0]);
-		int height = Integer.parseInt(parts[1]);
+		try {
+			int width = Integer.parseInt(parts[0]);
+			int height = Integer.parseInt(parts[1]);
 
-		this.resizeStage(width - 1, height - 1);
+			this.resizeStage(width - 1, height - 1);
 
-		if (parts.length != width * height + 2 || width != this.stage.getWidth()
-				|| height != this.stage.getHeight())
-			return;
+			if (parts.length != width * height + 2
+					|| width != this.stage.getWidth()
+					|| height != this.stage.getHeight())
+				return;
 
-		for (int i = 2; i < parts.length; i++) {
-			IFieldWriteable f = this.stage.getFieldWriteable((i - 2) % width,
-					(i - 2) / width);
-			int growingRate = Integer.parseInt(parts[i]);
-			f.setGrowingRate(growingRate);
-			f.emitEvent(UpdateType.GAME_PARAMETER);
+			for (int i = 2; i < parts.length; i++) {
+				IFieldWriteable f = this.stage.getFieldWriteable((i - 2)
+						% width, (i - 2) / width);
+				int growingRate = Integer.parseInt(parts[i]);
+				f.setGrowingRate(growingRate);
+			}
+			
+			this.stage.emitEvent(UpdateType.STAGE_GROWINGRATE);
+			
+		} catch (NumberFormatException e) {
 		}
-
 	}
 
 	/**
@@ -151,7 +175,10 @@ public class StageModelController {
 	 */
 	public void mqttSetFieldFood(String key, String message) {
 		String[] coordinates = key.split("-");
-		if (coordinates.length == 2) {
+		if (coordinates.length != 2)
+			return;
+
+		try {
 			int x = Integer.parseInt(coordinates[0]);
 			int y = Integer.parseInt(coordinates[1]);
 			int food = Integer.parseInt(message);
@@ -164,6 +191,7 @@ public class StageModelController {
 				f.setFood(food);
 				f.emitEvent(UpdateType.FIELD_FOOD);
 			}
+		} catch (NumberFormatException e) {
 		}
 	}
 
@@ -180,12 +208,15 @@ public class StageModelController {
 
 		this.stage.clearStartPositions();
 		for (int i = 0; i < parts.length; i += 3) {
-			int x = Integer.parseInt(parts[i]);
-			int y = Integer.parseInt(parts[i + 1]);
-			Orientation o = Orientation.getBy(parts[i + 2].charAt(0));
+			try {
+				int x = Integer.parseInt(parts[i]);
+				int y = Integer.parseInt(parts[i + 1]);
+				Orientation o = Orientation.getBy(parts[i + 2].charAt(0));
 
-			if (x >= 0 && y >= 0 && o != null)
-				this.stage.addStartPosition(x, y, o);
+				if (x >= 0 && y >= 0 && o != null)
+					this.stage.addStartPosition(x, y, o);
+			} catch (NumberFormatException e) {
+			}
 		}
 		this.stage.emitEvent(UpdateType.STAGE_STARTPOSITIONS);
 	}

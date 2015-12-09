@@ -19,7 +19,8 @@ import de.unihannover.swp2015.robots2.model.writeableInterfaces.IRobotWriteable;
  * 
  * @author Michael Thies
  */
-public class VisualizationMainController extends AbstractMainController implements IVisualizationController {
+public class VisualizationMainController extends AbstractMainController
+		implements IVisualizationController {
 
 	private IVisualization visualization;
 
@@ -27,27 +28,17 @@ public class VisualizationMainController extends AbstractMainController implemen
 		super();
 
 		this.infoComponent = "visualization";
-	}
 
-	@Override
-	public boolean startMqtt(String brokerUrl) {
-		if (this.mqttController == null) {
-			String clientId = "visu_" + UUID.randomUUID().toString();
-			// TODO subscription list
+		try {
+			String clientId = "visu_"
+					+ UUID.randomUUID().toString().substring(0, 8);
 			String[] subscribeTopics = { "robot/#", "extension/2/robot/#",
 					"map/walls", "map/food", "map/food/+",
 					"map/occupied/+/set", "event/error/robot/#",
-					"extension/2/settings/visualization/#", "control/state"};
-
-			try {
-				this.mqttController = new MqttController(brokerUrl, clientId, this, Arrays.asList(subscribeTopics));
-				return true;
-			} catch (MqttException e) {
-				e.printStackTrace();
-				return false;
-			}
-		} else {
-			return true;
+					"extension/2/settings/visualization/#", "control/state" };
+			this.mqttController = new MqttController(clientId, this,
+					Arrays.asList(subscribeTopics));
+		} catch (MqttException e) {
 		}
 	}
 
@@ -67,25 +58,27 @@ public class VisualizationMainController extends AbstractMainController implemen
 
 		case ROBOT_POSITION:
 		case ROBOT_SETPOSITION:
-			this.robotModelController.mqttRobotPosition(key, message, mqtttopic == MqttTopic.ROBOT_SETPOSITION);
+			this.robotModelController.mqttRobotPosition(key, message,
+					mqtttopic == MqttTopic.ROBOT_SETPOSITION);
 			break;
 
 		case ROBOT_PROGRESS:
 			this.robotModelController.mqttRobotProgress(key, message);
 			break;
-			
+
 		case ROBOT_SCORE:
 			this.robotModelController.mqttScoreUpdate(key, message);
 			break;
-			
+
 		case CONTROL_VIRTUALSPEED:
-			this.gameModelController.mqttSetRobotVirtualspeed(Float.parseFloat(message));
+			this.gameModelController.mqttSetRobotVirtualspeed(Float
+					.parseFloat(message));
 			break;
 
 		case CONTROL_HESITATIONTIME:
 			this.gameModelController.mqttSetRobotHesitationTime(message);
-			break;	
-			
+			break;
+
 		case MAP_WALLS:
 			this.stageModelController.mqttSetWalls(message);
 			break;
@@ -111,7 +104,8 @@ public class VisualizationMainController extends AbstractMainController implemen
 
 		case SETTINGS_VISU_REQUEST:
 			if (this.visualization != null)
-				this.sendMqttMessage(MqttTopic.SETTINGS_VISU_RESPONSE, null, this.visualization.getSettings());
+				this.sendMqttMessage(MqttTopic.SETTINGS_VISU_RESPONSE, null,
+						this.visualization.getSettings());
 			break;
 
 		case SETTINGS_VISU_SET:
