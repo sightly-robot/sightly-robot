@@ -26,8 +26,6 @@ public class AIGraph {
 	 */
 	private Robot myself;
 	
-//	private IRobot iMyself;
-
 	private int dimX;
 	private int dimY;
 
@@ -35,25 +33,8 @@ public class AIGraph {
 		this.stage = stage;
 		this.loadFromStage(stage);
 		
-//		iMyself = iRobot;
-		
 		this.myself = myself;
 		
-//		iRobot.observe(new IModelObserver() {	
-//			@Override
-//			public void onModelUpdate(IEvent event) {
-//				switch (event.getType()) {
-//				case ROBOT_POSITION:
-//					myself.setPosition(getNodes()[iMyself.getPosition().getX()][iMyself.getPosition().getY()]);
-//					myself.setOrientation(iMyself.getPosition().getOrientation());
-//					setRobotPosition(myself, iMyself.getPosition());
-//					break;
-//
-//				default:
-//					break;
-//				}
-//			}
-//		});
 	}
 
 	/**
@@ -226,7 +207,7 @@ public class AIGraph {
 	}
 
 	/**
-	 * Sets the new position of a robot in the graph
+	 * Sets the new position of a robot in the graph and also sets it for the robot itself
 	 * 
 	 * @param robot
 	 *            Robot to be set
