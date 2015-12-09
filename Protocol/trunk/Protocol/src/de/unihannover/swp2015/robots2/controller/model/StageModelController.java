@@ -155,8 +155,10 @@ public class StageModelController {
 						% width, (i - 2) / width);
 				int growingRate = Integer.parseInt(parts[i]);
 				f.setGrowingRate(growingRate);
-				f.emitEvent(UpdateType.GAME_PARAMETER);
 			}
+			
+			this.stage.emitEvent(UpdateType.STAGE_GROWINGRATE);
+			
 		} catch (NumberFormatException e) {
 		}
 	}

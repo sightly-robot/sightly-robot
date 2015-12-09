@@ -44,6 +44,12 @@ public interface IEvent {
 		STAGE_WALL,
 
 		/**
+		 * The growingrates of the fields changed. (A new map was started by the
+		 * user.) Emitted from Stage.
+		 */
+		STAGE_GROWINGRATE,
+
+		/**
 		 * The start positions were updated. Emitted from Stage.
 		 */
 		STAGE_STARTPOSITIONS,
