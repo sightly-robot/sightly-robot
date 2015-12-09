@@ -304,8 +304,6 @@ public enum HardwareState implements IState {
 	private final static Color COLOR_BREAK = Color.RED;
 	private final static Color COLOR_DEFAULT = Color.WHITE;
 
-	private double progress = 0.0;
-
 	/**
 	 * Returns whether the current state is the wait state or not.
 	 * 
@@ -315,16 +313,6 @@ public enum HardwareState implements IState {
 	@Override
 	public boolean isWait() {
 		return this == WAIT;
-	}
-
-	/**
-	 * Gets the progress of the current state.
-	 * 
-	 * @return 0.0 <= progress <= 1.0
-	 */
-	@Override
-	public double getProgress() {
-		return progress;
 	}
 
 	/**
