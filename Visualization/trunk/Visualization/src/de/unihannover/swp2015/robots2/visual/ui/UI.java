@@ -73,6 +73,11 @@ public class UI implements IRenderable, IPreferencesObserver {
 	private final Color color;
 	
 	/**
+	 * Color of the background texture.
+	 */
+	private final Color startBg;
+	
+	/**
 	 * True if the ranking should be displayed.
 	 */
 	private boolean display = false;
@@ -95,6 +100,7 @@ public class UI implements IRenderable, IPreferencesObserver {
 		this.fontTitle.setColor(Color.BLACK);
 		this.background = res.getRegion(ResConst.DEFAULT_BUBBLE);
 		this.color = new Color(1, 1, 1, 0.7f);
+		this.startBg = new Color(1,1,1,0.3f);
 		
 		final float viewWidth = pref.getFloat(PrefConst.VIEW_WIDTH, 0);
 		final float viewHeight = pref.getFloat(PrefConst.VIEW_HEIGHT, 0); 
@@ -106,15 +112,16 @@ public class UI implements IRenderable, IPreferencesObserver {
 	public void render() {
 		
 		batch.begin();
-		batch.setColor(color);
-		
-		batch.draw(background, rect.x, rect.y, rect.width, rect.height);
-		
+				
 		if (robotList.size() == 0 || !display) {
+			batch.setColor(startBg);
+			batch.draw(background, rect.x, rect.y, rect.width, rect.height);
 			fontTitle.draw(batch, GameConst.UI_NO_DATA,
 					rect.x + GameConst.UI_PADDING_ABS, rect.y + GameConst.UI_TOP_ABS + GameConst.UI_PADDING_ABS);
 		}
-		else {
+		else {		
+			batch.setColor(color);
+			batch.draw(background, rect.x, rect.y, rect.width, rect.height);
 			fontTitle.draw(batch, GameConst.UI_TITLE,
 					rect.x + GameConst.UI_PADDING_ABS, rect.y + GameConst.UI_PADDING_ABS);
 			for (int i = 0; i < robotList.size(); ++i) {

@@ -1,12 +1,9 @@
 package de.unihannover.swp2015.robots2.visual.core.base;
 
-import java.util.List;
-
 import com.badlogic.gdx.utils.Disposable;
 
 import de.unihannover.swp2015.robots2.model.externalInterfaces.IModelObserver;
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
-import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
 import de.unihannover.swp2015.robots2.visual.resource.IResourceHandler;
 import de.unihannover.swp2015.robots2.visual.util.pref.IPreferences;
 
@@ -55,11 +52,5 @@ public interface IGameHandler extends IUpdateable, IModelObserver, IRenderable, 
 	 * @param event emitted event
 	 */
 	void onManagedModelUpdate(final IEvent event);
-	
-	/**
-	 * List of robots needed to display their starting positions
-	 * 
-	 * @return List of robots in the game
-	 */
-	List<IRobot> getRobots();
+
 }

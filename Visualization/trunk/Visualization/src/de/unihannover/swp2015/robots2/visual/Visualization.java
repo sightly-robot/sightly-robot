@@ -38,7 +38,7 @@ public class Visualization extends ApplicationAdapter {
 	/**
 	 * Broker-IP
 	 */
-	private static final String CONNECTION_IP = "192.168.1.66";
+	private static final String CONNECTION_IP = "192.168.1.115";
 	
 	/**
 	 * List of all {@link IGameHandler}.

@@ -118,7 +118,7 @@ public class RobotGameHandler extends GameHandler {
 		this.bloom.setBaseIntesity(0);
 		this.bloom.setThreshold(0);
 		this.bloom.setBloomSaturation(0.3f);
-		this.bloom.setEnabled(!game.isRunning());
+		this.bloom.setEnabled(false);
 		this.pp.addEffect(bloom);
 		this.pp2.addEffect(new Fxaa((int) (view.getWorldWidth() * 2), (int) (view.getWorldHeight() * 2)));
 		this.fbo = new FrameBuffer(Pixmap.Format.RGBA4444, 800, 800, false);

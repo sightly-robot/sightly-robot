@@ -1,6 +1,6 @@
 package de.unihannover.swp2015.robots2.visual.entity;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -59,7 +59,7 @@ public class Robot extends Entity {
 	
 	float fieldWidth;
 	float fieldHeight;
-		
+	
 	/**
 	 * Constructs a robot entity using given parameters.
 	 * 
@@ -72,7 +72,7 @@ public class Robot extends Entity {
 
 		this.robo = resHandler.getRegion(ResConst.DEFAULT_ROBO);
 		this.bubble = new Bubble();
-		 
+		this.modList = new ArrayList<>();
 		this.startpos = resHandler.getRegion(ResConst.DEFAULT_STARTPOS);
 
 		fieldWidth = prefs.getFloat(PrefConst.FIELD_WIDTH_KEY, 42);
@@ -109,7 +109,6 @@ public class Robot extends Entity {
 		this.bubble.width = fieldWidth * 0.75f;
 		this.bubble.height = fieldHeight * 0.2f;
 	}
-	
 	
 	private void drawStartPositions(final IRobot robo) {
 		this.startp = true;
@@ -203,12 +202,13 @@ public class Robot extends Entity {
 	 * @param robo model of the robot
 	 */
 	private void updatePosition(final IRobot robo) { 
-		 fieldWidth = prefs.getFloat(PrefConst.FIELD_WIDTH_KEY, 42);
-		 fieldHeight = prefs.getFloat(PrefConst.FIELD_HEIGHT_KEY, 42);
+		fieldWidth = prefs.getFloat(PrefConst.FIELD_WIDTH_KEY, 42);
+		fieldHeight = prefs.getFloat(PrefConst.FIELD_HEIGHT_KEY, 42);
 		
 		final float newRenderX = robo.getPosition().getX() * fieldWidth + fieldWidth/2 - width/2;
 		final float newRenderY = robo.getPosition().getY() * fieldHeight + fieldHeight/2 - height/2;
-		
+		System.out.println(newRenderX);
+		System.out.println(newRenderY);
 		if (renderX > newRenderX || newRenderX > renderX) 
 			this.registerModifier(new MoveModifierX(this, 0.4f, renderX, newRenderX));
 		if (renderY > newRenderY || newRenderY > renderY) 
@@ -241,28 +241,23 @@ public class Robot extends Entity {
 				break;
 				
 			case ROBOT_POSITION:
-				this.updateRobot(robo);
+				if (this.modList != null && this.modList.size() == 0)
+					this.updateRobot(robo);
 				break;
-				
+					
 			case ROBOT_SCORE:
-				this.bubble.points =  robo.getId().substring(0, 4) + "  : " + robo.getScore() +  "(" + handler.getRanking(robo) + ")";
+				this.bubble.points = robo.getId().substring(0, 4) + "  : " + robo.getScore() + "("
+						+ handler.getRanking(robo) + ")";
 				break;
-
+	
 			case ROBOT_STATE:
-				final List <IRobot> robos = gameHandler.getRobots();
-				for (IRobot rob : robos) {
-					if(!rob.isSetupState()){
-						if((this.renderX/fieldWidth)==rob.getPosition().getX() && (this.renderY/fieldHeight)==rob.getPosition().getY()){
-							//System.out.println("No setup");
-							this.startp = false;
-						}
-					}
-				}				
+				this.startp = robo.isSetupState();
+	
 				break;
-			case STAGE_STARTPOSITIONS:	
+			case STAGE_STARTPOSITIONS:
 				drawStartPositions(robo);
 				break;
-			default:
+				default:
 				break;
 		}		
 	}
