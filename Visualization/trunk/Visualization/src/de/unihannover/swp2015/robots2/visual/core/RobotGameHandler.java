@@ -179,26 +179,41 @@ public class RobotGameHandler extends GameHandler {
 	public void render() {
 		
 		if (!game.isRunning()) {
-			//TODO check whether the performance drop in this branch is acceptable.
-			//approx. 50% slower than the other branch.
-			pp.capture();
-			
-			spriteBatch.begin();
-			for (int i = 0; i < entityList.size(); ++i) {
-				this.entityList.get(i).draw(spriteBatch);
+
+			if (bloom.isEnabled()) {
+				//TODO check whether the performance drop in this branch is acceptable.
+				//approx. 50% slower than the other branch.
+				pp.capture();
+				
+				spriteBatch.begin();
+				for (int i = 0; i < entityList.size(); ++i) {
+					this.entityList.get(i).draw(spriteBatch);
+				}
+				spriteBatch.end();
+				
+				pp.render(fbo);
+				pp2.capture();
+				
+				spriteBatch.begin();
+				spriteBatch.draw(reg, 0, 0);
+				spriteBatch.end();
+				
+				ui.render();
+				
+				pp2.render();
 			}
-			spriteBatch.end();
-			
-			pp.render(fbo);
-			pp2.capture();
-			
-			spriteBatch.begin();
-			spriteBatch.draw(reg, 0, 0);
-			spriteBatch.end();
-			
-			ui.render();
-			
-			pp2.render();
+			else {
+				pp2.capture();
+				spriteBatch.begin();
+				for (int i = 0; i < entityList.size(); ++i) {
+					this.entityList.get(i).draw(spriteBatch);
+				}
+				spriteBatch.end();
+				
+				ui.render();
+
+				pp2.render();
+			}
 		}
 		else {
 			pp2.capture();
