@@ -71,4 +71,9 @@ public interface IEntity extends IDrawable, IModelObserver, Comparable<IEntity>,
 	 * @param mod {@link IEntityModifier}
 	 */
 	void registerModifier(final IEntityModifier mod);
+	
+	/**
+	 * Clears all references, hold by observables, to this entity.
+	 */
+	void clearReferences();
 }

@@ -1,6 +1,7 @@
 package de.unihannover.swp2015.robots2.visual.util;
 
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
@@ -40,6 +41,15 @@ public class SortUtil {
 				break;
 			}
 		}
+	}
+	
+	public static void sortRobots(final List<IRobot> robots) {
+		Collections.sort(robots, new Comparator<IRobot>() {
+			@Override
+			public int compare(IRobot r1, IRobot r2) {
+				return r2.getScore()-r1.getScore();
+			}
+		});
 	}
 	
 	/**

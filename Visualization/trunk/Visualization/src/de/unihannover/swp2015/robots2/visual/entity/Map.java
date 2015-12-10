@@ -71,6 +71,9 @@ public class Map extends Entity {
 		
 		case STAGE_SIZE:
 			//TODO dynamic world-size
+			for (int i = 0; i < fieldList.size(); ++i) {
+				fieldList.get(i).clearReferences();
+			}
 			this.fieldList.clear();
 			this.prefs.putInt(PrefConst.MAP_ROWS_KEY, model.getWidth());
 			this.prefs.putInt(PrefConst.MAP_COLS_KEY, model.getHeight());
@@ -87,13 +90,12 @@ public class Map extends Entity {
 		default:
 			break;
 		
-		}		
+		}
 	}
 
 	@Override
 	public void onUpdatePreferences(PreferencesObservable o, IPreferencesKey updatedKey) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override

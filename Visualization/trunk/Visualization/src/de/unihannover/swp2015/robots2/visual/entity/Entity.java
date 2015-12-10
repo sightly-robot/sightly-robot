@@ -121,6 +121,12 @@ public abstract class Entity implements IEntity {
     }
         
     @Override
+    public void clearReferences() {
+    	this.prefs.removeObserver(this);
+    	this.model.unobserve(this);
+    }
+    
+    @Override
     public int getZIndex() {
     	return zIndex;
     }

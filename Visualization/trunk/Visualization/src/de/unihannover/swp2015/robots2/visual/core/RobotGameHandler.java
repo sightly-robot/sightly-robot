@@ -112,6 +112,8 @@ public class RobotGameHandler extends GameHandler {
 		this.spriteBatch.setProjectionMatrix(view.getCamera().combined);
 		this.game.observe(this);
 		
+		this.fbo = new FrameBuffer(Pixmap.Format.RGBA4444, (int) (view.getWorldWidth()), (int) (view.getWorldHeight()), false);
+		this.reg = new TextureRegion(fbo.getColorBufferTexture());
 		this.pp = new PostProcessor(false, true, true);
 		this.pp2 = new PostProcessor(false, true, true);
 		this.bloom = new Bloom((int) (view.getWorldWidth()/2f), (int)(view.getWorldHeight()/2f));
@@ -121,8 +123,6 @@ public class RobotGameHandler extends GameHandler {
 		this.bloom.setEnabled(false);
 		this.pp.addEffect(bloom);
 		this.pp2.addEffect(new Fxaa((int) (view.getWorldWidth() * 2), (int) (view.getWorldHeight() * 2)));
-		this.fbo = new FrameBuffer(Pixmap.Format.RGBA4444, 800, 800, false);
-		this.reg = new TextureRegion(fbo.getColorBufferTexture());
 
 		this.init();
 	}
@@ -159,6 +159,8 @@ public class RobotGameHandler extends GameHandler {
 	 * @param robot you want the ranking for
 	 */
 	public int getRanking(final IRobot robo) {
+		SortUtil.sortRobots(robots);
+		
 		for (int i = 0; i < robots.size(); ++i) {
 			if (robots.get(i) == robo)
 				return i+1;
@@ -235,7 +237,7 @@ public class RobotGameHandler extends GameHandler {
 			this.robots.remove(event.getObject());
 			for (int i = entityList.size()-1; i >= 0 ; i--) {
 				if (entityList.get(i).getModel() == event.getObject()) {
-					this.entityList.remove(i);
+					this.entityList.remove(i).clearReferences();
 				}
 			}
 			break;
@@ -263,14 +265,5 @@ public class RobotGameHandler extends GameHandler {
 		this.pp2.setViewport(new Rectangle(view.getScreenX(), view.getScreenY(),
 				view.getScreenWidth(), view.getScreenHeight()));
 	}
-	
-	/**
-	 * 
-	 * @return list of robots in game
-	 */
-	
-	public List<IRobot> getRobots(){
-		return robots;
-	}
-	
+
 }

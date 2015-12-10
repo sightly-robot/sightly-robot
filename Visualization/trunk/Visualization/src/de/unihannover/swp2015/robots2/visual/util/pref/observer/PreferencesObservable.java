@@ -21,6 +21,10 @@ public class PreferencesObservable implements IPreferencesObservable {
 	public void addObserver(final IPreferencesObserver obs) {
 		this.observerList.add(obs);
 	}
-
+	
+	@Override
+	public void removeObserver(final IPreferencesObserver obs) {
+		this.observerList.remove(obs);
+	}
 	
 }

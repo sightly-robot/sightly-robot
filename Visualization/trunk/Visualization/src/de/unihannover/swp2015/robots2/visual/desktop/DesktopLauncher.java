@@ -19,13 +19,29 @@ public class DesktopLauncher {
 	public static final float viewWidth = 800;
 	public static final float viewHeight = 800;
 	
-	public static void main (String[] arg) {
+	public static void main(String[] arg) {
 
+		boolean debug = false;
 		if (arg.length > 0) {
-			if (arg[0].equals("debug"))
-				Visualization.debug = true;
+			if (arg[0].equals("debug")) {
+				debug = true;
+				System.out.println("Debug: " + String.valueOf(debug));
+			}
 		}
 		
+		String brokerIp = "localhost";
+		if (!debug && arg.length > 1) {
+			if (arg[1].matches("[0-2][0-5][0-5].{3}[0-2][0-5][0-5]")) {
+				brokerIp = arg[1];
+				System.out.println("Broker ip: " + brokerIp);
+			}
+		}
+		
+		startApp(debug, brokerIp);
+	}
+	
+	private static void startApp(final boolean debug, final String brokerIp) {
+	
 		ShaderLoader.BasePath = "resources/shaders/";
 
 		Settings packSettings = new Settings();
@@ -42,7 +58,7 @@ public class DesktopLauncher {
 		config.backgroundFPS = 0;
 		config.vSyncEnabled = false;
 		config.fullscreen = false;
-		new LwjglApplication(new Visualization(), config);
+		new LwjglApplication(new Visualization(debug, brokerIp), config);
 	}
 
 }

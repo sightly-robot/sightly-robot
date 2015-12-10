@@ -52,6 +52,7 @@ public class EntitySortTest {
 		public void putInt(IPreferencesKey key, int value, boolean persistent) {}
 		public void putString(IPreferencesKey key, String value) {}
 		public void putString(IPreferencesKey key, String value, boolean persistent) {}
+		public void removeObserver(IPreferencesObserver obs) {}
 		
 	}
 	
@@ -160,6 +161,39 @@ public class EntitySortTest {
 		SortUtil.addRobotSorted(roboFour, list);
 		SortUtil.addRobotSorted(roboFive, list);
 
+		final List<Robot> expected = Arrays.asList(roboFour, roboThree, roboFive, roboTwo, roboOne);
+
+		assertTrue("Expect that 'list' and 'expected' are equal \n 'list' = " + list + "\n 'expected = " + expected,
+				list.equals(expected));
+	}	
+	
+	@Test
+	public void testSortRobot() {
+		final Robot roboOne = new Robot("asd",true, true);
+		roboOne.setScore(0);
+
+		final Robot roboTwo = new Robot("assd",true, true);
+		roboTwo.setScore(1);
+		
+		final Robot roboThree = new Robot("asssd",true, true);
+		roboThree.setScore(42);
+		
+		final Robot roboFour = new Robot("asssssd",true, true);
+		roboFour.setScore(500);
+		
+		final Robot roboFive = new Robot("asssssssd",true, true);
+		roboFive.setScore(4);
+
+		final List<IRobot> list = new ArrayList<>(5);
+
+		list.add(roboOne);
+		list.add(roboTwo);
+		list.add(roboThree);
+		list.add(roboFour);
+		list.add(roboFive);
+
+		SortUtil.sortRobots(list);
+		
 		final List<Robot> expected = Arrays.asList(roboFour, roboThree, roboFive, roboTwo, roboOne);
 
 		assertTrue("Expect that 'list' and 'expected' are equal \n 'list' = " + list + "\n 'expected = " + expected,

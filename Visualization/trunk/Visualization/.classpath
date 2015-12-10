@@ -2,34 +2,30 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="test"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Protocol"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="libs/gdx-1.7.1.jar" sourcepath="libs/src/gdx-1.7.1-sources.jar"/>
-	<classpathentry kind="lib" path="libs/gdx-backend-gwt-1.7.1.jar"/>
-	<classpathentry kind="lib" path="libs/gdx-backend-lwjgl-1.7.1.jar" sourcepath="libs/src/gdx-backend-lwjgl-1.7.1-sources.jar"/>
-	<classpathentry kind="lib" path="libs/gdx-platform-1.7.1-natives-desktop.jar"/>
+	<classpathentry kind="lib" path="libs/src/gdx-backend-lwjgl-1.7.1-sources.jar" sourcepath="libs/src/gdx-backend-lwjgl-1.7.1-sources.jar"/>
+	<classpathentry kind="lib" path="libs/gdx-freetype.jar" sourcepath="libs/src/gdx-freetype-sources.jar"/>
+	<classpathentry kind="lib" path="libs/gdx-tools-1.7.2.jar"/>
 	<classpathentry kind="lib" path="libs/gdx-pp.jar"/>
+	<classpathentry kind="lib" path="libs/lwjgl-2.9.2.jar"/>
+	<classpathentry kind="lib" path="libs/gdx-platform-1.7.1-natives-desktop.jar"/>
+	<classpathentry kind="lib" path="libs/lwjgl-platform-2.9.2-natives-linux.jar"/>
+	<classpathentry kind="lib" path="libs/lwjgl-platform-2.9.2-natives-osx.jar"/>
+	<classpathentry kind="lib" path="libs/lwjgl-platform-2.9.2-natives-windows.jar"/>
+	<classpathentry kind="lib" path="libs/gdx-freetype-natives.jar"/>
+	<classpathentry kind="lib" path="libs/gdx-backend-gwt-1.7.1.jar"/>
+	<classpathentry kind="lib" path="libs/lwjgl_util-2.9.2.jar"/>
 	<classpathentry kind="lib" path="libs/jinput-2.0.5.jar"/>
 	<classpathentry kind="lib" path="libs/jinput-platform-2.0.5-natives-linux.jar"/>
 	<classpathentry kind="lib" path="libs/jinput-platform-2.0.5-natives-osx.jar"/>
 	<classpathentry kind="lib" path="libs/jinput-platform-2.0.5-natives-windows.jar"/>
 	<classpathentry kind="lib" path="libs/jlayer-1.0.1-gdx.jar"/>
 	<classpathentry kind="lib" path="libs/jorbis-0.0.17.jar"/>
-	<classpathentry kind="lib" path="libs/jutils-1.0.0.jar"/>
-	<classpathentry kind="lib" path="libs/lwjgl_util-2.9.2.jar"/>
-	<classpathentry kind="lib" path="libs/lwjgl-2.9.2.jar"/>
-	<classpathentry kind="lib" path="libs/lwjgl-platform-2.9.2-natives-linux.jar"/>
-	<classpathentry kind="lib" path="libs/lwjgl-platform-2.9.2-natives-osx.jar"/>
-	<classpathentry kind="lib" path="libs/lwjgl-platform-2.9.2-natives-windows.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/Protocol"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="libs/gdx-tools-1.7.2.jar"/>
 	<classpathentry kind="lib" path="libs/json-org.jar" sourcepath="libs/src/json-sources.jar"/>
-	<classpathentry kind="lib" path="libs/gdx-freetype-natives.jar"/>
-	<classpathentry kind="lib" path="libs/gdx-freetype.jar" sourcepath="libs/src/gdx-freetype-sources.jar"/>
-	<classpathentry kind="lib" path="/Protocol/lib/org.eclipse.paho.client.mqttv3-1.0.2.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="http://www.eclipse.org/paho/files/javadoc"/>
-		</attributes>
-	</classpathentry>
+	<classpathentry kind="lib" path="libs/jutils-1.0.0.jar"/>
+	<classpathentry kind="lib" path="libs/gdx-backend-lwjgl-1.7.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -28,17 +28,17 @@ import de.unihannover.swp2015.robots2.visual.util.pref.FlexPreferences;
  * @author Rico Schrage
  */
 public class Visualization extends ApplicationAdapter {
-
-	/**
-	 * Indicates whether this build is a debug build.
-	 * Have to be set before the application will be created.
-	 */
-	public static boolean debug = false;
 	
 	/**
 	 * Broker-IP
 	 */
-	private static final String CONNECTION_IP = "192.168.1.115";
+	private final String brokerIp;
+	
+	/**
+	 * Indicates whether this build is a debug build.
+	 * Have to be set before the application will be created.
+	 */
+	public final boolean debug;
 	
 	/**
 	 * List of all {@link IGameHandler}.
@@ -67,14 +67,21 @@ public class Visualization extends ApplicationAdapter {
 	private Viewport fitViewport;
 		
 	/**
+	 * For the timing of the debug output.
+	 */
+	float c = 5;
+		
+	/**
 	 * Constructs a Visualization object.
 	 * 
 	 * Important: Don't do OpenGL related things here! Use {@link #create()}
 	 * instead.
 	 */
-	public Visualization() {
+	public Visualization(final boolean debug, final String brokerIp) {
 		this.gameHandlerList = new ArrayList<>();
-		this.mqttHandler = new MqttHandler();
+		this.brokerIp = brokerIp;
+		this.mqttHandler = new MqttHandler(this.brokerIp);
+		this.debug = debug;
 	}
 
 	@Override
@@ -98,7 +105,8 @@ public class Visualization extends ApplicationAdapter {
 			new TestApp(mqttHandler.getGame());
 		}
 		else {
-			this.mqttHandler.startMqtt(CONNECTION_IP);
+			Thread mqttThread = new Thread(mqttHandler);
+			mqttThread.start();
 		}
 		
 		this.gameHandlerList.add(new RobotGameHandler(mqttHandler.getGame(), fitViewport, resHandler, prefs));
@@ -110,7 +118,7 @@ public class Visualization extends ApplicationAdapter {
 			gameHandlerList.get(i).dispose();
 		}
 	}
-	float c = 5;
+
 	@Override
 	public void render() {
 			
@@ -130,10 +138,12 @@ public class Visualization extends ApplicationAdapter {
 			gameHandlerList.get(i).render();
 		}
 
-		c-=Gdx.graphics.getDeltaTime();
-		if (c <0) {
-			c = 5;
-			System.out.println(Gdx.graphics.getFramesPerSecond());
+		if (debug) {
+			c -= Gdx.graphics.getDeltaTime();
+			if (c <0) {
+				c = 5;
+				System.out.println(Gdx.graphics.getFramesPerSecond());
+			}
 		}
 	}
 	
