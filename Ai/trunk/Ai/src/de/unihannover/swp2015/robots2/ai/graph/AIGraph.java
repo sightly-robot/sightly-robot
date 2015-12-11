@@ -2,17 +2,15 @@ package de.unihannover.swp2015.robots2.ai.graph;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 import de.unihannover.swp2015.robots2.ai.core.Robot;
 import de.unihannover.swp2015.robots2.ai.exceptions.InvalidStageException;
 import de.unihannover.swp2015.robots2.ai.exceptions.NoValidOrientationException;
-import de.unihannover.swp2015.robots2.model.externalInterfaces.IModelObserver;
-import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
 import de.unihannover.swp2015.robots2.model.interfaces.IField;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
-import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
 import de.unihannover.swp2015.robots2.model.interfaces.IStage;
 
 public class AIGraph {
@@ -25,6 +23,12 @@ public class AIGraph {
 	 * Should be set by the AI class!
 	 */
 	private Robot myself;
+	/*
+	 * To identify other robots
+	 * String is ID of the robot
+	 * TODO implement
+	 */
+	private HashMap<String, Robot> robots;
 	
 	private int dimX;
 	private int dimY;
@@ -293,5 +297,13 @@ public class AIGraph {
 
 	public void setMyself(Robot myself) {
 		this.myself = myself;
+	}
+
+	public HashMap<String, Robot> getRobots() {
+		return robots;
+	}
+
+	public void setRobots(HashMap<String, Robot> robots) {
+		this.robots = robots;
 	}
 }

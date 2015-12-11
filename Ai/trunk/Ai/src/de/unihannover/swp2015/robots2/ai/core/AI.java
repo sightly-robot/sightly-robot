@@ -208,39 +208,32 @@ public class AI extends AbstractAI implements IModelObserver {
 							}
 						}
 					}
-				} else {
-
-					// !robot.isMyself()
-
+				}
+				/*
+				 * Case robot is not myself
+				 */
+				else {
 					/*
-					 * Here we should handle other robots than myself!
+					 * Get intern graph-robot object if it already exists, else
+					 * create new one and set position
 					 */
-
-					if (myself.getPosition() == null
-							|| (myself.getPosition() != null && (myself.getPosition().getX() != pos.getX()
-									|| myself.getPosition().getY() != pos.getY()))) {
-						System.out.println("POS" + pos.getX() + pos.getY());
-						// why move myself, if !robot.isMyself() ?
-						this.graph.setRobotPosition(myself, pos);
-
-						if (this.game.isRunning() && myself.getPosition() != null) {
-							if (robot == iRobotController.getMyself()) {// !robot.isMyself(),
-																		// so
-																		// can't
-																		// return
-																		// true
-								try {
-									System.out.print("POSStart");
-									Orientation o = getNextOrientation();
-									System.out.println(o.name());
-									fireNextOrientationEvent(o);
-								} catch (NoValidOrientationException e) {
-								}
-							}
+					if (!this.graph.getRobots().containsKey(robot.getId())) {
+						Robot newRobot = new Robot(robot.getId());
+						this.graph.getRobots().put(robot.getId(), newRobot);
+						this.graph.setRobotPosition(newRobot, pos);
+					} else {
+						Robot otherRobot = this.graph.getRobots().get(robot.getId());
+						int x = otherRobot.getPosition().getX();
+						int y = otherRobot.getPosition().getY();
+						/*
+						 * Check if position was actually updated
+						 */
+						if (x == pos.getX() && y == pos.getY()) {
+							System.out.println("Other robot's position is the same as the old one!");
+							break;
+						} else {
+							this.graph.setRobotPosition(otherRobot, pos);
 						}
-					} else if (myself.getOrientation() == null || myself.getOrientation() != pos.getOrientation()) {
-						System.out.println("Orientation" + pos.getOrientation().name());
-						myself.setOrientation(pos.getOrientation());
 					}
 				}
 			}
@@ -274,6 +267,7 @@ public class AI extends AbstractAI implements IModelObserver {
 		default:
 			break;
 		}
+
 	}
 
 	@Override
