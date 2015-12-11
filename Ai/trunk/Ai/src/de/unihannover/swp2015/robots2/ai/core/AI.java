@@ -3,6 +3,7 @@ package de.unihannover.swp2015.robots2.ai.core;
 import de.unihannover.swp2015.robots2.ai.exceptions.InvalidStageException;
 import de.unihannover.swp2015.robots2.ai.exceptions.NoValidOrientationException;
 import de.unihannover.swp2015.robots2.ai.graph.AIGraph;
+import de.unihannover.swp2015.robots2.ai.graph.Node;
 import de.unihannover.swp2015.robots2.controller.interfaces.IRobotController;
 import de.unihannover.swp2015.robots2.model.externalInterfaces.IModelObserver;
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
@@ -66,6 +67,41 @@ public class AI extends AbstractAI implements IModelObserver {
 		case STAGE_SIZE:
 			break;
 		case FIELD_STATE:
+			if(graph != null) {
+				IField field = (IField) event.getObject();
+				Node node = myself.getPosition(); 
+				
+				if(game.isRunning()) {
+					switch(field.getState()) {
+					case OURS:
+						if(field.getX() == node.getX() + 1 && field.getY() == node.getY()) {
+							fireNextOrientationEvent(Orientation.EAST);
+						}
+						if(field.getX() == node.getX() - 1 && field.getY() == node.getY()) {
+							fireNextOrientationEvent(Orientation.WEST);
+						}
+						if(field.getX() == node.getX() && field.getY() == node.getY() + 1) {
+							fireNextOrientationEvent(Orientation.SOUTH); //or NORTH?
+						}
+						if(field.getX() == node.getX() && field.getY() == node.getY() - 1) {
+							fireNextOrientationEvent(Orientation.NORTH); //or SOUTH?
+						}
+						break;
+					case FREE:
+						break;
+					case LOCKED:
+						break;
+					case LOCK_WAIT:
+						break;
+					case OCCUPIED:
+						break;
+					case RANDOM_WAIT:
+						break;
+					default:
+						break;
+					}
+				}
+			}
 			break;
 		case ROBOT_SCORE:
 			break;
@@ -116,7 +152,7 @@ public class AI extends AbstractAI implements IModelObserver {
 									 * Calculate next node position
 									 */
 									switch (nextOrientation) {
-									case NORTH:
+									case NORTH: //isn't NORTH on y - 1?
 										y += 1;
 										break;
 									case EAST:
@@ -172,6 +208,9 @@ public class AI extends AbstractAI implements IModelObserver {
 						}
 					}
 				} else {
+					
+					//!robot.isMyself()
+					
 					/*
 					 * Here we should handle other robots than myself!
 					 */
@@ -180,10 +219,11 @@ public class AI extends AbstractAI implements IModelObserver {
 							|| (myself.getPosition() != null && (myself.getPosition().getX() != pos.getX()
 									|| myself.getPosition().getY() != pos.getY()))) {
 						System.out.println("POS" + pos.getX() + pos.getY());
+						//why move myself, if !robot.isMyself() ?
 						this.graph.setRobotPosition(myself, pos);
 
 						if (this.game.isRunning() && myself.getPosition() != null) {
-							if (robot == iRobotController.getMyself()) {
+							if (robot == iRobotController.getMyself()) {// !robot.isMyself(), so can't return true
 								try {
 									System.out.print("POSStart");
 									Orientation o = getNextOrientation();
@@ -195,7 +235,7 @@ public class AI extends AbstractAI implements IModelObserver {
 						}
 					} else if (myself.getOrientation() == null || myself.getOrientation() != pos.getOrientation()) {
 						System.out.println("Orientation" + pos.getOrientation().name());
-						myself.setOrientation(pos.getOrientation());
+						myself.setOrientation(pos.getOrientation()); 
 					}
 				}
 			}
@@ -243,7 +283,7 @@ public class AI extends AbstractAI implements IModelObserver {
 	}
 
 	/**
-	 * Returns the next Orientation, the robot i supposed to move in.
+	 * Returns the next Orientation, the robot is supposed to move in.
 	 * 
 	 * @return Orientation, the robot is supposed to move in next.
 	 */
