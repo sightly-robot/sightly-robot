@@ -3,7 +3,6 @@ package de.unihannover.swp2015.robots2.ai.core;
 import de.unihannover.swp2015.robots2.ai.exceptions.InvalidStageException;
 import de.unihannover.swp2015.robots2.ai.exceptions.NoValidOrientationException;
 import de.unihannover.swp2015.robots2.ai.graph.AIGraph;
-import de.unihannover.swp2015.robots2.ai.graph.Node;
 import de.unihannover.swp2015.robots2.controller.interfaces.IRobotController;
 import de.unihannover.swp2015.robots2.model.externalInterfaces.IModelObserver;
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
@@ -92,35 +91,90 @@ public class AI extends AbstractAI implements IModelObserver {
 						break;
 					}
 					/*
-					 * If myself has a position, update it
+					 * If myself has a position, update it if it's not the same
+					 * as the old one
 					 */
 					else {
-						this.getGraph().setRobotPosition(myself, pos);
 						/*
-						 * Only keep going if the game is running
+						 * Check if the new position is different than our old
+						 * one, only keep going if this is true
 						 */
-						if(this.game.isRunning()) {
-							try {
-								Orientation nextOrientation = getNextOrientation();
-								Orientation currentOrientation = myself.getOrientation();
-								/*
-								 * Calculate next node position
-								 */
-								// TODO
-								switch(nextOrientation) {
-								case NORTH:
-									
+						if (pos.getX() == myself.getPosition().getX() && pos.getY() == myself.getPosition().getY()) {
+							System.out.println("New position is the same as the old one");
+							break;
+						} else {
+							this.getGraph().setRobotPosition(myself, pos);
+							/*
+							 * Only keep going if the game is running
+							 */
+							if (this.game.isRunning()) {
+								try {
+									Orientation nextOrientation = getNextOrientation();
+									int x = myself.getPosition().getX();
+									int y = myself.getPosition().getY();
+									/*
+									 * Calculate next node position
+									 */
+									switch (nextOrientation) {
+									case NORTH:
+										y += 1;
+										break;
+									case EAST:
+										x += 1;
+										break;
+									case SOUTH:
+										y -= 1;
+										break;
+									case WEST:
+										x -= 1;
+										break;
+									default:
+										break;
+									}
+									/*
+									 * Check if field on next orientation is
+									 * free before going
+									 */
+									switch (this.game.getStage().getField(x, y).getState()) {
+									// Lock if free
+									case FREE:
+										iRobotController.requestField(x, y);
+										break;
+									// No need to use LOCKED state at the moment
+									case LOCKED:
+										break;
+									// Calculate new field
+									case OCCUPIED:
+										break;
+									// Drive on field if we have successfully
+									// got it
+									// (locked by us)
+									// Should be triggered by another event!!
+									// TODO
+									case OURS:
+										fireNextOrientationEvent(nextOrientation);
+										break;
+									// Don't use for now
+									case LOCK_WAIT:
+										break;
+									// Don't use for now
+									case RANDOM_WAIT:
+										break;
+									// Should throw error if a field has no
+									// event
+									default:
+										break;
+									}
+								} catch (NoValidOrientationException e) {
+									e.printStackTrace();
 								}
-								/*
-								 * Check if field on next orientation is occupied before going
-								 */
-								if(this.game.getStage().getField(x, y))
-							} catch (NoValidOrientationException e) {
-								e.printStackTrace();
 							}
 						}
 					}
 				} else {
+					/*
+					 * Here we should handle other robots than myself!
+					 */
 
 					if (myself.getPosition() == null
 							|| (myself.getPosition() != null && (myself.getPosition().getX() != pos.getX()
@@ -149,7 +203,8 @@ public class AI extends AbstractAI implements IModelObserver {
 		case GAME_STATE: // reicht das?
 			System.out.println("Game");
 			IGame game = (IGame) event.getObject();
-			if (game.isRunning() && graph != null && myself.getPosition() != null  && !getController().getMyself().isSetupState()) {
+			if (game.isRunning() && graph != null && myself.getPosition() != null
+					&& !getController().getMyself().isSetupState()) {
 				try {
 					System.out.println("GAMEStart");
 					fireNextOrientationEvent(getNextOrientation());
@@ -162,7 +217,8 @@ public class AI extends AbstractAI implements IModelObserver {
 		case ROBOT_ADD:
 			break;
 		case ROBOT_STATE:
-			if (getController().getGame().isRunning() && graph != null && myself.getPosition() != null  && !getController().getMyself().isSetupState()) {
+			if (getController().getGame().isRunning() && graph != null && myself.getPosition() != null
+					&& !getController().getMyself().isSetupState()) {
 				try {
 					System.out.println("GAMEStart");
 					fireNextOrientationEvent(getNextOrientation());
