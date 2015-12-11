@@ -164,9 +164,19 @@ public class AIGraph {
 	// TODO: Exception if there is no valid Orientation
 	public Orientation getRandomOrientation() throws NoValidOrientationException {
 		List<Orientation> available = new ArrayList<Orientation>();
-		Orientation curr = this.myself.getOrientation();
 		Node myPos = getMyPosition();
-
+		
+		if (!myPos.isWall(Orientation.NORTH))
+			available.add(Orientation.NORTH);
+		if (!myPos.isWall(Orientation.EAST))
+			available.add(Orientation.EAST);
+		if (!myPos.isWall(Orientation.SOUTH))
+			available.add(Orientation.SOUTH);
+		if (!myPos.isWall(Orientation.WEST))
+			available.add(Orientation.WEST);
+		
+		/* switch used to not return backwards, can be deleted once this updated version is tested
+		Orientation curr = this.myself.getOrientation();
 		switch (curr) {
 		case NORTH:
 			if (!myPos.isWall(Orientation.WEST))
@@ -200,7 +210,7 @@ public class AIGraph {
 			if (!myPos.isWall(Orientation.NORTH))
 				available.add(Orientation.NORTH);
 			break;
-		}
+		} */
 
 		Collections.shuffle(available);
 		return available.get(0);
