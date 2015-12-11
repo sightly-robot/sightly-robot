@@ -67,24 +67,26 @@ public class AI extends AbstractAI implements IModelObserver {
 		case STAGE_SIZE:
 			break;
 		case FIELD_STATE:
-			if(graph != null) {
+			if (graph != null) {
 				IField field = (IField) event.getObject();
-				Node node = myself.getPosition(); 
-				
-				if(game.isRunning()) {
-					switch(field.getState()) {
+				Node node = myself.getPosition();
+
+				if (game.isRunning()) {
+					switch (field.getState()) {
 					case OURS:
-						if(field.getX() == node.getX() + 1 && field.getY() == node.getY()) {
+						if (field.getX() == node.getX() + 1 && field.getY() == node.getY()) {
 							fireNextOrientationEvent(Orientation.EAST);
 						}
-						if(field.getX() == node.getX() - 1 && field.getY() == node.getY()) {
+						if (field.getX() == node.getX() - 1 && field.getY() == node.getY()) {
 							fireNextOrientationEvent(Orientation.WEST);
 						}
-						if(field.getX() == node.getX() && field.getY() == node.getY() + 1) {
-							fireNextOrientationEvent(Orientation.SOUTH); //or NORTH?
+						if (field.getX() == node.getX() && field.getY() == node.getY() + 1) {
+							fireNextOrientationEvent(Orientation.SOUTH); // or
+																			// NORTH?
 						}
-						if(field.getX() == node.getX() && field.getY() == node.getY() - 1) {
-							fireNextOrientationEvent(Orientation.NORTH); //or SOUTH?
+						if (field.getX() == node.getX() && field.getY() == node.getY() - 1) {
+							fireNextOrientationEvent(Orientation.NORTH); // or
+																			// SOUTH?
 						}
 						break;
 					case FREE:
@@ -117,7 +119,6 @@ public class AI extends AbstractAI implements IModelObserver {
 				}
 
 				if (robot.isMyself()) {
-					this.graph.setRobotPosition(myself, pos);
 					/*
 					 * If no position was set for myself yet, then update it to
 					 * the current node (done in setRobotPosition)
@@ -152,7 +153,7 @@ public class AI extends AbstractAI implements IModelObserver {
 									 * Calculate next node position
 									 */
 									switch (nextOrientation) {
-									case NORTH: //isn't NORTH on y - 1?
+									case NORTH: // isn't NORTH on y - 1?
 										y += 1;
 										break;
 									case EAST:
@@ -208,9 +209,9 @@ public class AI extends AbstractAI implements IModelObserver {
 						}
 					}
 				} else {
-					
-					//!robot.isMyself()
-					
+
+					// !robot.isMyself()
+
 					/*
 					 * Here we should handle other robots than myself!
 					 */
@@ -219,11 +220,15 @@ public class AI extends AbstractAI implements IModelObserver {
 							|| (myself.getPosition() != null && (myself.getPosition().getX() != pos.getX()
 									|| myself.getPosition().getY() != pos.getY()))) {
 						System.out.println("POS" + pos.getX() + pos.getY());
-						//why move myself, if !robot.isMyself() ?
+						// why move myself, if !robot.isMyself() ?
 						this.graph.setRobotPosition(myself, pos);
 
 						if (this.game.isRunning() && myself.getPosition() != null) {
-							if (robot == iRobotController.getMyself()) {// !robot.isMyself(), so can't return true
+							if (robot == iRobotController.getMyself()) {// !robot.isMyself(),
+																		// so
+																		// can't
+																		// return
+																		// true
 								try {
 									System.out.print("POSStart");
 									Orientation o = getNextOrientation();
@@ -235,7 +240,7 @@ public class AI extends AbstractAI implements IModelObserver {
 						}
 					} else if (myself.getOrientation() == null || myself.getOrientation() != pos.getOrientation()) {
 						System.out.println("Orientation" + pos.getOrientation().name());
-						myself.setOrientation(pos.getOrientation()); 
+						myself.setOrientation(pos.getOrientation());
 					}
 				}
 			}
