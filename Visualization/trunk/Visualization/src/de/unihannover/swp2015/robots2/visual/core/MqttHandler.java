@@ -34,6 +34,7 @@ public class MqttHandler implements IVisualization, Runnable {
 	public void setIp(final String ip) {
 		synchronized(ipLock) {
 			this.ip = ip;
+			this.ipLock.notify();
 		}
 	}
 	
@@ -51,18 +52,19 @@ public class MqttHandler implements IVisualization, Runnable {
 		synchronized(ipLock) {
 			
 			try {
+				System.out.println("Trying to connect to: " + ip);
 				this.visController.startMqtt("tcp://" + ip);
 				this.attempts = 0;
 			} 
 			catch (Exception e) {
 				
 				this.attempts++;
-				
+					
 				if (this.attempts >= MAX_ATTEMPTS)
 					return;
 				
 				try {
-					Thread.sleep(ATTEMPT_INTERVAL);
+					ipLock.wait(ATTEMPT_INTERVAL);
 					this.run();
 				} 
 				catch (InterruptedException e1) {

@@ -7,6 +7,10 @@ package de.unihannover.swp2015.robots2.visual.core;
  */
 public class GameConst {
 
+	private GameConst() {
+		// pure static class
+	}
+	
 	public static final float ROBOT_SCALE = 0.7f;
 	
 	public static final float UI_WIDTH_REL = 0.6f;

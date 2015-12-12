@@ -30,7 +30,6 @@ import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
  * @author Rico Schrage
  */
 public class TestApp extends JFrame implements ActionListener {
-
 	
 	private static final long serialVersionUID = 1L;
 	private static final Random rand = new Random();

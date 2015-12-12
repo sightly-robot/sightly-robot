@@ -15,6 +15,10 @@ import de.unihannover.swp2015.robots2.visual.entity.IEntity;
  */
 public class SortUtil {
 	
+	private SortUtil() {
+		// utility class
+	}
+	
 	/**
 	 * Should be called, after you have added an entity to the {@link RobotGameHandler}. As alternative you can call {@link EntityUtil#addEntitySorted(IEntity, List)d} 
 	 * to add a new entity. 

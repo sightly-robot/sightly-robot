@@ -10,6 +10,10 @@ import de.unihannover.swp2015.robots2.model.interfaces.IStage;
  * @author Rico Schrage
  */
 public class StageUtil {
+
+	private StageUtil() {
+		// utility class
+	}
 	
 	/**
 	 * Checks if it is possible to drive from field <code>model</code> in the direction <code>direction</code>. 

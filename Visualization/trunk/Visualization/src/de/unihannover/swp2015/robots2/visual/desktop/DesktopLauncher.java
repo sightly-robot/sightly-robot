@@ -22,19 +22,15 @@ public class DesktopLauncher {
 	public static void main(String[] arg) {
 
 		boolean debug = false;
-		if (arg.length > 0) {
-			if (arg[0].equals("debug")) {
+		if (arg.length > 0 && arg[0].equals("debug")) {
 				debug = true;
 				System.out.println("Debug: " + String.valueOf(debug));
-			}
 		}
 		
 		String brokerIp = "localhost";
-		if (!debug && arg.length > 1) {
-			if (arg[1].matches("[0-2][0-5][0-5].{3}[0-2][0-5][0-5]")) {
+		if (!debug && arg.length > 1 && arg[1].matches("[0-2][0-5][0-5].{3}[0-2][0-5][0-5]")) {
 				brokerIp = arg[1];
 				System.out.println("Broker ip: " + brokerIp);
-			}
 		}
 		
 		startApp(debug, brokerIp);

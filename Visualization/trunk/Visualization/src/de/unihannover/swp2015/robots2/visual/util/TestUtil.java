@@ -17,6 +17,10 @@ import de.unihannover.swp2015.robots2.model.writeableInterfaces.IGameWriteable;
  */
 public class TestUtil {
 
+	private TestUtil() {
+		// utility class
+	}
+	
 	/**
 	 * Creates a haphazardly configured {@link Game}. For testing only!
 	 * 

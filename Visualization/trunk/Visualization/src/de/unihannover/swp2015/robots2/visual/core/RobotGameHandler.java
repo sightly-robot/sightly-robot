@@ -228,8 +228,8 @@ public class RobotGameHandler extends GameHandler {
 
 	@Override
 	public void onManagedModelUpdate(IEvent event) {
+
 		switch(event.getType()) {
-		
 		case GAME_PARAMETER:
 			break;
 			

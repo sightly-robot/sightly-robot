@@ -9,6 +9,10 @@ import com.badlogic.gdx.graphics.Color;
  */
 public class ColorUtil {
 
+	private ColorUtil() {
+		// utility class
+	}
+	
 	/**
 	 * Converts an awt-color object to a badlogic-color object.
 	 * 
