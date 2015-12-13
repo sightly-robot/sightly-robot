@@ -82,6 +82,8 @@ public class ResourceHandler implements IResourceHandler {
 	 */
 	private void createRegions() {
 		
+		final String theme = "grass"; //TODO changing of themes, renaming files
+		
 		final TextureRegion wallN = texAtlas.findRegion("wall_n");
 		this.texMap.put(ResConst.DEFAULT_WALL_N, wallN);
 		
@@ -115,29 +117,29 @@ public class ResourceHandler implements IResourceHandler {
 		final TextureRegion robo = texAtlas.findRegion("robo");
 		this.texMap.put(ResConst.DEFAULT_ROBO, robo);
 		
-		final TextureRegion noWay = texAtlas.findRegion("0_way_tile_tiled");
+		final TextureRegion noWay = texAtlas.findRegion("0_way_tile_"+theme);
 		this.texMap.put(ResConst.DEFAULT_FIELD, noWay);
 
-		final TextureRegion way1 = texAtlas.findRegion("1_way_tile_tiled");
+		final TextureRegion way1 = texAtlas.findRegion("1_way_tile_"+theme);
 		this.texMap.put(ResConst.DEFAULT_FIELD_1_N, way1);
 		this.texMap.put(ResConst.DEFAULT_FIELD_1_E, way1);
 		this.texMap.put(ResConst.DEFAULT_FIELD_1_S, way1);
 		this.texMap.put(ResConst.DEFAULT_FIELD_1_W, way1);
 		
-		final TextureRegion way2 = texAtlas.findRegion("2_way_WE_tile_tiled");
+		final TextureRegion way2 = texAtlas.findRegion("2_way_tile_"+theme);
 		this.texMap.put(ResConst.DEFAULT_FIELD_2_N, way2);
 		this.texMap.put(ResConst.DEFAULT_FIELD_2_E, way2);
 		
-		final TextureRegion way3 = texAtlas.findRegion("3_way_tile_tiled");
+		final TextureRegion way3 = texAtlas.findRegion("3_way_tile_"+theme);
 		this.texMap.put(ResConst.DEFAULT_FIELD_3_N, way3);
 		this.texMap.put(ResConst.DEFAULT_FIELD_3_E, way3);
 		this.texMap.put(ResConst.DEFAULT_FIELD_3_S, way3);
 		this.texMap.put(ResConst.DEFAULT_FIELD_3_W, way3);
 		
-		final TextureRegion way4 = texAtlas.findRegion("4_way_tile_tiled");
+		final TextureRegion way4 = texAtlas.findRegion("4_way_tile_"+theme);
 		this.texMap.put(ResConst.DEFAULT_FIELD_4, way4);
 		
-		final TextureRegion wayC = texAtlas.findRegion("curve_tile_tiled");
+		final TextureRegion wayC = texAtlas.findRegion("curve_tile_"+theme);
 		this.texMap.put(ResConst.DEFAULT_FIELD_C_NE, wayC);
 		this.texMap.put(ResConst.DEFAULT_FIELD_C_ES, wayC);
 		this.texMap.put(ResConst.DEFAULT_FIELD_C_SW, wayC);
