@@ -169,15 +169,26 @@ public class AIGraph {
 	public Orientation getRandomOrientation() throws NoValidOrientationException {
 		List<Orientation> available = new ArrayList<Orientation>();
 		Node myPos = getMyPosition();
+		int x = myPos.getX();
+		int y = myPos.getY();
 		
-		if (!myPos.isWall(Orientation.NORTH))
+		if (!myPos.isWall(Orientation.NORTH) 
+				/*&& this.stage.getField(x, y - 1).getState().equals(IField.State.LOCKED)*/) {
 			available.add(Orientation.NORTH);
-		if (!myPos.isWall(Orientation.EAST))
+		}
+		if (!myPos.isWall(Orientation.EAST)
+				/*&& this.stage.getField(x + 1, y).getState().equals(IField.State.LOCKED)*/) {
 			available.add(Orientation.EAST);
-		if (!myPos.isWall(Orientation.SOUTH))
+		}			
+		if (!myPos.isWall(Orientation.SOUTH)
+				/*&& this.stage.getField(x, y + 1).getState().equals(IField.State.LOCKED)*/) {
 			available.add(Orientation.SOUTH);
-		if (!myPos.isWall(Orientation.WEST))
+		}			
+		if (!myPos.isWall(Orientation.WEST)
+				/*&& this.stage.getField(x - 1, y).getState().equals(IField.State.LOCKED)*/) {
 			available.add(Orientation.WEST);
+		}
+			
 		
 		/* switch used to not return backwards, can be deleted once this updated version is tested
 		Orientation curr = this.myself.getOrientation();
