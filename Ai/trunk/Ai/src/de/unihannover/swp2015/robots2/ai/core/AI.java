@@ -153,14 +153,14 @@ public class AI extends AbstractAI implements IModelObserver {
 									 * Calculate next node position
 									 */
 									switch (nextOrientation) {
-									case NORTH: // isn't NORTH on y - 1?
-										y += 1;
+									case NORTH: 
+										y -= 1;
 										break;
 									case EAST:
 										x += 1;
 										break;
 									case SOUTH:
-										y -= 1;
+										y += 1;
 										break;
 									case WEST:
 										x -= 1;
