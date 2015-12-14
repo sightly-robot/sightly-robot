@@ -87,26 +87,13 @@ public class AI extends AbstractAI implements IModelObserver {
 				Node node = myself.getPosition();
 
 				//TODO nullpointerexception possible?
-				if (game.isRunning() && this.nextField == field) {
+				if (game.isRunning() && this.nextField == field && this.nextOrientation != null) {
 					switch (field.getState()) {
 					case OURS:
-						if (field.getX() == node.getX() + 1 && field.getY() == node.getY()) {
-							fireNextOrientationEvent(Orientation.EAST);
-						}
-						if (field.getX() == node.getX() - 1 && field.getY() == node.getY()) {
-							fireNextOrientationEvent(Orientation.WEST);
-						}
-						if (field.getX() == node.getX() && field.getY() == node.getY() + 1) {
-							fireNextOrientationEvent(Orientation.SOUTH); // or
-																			// NORTH?
-						}
-						if (field.getX() == node.getX() && field.getY() == node.getY() - 1) {
-							fireNextOrientationEvent(Orientation.NORTH); // or
-																			// SOUTH?
-						}
+						fireNextOrientationEvent(this.nextOrientation); // or
 						break;
 					case FREE:
-						int xCoord =  this.nextField.getX();
+						int xCoord = this.nextField.getX();
 						int yCoord = this.nextField.getY();
 						iRobotController.requestField(xCoord, yCoord);
 						break;
