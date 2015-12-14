@@ -67,7 +67,6 @@ public class SvgConstructor {
 		// create the svg stub
 		universe.clear();
 		templateSvg = loadSvgResource("Template");
-		
 		this.diagram = universe.getDiagram(templateSvg);
 	}
 	
@@ -85,6 +84,9 @@ public class SvgConstructor {
 				return builder.toString();
 			}			
 		}
+		
+		if (game.getStage().getWidth() == 0 || game.getStage().getHeight() == 0)
+			return;
 		
 		try {
 			double width = game.getStage().getWidth();
@@ -121,6 +123,9 @@ public class SvgConstructor {
 	 * Draws all walls onto the svg
 	 */
 	public void drawWalls() {
+		if (game.getStage().getWidth() == 0 || game.getStage().getHeight() == 0)
+			return;
+		
 		double fieldWidth = svgWidth / game.getStage().getWidth();
 		double fieldHeight = svgHeight / game.getStage().getHeight();
 
@@ -165,6 +170,9 @@ public class SvgConstructor {
 	 * Draws all real robots onto the svg
 	 */
 	public void drawRobots() {
+		if (game.getStage().getWidth() == 0 || game.getStage().getHeight() == 0)
+			return;
+		
 		Map<String, ? extends IRobot> robots = game.getRobots();
 
 		double fieldWidth = svgWidth / game.getStage().getWidth();
@@ -207,6 +215,9 @@ public class SvgConstructor {
 	 * Draws a grid to counteract the random lines between fields... which are ugly.
 	 */
 	public void drawGrid() {
+		if (game.getStage().getWidth() == 0 || game.getStage().getHeight() == 0)
+			return;
+		
 		double fieldWidth = svgWidth / game.getStage().getWidth();
 		double fieldHeight = svgHeight / game.getStage().getHeight();
 		
@@ -249,7 +260,10 @@ public class SvgConstructor {
 	/**
 	 * Draws all virtual robots onto the svg
 	 */
-	public void drawVirtualRobots() {		
+	public void drawVirtualRobots() {	
+		if (game.getStage().getWidth() == 0 || game.getStage().getHeight() == 0)
+			return;
+		
 		Map<String, ? extends IRobot> robots = game.getRobots();
 
 		double fieldWidth = svgWidth / game.getStage().getWidth();
@@ -292,6 +306,9 @@ public class SvgConstructor {
 	 * Draws all start positions as arrows into the svg.
 	 */
 	public void drawStartPositions() {
+		if (game.getStage().getWidth() == 0 || game.getStage().getHeight() == 0)
+			return;
+		
 		List <IPosition> startPositions = game.getStage().getStartPositions();
 
 		double fieldWidth = svgWidth / game.getStage().getWidth();

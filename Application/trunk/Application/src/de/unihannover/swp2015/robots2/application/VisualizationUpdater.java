@@ -1,8 +1,10 @@
 package de.unihannover.swp2015.robots2.application;
 
 import de.unihannover.swp2015.robots2.application.components.StrategicVisualization;
+import de.unihannover.swp2015.robots2.controller.main.GuiMainController;
 import de.unihannover.swp2015.robots2.model.externalInterfaces.IModelObserver;
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
+import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
 
 /**
  * A thread that automatically repaints the visualization.
@@ -10,53 +12,36 @@ import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
  * 
  * @author Tim
  */
-public class VisualizationUpdater extends Thread implements IModelObserver {
+public class VisualizationUpdater implements IModelObserver {
 
 	private boolean updated = false;
-	private boolean running = false;
 	private boolean enabled = true;
 	private StrategicVisualization visualization;
+	private GuiMainController controller;
 	
 	/**
 	 * Construct with reference to visualization component.
 	 * @param visualization A visualization component.
 	 */
-	public VisualizationUpdater(StrategicVisualization visualization) {
+	public VisualizationUpdater(StrategicVisualization visualization, GuiMainController controller) {
 		super();
 		this.visualization = visualization;
+		this.controller = controller;
 	}
 	
 	/**
-	 * Periodically repaints the visualization.
+	 * Repaints the visualization, but only if necessary.
 	 */
-	@Override
-	public void run() {
-		running = true;
-		while (running) {
-			// no updates?
-			if (!updated || !enabled) {
-				try {
-					// sleep for a moment and wait for updates
-					Thread.sleep(100);
-				} catch (InterruptedException e) {
-					// thread got interrupted, stop everything
-					running = false;
-					return;
-				}
-				continue; // go on.
-			}
-			
-			// updates!
-			visualization.update();
-			updated = false;
+	public void update() {
+		// no updates?
+		if (!updated || !enabled) {
+			return;
 		}
-	}
-	
-	/**
-	 * Sets the flag and let the run() function return.
-	 */
-	public synchronized void gentleStop() {
-		running = false;
+			
+		// updates!
+		visualization.update();
+		visualization.repaint();
+		updated = false;
 	}
 	
 	/**
@@ -67,7 +52,7 @@ public class VisualizationUpdater extends Thread implements IModelObserver {
 	}
 	
 	/**
-	 *	Enables the updating
+	 *	Enables the updating.
 	 */
 	public synchronized void enable() {
 		enabled = true;
@@ -79,8 +64,34 @@ public class VisualizationUpdater extends Thread implements IModelObserver {
 	 * @param event A model update event emitted by the controller.
 	 */
 	@Override
-	public synchronized void onModelUpdate(IEvent event) {
-		// almost every type and those that aren't, are unnecessary to filter.
+	public synchronized void onModelUpdate(IEvent event) {		
+		// System.out.println(event.getType().toString());
+		
+		if (event.getType() == IEvent.UpdateType.STAGE_WALL)
+		{
+			// observe to every field
+			for (int x = 0; x != controller.getGame().getStage().getWidth(); ++x) {
+				for (int y = 0; y != controller.getGame().getStage().getHeight(); ++y) {
+					controller.getGame().getStage().getField(x, y).observe(this);;
+				}
+			}
+		}
+		
+		if (event.getType() == IEvent.UpdateType.ROBOT_ADD)
+		{
+			((IRobot)event.getObject()).observe(this);
+		}
+		
+		// ignored events
+		switch(event.getType()) {
+			case ROBOT_PROGRESS:
+			case ROBOT_SCORE:
+			case GAME_PARAMETER:
+				return;
+			default:
+				break;
+		}
+		
 		updated = true;	
 	}	
 	

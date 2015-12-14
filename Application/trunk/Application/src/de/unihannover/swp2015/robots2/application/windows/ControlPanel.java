@@ -131,8 +131,8 @@ public class ControlPanel extends Window implements Bindable {
 					if (sheet.getResult()) {
 						File file = fileBrowserSheet.getSelectedFile();
 						try {
-							// has side effects
 							startVisualizationOnce();
+							// has side effects
 							new MapLoader(controller, file.getAbsolutePath());
 							
 							startGame.setEnabled(true);
@@ -164,14 +164,18 @@ public class ControlPanel extends Window implements Bindable {
 		if (updater != null)
 			return;
 		
-		updater = new VisualizationUpdater(visualization);	
-		controller.getGame().observe(updater);
-		updater.start();
+		updater = new VisualizationUpdater(visualization, controller);
 		
-		ApplicationContext.scheduleRecurringCallback(new Runnable() {
+		// observe stage
+		controller.getGame().getStage().observe(updater);
+		
+		// observe game
+		controller.getGame().observe(updater);
+		
+		ApplicationContext.scheduleRecurringCallback(new Runnable() {			
 			@Override
 			public void run() {
-				visualization.repaint();
+				updater.update();
 			}
 		}, 100);
 	}

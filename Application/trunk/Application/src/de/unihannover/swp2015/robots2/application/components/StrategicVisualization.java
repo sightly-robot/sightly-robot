@@ -64,7 +64,6 @@ public class StrategicVisualization extends Panel implements Bindable {
 		this.controller = controller;
 		
 		svgConstructor = new SvgConstructor(game);
-		update();
 		generateDrawing();
 		setMenuHandler(menuHandler);
 	}
@@ -185,6 +184,8 @@ public class StrategicVisualization extends Panel implements Bindable {
 	 */
 	@Override
 	public synchronized void paint(Graphics2D graphics) {
+		generateDrawing();
+		
 		graphics.scale((double)getWidth() / (double)drawing.getWidth(), (double)getHeight() / (double)drawing.getHeight());
 		
 		// reconstruct the svg from state.
