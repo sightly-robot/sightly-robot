@@ -52,6 +52,7 @@ public interface IResourceHandler extends Disposable {
 	 * The resulting {@link RenderUnit} will be put into an internal map to avoid redundancy.
 	 * <br>
 	 * So it just allocates memory when there is no a appropriate {@link RenderUnit} for the given key.
+	 * If you wan't to use the texture package system you have to use this method, because the renderUnit will get updated automatically.
 	 *  
 	 * @param key key of the texture region
 	 * @return RenderUnit

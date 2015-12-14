@@ -1,5 +1,6 @@
 package de.unihannover.swp2015.robots2.visual.resource;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -7,11 +8,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.utils.Array;
 
+import de.unihannover.swp2015.robots2.visual.resource.ResConst.ResType;
 import de.unihannover.swp2015.robots2.visual.resource.texture.RenderUnit;
 
 /**
@@ -20,7 +23,12 @@ import de.unihannover.swp2015.robots2.visual.resource.texture.RenderUnit;
  * @author Rico Schrage
  */
 public class ResourceHandler implements IResourceHandler {
-
+	
+	/**
+	 * Will be returned if texMap.get(key) == null
+	 */
+	private static final ResConst placeholderKey = ResConst.DEFAULT_FIELD;
+	
 	/**
 	 * Map key->textureRegion.
 	 * <br>
@@ -52,99 +60,60 @@ public class ResourceHandler implements IResourceHandler {
 	 * Hint: <code>renderUnitMap.keySet() subset of (frameSetMap.keySet() union texMap.keySet())</code>.
 	 */
 	private final Map<ResConst, RenderUnit> renderUnitMap;
+		
+	/**
+	 * Base path to the texture themes.
+	 */
+	private final String pathToThemes;
 	
 	/**
 	 * Main textureAtlas.
 	 */
-	private final TextureAtlas texAtlas;
-		
+	private TextureAtlas texAtlas;
+
 	/**
-	 * Will be returned if texMap.get(key) == null
+	 * Current texture pack.
 	 */
-	private static final ResConst placeholderKey = ResConst.DEFAULT_FIELD;
+	private String texPack = ResConst.DEFAULT_THEME.getName();
 	
 	/**
 	 * Constructs ResourceHandler
 	 */
-	public ResourceHandler(final String pathToAtlas) {
+	public ResourceHandler(final String pathToThemes) {
 		this.texMap = new HashMap<>();
 		this.frameSetMap = new HashMap<>();
 		this.renderUnitMap = new HashMap<>();
 		this.fontMap = new HashMap<>();
-		this.texAtlas = new TextureAtlas(Gdx.files.internal(pathToAtlas), true);
-
+		this.pathToThemes = pathToThemes;
+		
 		this.createRegions();
 		this.createFonts();
 	}
 
 	/**
-	 * Helper. Will be replaced soon.
+	 * Creates all textures depending on the resource pack.
 	 */
 	private void createRegions() {
 		
-		final String folder ="default_theme/";
-		final String theme = "grass"; //TODO changing of themes, renaming files, make it changeable more easily
+		this.texMap.clear();
+		this.frameSetMap.clear();
+		this.texAtlas = new TextureAtlas(Gdx.files.internal(getPathToTheme()), true);
 		
-		final TextureRegion wallN = texAtlas.findRegion("wall_n");
-		this.texMap.put(ResConst.DEFAULT_WALL_N, wallN);
-		
-		final TextureRegion wallW = texAtlas.findRegion("wall_w");
-		this.texMap.put(ResConst.DEFAULT_WALL_W, wallW);
-		
-		final TextureRegion wallE = texAtlas.findRegion("wall_e");
-		this.texMap.put(ResConst.DEFAULT_WALL_E, wallE);
-		
-		final TextureRegion wallS = texAtlas.findRegion("wall_s");
-		this.texMap.put(ResConst.DEFAULT_WALL_S, wallS);
-		
-		final TextureRegion wallVRegion = texAtlas.findRegion("wall_v");
-		this.texMap.put(ResConst.DEFAULT_BUBBLE, wallVRegion);
-		
-		final TextureRegion startpos = texAtlas.findRegion("startpos_white");
-		this.texMap.put(ResConst.DEFAULT_STARTPOS, startpos);
-		
-		final Array<TextureAtlas.AtlasRegion> food = texAtlas.findRegions("food");
-		this.texMap.put(ResConst.DEFAULT_RES_1, food.get(0));
-		this.texMap.put(ResConst.DEFAULT_RES_2, food.get(1));
-		this.texMap.put(ResConst.DEFAULT_RES_3, food.get(2));
-		this.texMap.put(ResConst.DEFAULT_RES_4, food.get(3));
-		this.texMap.put(ResConst.DEFAULT_RES_5, food.get(4));
-		this.texMap.put(ResConst.DEFAULT_RES_6, food.get(5));
-		this.texMap.put(ResConst.DEFAULT_RES_7, food.get(6));
-		this.texMap.put(ResConst.DEFAULT_RES_8, food.get(7));
-		this.texMap.put(ResConst.DEFAULT_RES_9, food.get(8));
-		this.texMap.put(ResConst.DEFAULT_RES_10, food.get(9));
-		
-		final TextureRegion robo = texAtlas.findRegion("robo");
-		this.texMap.put(ResConst.DEFAULT_ROBO, robo);
-		
-		final TextureRegion noWay = texAtlas.findRegion(folder+"0_way_tile_"+theme);
-		this.texMap.put(ResConst.DEFAULT_FIELD, noWay);
-
-		final TextureRegion way1 = texAtlas.findRegion(folder+"1_way_tile_"+theme);
-		this.texMap.put(ResConst.DEFAULT_FIELD_1_N, way1);
-		this.texMap.put(ResConst.DEFAULT_FIELD_1_E, way1);
-		this.texMap.put(ResConst.DEFAULT_FIELD_1_S, way1);
-		this.texMap.put(ResConst.DEFAULT_FIELD_1_W, way1);
-		
-		final TextureRegion way2 = texAtlas.findRegion(folder+"2_way_tile_"+theme);
-		this.texMap.put(ResConst.DEFAULT_FIELD_2_N, way2);
-		this.texMap.put(ResConst.DEFAULT_FIELD_2_E, way2);
-		
-		final TextureRegion way3 = texAtlas.findRegion(folder+"3_way_tile_"+theme);
-		this.texMap.put(ResConst.DEFAULT_FIELD_3_N, way3);
-		this.texMap.put(ResConst.DEFAULT_FIELD_3_E, way3);
-		this.texMap.put(ResConst.DEFAULT_FIELD_3_S, way3);
-		this.texMap.put(ResConst.DEFAULT_FIELD_3_W, way3);
-		
-		final TextureRegion way4 = texAtlas.findRegion(folder+"4_way_tile_"+theme);
-		this.texMap.put(ResConst.DEFAULT_FIELD_4, way4);
-		
-		final TextureRegion wayC = texAtlas.findRegion(folder+"curve_tile_"+theme);
-		this.texMap.put(ResConst.DEFAULT_FIELD_C_NE, wayC);
-		this.texMap.put(ResConst.DEFAULT_FIELD_C_ES, wayC);
-		this.texMap.put(ResConst.DEFAULT_FIELD_C_SW, wayC);
-		this.texMap.put(ResConst.DEFAULT_FIELD_C_WN, wayC);
+		//TODO support animations
+		final ResConst[] resConsts = ResConst.values();
+		for (final ResConst res : resConsts) {
+			if (res.getType() == ResType.TEX) {
+				AtlasRegion region = texAtlas.findRegion(res.getName());
+				texMap.put(res, region);
+				if (renderUnitMap.containsKey(res)) {
+					renderUnitMap.get(res).initAsTexture(region);
+				}
+			}
+		}
+	}
+	
+	private String getPathToTheme() {
+		return pathToThemes + File.separator + texPack + File.separator + ResConst.ATLAS_NAME.getName() + ".atlas";
 	}
 	
 	/**
@@ -187,6 +156,7 @@ public class ResourceHandler implements IResourceHandler {
 		else {
 			throw new IllegalArgumentException("No map contains the key: " + key + ".");
 		}
+		this.renderUnitMap.put(key, result);
 		return result;
 	}
 
@@ -240,7 +210,8 @@ public class ResourceHandler implements IResourceHandler {
 	}
 	
 	public void loadTexturePack(final String name) {
-		//TODO implement (optional)
+		this.texPack = name;
+		this.createRegions();
 	}
 
 	@Override

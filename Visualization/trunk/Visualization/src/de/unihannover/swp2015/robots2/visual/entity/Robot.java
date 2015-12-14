@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
 import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
@@ -18,6 +17,7 @@ import de.unihannover.swp2015.robots2.visual.entity.modifier.RotationModifier;
 import de.unihannover.swp2015.robots2.visual.entity.modifier.base.IEntityModifier;
 import de.unihannover.swp2015.robots2.visual.entity.modifier.base.IFinishListener;
 import de.unihannover.swp2015.robots2.visual.resource.ResConst;
+import de.unihannover.swp2015.robots2.visual.resource.texture.RenderUnit;
 import de.unihannover.swp2015.robots2.visual.util.ColorUtil;
 import de.unihannover.swp2015.robots2.visual.util.pref.IPreferencesKey;
 import de.unihannover.swp2015.robots2.visual.util.pref.observer.PreferencesObservable;
@@ -33,7 +33,7 @@ public class Robot extends Entity {
 	/**
 	 * Visual representation of the entity.
 	 */
-	private final TextureRegion robo;
+	private final RenderUnit robo;
 	
 	/**
 	 * Data of the information bubble.
@@ -50,15 +50,14 @@ public class Robot extends Entity {
 	 */
 	private float height;
 	
-	
-	private final TextureRegion startpos;
+	private final RenderUnit startpos;
 	
 	private boolean startp = false;
 	
-	int arrowrot=0;
+	private int arrowrot = 0;
 	
-	float fieldWidth;
-	float fieldHeight;
+	private float fieldWidth;
+	private float fieldHeight;
 	
 	/**
 	 * Constructs a robot entity using given parameters.
@@ -70,10 +69,10 @@ public class Robot extends Entity {
 	public Robot(final IRobot robModel, RobotGameHandler gameHandler) {
 		super(robModel, gameHandler);
 
-		this.robo = resHandler.getRegion(ResConst.DEFAULT_ROBO);
+		this.robo = resHandler.createRenderUnit(ResConst.DEFAULT_ROBO);
 		this.bubble = new Bubble();
 		this.modList = new ArrayList<>();
-		this.startpos = resHandler.getRegion(ResConst.DEFAULT_STARTPOS);
+		this.startpos = resHandler.createRenderUnit(ResConst.DEFAULT_STARTPOS);
 
 		fieldWidth = prefs.getFloat(PrefConst.FIELD_WIDTH_KEY, 42);
 		fieldHeight = prefs.getFloat(PrefConst.FIELD_HEIGHT_KEY, 42);
@@ -99,7 +98,7 @@ public class Robot extends Entity {
 	 * @param fieldHeight field height
 	 */
 	private void initBubble(final IRobot robo, final float fieldWidth, final float fieldHeight) {
-		this.bubble.tex = resHandler.getRegion(ResConst.DEFAULT_BUBBLE);
+		this.bubble.tex = resHandler.createRenderUnit(ResConst.DEFAULT_BUBBLE);
 		this.bubble.color = ColorUtil.fromAwtColor(robo.getColor());
 		this.bubble.color = bubble.color.set(bubble.color.r, bubble.color.g, bubble.color.b, bubble.color.a * 0.7f);
 		this.bubble.font = resHandler.getFont(ResConst.DEFAULT_FONT);
@@ -207,23 +206,22 @@ public class Robot extends Entity {
 		
 		final float newRenderX = robo.getPosition().getX() * fieldWidth + fieldWidth/2 - width/2;
 		final float newRenderY = robo.getPosition().getY() * fieldHeight + fieldHeight/2 - height/2;
-		System.out.println(newRenderX);
-		System.out.println(newRenderY);
-		if (renderX > newRenderX || newRenderX > renderX) 
+
+		if ((int) renderX != (int) newRenderX) 
 			this.registerModifier(new MoveModifierX(this, 0.4f, renderX, newRenderX));
-		if (renderY > newRenderY || newRenderY > renderY) 
+		if ((int) renderY != (int) newRenderY) 
 			this.registerModifier(new MoveModifierY(this, 0.4f, renderY, newRenderY));
 	}
 	
 	@Override
 	public void draw(final Batch batch) {
 		if(this.startp) // TODO check in whole game
-			batch.draw(startpos, renderX, renderY, fieldWidth/2f, fieldHeight/2f, fieldWidth, fieldHeight, 1f, 1f, arrowrot);
+			startpos.draw(batch, renderX, renderY, fieldWidth/2f, fieldHeight/2f, fieldWidth, fieldHeight, 1f, 1f, arrowrot);
 		else{
-			batch.draw(robo, renderX, renderY, width/2f, height/2f, width, height, 1f, 1f, rotation);	
+			robo.draw(batch, renderX, renderY, width/2f, height/2f, width, height, 1f, 1f, rotation);	
 	
 			batch.setColor(bubble.color);		
-			batch.draw(bubble.tex, renderX + bubble.x, renderY + bubble.y, bubble.width, bubble.height);
+			bubble.tex.draw(batch, renderX + bubble.x, renderY + bubble.y, bubble.width, bubble.height);
 			bubble.font.setColor(1-bubble.color.r, 1-bubble.color.g, 1-bubble.color.b, bubble.color.a);
 			bubble.font.draw(batch, bubble.points, renderX + 5 + bubble.x, renderY + 5 + bubble.y);
 			batch.setColor(Color.WHITE);
@@ -296,7 +294,7 @@ public class Robot extends Entity {
 		/**
 		 * Texture of the bubble.
 		 */
-		public TextureRegion tex;
+		public RenderUnit tex;
 		
 		/**
 		 * Width of the bubble.

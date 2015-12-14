@@ -1,61 +1,63 @@
 package de.unihannover.swp2015.robots2.visual.resource;
 
 /**
- * All available keys for resources in {@link IResourceHandler}.
+ * All available keys for resources in {@link IResourceHandler}. 
+ * The names of the enums are the same as the filenames of the packed textures.
  * 
  * @author Rico Schrage
  */
 public enum ResConst {
 	
-	ATLAS_PATH("assets/texturepacker/"),
-	ATLAS_NAME("tiles_default_theme"),
+	ATLAS_PATH("assets/theme/", ResType.PATH),
+	ATLAS_NAME("theme", ResType.PATH),
+	DEFAULT_THEME("default", ResType.PATH),
 	
-	DEFAULT_WALL_N("default_wall_n"),
-	DEFAULT_WALL_W("default_wall_w"),
-	DEFAULT_WALL_E("default_wall_e"),
-	DEFAULT_WALL_S("default_wall_s"),
-	DEFAULT_FIELD("default_field"),
-	DEFAULT_FIELD_1_N("default_field_1_n"),
-	DEFAULT_FIELD_1_E("default_field_1_e"),
-	DEFAULT_FIELD_1_S("default_field_1_s"),
-	DEFAULT_FIELD_1_W("default_field_1_w"),
-	DEFAULT_FIELD_2_N("default_field_2_n"),
-	DEFAULT_FIELD_2_E("default_field_2_e"),
-	DEFAULT_FIELD_3_N("default_field_3_n"),
-	DEFAULT_FIELD_3_E("default_field_3_e"),
-	DEFAULT_FIELD_3_S("default_field_3_s"),
-	DEFAULT_FIELD_3_W("default_field_3_w"),
-	DEFAULT_FIELD_4("default_field_4"),
-	DEFAULT_FIELD_C_NE("default_field_c_ne"),
-	DEFAULT_FIELD_C_ES("default_field_c_es"),
-	DEFAULT_FIELD_C_SW("default_field_c_sw"),
-	DEFAULT_FIELD_C_WN("default_field_c_wn"),
-	DEFAULT_RES_1("default_res_01"),
-	DEFAULT_RES_2("default_res_02"),
-	DEFAULT_RES_3("default_res_03"),
-	DEFAULT_RES_4("default_res_04"),
-	DEFAULT_RES_5("default_res_05"),
-	DEFAULT_RES_6("default_res_06"),
-	DEFAULT_RES_7("default_res_07"),
-	DEFAULT_RES_8("default_res_08"),
-	DEFAULT_RES_9("default_res_09"),
-	DEFAULT_RES_10("default_res_10"),
-	DEFAULT_ROBO("default_robo"),
-	DEFAULT_BUBBLE("default_bubble"),
-	DEFAULT_STARTPOS("default_startpos"),
+	DEFAULT_WALL_N("default_wall_n", ResType.TEX),
+	DEFAULT_WALL_W("default_wall_w", ResType.TEX),
+	DEFAULT_WALL_E("default_wall_e", ResType.TEX),
+	DEFAULT_WALL_S("default_wall_s", ResType.TEX),
+	DEFAULT_FIELD("default_field", ResType.TEX),
+	DEFAULT_FIELD_1("default_field_one", ResType.TEX),
+	DEFAULT_FIELD_2("default_field_two", ResType.TEX),
+	DEFAULT_FIELD_2_CURVE("default_field_2_c", ResType.TEX),
+	DEFAULT_FIELD_3("default_field_three", ResType.TEX),
+	DEFAULT_FIELD_4("default_field_four", ResType.TEX),
+	DEFAULT_RES_1("default_res_one", ResType.TEX),
+	DEFAULT_RES_2("default_res_two", ResType.TEX),
+	DEFAULT_RES_3("default_res_three", ResType.TEX),
+	DEFAULT_RES_4("default_res_four", ResType.TEX),
+	DEFAULT_RES_5("default_res_five", ResType.TEX),
+	DEFAULT_RES_6("default_res_six", ResType.TEX),
+	DEFAULT_RES_7("default_res_seven", ResType.TEX),
+	DEFAULT_RES_8("default_res_eight", ResType.TEX),
+	DEFAULT_RES_9("default_res_nine", ResType.TEX),
+	DEFAULT_RES_10("default_res_ten", ResType.TEX),
+	DEFAULT_ROBO("default_robo", ResType.TEX),
+	DEFAULT_BUBBLE("default_bubble", ResType.TEX),
+	DEFAULT_STARTPOS("default_startpos", ResType.TEX),
 	
-	DEFAULT_FONT("default_font"),
-	DEFAULT_FONT_BIG("default_font_big"),
-	DEFAULT_FONT_TITLE("default_font_title");
+	DEFAULT_FONT("default_font", ResType.FONT),
+	DEFAULT_FONT_BIG("default_font_big", ResType.FONT),
+	DEFAULT_FONT_TITLE("default_font_title", ResType.FONT);
 	
 	private final String name;
+	private final ResType type;
 	
-	private ResConst(final String name) {
+	private ResConst(final String name, final ResType type) {
 		this.name = name;
+		this.type = type;
 	}
 	
 	public String getName() {
 		return name;
+	}
+	
+	public ResType getType() {
+		return type;
+	}
+	
+	public static enum ResType {
+		PATH, TEX, FONT, AUDIO;
 	}
 	
 }

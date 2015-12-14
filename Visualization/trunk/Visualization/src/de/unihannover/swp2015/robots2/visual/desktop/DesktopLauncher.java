@@ -40,12 +40,28 @@ public class DesktopLauncher {
 	
 		ShaderLoader.BasePath = "resources/shaders/";
 
+		/* 
+		* Will be replaced by a standalone packer app.
+		*/
+		
+		// packs all textures of the default theme in a texture atlas
+		// name of the theme "default"
 		Settings packSettings = new Settings();
 		packSettings.maxWidth = 1024*4;
 		packSettings.maxHeight = 1024*4;
 		packSettings.pot = true;
 		packSettings.duplicatePadding = true;
-		TexturePacker.process(packSettings, "assets/tex", ResConst.ATLAS_PATH.getName(), ResConst.ATLAS_NAME.getName());
+		TexturePacker.process(packSettings, "assets/tex/default_theme_src", ResConst.ATLAS_PATH.getName()+ "/default", ResConst.ATLAS_NAME.getName());
+		
+		// packs all textures of the earth theme in a texture atlas
+		// name of the theme "earth"
+		Settings packSettingsEarth = new Settings();
+		packSettingsEarth.maxWidth = 1024*4;
+		packSettingsEarth.maxHeight = 1024*4;
+		packSettingsEarth.pot = true;
+		packSettingsEarth.duplicatePadding = true;
+		TexturePacker.process(packSettingsEarth, "assets/tex/earth_theme_src", ResConst.ATLAS_PATH.getName()+ "/earth", ResConst.ATLAS_NAME.getName());
+		
 		
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.width = (int) viewWidth;

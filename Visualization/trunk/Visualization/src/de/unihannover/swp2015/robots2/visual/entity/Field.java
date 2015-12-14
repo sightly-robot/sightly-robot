@@ -1,7 +1,6 @@
 package de.unihannover.swp2015.robots2.visual.entity;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
 import de.unihannover.swp2015.robots2.model.interfaces.IField;
@@ -11,6 +10,7 @@ import de.unihannover.swp2015.robots2.model.interfaces.IStage;
 import de.unihannover.swp2015.robots2.visual.core.PrefConst;
 import de.unihannover.swp2015.robots2.visual.core.RobotGameHandler;
 import de.unihannover.swp2015.robots2.visual.resource.ResConst;
+import de.unihannover.swp2015.robots2.visual.resource.texture.RenderUnit;
 import de.unihannover.swp2015.robots2.visual.util.StageUtil;
 import de.unihannover.swp2015.robots2.visual.util.pref.IPreferencesKey;
 import de.unihannover.swp2015.robots2.visual.util.pref.observer.PreferencesObservable;
@@ -26,12 +26,12 @@ public class Field extends Entity {
 	/**
 	 * Lookup table for the ground texture, which depends on the placement of walls. 
 	 */
-	private static final ResConst[] FIELD_TEXTURE_LOOKUP = { ResConst.DEFAULT_FIELD_4, ResConst.DEFAULT_FIELD_3_E,
-			ResConst.DEFAULT_FIELD_3_W, ResConst.DEFAULT_FIELD_2_E, ResConst.DEFAULT_FIELD_3_N,
-			ResConst.DEFAULT_FIELD_C_NE, ResConst.DEFAULT_FIELD_C_WN, ResConst.DEFAULT_FIELD_1_S,
-			ResConst.DEFAULT_FIELD_3_S, ResConst.DEFAULT_FIELD_C_ES, ResConst.DEFAULT_FIELD_C_SW,
-			ResConst.DEFAULT_FIELD_1_N, ResConst.DEFAULT_FIELD_2_N, ResConst.DEFAULT_FIELD_1_W,
-			ResConst.DEFAULT_FIELD_1_E, ResConst.DEFAULT_FIELD };
+	private static final ResConst[] FIELD_TEXTURE_LOOKUP = { ResConst.DEFAULT_FIELD_4, ResConst.DEFAULT_FIELD_3,
+			ResConst.DEFAULT_FIELD_3, ResConst.DEFAULT_FIELD_2, ResConst.DEFAULT_FIELD_3,
+			ResConst.DEFAULT_FIELD_2_CURVE, ResConst.DEFAULT_FIELD_2_CURVE, ResConst.DEFAULT_FIELD_1,
+			ResConst.DEFAULT_FIELD_3, ResConst.DEFAULT_FIELD_2_CURVE, ResConst.DEFAULT_FIELD_2_CURVE,
+			ResConst.DEFAULT_FIELD_1, ResConst.DEFAULT_FIELD_2, ResConst.DEFAULT_FIELD_1,
+			ResConst.DEFAULT_FIELD_1, ResConst.DEFAULT_FIELD };
 
 	/**
 	 * Lookup table for the rotation.
@@ -46,7 +46,7 @@ public class Field extends Entity {
 	/**
 	 * Visual representations of the walls.
 	 */
-	private final TextureRegion[] texWall;
+	private final RenderUnit[] texWall;
 	
 	/**
 	 * Resource as entity, based on this <code>model</code>.
@@ -56,7 +56,7 @@ public class Field extends Entity {
 	/**
 	 * Visual representation of the ground.
 	 */
-	private TextureRegion field;
+	private RenderUnit field;
 	
 	float fieldWidth;
 	float fieldHeight;
@@ -77,8 +77,8 @@ public class Field extends Entity {
 		this.parent = parent;
 		
 		this.food = new Resource(model, gameHandler);
-		this.texWall = resHandler.getRegion(ResConst.DEFAULT_WALL_N, ResConst.DEFAULT_WALL_E, ResConst.DEFAULT_WALL_S, ResConst.DEFAULT_WALL_W); 
-		this.field = resHandler.getRegion(ResConst.DEFAULT_FIELD);
+		this.texWall = resHandler.createRenderUnit(ResConst.DEFAULT_WALL_N, ResConst.DEFAULT_WALL_E, ResConst.DEFAULT_WALL_S, ResConst.DEFAULT_WALL_W); 
+		this.field = resHandler.createRenderUnit(ResConst.DEFAULT_FIELD);
 
 		fieldWidth = prefs.getFloat(PrefConst.FIELD_WIDTH_KEY, 50);
 		fieldHeight = prefs.getFloat(PrefConst.FIELD_HEIGHT_KEY, 50);
@@ -114,7 +114,7 @@ public class Field extends Entity {
 		
 		//selects the correct texture + rotation depending on the booleans
 		final int result = StageUtil.convertToInt(dir, 2);
-		this.field = resHandler.getRegion(FIELD_TEXTURE_LOOKUP[result]);
+		this.field = resHandler.createRenderUnit(FIELD_TEXTURE_LOOKUP[result]);
 		this.rotation = FIELD_ROTATION_LOOKUP[result];
 	}
 	
@@ -125,27 +125,27 @@ public class Field extends Entity {
 		fieldHeight = prefs.getFloat(PrefConst.FIELD_HEIGHT_KEY, 50);
 		
 		if (rotation == -90)
-			batch.draw(field, renderX-(fieldWidth-fieldHeight)/2, renderY-(fieldWidth-fieldHeight)/2, fieldWidth/2f, fieldHeight/2f, fieldHeight, fieldWidth, 1f, 1f, rotation);
+			field.draw(batch, renderX-(fieldWidth-fieldHeight)/2, renderY-(fieldWidth-fieldHeight)/2, fieldWidth/2f, fieldHeight/2f, fieldHeight, fieldWidth, 1f, 1f, rotation);
 		else if (rotation == 90)
-			batch.draw(field, renderX+(fieldWidth-fieldHeight)/2, renderY+(fieldWidth-fieldHeight)/2, fieldWidth/2f, fieldHeight/2f, fieldHeight, fieldWidth, 1f, 1f, rotation);
+			field.draw(batch, renderX+(fieldWidth-fieldHeight)/2, renderY+(fieldWidth-fieldHeight)/2, fieldWidth/2f, fieldHeight/2f, fieldHeight, fieldWidth, 1f, 1f, rotation);
 		else
-			batch.draw(field, renderX, renderY, fieldWidth/2f, fieldHeight/2f, fieldWidth, fieldHeight, 1f, 1f, rotation);
+			field.draw(batch, renderX, renderY, fieldWidth/2f, fieldHeight/2f, fieldWidth, fieldHeight, 1f, 1f, rotation);
 
 		food.draw(batch);
 				
 		final IField field = (IField) model;
 		
 		if(field.isWall(IPosition.Orientation.NORTH))
-			batch.draw(texWall[0], renderX, renderY, fieldWidth, fieldHeight);
+			texWall[0].draw(batch, renderX, renderY, fieldWidth, fieldHeight);
 		
 		if(field.isWall(IPosition.Orientation.EAST))
-			batch.draw(texWall[1], renderX, renderY, fieldWidth, fieldHeight);
+			texWall[1].draw(batch, renderX, renderY, fieldWidth, fieldHeight);
 		
 		if(field.isWall(IPosition.Orientation.SOUTH))
-			batch.draw(texWall[2], renderX, renderY, fieldWidth, fieldHeight);
+			texWall[2].draw(batch, renderX, renderY, fieldWidth, fieldHeight);
 		
 		if(field.isWall(IPosition.Orientation.WEST))
-			batch.draw(texWall[3], renderX, renderY, fieldWidth, fieldHeight);
+			texWall[3].draw(batch, renderX, renderY, fieldWidth, fieldHeight);
 		
 		} 
 	

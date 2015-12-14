@@ -44,10 +44,9 @@ public class RenderUnit {
 	 */
 	public void initAsAnimation(final Array<TextureRegion> frames, final Animation.PlayMode playMode,
 			final float duration) {
-		if (this.isAnimation() || this.isTexture())
-			throw new IllegalStateException("You must not initialize it twice!");
-
+		this.tex = null;
 		this.animation = new Animation(duration, frames, playMode);
+		this.stateTime = 0;
 	}
 
 	/**
@@ -57,9 +56,7 @@ public class RenderUnit {
 	 * @param tex {@link TextureRegion}
 	 */
 	public void initAsTexture(final TextureRegion tex) {
-		if (this.isAnimation() || this.isTexture())
-			throw new IllegalStateException("You must not initialize it twice!");
-
+		this.animation = null;
 		this.tex = tex;
 	}
 

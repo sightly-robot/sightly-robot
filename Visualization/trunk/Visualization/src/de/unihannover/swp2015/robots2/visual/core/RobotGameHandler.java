@@ -3,6 +3,8 @@ package de.unihannover.swp2015.robots2.visual.core;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -177,6 +179,11 @@ public class RobotGameHandler extends GameHandler {
 			
 	@Override
 	public void render() {
+		
+		if (Gdx.input.isKeyPressed(Keys.LEFT))
+			this.resHandler.loadTexturePack("default");
+		if (Gdx.input.isKeyPressed(Keys.RIGHT))
+			this.resHandler.loadTexturePack("earth");
 		
 		if (!game.isRunning()) {
 
