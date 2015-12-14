@@ -37,7 +37,7 @@ public class Main implements Application {
     public void startup(Display display, Map<String, String> properties) throws Exception {		
         BXMLSerializer bxmlSerializer = new BXMLSerializer();
         bxmlSerializer.getNamespace().put("application", this);
-        window = (ControlPanel)bxmlSerializer.readObject(getClass().getResource("/de/unihannover/swp2015/robots2/application/ControlPanel.bxml"));
+        window = (ControlPanel)bxmlSerializer.readObject(getClass().getResource("/de/unihannover/swp2015/robots2/application/bxml/ControlPanel.bxml"));
 
 	    this.controller = new GuiMainController();
         window.setController(controller);

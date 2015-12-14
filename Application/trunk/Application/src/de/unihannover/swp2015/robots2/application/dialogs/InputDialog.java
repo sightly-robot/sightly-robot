@@ -9,6 +9,10 @@ import org.apache.pivot.util.Resources;
 import org.apache.pivot.wtk.Dialog;
 import org.apache.pivot.wtk.TextArea;
 
+/**
+ * Dialog for inputting a string.
+ * @author Tim Ebbeke
+ */
 public class InputDialog extends Dialog implements Bindable {
 	@BXML private TextArea textBox; 
 	

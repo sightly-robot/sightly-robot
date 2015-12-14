@@ -12,7 +12,7 @@ public class DialogFactory {
         BXMLSerializer bxmlSerializer = new BXMLSerializer();
         InputDialog dialog = null;
 		try {
-			dialog = (InputDialog)bxmlSerializer.readObject(DialogFactory.class.getResource("/de/unihannover/swp2015/robots2/application/InputDialog.bxml"));
+			dialog = (InputDialog)bxmlSerializer.readObject(DialogFactory.class.getResource("/de/unihannover/swp2015/robots2/application/bxml/InputDialog.bxml"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (SerializationException e) {

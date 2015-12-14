@@ -28,11 +28,9 @@ import de.unihannover.swp2015.robots2.application.dialogs.DialogFactory;
 import de.unihannover.swp2015.robots2.application.dialogs.InputDialog;
 import de.unihannover.swp2015.robots2.application.svg.SvgConstructor;
 import de.unihannover.swp2015.robots2.controller.main.GuiMainController;
-import de.unihannover.swp2015.robots2.model.implementation.Position;
 import de.unihannover.swp2015.robots2.model.implementation.Robot;
 import de.unihannover.swp2015.robots2.model.interfaces.IGame;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition;
-import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
 
 /**
  * An apache pivot component for displaying a game. 
@@ -80,8 +78,8 @@ public class StrategicVisualization extends Panel implements Bindable {
 			Menu.Section menuSection = new Menu.Section();
             menu.getSections().add(menuSection);
             
-            final int rx = (int)(game.getStage().getWidth() * (double)x / (double)StrategicVisualization.this.getWidth());
-            final int ry = (int)(game.getStage().getWidth() * (double)y / (double)StrategicVisualization.this.getHeight());
+            final int rx = (int)(game.getStage().getWidth() * ((double)x / (double)StrategicVisualization.this.getWidth()));
+            final int ry = (int)(game.getStage().getWidth() * ((double)y / (double)StrategicVisualization.this.getHeight()));
 			
             // Get Coordinate
             Menu.Item getCoord = new Menu.Item("Get Coordinate");
@@ -112,8 +110,6 @@ public class StrategicVisualization extends Panel implements Bindable {
             				break;
             			}
             		}
-            		found = true;
-            		startPos = new Position(2, 3, Orientation.EAST);
             		
             		if (!found) {
 						Alert.alert(MessageType.ERROR, "Cannot place robot on field, that is not a start position", StrategicVisualization.this.getWindow());
@@ -141,7 +137,7 @@ public class StrategicVisualization extends Panel implements Bindable {
 	 * @throws IOException Throws if the svg is invalid.
 	 */
 	private void loadDefault() throws IOException {
-		InputStream stream = ClassLoader.class.getResourceAsStream("/de/unihannover/swp2015/robots2/application/LoadMap.svg");
+		InputStream stream = ClassLoader.class.getResourceAsStream("/de/unihannover/swp2015/robots2/application/svg/LoadMap.svg");
 		
 		SVGDiagramSerializer serializer = new SVGDiagramSerializer();
 		SVGDiagram diagram;

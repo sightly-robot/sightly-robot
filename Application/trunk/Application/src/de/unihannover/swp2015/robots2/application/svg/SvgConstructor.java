@@ -54,7 +54,7 @@ public class SvgConstructor {
 	 * @param name The svg name in the resources.
 	 */
 	private URI loadSvgResource(String name) {
-		InputStream stream = ResourceLoader.loadResourceAsInputStream("/de/unihannover/swp2015/robots2/application/" + name + ".svg");		
+		InputStream stream = ResourceLoader.loadResourceAsInputStream("/de/unihannover/swp2015/robots2/application/svg/" + name + ".svg");		
 		Reader rd = new InputStreamReader(stream); 
 		return universe.loadSVG(rd, "/" + name);
 	}
@@ -192,7 +192,7 @@ public class SvgConstructor {
 					robot.addAttribute(
 						"xlink:href", 
 						AnimationElement.AT_XML, 
-						SvgConstructor.class.getResource("/de/unihannover/swp2015/robots2/application/Lawnmower.svg").toURI().toString()
+						SvgConstructor.class.getResource("/de/unihannover/swp2015/robots2/application/svg/Lawnmower.svg").toURI().toString()
 					);
 				} catch (URISyntaxException e) {}
 				
@@ -283,7 +283,7 @@ public class SvgConstructor {
 					robot.addAttribute(
 						"xlink:href", 
 						AnimationElement.AT_XML, 
-						SvgConstructor.class.getResource("/de/unihannover/swp2015/robots2/application/Virtual.svg").toURI().toString()
+						SvgConstructor.class.getResource("/de/unihannover/swp2015/robots2/application/svg/Virtual.svg").toURI().toString()
 					);
 				} catch (URISyntaxException e) {}
 				
@@ -318,7 +318,7 @@ public class SvgConstructor {
 			for (IPosition pos : startPositions) {
 				Path path = new Path();
 				try {
-					path.addAttribute("d", AnimationElement.AT_XML, ResourceLoader.loadResourceAsString("/de/unihannover/swp2015/robots2/application/Arrow.txt"));
+					path.addAttribute("d", AnimationElement.AT_XML, ResourceLoader.loadResourceAsString("/de/unihannover/swp2015/robots2/application/svg/Arrow.txt"));
 				} catch (IOException | URISyntaxException e) {
 					// ignore - cannot happen
 					e.printStackTrace();

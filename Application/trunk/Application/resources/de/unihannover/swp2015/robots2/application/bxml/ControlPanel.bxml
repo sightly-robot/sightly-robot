@@ -54,7 +54,7 @@
 										<TableView bxml:id="participantTable" x="8" y="192" width="373" height="300"
 												   styles="{backgroundColor:'#303030'}">
 											<columns>
-												<TableView.Column width="270" name="player" headerData="Spieler"/>
+												<TableView.Column name="player" width="270" headerData="Spieler"/>
 												<TableView.Column name="points" headerData="Punkte"/>
 											</columns>
 										</TableView>

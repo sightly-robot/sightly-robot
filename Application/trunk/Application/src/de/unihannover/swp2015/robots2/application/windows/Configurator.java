@@ -8,13 +8,11 @@ import org.apache.pivot.beans.Bindable;
 import org.apache.pivot.collections.Map;
 import org.apache.pivot.collections.Sequence;
 import org.apache.pivot.util.Resources;
-import org.apache.pivot.wtk.Component;
 import org.apache.pivot.wtk.TabPane;
 import org.apache.pivot.wtk.TextArea;
 import org.apache.pivot.wtk.TextArea.Paragraph;
 import org.apache.pivot.wtk.TextAreaContentListener;
 import org.apache.pivot.wtk.Window;
-import org.apache.pivot.wtk.skin.terra.TerraTabPaneSkin;
 
 import de.unihannover.swp2015.robots2.application.models.GeneralOptions;
 
@@ -85,8 +83,6 @@ public class Configurator extends Window implements Bindable
 		public void textChanged(TextArea self) {
 			if (!self.getText().matches("(?:\\b6553[0-5]|655[0-2](?:[0-9]){1}|65[0-4](?:[0-9]){2}|6[0-4](?:[0-9]){3}|[1-5](?:[0-9]){4}|(?:[0-9]){4}|(?:[0-9]){3}|(?:[0-9]){2}|(?:[0-9]){1}\\b)")) {
 				// not a valid port
-				// FIXME: indicate for user in non intrusive way, maybe set textbox backgroundColor to
-				// rgb = 246, 66, 66
 				self.getStyles().put("backgroundColor", new Color(246, 66, 66));
 			} 
 			else {

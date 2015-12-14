@@ -1,4 +1,4 @@
-package de.unihannover.swp2015.robots2.application;
+package de.unihannover.swp2015.robots2.application.observers;
 
 import de.unihannover.swp2015.robots2.application.components.StrategicVisualization;
 import de.unihannover.swp2015.robots2.controller.main.GuiMainController;
@@ -10,11 +10,11 @@ import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
  * A thread that automatically repaints the visualization.
  * Repainting from an event is discouraged, because its expensive.
  * 
- * @author Tim
+ * @author Tim Ebbeke
  */
 public class VisualizationUpdater implements IModelObserver {
 
-	private boolean updated = false;
+	private volatile boolean updated = false;
 	private boolean enabled = true;
 	private StrategicVisualization visualization;
 	private GuiMainController controller;
@@ -27,6 +27,12 @@ public class VisualizationUpdater implements IModelObserver {
 		super();
 		this.visualization = visualization;
 		this.controller = controller;
+		
+		// observe stage
+		controller.getGame().getStage().observe(this);
+		
+		// observe game
+		controller.getGame().observe(this);
 	}
 	
 	/**

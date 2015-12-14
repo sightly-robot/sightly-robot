@@ -27,9 +27,10 @@ import org.apache.pivot.wtk.Window;
 import org.json.JSONException;
 
 import de.unihannover.swp2015.robots2.application.MapLoader;
-import de.unihannover.swp2015.robots2.application.VisualizationUpdater;
 import de.unihannover.swp2015.robots2.application.components.StrategicVisualization;
 import de.unihannover.swp2015.robots2.application.exceptions.InvalidMapFile;
+import de.unihannover.swp2015.robots2.application.observers.ListUpdater;
+import de.unihannover.swp2015.robots2.application.observers.VisualizationUpdater;
 import de.unihannover.swp2015.robots2.controller.main.GuiMainController;
 
 import org.apache.pivot.wtk.DesktopApplicationContext;
@@ -55,7 +56,10 @@ public class ControlPanel extends Window implements Bindable {
 	
 	// Visualization
 	@BXML private StrategicVisualization visualization;
-	private VisualizationUpdater updater;
+	
+	// Updaters
+	private VisualizationUpdater visualizationUpdater;
+	private ListUpdater listUpdater;
 	
 	private GuiMainController controller;
 	private Configurator configurator;
@@ -88,7 +92,7 @@ public class ControlPanel extends Window implements Bindable {
 		try {
 			BXMLSerializer bxmlSerializer = new BXMLSerializer();
 	        bxmlSerializer.getNamespace().put("application", this);
-	        this.configurator = (Configurator)bxmlSerializer.readObject(getClass().getResource("/de/unihannover/swp2015/robots2/application/Configurator.bxml"));
+	        this.configurator = (Configurator)bxmlSerializer.readObject(getClass().getResource("/de/unihannover/swp2015/robots2/application/bxml/Configurator.bxml"));
 			configurator.setPreferredSize(initialWidth, initialHeight);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -131,7 +135,7 @@ public class ControlPanel extends Window implements Bindable {
 					if (sheet.getResult()) {
 						File file = fileBrowserSheet.getSelectedFile();
 						try {
-							startVisualizationOnce();
+							startAutoUpdateOnce();
 							// has side effects
 							new MapLoader(controller, file.getAbsolutePath());
 							
@@ -158,24 +162,20 @@ public class ControlPanel extends Window implements Bindable {
 	 * Start visualization and automatic updating.
 	 * Won't restart it if already runs.
 	 */
-	public void startVisualizationOnce() {
+	public void startAutoUpdateOnce() {
 		visualization.setGame(controller, controller.getGame());
 		
-		if (updater != null)
+		if (visualizationUpdater != null)
 			return;
 		
-		updater = new VisualizationUpdater(visualization, controller);
-		
-		// observe stage
-		controller.getGame().getStage().observe(updater);
-		
-		// observe game
-		controller.getGame().observe(updater);
+		visualizationUpdater = new VisualizationUpdater(visualization, controller);
+		listUpdater = new ListUpdater(participantTable, controller);
 		
 		ApplicationContext.scheduleRecurringCallback(new Runnable() {			
 			@Override
 			public void run() {
-				updater.update();
+				visualizationUpdater.update();
+				listUpdater.update();
 			}
 		}, 100);
 	}
