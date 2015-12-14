@@ -85,10 +85,18 @@ public class MapLoader {
 			for (int x = 0; x < row.length(); ++x) {
 				JSONObject fieldObject = row.getJSONObject(x); // gef field object 
 				
-				if (fieldObject.has("growthRate"))
-					growingRates.get(growingRates.size() - 1).add(new Integer(fieldObject.getInt("growthRate")));
-				if (fieldObject.has("initialResources"))
-					food.get(food.size() - 1).add(new Integer(fieldObject.getInt("initialResources")));
+				if (fieldObject.has("growthRate")) {
+					Integer gr = new Integer(fieldObject.getInt("growthRate"));
+					if (gr <= 0)
+						throw new InvalidMapFile("The growth rate must be larger than 0");
+					growingRates.get(growingRates.size() - 1).add(gr);
+				}
+				if (fieldObject.has("initialResources")) {
+					Integer ir = new Integer(fieldObject.getInt("initialResources"));
+					if (ir < 0)
+						throw new InvalidMapFile("The initial resources must be positive");
+					food.get(food.size() - 1).add(ir);
+				}
 				if (fieldObject.has("possibleDirections")) {
 					String str = fieldObject.getString("possibleDirections");
 					String w = "nesw";
