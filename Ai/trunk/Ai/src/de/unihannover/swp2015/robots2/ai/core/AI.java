@@ -17,6 +17,7 @@ import de.unihannover.swp2015.robots2.robot.interfaces.AbstractAI;
 public class AI extends AbstractAI implements IModelObserver {
 
 	private IField nextField;
+	private Orientation nextOrientation;
 	private AIGraph graph; // volatile
 
 	private IGame game;
@@ -85,7 +86,8 @@ public class AI extends AbstractAI implements IModelObserver {
 				IField field = (IField) event.getObject();
 				Node node = myself.getPosition();
 
-				if (game.isRunning()) {
+				//TODO nullpointerexception possible?
+				if (game.isRunning() && this.nextField == field) {
 					switch (field.getState()) {
 					case OURS:
 						if (field.getX() == node.getX() + 1 && field.getY() == node.getY()) {
@@ -106,12 +108,43 @@ public class AI extends AbstractAI implements IModelObserver {
 					case FREE:
 						break;
 					case LOCKED:
-						break;
+						//break;
 					case LOCK_WAIT:
-						break;
+						//break;
 					case OCCUPIED:
-						break;
+						//break;
 					case RANDOM_WAIT:
+						try {
+							Orientation nextOrientation = getNextOrientation();
+							int x = myself.getPosition().getX();
+							int y = myself.getPosition().getY();
+							/*
+							 * Calculate next node position
+							 */
+							switch (nextOrientation) {
+							case NORTH: 
+								y -= 1;
+								break;
+							case EAST:
+								x += 1;
+								break;
+							case SOUTH:
+								y += 1;
+								break;
+							case WEST:
+								x -= 1;
+								break;
+							default:
+								break;
+							}
+							
+							iRobotController.requestField(x, y);
+							this.nextField = this.game.getStage().getField(x, y);
+							this.nextOrientation = nextOrientation;
+							
+						} catch (NoValidOrientationException e) {
+							e.printStackTrace();
+						}
 						break;
 					default:
 						break;
@@ -190,6 +223,8 @@ public class AI extends AbstractAI implements IModelObserver {
 									// Lock if free
 									case FREE:
 										iRobotController.requestField(x, y);
+										this.nextField = this.game.getStage().getField(x, y);
+										this.nextOrientation = nextOrientation;
 										break;
 									// No need to use LOCKED state at the moment
 									case LOCKED:
