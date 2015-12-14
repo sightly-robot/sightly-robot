@@ -10,14 +10,19 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.apache.pivot.beans.BXML;
 import org.apache.pivot.beans.BXMLSerializer;
 import org.apache.pivot.beans.Bindable;
+import org.apache.pivot.collections.List;
 import org.apache.pivot.collections.Map;
 import org.apache.pivot.serialization.SerializationException;
 import org.apache.pivot.util.Resources;
+import org.apache.pivot.wtk.Action;
 import org.apache.pivot.wtk.Alert;
 import org.apache.pivot.wtk.ApplicationContext;
 import org.apache.pivot.wtk.Button;
 import org.apache.pivot.wtk.ButtonPressListener;
+import org.apache.pivot.wtk.Component;
 import org.apache.pivot.wtk.FileBrowserSheet;
+import org.apache.pivot.wtk.Menu;
+import org.apache.pivot.wtk.MenuHandler;
 import org.apache.pivot.wtk.MessageType;
 import org.apache.pivot.wtk.PushButton;
 import org.apache.pivot.wtk.Sheet;
@@ -29,9 +34,12 @@ import org.json.JSONException;
 import de.unihannover.swp2015.robots2.application.MapLoader;
 import de.unihannover.swp2015.robots2.application.components.StrategicVisualization;
 import de.unihannover.swp2015.robots2.application.exceptions.InvalidMapFile;
-import de.unihannover.swp2015.robots2.application.observers.ListUpdater;
+import de.unihannover.swp2015.robots2.application.models.TableData;
+import de.unihannover.swp2015.robots2.application.models.TableElement;
+import de.unihannover.swp2015.robots2.application.observers.TableObserver;
 import de.unihannover.swp2015.robots2.application.observers.VisualizationUpdater;
 import de.unihannover.swp2015.robots2.controller.main.GuiMainController;
+import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
 
 import org.apache.pivot.wtk.DesktopApplicationContext;
 import org.apache.pivot.wtk.Display;
@@ -46,10 +54,11 @@ public class ControlPanel extends Window implements Bindable {
 	@BXML private PushButton startGame;
 	@BXML private PushButton pauseGame;
 	@BXML private PushButton stopGame;
-	@BXML private PushButton startProjection;
 	@BXML private PushButton openConfiguration;
 	@BXML private PushButton closeVisualization;
 	@BXML private PushButton connectButton;
+	@BXML private PushButton blinkButton;
+	@BXML private PushButton stopRobotButton;
 
 	// Participants table
 	@BXML private TableView participantTable; 
@@ -57,11 +66,14 @@ public class ControlPanel extends Window implements Bindable {
 	// Visualization
 	@BXML private StrategicVisualization visualization;
 	
-	// Updaters
+	// Oberservers
 	private VisualizationUpdater visualizationUpdater;
-	private ListUpdater listUpdater;
+	private TableObserver tableObserver;
 	
+	// Other Controllers
 	private GuiMainController controller;
+	
+	// Windows
 	private Configurator configurator;
 	
 	/**
@@ -82,7 +94,37 @@ public class ControlPanel extends Window implements Bindable {
 		stopGame.getButtonPressListeners().add(stopGameAction);
 		pauseGame.getButtonPressListeners().add(pauseGameAction);
 		connectButton.getButtonPressListeners().add(connectAction);
+		blinkButton.getButtonPressListeners().add(blinkAction);
+		stopRobotButton.getButtonPressListeners().add(stopRobotAction);
 	}	
+	
+	/**
+	 * Button for letting a robot blink.
+	 */
+	private ButtonPressListener blinkAction = new ButtonPressListener() {
+
+		@Override
+		public void buttonPressed(Button button) {
+			TableElement elem = tableObserver.getSelected();
+			if (elem != null) {
+				controller.letRobotBlink(elem.getId());
+			}
+		}		
+	};
+	
+	/**
+	 * Button to stop a robot (maybe disqualification) 
+	 */
+	private ButtonPressListener stopRobotAction = new ButtonPressListener() {
+		
+		@Override
+		public void buttonPressed(Button button) {
+			TableElement elem = tableObserver.getSelected();
+			if (elem != null) {
+				controller.deleteRobot(elem.getId());
+			}
+		}
+	};
 	
 	/**
 	 * Creates the control panel controller.
@@ -169,13 +211,13 @@ public class ControlPanel extends Window implements Bindable {
 			return;
 		
 		visualizationUpdater = new VisualizationUpdater(visualization, controller);
-		listUpdater = new ListUpdater(participantTable, controller);
+		tableObserver = new TableObserver(participantTable, controller);
 		
 		ApplicationContext.scheduleRecurringCallback(new Runnable() {			
 			@Override
 			public void run() {
 				visualizationUpdater.update();
-				listUpdater.update();
+				tableObserver.update();
 			}
 		}, 100);
 	}

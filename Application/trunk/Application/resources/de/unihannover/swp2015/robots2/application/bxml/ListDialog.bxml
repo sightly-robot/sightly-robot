@@ -1,0 +1,15 @@
+<dialogs:ListDialog bxml:id="dialog" title="Dialog" modal="true"
+    xmlns:bxml="http://pivot.apache.org/bxml"
+    xmlns:dialogs="de.unihannover.swp2015.robots2.application.dialogs"
+    xmlns="org.apache.pivot.wtk"
+	preferredWidth="400"
+	preferredHeight="350"
+>	
+	<FillPane styles="{padding:4, spacing:4}">
+		<ScrollPane
+					horizontalScrollBarPolicy="fill"
+					verticalScrollBarPolicy="fill_to_capacity">
+			<ListView bxml:id="list" selectMode="single"/>
+		</ScrollPane>
+	</FillPane>	
+</dialogs:ListDialog>

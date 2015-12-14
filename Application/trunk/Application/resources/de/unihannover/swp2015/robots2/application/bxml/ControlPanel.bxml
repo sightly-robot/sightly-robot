@@ -44,8 +44,11 @@
 									<TablePane.Column width="1*"/>									
 								</columns>
 								
-								<TablePane.Row height="24">
-									<PushButton bxml:id="startProjection" styles="{font:{size:16}, color:'#FFFFFF', backgroundColor:'#505050'}" buttonData="Visualisierung Starten"/>
+								<TablePane.Row height="32">
+									<FillPane styles="{padding:4}">
+										<PushButton bxml:id="blinkButton" styles="{font:{size:16}, color:'#FFFFFF', backgroundColor:'#505050'}" buttonData="Indentify"/>
+										<PushButton bxml:id="stopRobotButton" styles="{font:{size:16}, color:'#FFFFFF', backgroundColor:'#505050'}" buttonData="Delete Robot"/>
+									</FillPane>
 								</TablePane.Row>
 								
 								<TablePane.Row height="1*">

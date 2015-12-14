@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ClassLoader;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.pivot.collections.Map;
@@ -26,11 +28,13 @@ import com.kitfox.svg.SVGDiagram;
 
 import de.unihannover.swp2015.robots2.application.dialogs.DialogFactory;
 import de.unihannover.swp2015.robots2.application.dialogs.InputDialog;
+import de.unihannover.swp2015.robots2.application.dialogs.ListDialog;
 import de.unihannover.swp2015.robots2.application.svg.SvgConstructor;
 import de.unihannover.swp2015.robots2.controller.main.GuiMainController;
 import de.unihannover.swp2015.robots2.model.implementation.Robot;
 import de.unihannover.swp2015.robots2.model.interfaces.IGame;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition;
+import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
 
 /**
  * An apache pivot component for displaying a game. 
@@ -96,9 +100,7 @@ public class StrategicVisualization extends Panel implements Bindable {
             Menu.Item placeRobot = new Menu.Item("Place Robot Here");
             placeRobot.setAction(new Action() {
             	@Override
-            	public void perform(Component source) {
-        			// debug
-        			
+            	public void perform(Component source) {        			
             		List <IPosition> startPositions = game.getStage().getStartPositions();
             		// does not allow if the selected position is no start position!
             		Boolean found = false;
@@ -114,14 +116,24 @@ public class StrategicVisualization extends Panel implements Bindable {
             		if (!found) {
 						Alert.alert(MessageType.ERROR, "Cannot place robot on field, that is not a start position", StrategicVisualization.this.getWindow());
             		} else {
+            			// compile robot list
+            			final List<IRobot> robots = new ArrayList<IRobot>();
+            			org.apache.pivot.collections.List <String> shownList = new org.apache.pivot.collections.ArrayList <String>();
+            			for (IRobot robot : game.getRobots().values()) {
+            				shownList.add(robot.getName());
+            				robots.add(robot);
+            			}
+            			
             			final IPosition sp = startPos;
-            			DialogFactory.createInputDialog(StrategicVisualization.this.getWindow(), new DialogCloseListener() {
+            			DialogFactory.createListDialog(StrategicVisualization.this.getWindow(), new DialogCloseListener() {
 							@Override
-							public void dialogClosed(Dialog dialog, boolean modal) { 
+							public void dialogClosed(Dialog dialog, boolean modal) {
+								ListDialog listDialog = (ListDialog)dialog;
+								controller.getGame().getRobots().get(robots.get(listDialog.getSelectedIndex()));
 		            			Robot robo = new Robot(((InputDialog)dialog).getText(), false, false);
-		            			StrategicVisualization.this.controller.setRobotPosition(rx, ry, sp.getOrientation(), robo);							
+		            			StrategicVisualization.this.controller.setRobotPosition(rx, ry, sp.getOrientation(), robo);						
 							}
-						});
+            			}, shownList);
             		}
             	}
             });
