@@ -20,7 +20,6 @@ public enum SoftwareState implements IState {
 
 	private static double DURATION = 2000;
 
-	private double progress = 0.0;
 	private long startTime;
 
 	private SoftwareState() {
