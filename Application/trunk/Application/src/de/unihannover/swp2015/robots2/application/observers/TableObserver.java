@@ -3,8 +3,6 @@ package de.unihannover.swp2015.robots2.application.observers;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.apache.pivot.collections.ArrayList;
-import org.apache.pivot.collections.List;
 import org.apache.pivot.wtk.TableView;
 
 import de.unihannover.swp2015.robots2.application.models.TableData;
