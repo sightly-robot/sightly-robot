@@ -33,6 +33,8 @@ import de.unihannover.swp2015.robots2.application.models.TableElement;
 import de.unihannover.swp2015.robots2.application.observers.TableObserver;
 import de.unihannover.swp2015.robots2.application.observers.VisualizationUpdater;
 import de.unihannover.swp2015.robots2.controller.main.GuiMainController;
+import de.unihannover.swp2015.robots2.model.externalInterfaces.IModelObserver;
+import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
 
 import org.apache.pivot.wtk.DesktopApplicationContext;
 import org.apache.pivot.wtk.Display;
@@ -209,6 +211,16 @@ public class ControlPanel extends Window implements Bindable {
 		ApplicationContext.scheduleRecurringCallback(new Runnable() {			
 			@Override
 			public void run() {
+				boolean synced = controller.getGame().isSynced();
+				
+				loadMap.setEnabled(synced);
+				startGame.setEnabled(synced);
+				pauseGame.setEnabled(synced);
+				stopGame.setEnabled(synced);
+				blinkButton.setEnabled(synced);
+				stopRobotButton.setEnabled(synced);
+				
+				visualization.setConnectionState(synced);
 				visualizationUpdater.update();
 				tableObserver.update();
 			}

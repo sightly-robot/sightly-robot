@@ -44,6 +44,8 @@ public class StrategicVisualization extends Panel implements Bindable {
 	private SvgConstructor svgConstructor;
 	private IGame game;
 	private GuiMainController controller;
+	private boolean synced = true;
+	private Drawing errorDrawing;
 	
 	/**
 	 * Constructor loads default svg.
@@ -54,6 +56,9 @@ public class StrategicVisualization extends Panel implements Bindable {
 		
 		// load default svg
 		loadDefault();	
+		
+		// load error svg
+		loadConnectionLost();
 	}
 	
 	/**
@@ -143,17 +148,30 @@ public class StrategicVisualization extends Panel implements Bindable {
 		}
 	};
 	
+	public void setConnectionState(boolean synced) {
+		this.synced = synced; 
+	}
+	
 	/**
 	 * Loads a default svg into the viewport. We cannot display a map before the user loaded any.
 	 * @throws IOException Throws if the svg is invalid.
 	 */
 	private void loadDefault() throws IOException {
+		InputStream stream = ClassLoader.class.getResourceAsStream("/de/unihannover/swp2015/robots2/application/svg/ConnectionLost.svg");
+		
+		SVGDiagramSerializer serializer = new SVGDiagramSerializer();
+		SVGDiagram diagram;
+		diagram = serializer.readObject(stream);
+		errorDrawing = new Drawing(diagram);
+	}
+	
+	private void loadConnectionLost() throws IOException {
 		InputStream stream = ClassLoader.class.getResourceAsStream("/de/unihannover/swp2015/robots2/application/svg/LoadMap.svg");
 		
 		SVGDiagramSerializer serializer = new SVGDiagramSerializer();
 		SVGDiagram diagram;
 		diagram = serializer.readObject(stream);
-		drawing = new Drawing(diagram);
+		drawing = new Drawing(diagram);		
 	}
 	
 	/**
@@ -191,13 +209,19 @@ public class StrategicVisualization extends Panel implements Bindable {
 	 */
 	@Override
 	public synchronized void paint(Graphics2D graphics) {
-		generateDrawing();
 		
-		graphics.scale((double)getWidth() / (double)drawing.getWidth(), (double)getHeight() / (double)drawing.getHeight());
-		
-		// reconstruct the svg from state.
-		if (drawing != null)	
-			drawing.paint(graphics);
+		if (synced) {
+			generateDrawing();
+			if (drawing != null) {
+				graphics.scale((double)getWidth() / (double)drawing.getWidth(), (double)getHeight() / (double)drawing.getHeight());
+				drawing.paint(graphics);
+			}
+		} else {
+			if (errorDrawing != null) {
+				graphics.scale((double)getWidth() / (double)errorDrawing.getWidth(), (double)getHeight() / (double)errorDrawing.getHeight());
+				errorDrawing.paint(graphics);
+			}			
+		}
 		
 		super.paint(graphics);
 	}

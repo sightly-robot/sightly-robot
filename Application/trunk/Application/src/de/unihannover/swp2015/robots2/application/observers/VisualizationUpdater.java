@@ -99,6 +99,10 @@ public class VisualizationUpdater implements IModelObserver {
 		}
 		
 		updated = true;	
+	}
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;		
 	}	
 	
 }
