@@ -106,6 +106,9 @@ public class AI extends AbstractAI implements IModelObserver {
 						}
 						break;
 					case FREE:
+						int xCoord =  this.nextField.getX();
+						int yCoord = this.nextField.getY();
+						iRobotController.requestField(xCoord, yCoord);
 						break;
 					case LOCKED:
 						//break;
