@@ -33,8 +33,6 @@ import de.unihannover.swp2015.robots2.application.models.TableElement;
 import de.unihannover.swp2015.robots2.application.observers.TableObserver;
 import de.unihannover.swp2015.robots2.application.observers.VisualizationUpdater;
 import de.unihannover.swp2015.robots2.controller.main.GuiMainController;
-import de.unihannover.swp2015.robots2.model.externalInterfaces.IModelObserver;
-import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
 
 import org.apache.pivot.wtk.DesktopApplicationContext;
 import org.apache.pivot.wtk.Display;
@@ -261,6 +259,7 @@ public class ControlPanel extends Window implements Bindable {
 	private ButtonPressListener startGameAction = new ButtonPressListener() {
 		@Override
 		public void buttonPressed(Button button) {
+			controller.resetGame();
 			controller.startGame();
 		}
 	};
@@ -282,7 +281,6 @@ public class ControlPanel extends Window implements Bindable {
 		@Override
 		public void buttonPressed(Button button) {
 			controller.stopGame();
-			//controller.resetGame();
 		}
 	};
 	
