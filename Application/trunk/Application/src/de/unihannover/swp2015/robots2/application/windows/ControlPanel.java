@@ -219,6 +219,8 @@ public class ControlPanel extends Window implements Bindable {
 				stopGame.setEnabled(synced);
 				blinkButton.setEnabled(synced);
 				stopRobotButton.setEnabled(synced);
+
+				connectButton.setEnabled(synced);
 				
 				visualization.setConnectionState(synced);
 				visualizationUpdater.update();
