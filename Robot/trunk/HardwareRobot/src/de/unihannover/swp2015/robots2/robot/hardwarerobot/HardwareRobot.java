@@ -25,7 +25,7 @@ public class HardwareRobot extends AbstractRobot {
 	public HardwareRobot(String brokerIP) {
 		super(true,brokerIP);
 		// PreInitialize Controller Instances:
-		BlinkLEDAndServoController.getInstance();
+		BlinkLEDAndServoController.getInstance().setAccentColor(robotController.getMyself().getColor());;
 		Pi2GoGPIOController.getInstance();
 		MotorController.getInstance();
 		// SoundController.getInstance();
