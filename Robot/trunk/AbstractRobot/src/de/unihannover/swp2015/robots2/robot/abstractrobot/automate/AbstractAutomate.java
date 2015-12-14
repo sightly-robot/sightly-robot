@@ -177,6 +177,25 @@ public abstract class AbstractAutomate implements AiEventObserver, Runnable {
 			return false;
 		}
 	}
+	
+	public boolean setState(IState iState) {
+		synchronized (state) {
+			if (state.isWait()) {
+				// set new state
+				state = iState;
+				state.start();
+
+				// measurements
+				lastWaitTime = System.currentTimeMillis();
+
+				synchronized (automation) {
+					automation.notify();
+				}
+				return true;
+			}
+			return false;
+		}
+	}
 
 	@Override
 	public void nextButOneOrientationEvent(Orientation orientation) {
