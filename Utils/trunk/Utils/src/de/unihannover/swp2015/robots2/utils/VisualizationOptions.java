@@ -109,6 +109,30 @@ public class VisualizationOptions {
 	}
 	
 	/**
+	 * Creates a new VisualizationOptions class with default values.
+	 * @return A new VisualizationOptions class with all things set.
+	 */
+	public static VisualizationOptions createDefault() {
+		VisualizationOptions options = new VisualizationOptions();
+		
+		options.abscissaOffset = Optional.of(1.0f);
+		options.ordinateOffset = Optional.of(1.0f);
+		options.abscissaScale = Optional.of(1.0f);
+		options.ordinateScale = Optional.of(1.0f);
+		
+		options.perspectiveTransformation = Optional.of(1.0f);
+		
+		options.renderWalls = Optional.of(true);
+		options.renderResources = Optional.of(true);
+		options.renderName = Optional.of(true);
+		options.renderScore = Optional.of(true);
+		options.renderRobots = Optional.of(false);
+		options.renderVirtualRobots = Optional.of(true);
+		
+		return options;
+	}
+	
+	/**
 	 * Takes all values from parameter "options" that aren't specified in this instance.
 	 * Does not overwrite any set variables of this instance.
 	 * @param options Another VisualizationOptions object to take values from.
