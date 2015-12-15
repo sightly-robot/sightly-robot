@@ -8,13 +8,22 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
+/**
+ * A VisualizationOptions class holds all necessary options for the visualization.
+ * VisualizationOptions can be read from json and written to json. Only set members
+ * are actually serialized and read from. 
+ * In order to make this behaviour useful, two more methods are provided two merge 
+ * VisualizationOptions classes to fill in missing or overwrite missing members. 
+ * Useful for sending only what is necessary. 
+ * 
+ * @author Tim Ebbeke
+ */
 public class VisualizationOptions {
 	private Optional<Float> abscissaOffset;
 	private Optional<Float> ordinateOffset;
 	private Optional<Float> abscissaScale;
 	private Optional<Float> ordinateScale;
 	
-	// FIXME: how should this be represented?
 	private Optional<Float> perspectiveTransformation;
 	
 	private Optional<Boolean> renderWalls;
