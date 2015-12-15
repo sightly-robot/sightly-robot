@@ -5,7 +5,6 @@ import java.util.List;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 
 import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
@@ -15,6 +14,7 @@ import de.unihannover.swp2015.robots2.visual.core.base.IGameHandler;
 import de.unihannover.swp2015.robots2.visual.core.base.IRenderable;
 import de.unihannover.swp2015.robots2.visual.resource.IResourceHandler;
 import de.unihannover.swp2015.robots2.visual.resource.ResConst;
+import de.unihannover.swp2015.robots2.visual.resource.texture.RenderUnit;
 import de.unihannover.swp2015.robots2.visual.util.pref.IPreferences;
 import de.unihannover.swp2015.robots2.visual.util.pref.IPreferencesKey;
 import de.unihannover.swp2015.robots2.visual.util.pref.observer.IPreferencesObserver;
@@ -65,7 +65,7 @@ public class UI implements IRenderable, IPreferencesObserver {
 	/**
 	 * Texture for the background of the ui.
 	 */
-	private final TextureRegion background;
+	private final RenderUnit background;
 	
 	/**
 	 * Color of the background texture.
@@ -98,7 +98,7 @@ public class UI implements IRenderable, IPreferencesObserver {
 		this.font.setColor(Color.BLACK);
 		this.fontTitle = res.getFont(ResConst.DEFAULT_FONT_TITLE);
 		this.fontTitle.setColor(Color.BLACK);
-		this.background = res.getRegion(ResConst.DEFAULT_BUBBLE);
+		this.background = res.createRenderUnit(ResConst.DEFAULT_BUBBLE);
 		this.color = new Color(1, 1, 1, 0.7f);
 		this.startBg = new Color(1,1,1,0.3f);
 		
@@ -115,13 +115,13 @@ public class UI implements IRenderable, IPreferencesObserver {
 				
 		if (robotList.size() == 0 || !display) {
 			batch.setColor(startBg);
-			batch.draw(background, rect.x, rect.y, rect.width, rect.height);
+			background.draw(batch, rect.x, rect.y, rect.width, rect.height);
 			fontTitle.draw(batch, GameConst.UI_NO_DATA,
 					rect.x + GameConst.UI_PADDING_ABS, rect.y + GameConst.UI_TOP_ABS + GameConst.UI_PADDING_ABS);
 		}
 		else {		
 			batch.setColor(color);
-			batch.draw(background, rect.x, rect.y, rect.width, rect.height);
+			background.draw(batch, rect.x, rect.y, rect.width, rect.height);
 			fontTitle.draw(batch, GameConst.UI_TITLE,
 					rect.x + GameConst.UI_PADDING_ABS, rect.y + GameConst.UI_PADDING_ABS);
 			for (int i = 0; i < robotList.size(); ++i) {
