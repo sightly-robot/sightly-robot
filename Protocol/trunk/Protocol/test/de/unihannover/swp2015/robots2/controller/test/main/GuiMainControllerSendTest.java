@@ -1,6 +1,6 @@
 package de.unihannover.swp2015.robots2.controller.test.main;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,10 +35,11 @@ public class GuiMainControllerSendTest {
 	}
 
 	/**
-	 * Test sending messages to control/state to start and stop the game.
+	 * Test sending messages to control/state to start and stop the game. And
+	 * the one for resets.
 	 */
 	@Test
-	public void testStartStop() throws Exception {
+	public void testStartStopReset() throws Exception {
 		// Test
 		this.guiController.startGame();
 		Thread.sleep(100);
@@ -59,6 +60,11 @@ public class GuiMainControllerSendTest {
 
 		// Cleanup retained message
 		this.receiver.sendMessage("control/state", null, true);
+
+		// Test reset game
+		this.guiController.resetGame();
+		Thread.sleep(100);
+		assertNotNull(receiveHandler.getValue("extension/2/control/reset"));
 	}
 
 	/**
@@ -222,8 +228,31 @@ public class GuiMainControllerSendTest {
 		assertEquals(expectedString,
 				this.receiveHandler.getValue("extension/2/map/startpositions"));
 
-		this.receiver.sendMessage("extension/2/robot/startpositions", null,
-				true);
+		// Clean up
+		this.receiver.sendMessage("extension/2/map/startpositions", null, true);
+	}
+
+	/**
+	 * Test disable robot, delete robot.
+	 */
+	@Test
+	public void testUtilities() throws Exception {
+		// Test disable robot
+		this.guiController.disableRobot("1a2b3c4d");
+		Thread.sleep(100);
+		assertEquals("y",
+				receiveHandler.getValue("extension/2/robot/state/1a2b3c4d"));
+
+		// Test delete robot
+		this.guiController.deleteRobot("1a2b3c4d");
+		Thread.sleep(100);
+		assertEquals("", receiveHandler.getValue("robot/type/1a2b3c4d"));
+
+		// No clean up needed, as controller should automatically clean up
+		// but we will check if there are clean up message from the controller:
+		assertEquals("", receiveHandler.getValue("robot/position/1a2b3c4d"));
+		assertEquals("", receiveHandler.getValue("extension/2/robot/state/1a2b3c4d"));
+		
 	}
 
 	/**
@@ -231,7 +260,8 @@ public class GuiMainControllerSendTest {
 	 */
 	private void restartReceiver() throws Exception {
 		this.receiveHandler = new TestReceiveHandler();
-		this.receiver = new MqttController("junit_receiver" + UUID.randomUUID().toString(), receiveHandler,
+		this.receiver = new MqttController("junit_receiver"
+				+ UUID.randomUUID().toString(), receiveHandler,
 				Arrays.asList(new String[] { "#" }));
 		this.receiver.connect("tcp://localhost");
 	}

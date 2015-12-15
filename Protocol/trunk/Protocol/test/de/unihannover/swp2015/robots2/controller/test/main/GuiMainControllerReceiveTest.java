@@ -22,6 +22,7 @@ import de.unihannover.swp2015.robots2.model.interfaces.IField;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
 import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
+import de.unihannover.swp2015.robots2.model.interfaces.IRobot.RobotState;
 import de.unihannover.swp2015.robots2.model.interfaces.IStage;
 
 public class GuiMainControllerReceiveTest {
@@ -82,6 +83,7 @@ public class GuiMainControllerReceiveTest {
 			public IRobot robot;
 			public int count;
 			public int countState;
+			public int countProgress;
 
 			@Override
 			public void onModelUpdate(IEvent event) {
@@ -89,6 +91,9 @@ public class GuiMainControllerReceiveTest {
 				case ROBOT_POSITION:
 					this.count++;
 					this.robot = (IRobot) event.getObject();
+					break;
+				case ROBOT_PROGRESS:
+					this.countProgress++;
 					break;
 				case ROBOT_STATE:
 					this.countState++;
@@ -116,7 +121,8 @@ public class GuiMainControllerReceiveTest {
 		assertEquals(2, r.getPosition().getY());
 		assertEquals(Orientation.WEST, r.getPosition().getOrientation());
 		assertEquals(r, observer.robot);
-		assertEquals(1, observer.count);
+		assertEquals(1, observer.count); // Position event shoud fire
+		assertEquals(1, observer.countProgress); // and progress also
 
 		// Update progress
 		sender.sendMessage("extension/2/robot/progress/1a2b3c4d", "250", false);
@@ -124,20 +130,110 @@ public class GuiMainControllerReceiveTest {
 
 		assertEquals(250, r.getPosition().getProgress());
 		assertEquals(r, observer.robot);
-		assertEquals(2, observer.count);
+		assertEquals(1, observer.count); // No position event fired
+		assertEquals(2, observer.countProgress); // but progress event fired
 
-		// Perform SET_POSITION
+		// Perform SET_POSITION which now should not affect the position or
+		// state of robot
 		sender.sendMessage("robot/setposition/1a2b3c4d", "2,4,e", false);
 		Thread.sleep(100);
 
-		assertEquals(2, r.getPosition().getX());
-		assertEquals(4, r.getPosition().getY());
-		assertEquals(Orientation.EAST, r.getPosition().getOrientation());
+		assertEquals(1, r.getPosition().getX());
+		assertEquals(2, r.getPosition().getY());
+		assertEquals(RobotState.CONNECTED, r.getState());
+		assertEquals(1, observer.count);
+		assertEquals(0, observer.countState);
+
+		// Perform position again, which should also reset progress
+		sender.sendMessage("robot/position/1a2b3c4d", "0,2,w", false);
+		Thread.sleep(100);
+
 		assertEquals(0, r.getPosition().getProgress());
-		assertEquals(true, r.isSetupState());
+		assertEquals(3, observer.countProgress);
+
+	}
+
+	@Test
+	public void testRobotState() throws Exception {
+		class TestRobotModelObserver implements IModelObserver {
+			public IRobot robot;
+			public int count;
+
+			@Override
+			public void onModelUpdate(IEvent event) {
+				switch (event.getType()) {
+				case ROBOT_STATE:
+					this.count++;
+					this.robot = (IRobot) event.getObject();
+					break;
+				default:
+					break;
+				}
+			}
+		}
+
+		// Add robot
+		sender.sendMessage("robot/type/1a2b3c4d", "virtual", false);
+		Thread.sleep(200);
+		IRobot r = this.guiController.getGame().getRobots().get("1a2b3c4d");
+
+		// Observe robot
+		TestRobotModelObserver observer = new TestRobotModelObserver();
+		r.observe(observer);
+
+		// The robot should be in connected state initially
+		assertEquals(RobotState.CONNECTED, r.getState());
+		assertEquals(0, observer.count);
+
+		// Now it encounters a robotics error (a bit strange, I know)
+		sender.sendMessage("extension/2/robot/state/1a2b3c4d",
+				RobotState.ROBOTICS_ERROR.toString(), false);
+		Thread.sleep(100);
+
+		assertEquals(RobotState.ROBOTICS_ERROR, r.getState());
+		assertEquals(1, observer.count);
 		assertEquals(r, observer.robot);
+
+		// But another GUI assigns a new position and the robot goes to
+		// setup state
+		sender.sendMessage("extension/2/robot/state/1a2b3c4d",
+				RobotState.SETUPSTATE.toString(), false);
+		Thread.sleep(100);
+
+		assertEquals(RobotState.SETUPSTATE, r.getState());
+		assertEquals(2, observer.count);
+		
+		// And finally the robot is ready
+		sender.sendMessage("extension/2/robot/state/1a2b3c4d",
+				RobotState.ENABLED.toString(), false);
+		Thread.sleep(100);
+
+		assertEquals(RobotState.ENABLED, r.getState());
 		assertEquals(3, observer.count);
-		assertEquals(1, observer.countState);
+		
+		// But now it loses connection
+		sender.sendMessage("event/error/robot/1a2b3c4d/connection",
+				"error", false);
+		Thread.sleep(100);
+
+		assertEquals(RobotState.DISCONNECTED, r.getState());
+		assertEquals(4, observer.count);
+		
+		// Which should not change if it disables itself
+		sender.sendMessage("extension/2/robot/state/1a2b3c4d",
+				"x", false);
+		Thread.sleep(100);
+
+		assertEquals(RobotState.DISCONNECTED, r.getState());
+		assertEquals(5, observer.count); // The event will still fire 
+		
+		// But after reconnect the status change should be visible
+		sender.sendMessage("event/error/robot/1a2b3c4d/connection",
+				null,false);
+		Thread.sleep(100);
+
+		assertEquals(RobotState.MANUAL_DISABLED_ROBOT, r.getState());
+		assertEquals(6, observer.count); 
 	}
 
 	@Test

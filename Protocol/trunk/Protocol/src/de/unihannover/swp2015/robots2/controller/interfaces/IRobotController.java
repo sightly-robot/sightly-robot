@@ -83,7 +83,7 @@ public interface IRobotController extends IController {
 	 * Remove this robot from the game. The robot will be erased completely from
 	 * all parts of the game.
 	 */
-	public void deleteRobot();
+	public void deleteMyself();
 
 	/**
 	 * Returns an Robot instance of the robot on which this thread is running..

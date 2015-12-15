@@ -254,8 +254,8 @@ public class GuiMainController extends AbstractMainController implements
 	public void deleteRobot(String id) {
 		// Delete robot and retained messages concerning it
 		this.sendMqttMessage(MqttTopic.ROBOT_TYPE, id, null);
-
 		this.sendMqttMessage(MqttTopic.ROBOT_POSITION, id, null);
+		this.sendMqttMessage(MqttTopic.ROBOT_STATE, id, null);
 
 		// Release all fields occupied by this robot
 		for (int x = 0; x < this.game.getStage().getWidth(); x++) {

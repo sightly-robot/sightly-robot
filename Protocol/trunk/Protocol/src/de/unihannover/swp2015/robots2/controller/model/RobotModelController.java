@@ -132,7 +132,7 @@ public class RobotModelController {
 		if (r == null || r.isMyself())
 			return;
 
-		r.setRobotConnectionState(!message.equals(""));
+		r.setRobotConnectionState(message.equals(""));
 		r.emitEvent(UpdateType.ROBOT_STATE);
 	}
 }

@@ -115,9 +115,8 @@ public class RobotMainController extends AbstractMainController implements
 
 				// Occupy target field and release old fields
 				this.occupyField(x, y);
-				List<IFieldWriteable> ourFields = this.stageModelController
-						.getOurFields();
-				for (IFieldWriteable ourField : ourFields) {
+				for (IFieldWriteable ourField : this.stageModelController
+						.getOurFields()) {
 					this.releaseField(ourField.getX(), ourField.getY());
 				}
 
@@ -295,8 +294,15 @@ public class RobotMainController extends AbstractMainController implements
 	}
 
 	@Override
-	public void deleteRobot() {
+	public void deleteMyself() {
 		sendMqttMessage(MqttTopic.ROBOT_TYPE, this.myself.getId(), null);
+		sendMqttMessage(MqttTopic.ROBOT_STATE, this.myself.getId(), null);
+		sendMqttMessage(MqttTopic.ROBOT_POSITION, this.myself.getId(), null);
+		for (IFieldWriteable ourField : this.stageModelController
+				.getOurFields()) {
+			this.releaseField(ourField.getX(), ourField.getY());
+		}
+
 	}
 
 	@Override

@@ -32,7 +32,7 @@ public enum MqttTopic {
 	 */
 	ROBOT_BLINK("robot/blink/+", false),
 	
-	ROBOT_STATE("extension/2/robot/state/+", false),
+	ROBOT_STATE("extension/2/robot/state/+", true),
 
 	MAP_WALLS("map/walls", true),
 
