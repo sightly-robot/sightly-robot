@@ -63,24 +63,27 @@ public interface IRobotWriteable extends IRobot, IAbstractModelWriteable {
 	public void setScore(int score);
 
 	/**
-	 * Set this Robot to setup state.
+	 * Set this robot's state.
 	 * 
-	 * This should happen after the robot got its start position and should be
-	 * revoked when the game is started or the user indicates the robot is ready
-	 * and in position.
+	 * See {@link RobotState} for further details on this. The disconnected
+	 * state should not be set with this method as robot state but as
+	 * robotConnection flag with {@link #setRobotConnectionState(boolean)}.
 	 * 
-	 * @param setupState
-	 *            If the robot is currently in setupState
+	 * @param state
+	 *            new state of the robot (if connected)
 	 */
-	public void setSetupState(boolean setupState);
+	public void setRobotState(RobotState state);
 
 	/**
-	 * Set this Robot to error state or back to normal operation.
+	 * Set the robot connected flag.
 	 * 
-	 * This should happen when the robot broadcasts an error message.
+	 * Changing this flag will not affect the stored robot state but is used by
+	 * {@link IRobot#getState()} to overwrite the current state with
+	 * Disconnected.
 	 * 
-	 * @param errorState
+	 * @param state
+	 *            true if the robot is currently connected
 	 */
-	public void setErrorState(boolean errorState);
+	public void setRobotConnectionState(boolean state);
 
 }

@@ -12,13 +12,12 @@ import de.unihannover.swp2015.robots2.controller.externalInterfaces.IVisualizati
 import de.unihannover.swp2015.robots2.controller.interfaces.IGuiController;
 import de.unihannover.swp2015.robots2.controller.mqtt.MqttController;
 import de.unihannover.swp2015.robots2.controller.mqtt.MqttTopic;
-import de.unihannover.swp2015.robots2.model.interfaces.IEvent.UpdateType;
 import de.unihannover.swp2015.robots2.model.interfaces.IField;
 import de.unihannover.swp2015.robots2.model.interfaces.IField.State;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
 import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
-import de.unihannover.swp2015.robots2.model.writeableInterfaces.IRobotWriteable;
+import de.unihannover.swp2015.robots2.model.interfaces.IRobot.RobotState;
 
 /**
  * Main controller specialized for control guis.
@@ -38,7 +37,8 @@ public class GuiMainController extends AbstractMainController implements
 
 		// Start MQTTController
 		try {
-			String clientId = "gui_" + UUID.randomUUID().toString().substring(0,8);
+			String clientId = "gui_"
+					+ UUID.randomUUID().toString().substring(0, 8);
 			String[] subscribeTopics = { "robot/#", "extension/2/robot/#",
 					"map/walls", "map/food", "map/food/+", "map/occupied/#",
 					"event/error/robot/#", "extension/2/settings/#",
@@ -56,7 +56,7 @@ public class GuiMainController extends AbstractMainController implements
 			return;
 
 		String key = mqtttopic.getKey(topic);
-		
+
 		switch (mqtttopic) {
 
 		case ROBOT_TYPE:
@@ -64,9 +64,11 @@ public class GuiMainController extends AbstractMainController implements
 			break;
 
 		case ROBOT_POSITION:
-		case ROBOT_SETPOSITION:
-			this.robotModelController.mqttRobotPosition(key, message,
-					mqtttopic == MqttTopic.ROBOT_SETPOSITION);
+			this.robotModelController.mqttRobotPosition(key, message);
+			break;
+
+		case ROBOT_STATE:
+			this.robotModelController.mqttRobotState(key, message);
 			break;
 
 		case ROBOT_PROGRESS:
@@ -115,10 +117,7 @@ public class GuiMainController extends AbstractMainController implements
 			break;
 
 		case EVENT_ERROR_ROBOT_CONNECTION:
-		case EVENT_ERROR_ROBOT_ROBOTICS:
-			IRobotWriteable r = this.game.getRobotsWriteable().get(key);
-			r.setErrorState(true);
-			r.emitEvent(UpdateType.ROBOT_STATE);
+			this.robotModelController.mqttRobotConnectionState(key, message);
 			break;
 
 		case SETTINGS_ROBOT_RESPONSE:
@@ -223,9 +222,7 @@ public class GuiMainController extends AbstractMainController implements
 
 	@Override
 	public void resetGame() {
-		// Reset robots' scores
-		for (IRobot r : this.game.getRobots().values())
-			this.sendMqttMessage(MqttTopic.ROBOT_SCORE, r.getId(), "0");
+		this.sendMqttMessage(MqttTopic.CONTROL_RESET, null, "reset");
 	}
 
 	@Override
@@ -255,7 +252,7 @@ public class GuiMainController extends AbstractMainController implements
 
 	@Override
 	public void deleteRobot(String id) {
-		// Delete robot
+		// Delete robot and retained messages concerning it
 		this.sendMqttMessage(MqttTopic.ROBOT_TYPE, id, null);
 
 		this.sendMqttMessage(MqttTopic.ROBOT_POSITION, id, null);
@@ -270,6 +267,12 @@ public class GuiMainController extends AbstractMainController implements
 							+ "-" + y, "");
 			}
 		}
+	}
+
+	@Override
+	public void disableRobot(String id) {
+		this.sendMqttMessage(MqttTopic.ROBOT_STATE, id,
+				RobotState.MANUAL_DISABLED_GUI.toString());
 	}
 
 	@Override

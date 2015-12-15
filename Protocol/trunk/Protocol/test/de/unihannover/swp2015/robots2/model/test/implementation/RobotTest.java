@@ -57,25 +57,5 @@ public class RobotTest {
 		assertEquals(5, robot.getScore());
 	}
 	
-	@Test
-	public void testStates() {
-		String uuid = UUID.randomUUID().toString().substring(0, 8);
-		Robot robot = new Robot(uuid, true, false);
-		
-		assertEquals(false, robot.isSetupState());
-		assertEquals(false, robot.isErrorState());
-		
-		robot.setErrorState(true);
-		assertEquals(false, robot.isSetupState());
-		assertEquals(true, robot.isErrorState());
-		
-		robot.setSetupState(true);
-		assertEquals(true, robot.isSetupState());
-		assertEquals(true, robot.isErrorState());
-		
-		robot.setErrorState(false);
-		assertEquals(true, robot.isSetupState());
-		assertEquals(false, robot.isErrorState());
-	}
 
 }

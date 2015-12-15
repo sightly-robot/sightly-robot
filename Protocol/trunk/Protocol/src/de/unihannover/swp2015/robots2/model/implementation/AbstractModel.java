@@ -36,15 +36,21 @@ public abstract class AbstractModel implements IAbstractModel,
 	@Override
 	public void observe(IModelObserver observer) {
 		observerlock.writeLock().lock();
-		this.observers.add(observer);
-		observerlock.writeLock().unlock();
+		try {
+			this.observers.add(observer);
+		} finally {
+			observerlock.writeLock().unlock();
+		}
 	}
 
 	@Override
 	public void unobserve(IModelObserver observer) {
 		observerlock.writeLock().lock();
-		this.observers.remove(observer);
-		observerlock.writeLock().unlock();
+		try {
+			this.observers.remove(observer);
+		} finally {
+			observerlock.writeLock().unlock();
+		}
 	}
 
 	@Override

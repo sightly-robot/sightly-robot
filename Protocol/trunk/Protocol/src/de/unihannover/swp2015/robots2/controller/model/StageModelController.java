@@ -156,9 +156,9 @@ public class StageModelController {
 				int growingRate = Integer.parseInt(parts[i]);
 				f.setGrowingRate(growingRate);
 			}
-			
+
 			this.stage.emitEvent(UpdateType.STAGE_GROWINGRATE);
-			
+
 		} catch (NumberFormatException e) {
 		}
 	}
@@ -224,15 +224,16 @@ public class StageModelController {
 	/**
 	 * Returns all fields from the stage, which are hold by us.
 	 * 
-	 * @return a list of formated strings for the mqtt-message
+	 * @return a list of references to all fields occupied by us.
 	 */
-	public List<String> getOurFields() {
-		List<String> occupiedFields = new ArrayList<>();
+	public List<IFieldWriteable> getOurFields() {
+		List<IFieldWriteable> occupiedFields = new ArrayList<>();
 
 		for (int y = 0; y < this.stage.getHeight(); y++) {
 			for (int x = 0; x < this.stage.getWidth(); x++) {
-				if (this.stage.getField(x, y).getState() == State.OURS) {
-					occupiedFields.add(x + "-" + y);
+				IFieldWriteable f = this.stage.getFieldWriteable(x, y);
+				if (f.getState() == State.OURS) {
+					occupiedFields.add(f);
 				}
 			}
 		}

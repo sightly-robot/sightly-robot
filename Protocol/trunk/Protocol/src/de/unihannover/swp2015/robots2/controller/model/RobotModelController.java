@@ -4,6 +4,7 @@ import java.util.Map;
 
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent.UpdateType;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
+import de.unihannover.swp2015.robots2.model.interfaces.IRobot.RobotState;
 import de.unihannover.swp2015.robots2.model.writeableInterfaces.IRobotWriteable;
 
 /**
@@ -28,14 +29,10 @@ public class RobotModelController {
 	 * @param setPosition
 	 *            true if the MQTT topic was ROBOT_SETPOSITION
 	 */
-	public void mqttRobotPosition(String key, String message,
-			boolean setPosition) {
+	public void mqttRobotPosition(String key, String message) {
 		IRobotWriteable r = this.robots.get(key);
 
-		// Only update position if other robot or explicit external command to
-		// reset position.
-		if (r != null && (setPosition || !r.isMyself())) {
-
+		if (r != null && !r.isMyself()) {
 			try {
 				String[] positionParts = message.split(",");
 
@@ -45,11 +42,6 @@ public class RobotModelController {
 				r.setProgress(0);
 				r.emitEvent(UpdateType.ROBOT_POSITION);
 				r.emitEvent(UpdateType.ROBOT_PROGRESS);
-
-				if (setPosition) {
-					r.setSetupState(true);
-					r.emitEvent(UpdateType.ROBOT_STATE);
-				}
 			} catch (NumberFormatException e) {
 			}
 		}
@@ -95,12 +87,52 @@ public class RobotModelController {
 		} catch (NumberFormatException e) {
 		}
 	}
-	
-	public void mqttRobotReady(String key) {
+
+	/**
+	 * Handle a robot state update/set that was received via MQTT topic
+	 * ROBOT_STATE.
+	 * 
+	 * @param key
+	 *            Robot id extracted from MQTT topic
+	 * @param message
+	 *            MQTT message payload containing the encoded robot state
+	 */
+	public void mqttRobotState(String key, String message) {
+		RobotState state = RobotState.getBy(message);
 		IRobotWriteable r = this.robots.get(key);
-		if( r != null ) {
-			r.setSetupState(false);
-			r.emitEvent(UpdateType.ROBOT_STATE);
-		}
+
+		// Break if invalid parameters received
+		if (r == null || state == null)
+			return;
+
+		// The state of a robot can only be changed from outside the robot on a
+		// manual disable from gui. All other status updates should be sent by
+		// the robot itself and therefore ignored when returning.
+		if (r.isMyself() && state != RobotState.MANUAL_DISABLED_GUI)
+			return;
+
+		r.setRobotState(state);
+		r.emitEvent(UpdateType.ROBOT_STATE);
+	}
+
+	/**
+	 * Handle a robot disconnect (or reconnect) messge received via MQTT topic
+	 * EVENT_ROBOT_CONNECTION.
+	 * 
+	 * @param key
+	 *            Robot id extracted from MQTT topic
+	 * @param message
+	 *            MQTT message payload to check if disconnect or reconnect of
+	 *            robot.
+	 */
+	public void mqttRobotConnectionState(String key, String message) {
+		IRobotWriteable r = this.robots.get(key);
+
+		// Break if invalid parameters received
+		if (r == null || r.isMyself())
+			return;
+
+		r.setRobotConnectionState(!message.equals(""));
+		r.emitEvent(UpdateType.ROBOT_STATE);
 	}
 }
