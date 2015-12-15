@@ -9,13 +9,13 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 
 public class VisualizationOptions {
-	private Optional<Double> abscissaOffset;
-	private Optional<Double> ordinateOffset;
-	private Optional<Double> abscissaScale;
-	private Optional<Double> ordinateScale;
+	private Optional<Float> abscissaOffset;
+	private Optional<Float> ordinateOffset;
+	private Optional<Float> abscissaScale;
+	private Optional<Float> ordinateScale;
 	
 	// FIXME: how should this be represented?
-	private Optional<Double> perspectiveTransformation;
+	private Optional<Float> perspectiveTransformation;
 	
 	private Optional<Boolean> renderWalls;
 	private Optional<Boolean> renderResources;
@@ -73,19 +73,19 @@ public class VisualizationOptions {
 		JSONObject options = new JSONObject(tokenizer).getJSONObject("options"); 
 		
 		// X, Y Offset & Scaling
-		double xOff = options.optDouble("abscissaOffset");
-		double yOff = options.optDouble("ordinateOffset");
-		double xSca = options.optDouble("abscissaScale");
-		double ySca = options.optDouble("ordinateScale");
-		double pT = options.optDouble("perspectiveTransformation");
+		float xOff = (float) options.optDouble("abscissaOffset");
+		float yOff = (float) options.optDouble("ordinateOffset");
+		float xSca = (float) options.optDouble("abscissaScale");
+		float ySca = (float) options.optDouble("ordinateScale");
+		float pT = (float) options.optDouble("perspectiveTransformation");
 		
-		abscissaOffset = Optional.ofNullable(Double.isNaN(xOff) ? null : xOff);
-		ordinateOffset = Optional.ofNullable(Double.isNaN(yOff) ? null : yOff);
-		abscissaScale = Optional.ofNullable(Double.isNaN(xSca) ? null : xSca);
-		ordinateScale = Optional.ofNullable(Double.isNaN(ySca) ? null : ySca);
+		abscissaOffset = Optional.ofNullable(Float.isNaN(xOff) ? null : xOff);
+		ordinateOffset = Optional.ofNullable(Float.isNaN(yOff) ? null : yOff);
+		abscissaScale = Optional.ofNullable(Float.isNaN(xSca) ? null : xSca);
+		ordinateScale = Optional.ofNullable(Float.isNaN(ySca) ? null : ySca);
 		
 		// Transformation
-		perspectiveTransformation = Optional.ofNullable(Double.isNaN(pT) ? null : pT);
+		perspectiveTransformation = Optional.ofNullable(Float.isNaN(pT) ? null : pT);
 		
 		// Boolean flags
 		try { renderWalls = Optional.of(options.getBoolean("renderWalls")); } catch (JSONException exc) { renderWalls = Optional.empty(); }
@@ -171,44 +171,44 @@ public class VisualizationOptions {
 			this.renderVirtualRobots = options.renderVirtualRobots;
 	}
 
-	public Optional<Double> getAbscissaOffset() {
+	public Optional<Float> getAbscissaOffset() {
 		return abscissaOffset;
 	}
 
-	public void setAbscissaOffset(double abscissaOffset) {
-		this.abscissaOffset = Optional.<Double>of(abscissaOffset);
+	public void setAbscissaOffset(float abscissaOffset) {
+		this.abscissaOffset = Optional.<Float>of(abscissaOffset);
 	}
 
-	public Optional<Double> getOrdinateOffset() {
+	public Optional<Float> getOrdinateOffset() {
 		return ordinateOffset;
 	}
 
-	public void setOrdinateOffset(double ordinateOffset) {
-		this.ordinateOffset = Optional.<Double>of(ordinateOffset);
+	public void setOrdinateOffset(float ordinateOffset) {
+		this.ordinateOffset = Optional.<Float>of(ordinateOffset);
 	}
 
-	public Optional<Double> getAbscissaScale() {
+	public Optional<Float> getAbscissaScale() {
 		return abscissaScale;
 	}
 
-	public void setAbscissaScale(double abscissaScale) {
-		this.abscissaScale = Optional.<Double>of(abscissaScale);
+	public void setAbscissaScale(float abscissaScale) {
+		this.abscissaScale = Optional.<Float>of(abscissaScale);
 	}
 
-	public Optional<Double> getOrdinateScale() {
+	public Optional<Float> getOrdinateScale() {
 		return ordinateScale;
 	}
 
-	public void setOrdinateScale(double ordinateScale) {
-		this.ordinateScale = Optional.<Double>of(ordinateScale);
+	public void setOrdinateScale(float ordinateScale) {
+		this.ordinateScale = Optional.<Float>of(ordinateScale);
 	}
 
-	public Optional<Double> getPerspectiveTransformation() {
+	public Optional<Float> getPerspectiveTransformation() {
 		return perspectiveTransformation;
 	}
 
-	public void setPerspectiveTransformation(double perspectiveTransformation) {
-		this.perspectiveTransformation = Optional.<Double>of(perspectiveTransformation);
+	public void setPerspectiveTransformation(float perspectiveTransformation) {
+		this.perspectiveTransformation = Optional.<Float>of(perspectiveTransformation);
 	}
 
 	public Optional<Boolean> doesRenderWalls() {
