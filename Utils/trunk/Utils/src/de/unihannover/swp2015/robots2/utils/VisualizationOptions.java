@@ -97,6 +97,18 @@ public class VisualizationOptions {
 	}
 	
 	/**
+	 * Convenience method to convert json directly into VisualizationOptions. 
+	 * @param jsonData A json string.
+	 * @return A fresh visualization object.
+	 * 
+	 */
+	public static VisualizationOptions createFromJson(String jsonData) {
+		VisualizationOptions options = new VisualizationOptions();
+		options.fromJson(jsonData);
+		return options;
+	}
+	
+	/**
 	 * Takes all values from parameter "options" that aren't specified in this instance.
 	 * Does not overwrite any set variables of this instance.
 	 * @param options Another VisualizationOptions object to take values from.
