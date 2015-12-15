@@ -16,8 +16,8 @@ import de.unihannover.swp2015.robots2.visual.resource.ResConst;
  */
 public class DesktopLauncher {
 	
-	public static final float viewWidth = 800;
-	public static final float viewHeight = 800;
+	public static final int initialWidth = 800;
+	public static final int initialHeight = 800;
 	
 	public static void main(String[] arg) {
 
@@ -62,10 +62,9 @@ public class DesktopLauncher {
 		packSettingsEarth.duplicatePadding = true;
 		TexturePacker.process(packSettingsEarth, "assets/tex/earth_theme_src", ResConst.ATLAS_PATH.getName()+ "/earth", ResConst.ATLAS_NAME.getName());
 		
-		
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		config.width = (int) viewWidth;
-		config.height = (int) viewHeight;
+		config.width = initialWidth;
+		config.height = initialHeight;
 		config.foregroundFPS = 0;
 		config.backgroundFPS = 0;
 		config.vSyncEnabled = false;

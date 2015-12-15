@@ -54,6 +54,11 @@ public class FlexPreferences extends PreferencesObservable implements IPreferenc
 
 		this.persistentDataHandler = Gdx.app.getPreferences(name);
 	}
+	
+	@Override
+	public boolean getBoolean(IPreferencesKey key) {
+		return getBoolean(key, false);
+	}
 
 	@Override
 	public boolean getBoolean(IPreferencesKey key, boolean def) {
@@ -70,6 +75,11 @@ public class FlexPreferences extends PreferencesObservable implements IPreferenc
 	}
 
 	@Override
+	public float getFloat(IPreferencesKey key) {
+		return getFloat(key, 0f);
+	}
+	
+	@Override
 	public float getFloat(IPreferencesKey key, float def) {
 		final Float result = floatMap.get(key);
 		if (result == null) {
@@ -84,6 +94,11 @@ public class FlexPreferences extends PreferencesObservable implements IPreferenc
 	}
 
 	@Override
+	public int getInt(IPreferencesKey key) {
+		return getInt(key, 0);
+	}
+	
+	@Override
 	public int getInt(IPreferencesKey key, int def) {
 		final Integer result = integerMap.get(key);
 		if (result == null) {
@@ -97,6 +112,11 @@ public class FlexPreferences extends PreferencesObservable implements IPreferenc
 		return result;
 	}
 
+	@Override
+	public String getString(IPreferencesKey key) {
+		return getString(key, "");
+	}
+	
 	@Override
 	public String getString(IPreferencesKey key, String def) {
 		final String result = stringMap.get(key);

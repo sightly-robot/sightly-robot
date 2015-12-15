@@ -136,8 +136,6 @@ public class RobotGameHandler extends GameHandler {
 		final IStage stage = game.getStage();
 		
 		//set preferences !have to happen before creating entities!
-		this.prefs.putInt(PrefConst.MAP_ROWS_KEY, stage.getWidth());
-		this.prefs.putInt(PrefConst.MAP_COLS_KEY, stage.getHeight());
 		this.prefs.putFloat(PrefConst.FIELD_WIDTH_KEY, view.getWorldWidth() / stage.getWidth());
 		this.prefs.putFloat(PrefConst.FIELD_HEIGHT_KEY, view.getWorldWidth() / stage.getHeight());
 		

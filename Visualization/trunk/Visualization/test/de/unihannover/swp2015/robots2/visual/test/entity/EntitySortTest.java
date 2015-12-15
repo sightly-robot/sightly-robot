@@ -53,6 +53,21 @@ public class EntitySortTest {
 		public void putString(IPreferencesKey key, String value) {}
 		public void putString(IPreferencesKey key, String value, boolean persistent) {}
 		public void removeObserver(IPreferencesObserver obs) {}
+		@Override
+		public boolean getBoolean(IPreferencesKey key) {return false;
+		}
+		@Override
+		public float getFloat(IPreferencesKey key) {
+			return 0;
+		}
+		@Override
+		public int getInt(IPreferencesKey key) {
+			return 0;
+		}
+		@Override
+		public String getString(IPreferencesKey key) {
+			return null;
+		}
 		
 	}
 	

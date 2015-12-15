@@ -1,5 +1,7 @@
 package de.unihannover.swp2015.robots2.visual;
 
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,7 +66,12 @@ public class Visualization extends ApplicationAdapter {
 	 * Handles virtual display. Furthermore it makes the application keep the aspect ratio.
 	 */
 	private Viewport fitViewport;
-		
+	
+	/**
+	 * Information about the system
+	 */
+	private GraphicsDevice device;
+	
 	/**
 	 * For the timing of the debug output.
 	 */
@@ -77,6 +84,7 @@ public class Visualization extends ApplicationAdapter {
 	 * instead.
 	 */
 	public Visualization(final boolean debug, final String brokerIp) {
+		this.device = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 		this.gameHandlerList = new ArrayList<>();
 		this.brokerIp = brokerIp;
 		this.mqttHandler = new MqttHandler(this.brokerIp);
@@ -97,6 +105,8 @@ public class Visualization extends ApplicationAdapter {
 
 		this.prefs.putFloat(PrefConst.VIEW_WIDTH, appWidth);
 		this.prefs.putFloat(PrefConst.VIEW_HEIGHT, appHeight);
+		this.prefs.putFloat(PrefConst.DEVICE_WIDTH, device.getDisplayMode().getWidth());
+		this.prefs.putFloat(PrefConst.DEVICE_HEIGHT, device.getDisplayMode().getHeight());
 		
 		final IResourceHandler resHandler = new ResourceHandler(ResConst.ATLAS_PATH.getName());
 		
@@ -104,7 +114,7 @@ public class Visualization extends ApplicationAdapter {
 			new TestApp(mqttHandler.getGame());
 		}
 		else {
-			Thread mqttThread = new Thread(mqttHandler);
+			final Thread mqttThread = new Thread(mqttHandler);
 			mqttThread.start();
 		}
 		
@@ -134,7 +144,7 @@ public class Visualization extends ApplicationAdapter {
 
 		if (debug) {
 			c -= Gdx.graphics.getDeltaTime();
-			if (c <0) {
+			if (c < 0) {
 				c = 5;
 				System.out.println(Gdx.graphics.getFramesPerSecond());
 			}

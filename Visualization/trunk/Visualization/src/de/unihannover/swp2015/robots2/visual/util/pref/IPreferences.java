@@ -22,6 +22,13 @@ public interface IPreferences extends IPreferencesObservable {
 	boolean getBoolean(final IPreferencesKey key, final boolean def);
 	
 	/**
+	 * Calls {@link #getBoolean(IPreferencesKey, boolean)} with false as default value.
+	 * @param key key of the value
+	 * @return boolean from the internal map or <code>false</code>
+	 */
+	boolean getBoolean(final IPreferencesKey key);
+	
+	/**
 	 * Returns the float value, which is mapped to <code>key</code>. If there is no value mapped to <code>key</code>, <code>def</code> will be returned.
 	 * 
 	 * @param key key of the value
@@ -29,6 +36,13 @@ public interface IPreferences extends IPreferencesObservable {
 	 * @return float value from the internal map or <code>def</code>
 	 */
 	float getFloat(final IPreferencesKey key, final float def);
+	
+	/**
+	 * Calls {@link #getFloat(IPreferencesKey, float)} with 0.0 as default value.
+	 * @param key key of the value
+	 * @return float from the internal map or <code>0.0</code>
+	 */
+	float getFloat(final IPreferencesKey key);
 	
 	/**
 	 * Returns the integer value, which is mapped to <code>key</code>. If there is no value mapped to <code>key</code>, <code>def</code> will be returned.
@@ -40,6 +54,13 @@ public interface IPreferences extends IPreferencesObservable {
 	int getInt(final IPreferencesKey key, final int def);
 	
 	/**
+	 * Calls {@link #getInt(IPreferencesKey, int)} with 0 as default value.
+	 * @param key key of the value
+	 * @return int from the internal map or <code>0</code>
+	 */
+	int getInt(final IPreferencesKey key);
+	
+	/**
 	 * Returns the string, which is mapped to <code>key</code>. If there is no value mapped to <code>key</code>, <code>def</code> will be returned.
 	 * 
 	 * @param key key of the value
@@ -47,6 +68,13 @@ public interface IPreferences extends IPreferencesObservable {
 	 * @return string from the internal map or <code>def</code>
 	 */
 	String getString(final IPreferencesKey key, final String def);
+	
+	/**
+	 * Calls {@link #getString(IPreferencesKey, String)} with <code>""</code> as default value.
+	 * @param key key of the value
+	 * @return string from the internal map or <code>""</code>
+	 */
+	String getString(final IPreferencesKey key);
 	
 	/**
 	 * Puts given <code>value</code> in the map (non-persistent). 

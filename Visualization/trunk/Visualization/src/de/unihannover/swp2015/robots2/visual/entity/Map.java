@@ -9,6 +9,7 @@ import de.unihannover.swp2015.robots2.model.interfaces.IAbstractModel;
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
 import de.unihannover.swp2015.robots2.model.interfaces.IField;
 import de.unihannover.swp2015.robots2.model.interfaces.IStage;
+import de.unihannover.swp2015.robots2.visual.core.GameConst;
 import de.unihannover.swp2015.robots2.visual.core.PrefConst;
 import de.unihannover.swp2015.robots2.visual.core.RobotGameHandler;
 import de.unihannover.swp2015.robots2.visual.util.pref.IPreferencesKey;
@@ -55,6 +56,25 @@ public class Map extends Entity {
 			}
 		}
 	}
+
+	private void resize() {
+		final IStage model = (IStage) this.model;
+
+		for (int i = 0; i < fieldList.size(); ++i) {
+			fieldList.get(i).clearReferences();
+		}
+		this.fieldList.clear();
+		
+		final float fieldSize = prefs.getFloat(PrefConst.DEVICE_HEIGHT) * GameConst.HEIGHT_SCALE / model.getHeight();
+		final float viewWidth = fieldSize * model.getWidth();
+		final float viewHeight = fieldSize * model.getHeight();
+		
+		this.prefs.putFloat(PrefConst.FIELD_WIDTH_KEY, viewWidth);
+		this.prefs.putFloat(PrefConst.FIELD_HEIGHT_KEY, viewHeight);
+		this.prefs.putFloat(PrefConst.VIEW_WIDTH, viewWidth);
+		this.prefs.putFloat(PrefConst.VIEW_WIDTH, viewHeight);
+		this.init(model);
+	}
 	
 	@Override
 	public void draw(final Batch batch) {
@@ -64,22 +84,11 @@ public class Map extends Entity {
 	}
 	
 	@Override
-	public void onManagedModelUpdate(IEvent event) {
-		final IStage model = (IStage) this.model;
-		
+	public void onManagedModelUpdate(IEvent event) {		
 		switch(event.getType()) {
 		
 		case STAGE_SIZE:
-			//TODO dynamic world-size
-			for (int i = 0; i < fieldList.size(); ++i) {
-				fieldList.get(i).clearReferences();
-			}
-			this.fieldList.clear();
-			this.prefs.putInt(PrefConst.MAP_ROWS_KEY, model.getWidth());
-			this.prefs.putInt(PrefConst.MAP_COLS_KEY, model.getHeight());
-			this.prefs.putFloat(PrefConst.FIELD_WIDTH_KEY, prefs.getFloat(PrefConst.VIEW_WIDTH, 1) / model.getWidth());
-			this.prefs.putFloat(PrefConst.FIELD_HEIGHT_KEY, prefs.getFloat(PrefConst.VIEW_HEIGHT, 1) / model.getHeight());
-			this.init(model);
+			this.resize();
 			break;
 			
 		case STAGE_WALL:

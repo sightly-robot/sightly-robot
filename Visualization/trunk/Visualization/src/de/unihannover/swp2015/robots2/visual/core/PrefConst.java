@@ -9,11 +9,10 @@ import de.unihannover.swp2015.robots2.visual.util.pref.IPreferencesKey;
  */
 public enum PrefConst implements IPreferencesKey {
 
+	DEVICE_WIDTH("device_width"),
+	DEVICE_HEIGHT("device_height"),
 	FIELD_WIDTH_KEY("field_width"), 
 	FIELD_HEIGHT_KEY("field_height"), 
-	MAP_ROWS_KEY("map_rows"), 
-	MAP_COLS_KEY("map_cols"), 
-	WALL_THICK_KEY("wall_thick"),
 	VIEW_WIDTH("view_width"), 
 	VIEW_HEIGHT("view_height");
 	
