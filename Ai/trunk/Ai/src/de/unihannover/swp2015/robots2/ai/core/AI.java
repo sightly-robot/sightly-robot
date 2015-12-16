@@ -31,8 +31,8 @@ public class AI extends AbstractAI implements IModelObserver {
 		this.game.getStage().observe(this);
 		this.iRobotController.getMyself().observe(this);
 		if (this.game.getStage().getWidth() != 0 && this.game.getStage().getHeight() != 0) {
-			for(int i = 0; i < this.game.getStage().getWidth(); i++) {
-				for(int j = 0; j < this.game.getStage().getHeight(); i++) {
+			for (int i = 0; i < this.game.getStage().getWidth(); i++) {
+				for (int j = 0; j < this.game.getStage().getHeight(); i++) {
 					this.game.getStage().getField(i, j).observe(this);
 				}
 			}
@@ -74,8 +74,8 @@ public class AI extends AbstractAI implements IModelObserver {
 			break;
 		case STAGE_SIZE:
 			if (this.game.getStage().getWidth() != 0 && this.game.getStage().getHeight() != 0) {
-				for(int i = 0; i < this.game.getStage().getWidth(); i++) {
-					for(int j = 0; j < this.game.getStage().getHeight(); i++) {
+				for (int i = 0; i < this.game.getStage().getWidth(); i++) {
+					for (int j = 0; j < this.game.getStage().getHeight(); i++) {
 						this.game.getStage().getField(i, j).observe(this);
 					}
 				}
@@ -86,7 +86,7 @@ public class AI extends AbstractAI implements IModelObserver {
 				IField field = (IField) event.getObject();
 				Node node = myself.getPosition();
 
-				//TODO nullpointerexception possible?
+				// TODO nullpointerexception possible?
 				if (game.isRunning() && this.nextField == field && this.nextOrientation != null) {
 					switch (field.getState()) {
 					case OURS:
@@ -98,11 +98,11 @@ public class AI extends AbstractAI implements IModelObserver {
 						iRobotController.requestField(xCoord, yCoord);
 						break;
 					case LOCKED:
-						//break;
+						// break;
 					case LOCK_WAIT:
-						//break;
+						// break;
 					case OCCUPIED:
-						//break;
+						// break;
 					case RANDOM_WAIT:
 						try {
 							Orientation nextOrientation = getNextOrientation();
@@ -112,7 +112,7 @@ public class AI extends AbstractAI implements IModelObserver {
 							 * Calculate next node position
 							 */
 							switch (nextOrientation) {
-							case NORTH: 
+							case NORTH:
 								y -= 1;
 								break;
 							case EAST:
@@ -127,11 +127,11 @@ public class AI extends AbstractAI implements IModelObserver {
 							default:
 								break;
 							}
-							
+
 							iRobotController.requestField(x, y);
 							this.nextField = this.game.getStage().getField(x, y);
 							this.nextOrientation = nextOrientation;
-							
+
 						} catch (NoValidOrientationException e) {
 							e.printStackTrace();
 						}
@@ -190,7 +190,7 @@ public class AI extends AbstractAI implements IModelObserver {
 									 * Calculate next node position
 									 */
 									switch (nextOrientation) {
-									case NORTH: 
+									case NORTH:
 										y -= 1;
 										break;
 									case EAST:
@@ -284,7 +284,31 @@ public class AI extends AbstractAI implements IModelObserver {
 					&& !getController().getMyself().isSetupState()) {
 				try {
 					System.out.println("GAMEStart");
-					fireNextOrientationEvent(getNextOrientation());
+					int x = myself.getPosition().getX();
+					int y = myself.getPosition().getY();
+					Orientation orientation = getNextOrientation();
+					/*
+					 * Calculate next node position
+					 */
+					switch (orientation) {
+					case NORTH:
+						y -= 1;
+						break;
+					case EAST:
+						x += 1;
+						break;
+					case SOUTH:
+						y += 1;
+						break;
+					case WEST:
+						x -= 1;
+						break;
+					default:
+						break;
+					}
+					iRobotController.requestField(x, y);
+					this.nextField = this.game.getStage().getField(x, y);
+					this.nextOrientation = orientation;
 				} catch (NoValidOrientationException e) {
 				}
 			}
