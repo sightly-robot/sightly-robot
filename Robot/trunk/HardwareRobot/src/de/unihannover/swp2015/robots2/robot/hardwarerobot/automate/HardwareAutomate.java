@@ -23,7 +23,7 @@ public class HardwareAutomate extends AbstractAutomate implements IHardwareRobot
 	 *            the controller of the robot
 	 */
 	public HardwareAutomate(IRobotController robotController) {
-		super(robotController, HardwareStateV2.SETUP);
+		super(robotController, HardwareStateV2.WAIT,HardwareStateV2.SETUP, HardwareStateV2.DISABLED, HardwareStateV2.CONNECTED);
 	}
 
 	@Override

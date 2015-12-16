@@ -145,6 +145,25 @@ public enum HardwareStateV2 implements IState {
 		}
 	},
 	/**
+	 * The robot awaits a new command.
+	 */
+	CONNECTED {
+		@Override
+		public void start() {
+			super.start();
+			MOTORS.go(STOP);
+			this.execute();
+		}
+
+		@Override
+		public IState execute() {
+			double i = 0.25 + ((System.currentTimeMillis()-startTime)%4000 - 2000)/14000.0;
+			LEDS.setAllLEDs(new Color((int) (LEDS.getAccentColor().getRed() * i), (int) (LEDS.getAccentColor().getGreen() * i),
+					(int) (LEDS.getAccentColor().getBlue() * i)));
+			return this;
+		}
+	},
+	/**
 	 * First part of turning left.
 	 */
 	TURN_LEFT_1 {
@@ -382,7 +401,12 @@ public enum HardwareStateV2 implements IState {
 	 */
 	@Override
 	public boolean isWait() {
-		return this == WAIT || this == SETUP || this == DISABLED; //TODO
+		return this == WAIT ; //TODO || this == SETUP || this == DISABLED
+	}
+	
+	@Override
+	public boolean isDriving() {
+		return this != WAIT && this != SETUP && this != DISABLED && this != CONNECTED;
 	}
 
 	/**

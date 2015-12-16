@@ -52,8 +52,21 @@ public class HardwareRobot extends AbstractRobot {
 			public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {
 				if(event.getState().isHigh())
 				{
-					System.out.println("Robot ready!");
-					robotController.setRobotReady();
+					switch (robotController.getMyself().getState()) {
+					case SETUPSTATE:
+						System.out.println("Robot ready!");
+						robotController.setRobotReady();
+						break;
+					case ENABLED:
+						System.out.println("Robot disable!");
+						robotController.disableMyself();
+						break;	
+					default:
+						System.out.println("Robot delete!");
+						robotController.deleteMyself();
+						break;
+					}
+					
 				}
 			}
 		});
