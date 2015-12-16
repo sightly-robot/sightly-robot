@@ -11,6 +11,9 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import de.unihannover.swp2015.robots2.ai.core.AI;
 import de.unihannover.swp2015.robots2.controller.interfaces.IRobotController;
 import de.unihannover.swp2015.robots2.controller.main.RobotMainController;
+import de.unihannover.swp2015.robots2.model.externalInterfaces.IModelObserver;
+import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
+import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
 import de.unihannover.swp2015.robots2.robot.abstractrobot.automate.AbstractAutomate;
 import de.unihannover.swp2015.robots2.robot.interfaces.AbstractAI;
 
@@ -75,6 +78,20 @@ public abstract class AbstractRobot {
 			}
 
 		}
+	
+		robotController.getGame().observe(new IModelObserver() {
+			@Override
+			public void onModelUpdate(IEvent event) {
+				switch (event.getType()) {
+				case ROBOT_DELETE:
+					if(event.getObject() == robotController.getMyself())
+					{
+						System.exit(0);
+					}
+					break;
+				}
+			}
+		});
 		/*
 		 * while(!robotController.startMqtt("tcp://192.168.1.66")) { try {
 		 * Thread.sleep(1000); } catch (InterruptedException e) {

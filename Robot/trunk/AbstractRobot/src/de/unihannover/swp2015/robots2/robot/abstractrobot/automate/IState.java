@@ -29,7 +29,14 @@ public interface IState {
 	 * @return {@code true} if the current state is the wait state,
 	 *         {@code false} otherwise
 	 */
+	@Deprecated
 	public boolean isWait();
+	
+	/**
+	 * Returns whether the Pi2Go is driving or not. 
+	 * @return {@code true} if it is in a driving State.
+	 */
+	public boolean isDriving();
 
 	/**
 	 * Returns the state for driving into the specified direction.
