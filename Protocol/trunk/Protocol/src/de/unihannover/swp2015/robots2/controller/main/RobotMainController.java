@@ -122,8 +122,8 @@ public class RobotMainController extends AbstractMainController implements
 
 				// Broadcast new position and SETUPSTATE
 				this.sendMqttMessage(MqttTopic.ROBOT_POSITION,
-						this.myself.getId(), Integer.toString(x) + "-"
-								+ Integer.toString(y) + "-" + o.toString());
+						this.myself.getId(), Integer.toString(x) + ","
+								+ Integer.toString(y) + "," + o.toString());
 				this.sendMqttMessage(MqttTopic.ROBOT_STATE,
 						this.myself.getId(), RobotState.SETUPSTATE.toString());
 
