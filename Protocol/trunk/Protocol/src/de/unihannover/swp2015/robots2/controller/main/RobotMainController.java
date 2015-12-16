@@ -100,7 +100,7 @@ public class RobotMainController extends AbstractMainController implements
 
 		case ROBOT_SETPOSITION:
 			// TODO refactor to own method
-			if (this.myself.getId().equals(message)) {
+			if (this.myself.getId().equals(key)) {
 				String[] positionParts = message.split(",");
 				int x = Integer.parseInt(positionParts[0]);
 				int y = Integer.parseInt(positionParts[1]);
@@ -114,11 +114,11 @@ public class RobotMainController extends AbstractMainController implements
 					return;
 
 				// Occupy target field and release old fields
-				this.occupyField(x, y);
 				for (IFieldWriteable ourField : this.stageModelController
 						.getOurFields()) {
 					this.releaseField(ourField.getX(), ourField.getY());
 				}
+				this.occupyField(x, y);
 
 				// Broadcast new position and SETUPSTATE
 				this.sendMqttMessage(MqttTopic.ROBOT_POSITION,
