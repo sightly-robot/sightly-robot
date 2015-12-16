@@ -12,8 +12,6 @@ import de.unihannover.swp2015.robots2.controller.externalInterfaces.IVisualizati
 import de.unihannover.swp2015.robots2.controller.interfaces.IVisualizationController;
 import de.unihannover.swp2015.robots2.controller.mqtt.MqttController;
 import de.unihannover.swp2015.robots2.controller.mqtt.MqttTopic;
-import de.unihannover.swp2015.robots2.model.interfaces.IEvent.UpdateType;
-import de.unihannover.swp2015.robots2.model.writeableInterfaces.IRobotWriteable;
 
 /**
  * 
@@ -56,14 +54,12 @@ public class VisualizationMainController extends AbstractMainController
 			this.gameModelController.mqttAddRobot(key, message);
 			break;
 
-		case ROBOT_POSITION:
-		case ROBOT_SETPOSITION:
-			this.robotModelController.mqttRobotPosition(key, message,
-					mqtttopic == MqttTopic.ROBOT_SETPOSITION);
+		case ROBOT_STATE:
+			this.robotModelController.mqttRobotState(key, message);
 			break;
-			
-		case ROBOT_READY:
-			this.robotModelController.mqttRobotReady(key);
+
+		case ROBOT_POSITION:
+			this.robotModelController.mqttRobotPosition(key, message);
 			break;
 
 		case ROBOT_PROGRESS:
@@ -100,10 +96,7 @@ public class VisualizationMainController extends AbstractMainController
 			break;
 
 		case EVENT_ERROR_ROBOT_CONNECTION:
-		case EVENT_ERROR_ROBOT_ROBOTICS:
-			IRobotWriteable r = this.game.getRobotsWriteable().get(key);
-			r.setErrorState(true);
-			r.emitEvent(UpdateType.ROBOT_STATE);
+			this.robotModelController.mqttRobotConnectionState(key, message);
 			break;
 
 		case SETTINGS_VISU_REQUEST:

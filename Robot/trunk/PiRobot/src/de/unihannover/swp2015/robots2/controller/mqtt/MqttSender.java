@@ -30,8 +30,8 @@ public class MqttSender implements Runnable {
 				MqttFullMessage message = this.queue.take();
 				
 				// Wait until MQTT connected
-				while(!client.isConnected()) {
-					synchronized(this.waitForConnect) {
+				synchronized(this.waitForConnect) {
+					while(!client.isConnected()) {
 						this.waitForConnect.wait();
 					}
 				}

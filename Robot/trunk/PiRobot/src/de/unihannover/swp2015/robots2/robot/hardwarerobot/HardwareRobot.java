@@ -25,7 +25,7 @@ public class HardwareRobot extends AbstractRobot {
 	public HardwareRobot(String brokerIP) {
 		super(true,brokerIP);
 		// PreInitialize Controller Instances:
-		BlinkLEDAndServoController.getInstance();
+		BlinkLEDAndServoController.getInstance().setAccentColor(robotController.getMyself().getColor());;
 		Pi2GoGPIOController.getInstance();
 		MotorController.getInstance();
 		// SoundController.getInstance();
@@ -52,17 +52,28 @@ public class HardwareRobot extends AbstractRobot {
 			public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {
 				if(event.getState().isHigh())
 				{
-					System.out.println("Robot ready!");
-					robotController.setRobotReady();
+					switch (robotController.getMyself().getState()) {
+					case SETUPSTATE:
+						System.out.println("Robot ready!");
+						robotController.setRobotReady();
+						break;
+					case ENABLED:
+						System.out.println("Robot disable!");
+						robotController.disableMyself();
+						break;	
+					default:
+						System.out.println("Robot delete!");
+						robotController.deleteMyself();
+						break;
+					}
+					
 				}
 			}
 		});
 		GpioPinListenerDigital gChangeEvent = new GpioPinListenerDigital() {
 			@Override
 			public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {
-				synchronized (((HardwareAutomate)automate).getAutomation()) {
-					((HardwareAutomate)automate).getAutomation().notify();
-				}
+				((HardwareAutomate)automate).getAutomation().notify();
 			}
 		};
 		Pi2GoGPIOController.getInstance().getLineLeft().addListener(gChangeEvent);

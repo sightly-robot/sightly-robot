@@ -13,7 +13,7 @@ import de.unihannover.swp2015.robots2.model.interfaces.*;
 public interface IRobotController extends IController {
 
 	/**
-	 * Boardcasts the given position to the network and save it in the model.
+	 * Broadcasts the given position to the network and save it in the model.
 	 * 
 	 * @param x
 	 *            The x-coordinate of the field.
@@ -59,9 +59,31 @@ public interface IRobotController extends IController {
 	public void releaseField(int x, int y);
 
 	/**
+	 * Set this robot to enabled state.
 	 * 
+	 * Should be called in SETUPSTATE. Hardware robot: After user confirms, that
+	 * robot is placed correctly, by pressing button. Software robot: On
+	 * entering setup state.
 	 */
 	public void setRobotReady();
+
+	/**
+	 * Disables this robot setting it do robotics error state and reports the
+	 * error via MQTT.
+	 */
+	public void reportRoboticsError();
+
+	/**
+	 * Disable this robot when user asks to (e.g. hardware button press) and
+	 * report the new state via MQTT.
+	 */
+	public void disableMyself();
+
+	/**
+	 * Remove this robot from the game. The robot will be erased completely from
+	 * all parts of the game.
+	 */
+	public void deleteMyself();
 
 	/**
 	 * Returns an Robot instance of the robot on which this thread is running..
@@ -71,7 +93,8 @@ public interface IRobotController extends IController {
 	public IRobot getMyself();
 
 	/**
-	 * Register the given hardware robot.
+	 * Register a hardware robot to receive hardware robot settings and blink
+	 * messages.
 	 * 
 	 * @param hardwareRobot
 	 *            The hardware robot.

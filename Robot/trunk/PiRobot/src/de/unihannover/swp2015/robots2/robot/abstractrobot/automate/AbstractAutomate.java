@@ -6,6 +6,8 @@ import de.unihannover.swp2015.robots2.controller.interfaces.IRobotController;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
 import de.unihannover.swp2015.robots2.robot.abstractrobot.Direction;
 import de.unihannover.swp2015.robots2.robot.interfaces.AiEventObserver;
+import de.unihannover.swp2015.robots2.model.externalInterfaces.IModelObserver;
+import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
 import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
 
 /**
@@ -45,15 +47,41 @@ public abstract class AbstractAutomate implements AiEventObserver, Runnable {
 	 * 
 	 * @param robotController
 	 *            the controller of the robot this automate controls
-	 * @param initialState
+	 * @param waitState
 	 *            the initial state of the automate
 	 */
-	public AbstractAutomate(IRobotController robotController, IState initialState) {
+	public AbstractAutomate(IRobotController robotController,final IState waitState,final IState setupState,final IState disableState, final IState connectedState) {
 		this.robotController = robotController;
 		robot = robotController.getMyself();
 
-		state = initialState;
-
+		state = connectedState;
+		
+		robotController.getMyself().observe(new IModelObserver() {
+			@Override
+			public void onModelUpdate(IEvent event) {
+				switch (event.getType()) {
+				case ROBOT_STATE:
+					switch (AbstractAutomate.this.robotController.getMyself().getState()) {
+					case SETUPSTATE:
+						setState(setupState);
+						break;
+					case CONNECTED:
+						setState(connectedState);
+						break;
+					case ENABLED:
+						setState(waitState);
+						break;
+					default:
+						setState(disableState);
+						break;
+					}
+					break;
+				default:
+					break;
+				}
+				
+			}
+		});
 	}
 
 	/**
@@ -77,7 +105,7 @@ public abstract class AbstractAutomate implements AiEventObserver, Runnable {
 				if (state != tempState) {
 					state = tempState;
 					state.start();
-					if (state.isWait()) {
+					if (!state.isDriving()) {
 						// measurements
 						progressMeasurements[currentDirection.ordinal()] = System.currentTimeMillis() - lastWaitTime;
 						// update position only
@@ -129,7 +157,7 @@ public abstract class AbstractAutomate implements AiEventObserver, Runnable {
 	}
 
 	private int calcProgress() {
-		if (!state.isWait()) {
+		if (state.isDriving()) {
 			return (int) ((Math.min(progressMeasurements[currentDirection.ordinal()],
 					(System.currentTimeMillis() - lastWaitTime)) / progressMeasurements[currentDirection.ordinal()])
 					* 1000);
@@ -141,7 +169,7 @@ public abstract class AbstractAutomate implements AiEventObserver, Runnable {
 	@Override
 	public boolean nextOrientationEvent(Orientation orientation) {
 		synchronized (state) {
-			if (state.isWait()) {
+			if (!state.isDriving()) {
 				nextPosition.setLocation(robot.getPosition().getX(), robot.getPosition().getY());
 				switch (orientation) {
 				case NORTH:
@@ -165,6 +193,25 @@ public abstract class AbstractAutomate implements AiEventObserver, Runnable {
 				System.out.println(currentDirection.name());
 
 				updateOrientation(orientation);
+
+				// measurements
+				lastWaitTime = System.currentTimeMillis();
+
+				synchronized (automation) {
+					automation.notify();
+				}
+				return true;
+			}
+			return false;
+		}
+	}
+	
+	protected boolean setState(IState iState) {
+		synchronized (state) {
+			if (!state.isDriving()) {
+				// set new state
+				state = iState;
+				state.start();
 
 				// measurements
 				lastWaitTime = System.currentTimeMillis();

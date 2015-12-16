@@ -32,7 +32,7 @@ public enum MqttTopic {
 	 */
 	ROBOT_BLINK("robot/blink/+", false),
 	
-	ROBOT_READY("extension/2/robot/ready/+", false),
+	ROBOT_STATE("extension/2/robot/state/+", true),
 
 	MAP_WALLS("map/walls", true),
 
@@ -56,11 +56,13 @@ public enum MqttTopic {
 
 	CONTROL_VIRTUALSPEED("robot/virtualspeed", true),
 	
+	CONTROL_RESET("extension/2/control/reset", false),
+	
 	CONTROL_HESITATIONTIME("extension/2/robot/hesitationtime", true),
 
-	EVENT_ERROR_SERVER_CONNECTION("event/error/server/connection", false),
+	EVENT_ERROR_SERVER_CONNECTION("event/error/server/connection", true),
 
-	EVENT_ERROR_ROBOT_CONNECTION("event/error/robot/+/connection", false),
+	EVENT_ERROR_ROBOT_CONNECTION("event/error/robot/+/connection", true),
 
 	EVENT_ERROR_ROBOT_ROBOTICS("event/error/robot/+/robotics", false),
 

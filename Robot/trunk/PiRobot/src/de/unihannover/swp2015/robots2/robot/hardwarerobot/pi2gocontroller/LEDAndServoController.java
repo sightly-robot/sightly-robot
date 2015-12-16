@@ -67,6 +67,9 @@ public class LEDAndServoController {
 	private static final double FREQUENCY = 50; // HZ
 	private static final double SERVO_CENTER_PWM = PWM_MAX / (1000 / FREQUENCY);
 	public static final double PWM_PER_DEGREE = SERVO_CENTER_PWM / 180;
+	
+	//AccentColor
+	private Color accentColor = Color.MAGENTA;
 
 	/**
 	 * Initializes the Singleton instance.<br>
@@ -258,5 +261,13 @@ public class LEDAndServoController {
 		if (DEBUG) {
 			System.out.println("I2CRGBLEDController stopped!");
 		}
+	}
+
+	public Color getAccentColor() {
+		return accentColor;
+	}
+
+	public void setAccentColor(Color accentColor) {
+		this.accentColor = accentColor;
 	}
 }

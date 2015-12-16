@@ -25,6 +25,7 @@ public interface IEvent {
 
 		/**
 		 * The state of the MQTT connection changed and so the model sync state.
+		 * Emitted from Game.
 		 */
 		MODEL_SYNC_STATE,
 
@@ -73,10 +74,18 @@ public interface IEvent {
 		ROBOT_SCORE,
 
 		/**
-		 * The position of a robot changed (could by "myself"). Emitted from the
-		 * affected Robot, object reference addresses this Robot.
+		 * The position of a robot changed (could by "myself"). This will not be
+		 * emitted on every progress change. Emitted from the affected Robot,
+		 * object reference addresses this Robot.
 		 */
 		ROBOT_POSITION,
+
+		/**
+		 * The drive progress or position of a robot changed (could by
+		 * "myself"). Emitted from the affected Robot, object reference
+		 * addresses this Robot.
+		 */
+		ROBOT_PROGRESS,
 
 		/**
 		 * The state of a robot changed (updatedState, errorState). Emitted from

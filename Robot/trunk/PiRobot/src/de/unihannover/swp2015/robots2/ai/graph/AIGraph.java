@@ -2,17 +2,15 @@ package de.unihannover.swp2015.robots2.ai.graph;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 import de.unihannover.swp2015.robots2.ai.core.Robot;
 import de.unihannover.swp2015.robots2.ai.exceptions.InvalidStageException;
 import de.unihannover.swp2015.robots2.ai.exceptions.NoValidOrientationException;
-import de.unihannover.swp2015.robots2.model.externalInterfaces.IModelObserver;
-import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
 import de.unihannover.swp2015.robots2.model.interfaces.IField;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
-import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
 import de.unihannover.swp2015.robots2.model.interfaces.IStage;
 
 public class AIGraph {
@@ -25,9 +23,13 @@ public class AIGraph {
 	 * Should be set by the AI class!
 	 */
 	private Robot myself;
+	/*
+	 * To identify other robots
+	 * String is ID of the robot
+	 * TODO implement
+	 */
+	private HashMap<String, Robot> robots;
 	
-//	private IRobot iMyself;
-
 	private int dimX;
 	private int dimY;
 
@@ -35,25 +37,8 @@ public class AIGraph {
 		this.stage = stage;
 		this.loadFromStage(stage);
 		
-//		iMyself = iRobot;
-		
 		this.myself = myself;
 		
-//		iRobot.observe(new IModelObserver() {	
-//			@Override
-//			public void onModelUpdate(IEvent event) {
-//				switch (event.getType()) {
-//				case ROBOT_POSITION:
-//					myself.setPosition(getNodes()[iMyself.getPosition().getX()][iMyself.getPosition().getY()]);
-//					myself.setOrientation(iMyself.getPosition().getOrientation());
-//					setRobotPosition(myself, iMyself.getPosition());
-//					break;
-//
-//				default:
-//					break;
-//				}
-//			}
-//		});
 	}
 
 	/**
@@ -183,9 +168,30 @@ public class AIGraph {
 	// TODO: Exception if there is no valid Orientation
 	public Orientation getRandomOrientation() throws NoValidOrientationException {
 		List<Orientation> available = new ArrayList<Orientation>();
-		Orientation curr = this.myself.getOrientation();
 		Node myPos = getMyPosition();
-
+		int x = myPos.getX();
+		int y = myPos.getY();
+		
+		if (!myPos.isWall(Orientation.NORTH) 
+				/*&& this.stage.getField(x, y - 1).getState().equals(IField.State.LOCKED)*/) {
+			available.add(Orientation.NORTH);
+		}
+		if (!myPos.isWall(Orientation.EAST)
+				/*&& this.stage.getField(x + 1, y).getState().equals(IField.State.LOCKED)*/) {
+			available.add(Orientation.EAST);
+		}			
+		if (!myPos.isWall(Orientation.SOUTH)
+				/*&& this.stage.getField(x, y + 1).getState().equals(IField.State.LOCKED)*/) {
+			available.add(Orientation.SOUTH);
+		}			
+		if (!myPos.isWall(Orientation.WEST)
+				/*&& this.stage.getField(x - 1, y).getState().equals(IField.State.LOCKED)*/) {
+			available.add(Orientation.WEST);
+		}
+			
+		
+		/* switch used to not return backwards, can be deleted once this updated version is tested
+		Orientation curr = this.myself.getOrientation();
 		switch (curr) {
 		case NORTH:
 			if (!myPos.isWall(Orientation.WEST))
@@ -219,14 +225,14 @@ public class AIGraph {
 			if (!myPos.isWall(Orientation.NORTH))
 				available.add(Orientation.NORTH);
 			break;
-		}
+		} */
 
 		Collections.shuffle(available);
 		return available.get(0);
 	}
 
 	/**
-	 * Sets the new position of a robot in the graph
+	 * Sets the new position of a robot in the graph and also sets it for the robot itself
 	 * 
 	 * @param robot
 	 *            Robot to be set
@@ -302,5 +308,13 @@ public class AIGraph {
 
 	public void setMyself(Robot myself) {
 		this.myself = myself;
+	}
+
+	public HashMap<String, Robot> getRobots() {
+		return robots;
+	}
+
+	public void setRobots(HashMap<String, Robot> robots) {
+		this.robots = robots;
 	}
 }
