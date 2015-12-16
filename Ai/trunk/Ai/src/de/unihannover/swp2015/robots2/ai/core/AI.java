@@ -154,7 +154,7 @@ public class AI extends AbstractAI implements IModelObserver {
 				/*
 				 * If the position is not set yet, break and do nothing
 				 */
-				if (pos.getX() == -1) {
+				if (pos.getX() == -1 || pos.getY() == -1) {
 					break;
 				}
 
@@ -181,7 +181,7 @@ public class AI extends AbstractAI implements IModelObserver {
 							break;
 						} else {
 							iRobotController.releaseField(nextField.getX(), nextField.getY());
-							
+
 							this.getGraph().setRobotPosition(myself, pos);
 							/*
 							 * Only keep going if the game is running
