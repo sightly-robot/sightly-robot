@@ -32,7 +32,7 @@ public class AI extends AbstractAI implements IModelObserver {
 		this.iRobotController.getMyself().observe(this);
 		if (this.game.getStage().getWidth() != 0 && this.game.getStage().getHeight() != 0) {
 			for (int i = 0; i < this.game.getStage().getWidth(); i++) {
-				for (int j = 0; j < this.game.getStage().getHeight(); i++) {
+				for (int j = 0; j < this.game.getStage().getHeight(); j++) {
 					this.game.getStage().getField(i, j).observe(this);
 				}
 			}
@@ -76,7 +76,7 @@ public class AI extends AbstractAI implements IModelObserver {
 		case STAGE_SIZE:
 			if (this.game.getStage().getWidth() != 0 && this.game.getStage().getHeight() != 0) {
 				for (int i = 0; i < this.game.getStage().getWidth(); i++) {
-					for (int j = 0; j < this.game.getStage().getHeight(); i++) {
+					for (int j = 0; j < this.game.getStage().getHeight(); j++) {
 						this.game.getStage().getField(i, j).observe(this);
 					}
 				}
