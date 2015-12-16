@@ -98,9 +98,9 @@ public class AI extends AbstractAI implements IModelObserver {
 						int yCoord = this.nextField.getY();
 						iRobotController.requestField(xCoord, yCoord);
 						break;
-					case LOCKED:
-						// break;
 					case LOCK_WAIT:
+						break;
+					case LOCKED:
 						// break;
 					case OCCUPIED:
 						// break;
@@ -390,10 +390,6 @@ public class AI extends AbstractAI implements IModelObserver {
 		boolean isOccupied = true;
 
 		return isOccupied;
-	}
-
-	public void nextField(Orientation o) {
-		fireNextOrientationEvent(o);
 	}
 
 	public IField getNextField() {
