@@ -64,13 +64,14 @@ public class AI extends AbstractAI implements IModelObserver {
 		case STAGE_WALL:
 			System.out.println("WALL");
 			initialize();
-			if (game.isRunning() && myself.getPosition() != null && !getController().getMyself().isSetupState()) {
-				try {
-					System.out.println("WALLStart");
-					fireNextOrientationEvent(getNextOrientation());
-				} catch (NoValidOrientationException e) {
-				}
-			}
+			// if (game.isRunning() && myself.getPosition() != null &&
+			// !getController().getMyself().isSetupState()) {
+			// try {
+			// System.out.println("WALLStart");
+			// fireNextOrientationEvent(getNextOrientation());
+			// } catch (NoValidOrientationException e) {
+			// }
+			// }
 			break;
 		case STAGE_SIZE:
 			if (this.game.getStage().getWidth() != 0 && this.game.getStage().getHeight() != 0) {
@@ -281,7 +282,7 @@ public class AI extends AbstractAI implements IModelObserver {
 			System.out.println("Game");
 			IGame game = (IGame) event.getObject();
 			if (game.isRunning() && graph != null && myself.getPosition() != null
-					&& !getController().getMyself().isSetupState()) {
+					&& iRobotController.getMyself().getState().equals(IRobot.RobotState.ENABLED)) {
 				try {
 					System.out.println("GAMEStart");
 					int x = myself.getPosition().getX();
@@ -318,12 +319,39 @@ public class AI extends AbstractAI implements IModelObserver {
 		case ROBOT_ADD:
 			break;
 		case ROBOT_STATE:
-			if (getController().getGame().isRunning() && graph != null && myself.getPosition() != null
-					&& !getController().getMyself().isSetupState()) {
-				try {
-					System.out.println("GAMEStart");
-					fireNextOrientationEvent(getNextOrientation());
-				} catch (NoValidOrientationException e) {
+			IRobot robot = (IRobot) event.getObject();
+			if (robot.isMyself()) {
+				if (getController().getGame().isRunning() && graph != null && myself.getPosition() != null
+						&& robot.getState().equals(IRobot.RobotState.ENABLED)) {
+					try {
+						System.out.println("GAMEStart");
+						int x = myself.getPosition().getX();
+						int y = myself.getPosition().getY();
+						Orientation orientation = getNextOrientation();
+						/*
+						 * Calculate next node position
+						 */
+						switch (orientation) {
+						case NORTH:
+							y -= 1;
+							break;
+						case EAST:
+							x += 1;
+							break;
+						case SOUTH:
+							y += 1;
+							break;
+						case WEST:
+							x -= 1;
+							break;
+						default:
+							break;
+						}
+						iRobotController.requestField(x, y);
+						this.nextField = this.game.getStage().getField(x, y);
+						this.nextOrientation = orientation;
+					} catch (NoValidOrientationException e) {
+					}
 				}
 			}
 			break;
