@@ -185,12 +185,13 @@ public abstract class AbstractAutomate implements AiEventObserver, Runnable {
 					nextPosition.translate(-1, 0);
 					break;
 				}
+				
 
 				// set new state
 				currentDirection = Direction.calcDirection(robot.getPosition().getOrientation(), orientation);
+				System.out.println("Current: "+robot.getPosition().getX()+" "+robot.getPosition().getY() + " Next: "+nextPosition.x+" "+nextPosition.y+" Orientation: "+orientation.name()+" Direction: "+currentDirection.name());
 				state = state.getStateForDirection(currentDirection);
 				state.start();
-				System.out.println(currentDirection.name());
 
 				updateOrientation(orientation);
 
