@@ -28,13 +28,16 @@ import de.unihannover.swp2015.robots2.visual.resource.IResourceHandler;
 import de.unihannover.swp2015.robots2.visual.ui.UI;
 import de.unihannover.swp2015.robots2.visual.util.SortUtil;
 import de.unihannover.swp2015.robots2.visual.util.pref.IPreferences;
+import de.unihannover.swp2015.robots2.visual.util.pref.IPreferencesKey;
+import de.unihannover.swp2015.robots2.visual.util.pref.observer.IPreferencesObserver;
+import de.unihannover.swp2015.robots2.visual.util.pref.observer.PreferencesObservable;
 
 /**
  * It handles all entities, resources and update processes of the RobotGame.
  * 
  * @author Rico Schrage
  */
-public class RobotGameHandler extends GameHandler {
+public class RobotGameHandler extends GameHandler implements IPreferencesObserver {
 
 	/**
 	 * Contains all modifiers, which are updated every tick.
@@ -86,16 +89,16 @@ public class RobotGameHandler extends GameHandler {
 	private final List<IRobot> robots;
 	
 	/**
-	 * FBO, part of a workaround for a bug in the PP-lib.
-	 */
-	private final FrameBuffer fbo;
-	
-	/**
 	 * TextureRegion, part of a workaround for a bug in the PP-lib.
 	 * Describes the resulting texture of the FBO as texture region.
 	 */
-	private final TextureRegion reg;
+	private TextureRegion reg;
 	
+	/**
+	 * FBO, part of a workaround for a bug in the PP-lib.
+	 */
+	private FrameBuffer fbo;
+
 	/**
 	 * Construct a new RobotGameHandler and connects this handler (means it will directly observe the model) to the given model <code>game</code>
 	 * 
@@ -113,6 +116,7 @@ public class RobotGameHandler extends GameHandler {
 		this.spriteBatch = new SpriteBatch();
 		this.spriteBatch.setProjectionMatrix(view.getCamera().combined);
 		this.game.observe(this);
+		this.prefs.addObserver(this);
 		
 		this.fbo = new FrameBuffer(Pixmap.Format.RGBA4444, (int) (view.getWorldWidth()), (int) (view.getWorldHeight()), false);
 		this.reg = new TextureRegion(fbo.getColorBufferTexture());
@@ -284,6 +288,29 @@ public class RobotGameHandler extends GameHandler {
 				view.getScreenWidth(), view.getScreenHeight()));
 		this.pp2.setViewport(new Rectangle(view.getScreenX(), view.getScreenY(),
 				view.getScreenWidth(), view.getScreenHeight()));
+	}
+
+	@Override
+	public void onUpdatePreferences(PreferencesObservable o, IPreferencesKey updatedKey) {
+		PrefConst key = (PrefConst) updatedKey.getEnum();
+		switch (key) {
+		
+		case VIEW_HEIGHT:
+			this.view.setWorldHeight(prefs.getFloat(updatedKey));
+		case VIEW_WIDTH:
+			this.view.setWorldWidth(prefs.getFloat(PrefConst.VIEW_WIDTH));
+			this.view.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
+			this.spriteBatch.setProjectionMatrix(view.getCamera().combined);	
+			this.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+			this.fbo.dispose();
+			this.fbo = new FrameBuffer(Pixmap.Format.RGBA4444, (int) (view.getWorldWidth()), (int) (view.getWorldHeight()), false);
+			this.reg = new TextureRegion(fbo.getColorBufferTexture());
+			break;
+			
+		default:
+			break;
+		
+		}
 	}
 
 }

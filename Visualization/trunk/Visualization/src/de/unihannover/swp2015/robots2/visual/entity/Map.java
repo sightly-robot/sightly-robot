@@ -69,10 +69,10 @@ public class Map extends Entity {
 		final float viewWidth = fieldSize * model.getWidth();
 		final float viewHeight = fieldSize * model.getHeight();
 		
-		this.prefs.putFloat(PrefConst.FIELD_WIDTH_KEY, viewWidth);
-		this.prefs.putFloat(PrefConst.FIELD_HEIGHT_KEY, viewHeight);
+		this.prefs.putFloat(PrefConst.FIELD_WIDTH_KEY, fieldSize);
+		this.prefs.putFloat(PrefConst.FIELD_HEIGHT_KEY, fieldSize);
 		this.prefs.putFloat(PrefConst.VIEW_WIDTH, viewWidth);
-		this.prefs.putFloat(PrefConst.VIEW_WIDTH, viewHeight);
+		this.prefs.putFloat(PrefConst.VIEW_HEIGHT, viewHeight);
 		this.init(model);
 	}
 	

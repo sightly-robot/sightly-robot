@@ -101,6 +101,7 @@ public class UI implements IRenderable, IPreferencesObserver {
 		this.background = res.createRenderUnit(ResConst.DEFAULT_BUBBLE);
 		this.color = new Color(1, 1, 1, 0.7f);
 		this.startBg = new Color(1,1,1,0.3f);
+		this.pref.addObserver(this);
 		
 		final float viewWidth = pref.getFloat(PrefConst.VIEW_WIDTH, 0);
 		final float viewHeight = pref.getFloat(PrefConst.VIEW_HEIGHT, 0); 
@@ -141,14 +142,14 @@ public class UI implements IRenderable, IPreferencesObserver {
 		
 		switch(key) {
 		case VIEW_HEIGHT:
-			final float viewHeight = pref.getFloat(PrefConst.VIEW_HEIGHT, 0); 
+			final float viewHeight = pref.getFloat(PrefConst.VIEW_HEIGHT); 
 			this.rect.setHeight(viewHeight * GameConst.UI_HEIGHT_REL);
 			this.rect.setY(viewHeight/2 - rect.height/2);
 			break;
 		case VIEW_WIDTH:
-			final float viewWidth = pref.getFloat(PrefConst.VIEW_WIDTH, 0);
-			this.rect.setHeight(viewWidth * GameConst.UI_WIDTH_REL);
-			this.rect.setY(viewWidth/2 - rect.width/2);
+			final float viewWidth = pref.getFloat(PrefConst.VIEW_WIDTH);
+			this.rect.setWidth(viewWidth * GameConst.UI_WIDTH_REL);
+			this.rect.setX(viewWidth/2 - rect.width/2);
 			break;
 		default:
 			break;

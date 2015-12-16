@@ -138,7 +138,7 @@ public class TestApp extends JFrame implements ActionListener {
 		}
 		else if (e.getSource() == this.changeSize) {
 			final Stage g = (Stage) game.getStage();
-			g.changeSize(4, 4);
+			g.changeSize(6, 4);
 			g.addStartPosition(2, 2, Orientation.EAST);
 			g.emitEvent(UpdateType.STAGE_SIZE);
 		}
