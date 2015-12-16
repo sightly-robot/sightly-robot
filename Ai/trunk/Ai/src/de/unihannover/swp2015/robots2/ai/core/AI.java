@@ -106,6 +106,8 @@ public class AI extends AbstractAI implements IModelObserver {
 						// break;
 					case RANDOM_WAIT:
 						try {
+							iRobotController.releaseField(nextField.getX(), nextField.getY());
+
 							Orientation nextOrientation = getNextOrientation();
 							int x = myself.getPosition().getX();
 							int y = myself.getPosition().getY();
@@ -178,6 +180,8 @@ public class AI extends AbstractAI implements IModelObserver {
 							System.out.println("New position is the same as the old one");
 							break;
 						} else {
+							iRobotController.releaseField(nextField.getX(), nextField.getY());
+							
 							this.getGraph().setRobotPosition(myself, pos);
 							/*
 							 * Only keep going if the game is running
