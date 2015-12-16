@@ -16,6 +16,24 @@ public enum SoftwareState implements IState {
 			return this;
 		}
 	},
+	CONNECTED {
+		@Override
+		public IState execute() {
+			return this;
+		}
+	},
+	SETUP {
+		@Override
+		public IState execute() {
+			return this;
+		}
+	},
+	DISABLED {
+		@Override
+		public IState execute() {
+			return this;
+		}
+	},
 	FOREWARD, RIGHT, BACKWARD, LEFT;
 
 	private static double DURATION = 2000;
@@ -43,6 +61,11 @@ public enum SoftwareState implements IState {
 	@Override
 	public boolean isWait() {
 		return this == WAIT;
+	}
+	
+	@Override
+	public boolean isDriving() {
+		return this != WAIT && this != CONNECTED && this != DISABLED && this != SETUP;
 	}
 
 	@Override

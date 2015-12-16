@@ -27,10 +27,13 @@ public class SoftwareRobot extends AbstractRobot {
 				switch(event.getType())
 				{
 					case ROBOT_STATE:
-						if(robotController.getMyself().isSetupState())
-						{
+						switch (robotController.getMyself().getState()) {
+						case SETUPSTATE:
 							System.out.println("READY!");
 							robotController.setRobotReady();
+							break;
+						default:
+							break;
 						}
 					break;
 				}

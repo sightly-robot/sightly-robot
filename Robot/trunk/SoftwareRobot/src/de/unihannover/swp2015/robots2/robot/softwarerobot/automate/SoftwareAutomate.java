@@ -13,13 +13,14 @@ import de.unihannover.swp2015.robots2.robot.abstractrobot.automate.AbstractAutom
 public class SoftwareAutomate extends AbstractAutomate {
 
 	public SoftwareAutomate(IRobotController robotController) {
-		super(robotController, SoftwareState.WAIT);
+		super(robotController, SoftwareState.WAIT, SoftwareState.SETUP, SoftwareState.DISABLED,
+				SoftwareState.CONNECTED);
 		robotController.getGame().observe(new IModelObserver() {
 			@Override
 			public void onModelUpdate(IEvent event) {
 				switch (event.getType()) {
 				case GAME_PARAMETER:
-						//SoftwareState.setVSpeed(SoftwareAutomate.this.robotController.getGame().getVRobotSpeed());
+					// SoftwareState.setVSpeed(SoftwareAutomate.this.robotController.getGame().getVRobotSpeed());
 					break;
 				default:
 					break;
