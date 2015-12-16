@@ -66,6 +66,7 @@ public abstract class AbstractRobot {
 		
 		while (!robotController.getGame().isSynced()) {
 			try {
+				System.out.println("start mqtt");
 				robotController.startMqtt("tcp://" + brokerIP);
 			} catch (MqttException me) {
 				try {
@@ -73,11 +74,12 @@ public abstract class AbstractRobot {
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
+				System.out.println("try again");
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-
 		}
+		System.out.println("connected!");
 	
 		robotController.getGame().observe(new IModelObserver() {
 			@Override
@@ -112,5 +114,6 @@ public abstract class AbstractRobot {
 		ai = new AI(robotController);
 		ai.setRelativeSpeed(1, 1, 1);
 
+		System.out.println("AI initialized!");
 	}
 }
