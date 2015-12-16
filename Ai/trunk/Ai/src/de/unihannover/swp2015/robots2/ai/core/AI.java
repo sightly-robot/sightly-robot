@@ -16,6 +16,7 @@ import de.unihannover.swp2015.robots2.robot.interfaces.AbstractAI;
 
 public class AI extends AbstractAI implements IModelObserver {
 
+	private boolean hasStarted = false;
 	private IField nextField;
 	private Orientation nextOrientation;
 	private AIGraph graph; // volatile
@@ -108,13 +109,13 @@ public class AI extends AbstractAI implements IModelObserver {
 						try {
 							iRobotController.releaseField(nextField.getX(), nextField.getY());
 
-							Orientation nextOrientation = getNextOrientation();
+							Orientation orientation = getNextOrientation();
 							int x = myself.getPosition().getX();
 							int y = myself.getPosition().getY();
 							/*
 							 * Calculate next node position
 							 */
-							switch (nextOrientation) {
+							switch (orientation) {
 							case NORTH:
 								y -= 1;
 								break;
@@ -133,7 +134,7 @@ public class AI extends AbstractAI implements IModelObserver {
 
 							iRobotController.requestField(x, y);
 							this.nextField = this.game.getStage().getField(x, y);
-							this.nextOrientation = nextOrientation;
+							this.nextOrientation = orientation;
 
 						} catch (NoValidOrientationException e) {
 							e.printStackTrace();
@@ -188,13 +189,13 @@ public class AI extends AbstractAI implements IModelObserver {
 							 */
 							if (this.game.isRunning()) {
 								try {
-									Orientation nextOrientation = getNextOrientation();
+									Orientation orientation = getNextOrientation();
 									int x = myself.getPosition().getX();
 									int y = myself.getPosition().getY();
 									/*
 									 * Calculate next node position
 									 */
-									switch (nextOrientation) {
+									switch (orientation) {
 									case NORTH:
 										y -= 1;
 										break;
@@ -217,9 +218,10 @@ public class AI extends AbstractAI implements IModelObserver {
 									switch (this.game.getStage().getField(x, y).getState()) {
 									// Lock if free
 									case FREE:
-										iRobotController.requestField(x, y);
-										this.nextField = this.game.getStage().getField(x, y);
-										this.nextOrientation = nextOrientation;
+										// iRobotController.requestField(x, y);
+										// this.nextField =
+										// this.game.getStage().getField(x, y);
+										// this.nextOrientation = orientation;
 										break;
 									// No need to use LOCKED state at the moment
 									case LOCKED:
@@ -233,7 +235,7 @@ public class AI extends AbstractAI implements IModelObserver {
 									// Should be triggered by another event!!
 									// TODO
 									case OURS:
-										fireNextOrientationEvent(nextOrientation);
+										// fireNextOrientationEvent(nextOrientation);
 										break;
 									// Don't use for now
 									case LOCK_WAIT:
@@ -284,6 +286,7 @@ public class AI extends AbstractAI implements IModelObserver {
 			break;
 		case GAME_STATE: // reicht das?
 			System.out.println("Game");
+			// TODO check hasStarted state!!
 			IGame game = (IGame) event.getObject();
 			if (game.isRunning() && graph != null && myself.getPosition() != null
 					&& iRobotController.getMyself().getState().equals(IRobot.RobotState.ENABLED)) {
@@ -325,36 +328,40 @@ public class AI extends AbstractAI implements IModelObserver {
 		case ROBOT_STATE:
 			IRobot robot = (IRobot) event.getObject();
 			if (robot.isMyself()) {
-				if (getController().getGame().isRunning() && graph != null && myself.getPosition() != null
-						&& robot.getState().equals(IRobot.RobotState.ENABLED)) {
-					try {
-						System.out.println("GAMEStart");
-						int x = myself.getPosition().getX();
-						int y = myself.getPosition().getY();
-						Orientation orientation = getNextOrientation();
-						/*
-						 * Calculate next node position
-						 */
-						switch (orientation) {
-						case NORTH:
-							y -= 1;
-							break;
-						case EAST:
-							x += 1;
-							break;
-						case SOUTH:
-							y += 1;
-							break;
-						case WEST:
-							x -= 1;
-							break;
-						default:
-							break;
+				if (this.hasStarted == false) {
+					if (robot.getState().equals(IRobot.RobotState.ENABLED)) {
+						this.hasStarted = true;
+						if (getController().getGame().isRunning() && graph != null && myself.getPosition() != null) {
+							try {
+								System.out.println("GAMEStart");
+								int x = myself.getPosition().getX();
+								int y = myself.getPosition().getY();
+								Orientation orientation = getNextOrientation();
+								/*
+								 * Calculate next node position
+								 */
+								switch (orientation) {
+								case NORTH:
+									y -= 1;
+									break;
+								case EAST:
+									x += 1;
+									break;
+								case SOUTH:
+									y += 1;
+									break;
+								case WEST:
+									x -= 1;
+									break;
+								default:
+									break;
+								}
+								iRobotController.requestField(x, y);
+								this.nextField = this.game.getStage().getField(x, y);
+								this.nextOrientation = orientation;
+							} catch (NoValidOrientationException e) {
+							}
 						}
-						iRobotController.requestField(x, y);
-						this.nextField = this.game.getStage().getField(x, y);
-						this.nextOrientation = orientation;
-					} catch (NoValidOrientationException e) {
 					}
 				}
 			}
