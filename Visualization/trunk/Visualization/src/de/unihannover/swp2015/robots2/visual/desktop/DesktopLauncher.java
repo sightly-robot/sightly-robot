@@ -28,7 +28,7 @@ public class DesktopLauncher {
 		}
 		
 		String brokerIp = "localhost";
-		if (!debug && arg.length > 1 && arg[1].matches("[0-2][0-5][0-5].{3}[0-2][0-5][0-5]")) {
+		if (!debug && arg.length > 1 && arg[1].matches("[0-2]?[0-5]?[0-5].{3}[0-2]?[0-5]?[0-5]")) {
 				brokerIp = arg[1];
 				System.out.println("Broker ip: " + brokerIp);
 		}
@@ -52,15 +52,7 @@ public class DesktopLauncher {
 		packSettings.pot = true;
 		packSettings.duplicatePadding = true;
 		TexturePacker.process(packSettings, "assets/tex/default_theme_src", ResConst.ATLAS_PATH.getName()+ "/default", ResConst.ATLAS_NAME.getName());
-		
-		// packs all textures of the earth theme in a texture atlas
-		// name of the theme "earth"
-		Settings packSettingsEarth = new Settings();
-		packSettingsEarth.maxWidth = 1024*4;
-		packSettingsEarth.maxHeight = 1024*4;
-		packSettingsEarth.pot = true;
-		packSettingsEarth.duplicatePadding = true;
-		TexturePacker.process(packSettingsEarth, "assets/tex/earth_theme_src", ResConst.ATLAS_PATH.getName()+ "/earth", ResConst.ATLAS_NAME.getName());
+		TexturePacker.process(packSettings, "assets/tex/earth_theme_src", ResConst.ATLAS_PATH.getName()+ "/earth", ResConst.ATLAS_NAME.getName());
 		
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.width = initialWidth;
