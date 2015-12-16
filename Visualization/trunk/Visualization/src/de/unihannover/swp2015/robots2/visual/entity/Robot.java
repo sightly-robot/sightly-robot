@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
 import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
+import de.unihannover.swp2015.robots2.model.interfaces.IRobot.RobotState;
 import de.unihannover.swp2015.robots2.visual.core.GameConst;
 import de.unihannover.swp2015.robots2.visual.core.PrefConst;
 import de.unihannover.swp2015.robots2.visual.core.RobotGameHandler;
@@ -84,7 +85,7 @@ public class Robot extends Entity {
 		
 		this.initDirection(robModel);
 		this.initBubble(robModel, fieldWidth, fieldHeight);
-		if(robModel.isSetupState()){
+		if(robModel.getState() == RobotState.SETUPSTATE) {
 			//System.out.println("setup...");
 			this.drawStartPositions(robModel);
 		}
@@ -249,7 +250,7 @@ public class Robot extends Entity {
 				break;
 	
 			case ROBOT_STATE:
-				this.startp = robo.isSetupState();
+				this.startp = robo.getState() == RobotState.SETUPSTATE;
 	
 				break;
 			case STAGE_STARTPOSITIONS:
