@@ -103,8 +103,8 @@ public class UI implements IRenderable, IPreferencesObserver {
 		this.startBg = new Color(1,1,1,0.3f);
 		this.pref.addObserver(this);
 		
-		final float viewWidth = pref.getFloat(PrefConst.VIEW_WIDTH, 0);
-		final float viewHeight = pref.getFloat(PrefConst.VIEW_HEIGHT, 0); 
+		final float viewWidth = pref.getFloat(PrefConst.VIEW_WIDTH);
+		final float viewHeight = pref.getFloat(PrefConst.VIEW_HEIGHT); 
 		this.rect.setSize(viewWidth * GameConst.UI_WIDTH_REL, viewHeight * GameConst.UI_HEIGHT_REL);
 		this.rect.setPosition(viewWidth/2 - rect.width/2, viewHeight/2 - rect.height/2);
 	}

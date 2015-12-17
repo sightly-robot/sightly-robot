@@ -54,11 +54,12 @@ public class DesktopLauncher {
 		TexturePacker.process(packSettings, "assets/tex/default_theme_src", ResConst.ATLAS_PATH.getName()+ "/default", ResConst.ATLAS_NAME.getName());
 		TexturePacker.process(packSettings, "assets/tex/earth_theme_src", ResConst.ATLAS_PATH.getName()+ "/earth", ResConst.ATLAS_NAME.getName());
 		
+		
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.width = initialWidth;
 		config.height = initialHeight;
-		config.foregroundFPS = 0;
-		config.backgroundFPS = 0;
+		config.foregroundFPS = 120;
+		config.backgroundFPS = 60;
 		config.vSyncEnabled = false;
 		config.fullscreen = false;
 		new LwjglApplication(new Visualization(debug, brokerIp), config);

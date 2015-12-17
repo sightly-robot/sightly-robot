@@ -40,7 +40,8 @@ public class Map extends Entity {
 	
 		this.fieldList = new ArrayList<>(model.getWidth() * model.getHeight());
 		
-		this.init(model);
+		if (model.getHeight() != 0 && model.getWidth() != 0)
+			this.resize();
 	}
 	
 	/**
@@ -68,8 +69,6 @@ public class Map extends Entity {
 		final float fieldSize = prefs.getFloat(PrefConst.DEVICE_HEIGHT) * GameConst.HEIGHT_SCALE / model.getHeight();
 		final float viewWidth = fieldSize * model.getWidth();
 		final float viewHeight = fieldSize * model.getHeight();
-		System.out.println(viewWidth);
-		System.out.println(viewHeight);
 		
 		this.prefs.putFloat(PrefConst.FIELD_WIDTH_KEY, fieldSize);
 		this.prefs.putFloat(PrefConst.FIELD_HEIGHT_KEY, fieldSize);

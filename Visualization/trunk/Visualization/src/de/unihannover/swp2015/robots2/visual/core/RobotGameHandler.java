@@ -296,7 +296,7 @@ public class RobotGameHandler extends GameHandler implements IPreferencesObserve
 		switch (key) {
 		
 		case VIEW_HEIGHT:
-			this.view.setWorldHeight(prefs.getFloat(updatedKey));
+			this.view.setWorldHeight(prefs.getFloat(PrefConst.VIEW_HEIGHT));
 		case VIEW_WIDTH:
 			this.view.setWorldWidth(prefs.getFloat(PrefConst.VIEW_WIDTH));
 			this.view.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
