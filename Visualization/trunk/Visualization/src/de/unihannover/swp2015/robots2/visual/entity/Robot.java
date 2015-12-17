@@ -86,7 +86,6 @@ public class Robot extends Entity {
 		this.initDirection(robModel);
 		this.initBubble(robModel, fieldWidth, fieldHeight);
 		if(robModel.getState() == RobotState.SETUPSTATE) {
-			//System.out.println("setup...");
 			this.drawStartPositions(robModel);
 		}
 	}

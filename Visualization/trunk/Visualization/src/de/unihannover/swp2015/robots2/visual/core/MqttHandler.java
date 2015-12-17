@@ -1,5 +1,8 @@
 package de.unihannover.swp2015.robots2.visual.core;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import de.unihannover.swp2015.robots2.controller.externalInterfaces.IVisualization;
 import de.unihannover.swp2015.robots2.controller.interfaces.IVisualizationController;
 import de.unihannover.swp2015.robots2.controller.main.VisualizationMainController;
@@ -10,6 +13,8 @@ import de.unihannover.swp2015.robots2.model.interfaces.IGame;
  */
 public class MqttHandler implements IVisualization, Runnable {
 
+	private final static Logger log = LogManager.getLogger();
+	
 	private final static int MAX_ATTEMPTS = 5; 
 	private final static int ATTEMPT_INTERVAL = 5000; 
 	
@@ -52,11 +57,14 @@ public class MqttHandler implements IVisualization, Runnable {
 		synchronized(ipLock) {
 			
 			try {
-				System.out.println("Trying to connect to: " + ip);
+				log.info("Trying to connect to: {}", ip);
 				this.visController.startMqtt("tcp://" + ip);
 				this.attempts = 0;
+				log.info("Connection established");
 			} 
 			catch (Exception e) {
+				
+				log.warn("Connection could'nt be established");
 				
 				this.attempts++;
 					
@@ -68,7 +76,7 @@ public class MqttHandler implements IVisualization, Runnable {
 					this.run();
 				} 
 				catch (InterruptedException e1) {
-					e1.printStackTrace();
+					log.error("ipLock.wait(...) has been interrupted!");
 				}
 			}
 		}

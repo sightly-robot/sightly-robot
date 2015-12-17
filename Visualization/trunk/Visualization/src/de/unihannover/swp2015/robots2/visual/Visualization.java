@@ -5,6 +5,9 @@ import java.awt.GraphicsEnvironment;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
@@ -29,6 +32,8 @@ import de.unihannover.swp2015.robots2.visual.util.pref.FlexPreferences;
  * @author Rico Schrage
  */
 public class Visualization extends ApplicationAdapter {
+	
+	private final Logger log = LogManager.getLogger();
 	
 	/**
 	 * Broker-IP
@@ -146,7 +151,7 @@ public class Visualization extends ApplicationAdapter {
 			c -= Gdx.graphics.getDeltaTime();
 			if (c < 0) {
 				c = 5;
-				System.out.println(Gdx.graphics.getFramesPerSecond());
+				log.info(Gdx.graphics.getFramesPerSecond());
 			}
 		}
 	}
