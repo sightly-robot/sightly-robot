@@ -114,7 +114,7 @@ public class UI implements IRenderable, IPreferencesObserver {
 		
 		batch.begin();
 				
-		if (robotList.size() == 0 || !display) {
+		if (robotList.isEmpty() || !display) {
 			batch.setColor(startBg);
 			background.draw(batch, rect.x, rect.y, rect.width, rect.height);
 			fontTitle.draw(batch, GameConst.UI_NO_DATA,
@@ -141,16 +141,19 @@ public class UI implements IRenderable, IPreferencesObserver {
 		final PrefConst key = (PrefConst) updatedKey.getEnum();
 		
 		switch(key) {
+		
 		case VIEW_HEIGHT:
 			final float viewHeight = pref.getFloat(PrefConst.VIEW_HEIGHT); 
 			this.rect.setHeight(viewHeight * GameConst.UI_HEIGHT_REL);
 			this.rect.setY(viewHeight/2 - rect.height/2);
 			break;
+		
 		case VIEW_WIDTH:
 			final float viewWidth = pref.getFloat(PrefConst.VIEW_WIDTH);
 			this.rect.setWidth(viewWidth * GameConst.UI_WIDTH_REL);
 			this.rect.setX(viewWidth/2 - rect.width/2);
 			break;
+			
 		default:
 			break;
 		}

@@ -30,6 +30,11 @@ public class ResourceHandler implements IResourceHandler {
 	private static final ResConst placeholderKey = ResConst.DEFAULT_FIELD;
 	
 	/**
+	 * All chars (as char-array), which will be used by the visualization.
+	 */
+	private static final String NECESSARY_CHARS = "abcdefghijklmnopqrstuvxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789()";
+	
+	/**
 	 * Map key->textureRegion.
 	 * <br>
 	 * Hint: <code>frameSetMap.keySet() intersection texMap.keySet() = { }</code>.
@@ -122,19 +127,19 @@ public class ResourceHandler implements IResourceHandler {
 	private void createFonts() {
 		final FreeTypeFontGenerator defFontGen = new FreeTypeFontGenerator(Gdx.files.internal("assets/font/Roboto-Regular.ttf"));
 		final FreeTypeFontParameter defPara = new FreeTypeFontParameter();
-		defPara.characters = "abcdefghijklmnopqrstuvxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789()";
+		defPara.characters = NECESSARY_CHARS;
 		defPara.size = 15;
 		defPara.flip = true;
 		this.fontMap.put(ResConst.DEFAULT_FONT, defFontGen.generateFont(defPara));
 		
 		final FreeTypeFontParameter bigDefFont = new FreeTypeFontParameter();
-		bigDefFont.characters = "abcdefghijklmnopqrstuvxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789()";
+		bigDefFont.characters = NECESSARY_CHARS;
 		bigDefFont.size = 28;
 		bigDefFont.flip = true;
 		this.fontMap.put(ResConst.DEFAULT_FONT_BIG, defFontGen.generateFont(bigDefFont));
 
 		final FreeTypeFontParameter titleDefFont = new FreeTypeFontParameter();
-		titleDefFont.characters = "abcdefghijklmnopqrstuvxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789()";
+		titleDefFont.characters = NECESSARY_CHARS;
 		titleDefFont.size = 36;
 		titleDefFont.flip = true;
 		this.fontMap.put(ResConst.DEFAULT_FONT_TITLE, defFontGen.generateFont(titleDefFont));

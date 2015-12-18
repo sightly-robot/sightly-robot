@@ -13,16 +13,18 @@ import de.unihannover.swp2015.robots2.model.interfaces.IGame;
  */
 public class MqttHandler implements IVisualization, Runnable {
 
-	private final static Logger log = LogManager.getLogger();
+	private static final Logger log = LogManager.getLogger();
 	
-	private final static int MAX_ATTEMPTS = 5; 
-	private final static int ATTEMPT_INTERVAL = 5000; 
+	private static final int MAX_ATTEMPTS = 5; 
+	private static final int ATTEMPT_INTERVAL = 5000; 
+	private static final int SLEEP_TIME = 1000; 
 	
 	private final IVisualizationController visController;
 	
 	private int attempts = 0;
 	private String ip = null;
 	private Object ipLock = new Object();
+	private boolean ipChanged = false;
 	
 	/**
 	 * 
@@ -40,6 +42,7 @@ public class MqttHandler implements IVisualization, Runnable {
 		synchronized(ipLock) {
 			this.ip = ip;
 			this.ipLock.notify();
+			this.ipChanged = true;
 		}
 	}
 	
@@ -53,6 +56,10 @@ public class MqttHandler implements IVisualization, Runnable {
 	
 	@Override
     public void run() {
+		this.connect();
+    }
+	
+	private void connect() {
 		
 		synchronized(ipLock) {
 			
@@ -64,23 +71,33 @@ public class MqttHandler implements IVisualization, Runnable {
 			} 
 			catch (Exception e) {
 				
-				log.warn("Connection could'nt be established");
+				log.warn("Connection could'nt be established.");
 				
 				this.attempts++;
 					
 				if (this.attempts >= MAX_ATTEMPTS)
 					return;
 				
+				log.info("Trying again in {} seconds.", ATTEMPT_INTERVAL/1000);
+				
 				try {
-					ipLock.wait(ATTEMPT_INTERVAL);
-					this.run();
+					
+					long timePassed = 0;
+					long startTime = System.currentTimeMillis();
+					while (!ipChanged && timePassed < ATTEMPT_INTERVAL) {
+						ipLock.wait(SLEEP_TIME);
+						timePassed = (System.currentTimeMillis() - startTime);
+					}
+					ipChanged = false;
+					
+					this.connect();
 				} 
 				catch (InterruptedException e1) {
 					log.error("ipLock.wait(...) has been interrupted!");
 				}
 			}
 		}
-    }
+	}
 	
 	@Override
 	public void setSettings(String settings) {

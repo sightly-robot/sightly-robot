@@ -6,10 +6,6 @@ package de.unihannover.swp2015.robots2.visual.core;
  * @author Rico Schrage
  */
 public class GameConst {
-
-	private GameConst() {
-		// pure static class
-	}
 	
 	public static final float HEIGHT_SCALE = 0.75f;
 	
@@ -22,5 +18,9 @@ public class GameConst {
 	public static final float UI_TOP_ABS = 50f;
 	public static final String UI_TITLE = "RANKING";
 	public static final String UI_NO_DATA = "PLEASE START A GAME";
+	
+	private GameConst() {
+		// pure static class
+	}
 	
 }

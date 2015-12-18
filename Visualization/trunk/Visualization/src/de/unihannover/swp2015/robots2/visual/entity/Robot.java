@@ -75,8 +75,8 @@ public class Robot extends Entity {
 		this.modList = new ArrayList<>();
 		this.startpos = resHandler.createRenderUnit(ResConst.DEFAULT_STARTPOS);
 
-		fieldWidth = prefs.getFloat(PrefConst.FIELD_WIDTH_KEY, 42);
-		fieldHeight = prefs.getFloat(PrefConst.FIELD_HEIGHT_KEY, 42);
+		this.fieldWidth = prefs.getFloat(PrefConst.FIELD_WIDTH_KEY, 42);
+		this.fieldHeight = prefs.getFloat(PrefConst.FIELD_HEIGHT_KEY, 42);
 
 		this.width = fieldWidth * GameConst.ROBOT_SCALE;
 		this.height = fieldHeight * GameConst.ROBOT_SCALE;
@@ -164,7 +164,7 @@ public class Robot extends Entity {
 		if (modList != null)
 			modList.clear();
 		
-		IEntityModifier mod = null;
+		IEntityModifier mod;
 		
 		//TODO dynamic duration
 		//TODO use progress
@@ -201,9 +201,7 @@ public class Robot extends Entity {
 	 * @param robo model of the robot
 	 */
 	private void updatePosition(final IRobot robo) { 
-		fieldWidth = prefs.getFloat(PrefConst.FIELD_WIDTH_KEY, 42);
-		fieldHeight = prefs.getFloat(PrefConst.FIELD_HEIGHT_KEY, 42);
-		
+
 		final float newRenderX = robo.getPosition().getX() * fieldWidth + fieldWidth/2 - width/2;
 		final float newRenderY = robo.getPosition().getY() * fieldHeight + fieldHeight/2 - height/2;
 
@@ -230,7 +228,7 @@ public class Robot extends Entity {
 
 	@Override
 	public void onManagedModelUpdate(IEvent event) {
-		IRobot robo = (IRobot) model;
+		IRobot robotModel = (IRobot) model;
 		RobotGameHandler handler = (RobotGameHandler) gameHandler;
 		
 		switch(event.getType()) {
@@ -240,20 +238,20 @@ public class Robot extends Entity {
 				
 			case ROBOT_POSITION:
 				if (this.modList != null && this.modList.size() == 0)
-					this.updateRobot(robo);
+					this.updateRobot(robotModel);
 				break;
 					
 			case ROBOT_SCORE:
-				this.bubble.points = robo.getId().substring(0, 4) + "  : " + robo.getScore() + "("
-						+ handler.getRanking(robo) + ")";
+				this.bubble.points = robotModel.getId().substring(0, 4) + "  : " + robotModel.getScore() + "("
+						+ handler.getRanking(robotModel) + ")";
 				break;
 	
 			case ROBOT_STATE:
-				this.startp = robo.getState() == RobotState.SETUPSTATE;
+				this.startp = robotModel.getState() == RobotState.SETUPSTATE;
 	
 				break;
 			case STAGE_STARTPOSITIONS:
-				drawStartPositions(robo);
+				drawStartPositions(robotModel);
 				break;
 				default:
 				break;
@@ -262,9 +260,10 @@ public class Robot extends Entity {
 
 	@Override
 	public void onUpdatePreferences(PreferencesObservable o, IPreferencesKey updatedKey) {
+		
 		if (updatedKey.getEnum() == PrefConst.FIELD_HEIGHT_KEY || updatedKey.getEnum() == PrefConst.FIELD_WIDTH_KEY) {
-			final float fieldWidth = prefs.getFloat(PrefConst.FIELD_WIDTH_KEY, 42);
-			final float fieldHeight = prefs.getFloat(PrefConst.FIELD_HEIGHT_KEY, 42);
+			this.fieldWidth = prefs.getFloat(PrefConst.FIELD_WIDTH_KEY, 42);
+			this.fieldHeight = prefs.getFloat(PrefConst.FIELD_HEIGHT_KEY, 42);
 
 			if (modList != null)
 				this.modList.clear();

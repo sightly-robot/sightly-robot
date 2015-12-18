@@ -64,7 +64,7 @@ public class Resource extends Entity {
 
 	@Override
 	public void onManagedModelUpdate(IEvent event) {
-		
+		// trivial entity
 	}
 
 	@Override

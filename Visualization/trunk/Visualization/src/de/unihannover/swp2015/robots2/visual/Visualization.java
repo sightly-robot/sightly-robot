@@ -33,7 +33,7 @@ import de.unihannover.swp2015.robots2.visual.util.pref.FlexPreferences;
  */
 public class Visualization extends ApplicationAdapter {
 	
-	private final Logger log = LogManager.getLogger();
+	private static final Logger log = LogManager.getLogger();
 	
 	/**
 	 * Broker-IP

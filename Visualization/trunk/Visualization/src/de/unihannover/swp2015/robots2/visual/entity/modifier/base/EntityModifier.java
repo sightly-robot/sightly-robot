@@ -87,7 +87,4 @@ public abstract class EntityModifier implements IEntityModifier {
         this.hasFinished = true;
     }
 
-    @Override
-    public void onInit() {}
-
 }

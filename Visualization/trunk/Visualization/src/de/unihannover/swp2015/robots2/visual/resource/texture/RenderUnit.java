@@ -34,7 +34,7 @@ public class RenderUnit {
 	 * Creates an uninitialized instance of {@link RenderUnit}.
 	 */
 	public RenderUnit() {
-
+		// have to be initialized
 	}
 
 	/**

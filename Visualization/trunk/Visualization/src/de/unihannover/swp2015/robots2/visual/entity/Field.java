@@ -56,7 +56,7 @@ public class Field extends Entity {
 	/**
 	 * Visual representation of the ground.
 	 */
-	private RenderUnit field;
+	private RenderUnit fieldUnit;
 	
 	float fieldWidth;
 	float fieldHeight;
@@ -78,7 +78,7 @@ public class Field extends Entity {
 		
 		this.food = new Resource(model, gameHandler);
 		this.texWall = resHandler.createRenderUnit(ResConst.DEFAULT_WALL_N, ResConst.DEFAULT_WALL_E, ResConst.DEFAULT_WALL_S, ResConst.DEFAULT_WALL_W); 
-		this.field = resHandler.createRenderUnit(ResConst.DEFAULT_FIELD);
+		this.fieldUnit = resHandler.createRenderUnit(ResConst.DEFAULT_FIELD);
 
 		fieldWidth = prefs.getFloat(PrefConst.FIELD_WIDTH_KEY, 50);
 		fieldHeight = prefs.getFloat(PrefConst.FIELD_HEIGHT_KEY, 50);
@@ -91,7 +91,7 @@ public class Field extends Entity {
 	}
 	
 	/**
-	 * Updates {@link #field} and {@link #rotation}.
+	 * Updates {@link #fieldUnit} and {@link #rotation}.
 	 * 
 	 * @param model data model of the field.
 	 */
@@ -114,7 +114,7 @@ public class Field extends Entity {
 		
 		//selects the correct texture + rotation depending on the booleans
 		final int result = StageUtil.convertToInt(dir, 2);
-		this.field = resHandler.createRenderUnit(FIELD_TEXTURE_LOOKUP[result]);
+		this.fieldUnit = resHandler.createRenderUnit(FIELD_TEXTURE_LOOKUP[result]);
 		this.rotation = FIELD_ROTATION_LOOKUP[result];
 	}
 	
@@ -125,11 +125,11 @@ public class Field extends Entity {
 		fieldHeight = prefs.getFloat(PrefConst.FIELD_HEIGHT_KEY, 50);
 		
 		if (rotation == -90)
-			field.draw(batch, renderX-(fieldWidth-fieldHeight)/2, renderY-(fieldWidth-fieldHeight)/2, fieldWidth/2f, fieldHeight/2f, fieldHeight, fieldWidth, 1f, 1f, rotation);
+			fieldUnit.draw(batch, renderX-(fieldWidth-fieldHeight)/2, renderY-(fieldWidth-fieldHeight)/2, fieldWidth/2f, fieldHeight/2f, fieldHeight, fieldWidth, 1f, 1f, rotation);
 		else if (rotation == 90)
-			field.draw(batch, renderX+(fieldWidth-fieldHeight)/2, renderY+(fieldWidth-fieldHeight)/2, fieldWidth/2f, fieldHeight/2f, fieldHeight, fieldWidth, 1f, 1f, rotation);
+			fieldUnit.draw(batch, renderX+(fieldWidth-fieldHeight)/2, renderY+(fieldWidth-fieldHeight)/2, fieldWidth/2f, fieldHeight/2f, fieldHeight, fieldWidth, 1f, 1f, rotation);
 		else
-			field.draw(batch, renderX, renderY, fieldWidth/2f, fieldHeight/2f, fieldWidth, fieldHeight, 1f, 1f, rotation);
+			fieldUnit.draw(batch, renderX, renderY, fieldWidth/2f, fieldHeight/2f, fieldWidth, fieldHeight, 1f, 1f, rotation);
 
 		food.draw(batch);
 				
@@ -157,6 +157,7 @@ public class Field extends Entity {
 			case STAGE_WALL:
 				determineFieldTexture(field);
 				break;
+				
 			default:
 				break;
 		}		

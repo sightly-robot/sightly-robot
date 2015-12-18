@@ -22,19 +22,26 @@ public class DesktopLauncher {
 	
 	private static final Logger log = LogManager.getLogger();
 	
-	public static final int initialWidth = 800;
-	public static final int initialHeight = 800;
+	private static final int INIT_WIDTH = 800;
+	private static final int INIT_HEIGHT = 800;
+	
+	private static final String IP_REGEX = "^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$";
+	private static final String DEBUG_SIGNAL = "debug";
+	
+	private DesktopLauncher() {
+		//pure static class
+	}
 	
 	public static void main(String[] arg) {
 
 		boolean debug = false;
-		if (arg.length > 0 && arg[0].equals("debug")) {
+		if (arg.length > 0 && arg[0].equals(DEBUG_SIGNAL)) {
 				debug = true;
 				log.info("Debug: {}", String.valueOf(debug));
 		}
 		
 		String brokerIp = "localhost";
-		if (!debug && arg.length > 1 && arg[1].matches("[0-2]?[0-5]?[0-5].{3}[0-2]?[0-5]?[0-5]")) {
+		if (!debug && arg.length > 1 && arg[1].matches(IP_REGEX)) {
 				brokerIp = arg[1];
 				log.info("Broker ip: {}", brokerIp);
 		}
@@ -65,8 +72,8 @@ public class DesktopLauncher {
 		}
 		
 		final LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		config.width = initialWidth;
-		config.height = initialHeight;
+		config.width = INIT_WIDTH;
+		config.height = INIT_HEIGHT;
 		config.foregroundFPS = 120;
 		config.backgroundFPS = 60;
 		config.vSyncEnabled = false;

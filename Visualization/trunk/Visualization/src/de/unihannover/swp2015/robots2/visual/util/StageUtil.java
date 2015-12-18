@@ -31,14 +31,17 @@ public class StageUtil {
 			if (model.getY() == 0)
 				return true;
 			break;
+			
 		case EAST:
 			if (model.getX()+1 == width)
 				return true;
 			break;
+		
 		case WEST:
 			if (model.getX() == 0) 
 				return true;
 			break;
+		
 		case SOUTH:
 			if (model.getY()+1 == height)
 				return true;
@@ -62,14 +65,17 @@ public class StageUtil {
 			if (model.getY() == 0)
 				return result;
 			return result || stage.getField(model.getX(), model.getY()-1).isWall(Orientation.SOUTH);
+		
 		case EAST:
 			if (model.getX()+1 == stage.getWidth())
 				return result;
 			return result || stage.getField(model.getX()+1, model.getY()).isWall(Orientation.WEST);
+		
 		case WEST:
 			if (model.getX() == 0) 
 				return result;
 			return result || stage.getField(model.getX()-1, model.getY()).isWall(Orientation.EAST);
+		
 		case SOUTH:
 			if (model.getY()+1 == stage.getHeight())
 				return result;
@@ -94,14 +100,17 @@ public class StageUtil {
 			if (model.getY() == 0)
 				return result;
 			return result && stage.getField(model.getX(), model.getY()-1).isWall(Orientation.SOUTH);
+		
 		case EAST:
 			if (model.getX()+1 == stage.getWidth())
 				return result;
 			return result && stage.getField(model.getX()+1, model.getY()).isWall(Orientation.WEST);
+		
 		case WEST:
 			if (model.getX() == 0) 
 				return result;
 			return result && stage.getField(model.getX()-1, model.getY()).isWall(Orientation.EAST);
+			
 		case SOUTH:
 			if (model.getY()+1 == stage.getHeight())
 				return result;

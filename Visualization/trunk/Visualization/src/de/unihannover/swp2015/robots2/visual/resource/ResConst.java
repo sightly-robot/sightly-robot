@@ -56,7 +56,7 @@ public enum ResConst {
 		return type;
 	}
 	
-	public static enum ResType {
+	public enum ResType {
 		PATH, TEX, FONT, AUDIO;
 	}
 	
