@@ -172,7 +172,7 @@ public class AI extends AbstractAI implements IModelObserver {
 					 * If myself has a position, update it if it's not the same
 					 * as the old one
 					 */
-					else {
+					else { //TODO add request for field etc back in
 						/*
 						 * Check if the new position is different than our old
 						 * one, only keep going if this is true
@@ -181,75 +181,79 @@ public class AI extends AbstractAI implements IModelObserver {
 							System.out.println("New position is the same as the old one");
 							break;
 						} else {
-							iRobotController.releaseField(nextField.getX(), nextField.getY());
+							Node position = this.myself.getPosition();
+							iRobotController.releaseField(position.getX(), position.getY());
 
 							this.getGraph().setRobotPosition(myself, pos);
 							/*
 							 * Only keep going if the game is running
 							 */
-							if (this.game.isRunning()) {
-								try {
-									Orientation orientation = getNextOrientation();
-									int x = myself.getPosition().getX();
-									int y = myself.getPosition().getY();
-									/*
-									 * Calculate next node position
-									 */
-									switch (orientation) {
-									case NORTH:
-										y -= 1;
-										break;
-									case EAST:
-										x += 1;
-										break;
-									case SOUTH:
-										y += 1;
-										break;
-									case WEST:
-										x -= 1;
-										break;
-									default:
-										break;
+							boolean requested = false;
+							while(!requested) {							
+								if (this.game.isRunning()) {
+									try {
+										Orientation orientation = getNextOrientation();
+										int x = myself.getPosition().getX();
+										int y = myself.getPosition().getY();
+										/*
+										 * Calculate next node position
+										 */
+										switch (orientation) { 
+										case NORTH:
+											y -= 1;
+											break;
+										case EAST:
+											x += 1;
+											break;
+										case SOUTH:
+											y += 1;
+											break;
+										case WEST:
+											x -= 1;
+											break;
+										default:
+											break;
+										}
+										/*
+										 * Check if field on next orientation is
+										 * free before going
+										 */
+										switch (this.game.getStage().getField(x, y).getState()) {
+										// Lock if free
+										case FREE:
+											 iRobotController.requestField(x, y);
+											 this.nextField = this.game.getStage().getField(x, y);
+											 this.nextOrientation = orientation;
+											 requested = true;
+											break;
+										// No need to use LOCKED state at the moment
+										case LOCKED:
+											break; 
+										// Calculate new field
+										case OCCUPIED: 
+											break;
+										// Drive on field if we have successfully
+										// got it
+										// (locked by us)
+										// Should be triggered by another event!!
+										// TODO
+										case OURS: 
+											// fireNextOrientationEvent(nextOrientation);
+											break;
+										// Don't use for now
+										case LOCK_WAIT: 
+											break;
+										// Don't use for now
+										case RANDOM_WAIT: 
+											break;
+										// Should throw error if a field has no
+										// event
+										default:
+											break;
+										}
+									} catch (NoValidOrientationException e) {
+										e.printStackTrace();
 									}
-									/*
-									 * Check if field on next orientation is
-									 * free before going
-									 */
-									switch (this.game.getStage().getField(x, y).getState()) {
-									// Lock if free
-									case FREE:
-										// iRobotController.requestField(x, y);
-										// this.nextField =
-										// this.game.getStage().getField(x, y);
-										// this.nextOrientation = orientation;
-										break;
-									// No need to use LOCKED state at the moment
-									case LOCKED:
-										break;
-									// Calculate new field
-									case OCCUPIED:
-										break;
-									// Drive on field if we have successfully
-									// got it
-									// (locked by us)
-									// Should be triggered by another event!!
-									// TODO
-									case OURS:
-										// fireNextOrientationEvent(nextOrientation);
-										break;
-									// Don't use for now
-									case LOCK_WAIT:
-										break;
-									// Don't use for now
-									case RANDOM_WAIT:
-										break;
-									// Should throw error if a field has no
-									// event
-									default:
-										break;
-									}
-								} catch (NoValidOrientationException e) {
-									e.printStackTrace();
 								}
 							}
 						}
