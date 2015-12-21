@@ -13,7 +13,7 @@ import de.unihannover.swp2015.robots2.model.interfaces.IPosition;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
 import de.unihannover.swp2015.robots2.model.interfaces.IStage;
 
-public class AIGraph {
+public class AIGraph extends Thread implements Runnable {
 
 	private IStage stage;
 
@@ -34,11 +34,14 @@ public class AIGraph {
 	private int dimY;
 
 	public AIGraph(IStage stage, Robot myself) throws InvalidStageException {
+		super();
+		
 		this.stage = stage;
 		this.loadFromStage(stage);
 		
 		this.myself = myself;
 		
+		this.start();
 	}
 
 	/**
@@ -48,6 +51,8 @@ public class AIGraph {
 	 * @param y
 	 */
 	public AIGraph(int x, int y) {
+		super();
+		
 		this.nodes = new Node[x][y];
 		this.dimX = x;
 		this.dimY = y;
@@ -80,6 +85,18 @@ public class AIGraph {
 		}
 	}
 
+	@Override
+	public void run() {
+		while(true) { //TODO something better than while true?
+			try{
+				sleep(10); //TODO this is supposed to keep the thread alive and waiting for method calls...
+			} 
+			catch(InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
 	/**
 	 * Loads map data into Graph object
 	 * 
