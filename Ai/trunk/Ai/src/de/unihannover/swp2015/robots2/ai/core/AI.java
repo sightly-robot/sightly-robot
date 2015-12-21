@@ -109,7 +109,7 @@ public class AI extends AbstractAI implements IModelObserver {
 						try {
 							iRobotController.releaseField(nextField.getX(), nextField.getY());
 
-							Orientation orientation = getNextOrientation();
+							Orientation orientation = findNextOrientation();
 							int x = myself.getPosition().getX();
 							int y = myself.getPosition().getY();
 							/*
@@ -192,7 +192,7 @@ public class AI extends AbstractAI implements IModelObserver {
 							while(!requested) {							
 								if (this.game.isRunning()) {
 									try {
-										Orientation orientation = getNextOrientation();
+										Orientation orientation = findNextOrientation();
 										int x = myself.getPosition().getX();
 										int y = myself.getPosition().getY();
 										/*
@@ -298,7 +298,7 @@ public class AI extends AbstractAI implements IModelObserver {
 					System.out.println("GAMEStart");
 					int x = myself.getPosition().getX();
 					int y = myself.getPosition().getY();
-					Orientation orientation = getNextOrientation();
+					Orientation orientation = findNextOrientation();
 					/*
 					 * Calculate next node position
 					 */
@@ -340,7 +340,7 @@ public class AI extends AbstractAI implements IModelObserver {
 								System.out.println("GAMEStart");
 								int x = myself.getPosition().getX();
 								int y = myself.getPosition().getY();
-								Orientation orientation = getNextOrientation();
+								Orientation orientation = findNextOrientation();
 								/*
 								 * Calculate next node position
 								 */
@@ -392,7 +392,7 @@ public class AI extends AbstractAI implements IModelObserver {
 	 * 
 	 * @return Orientation, the robot is supposed to move in next.
 	 */
-	public Orientation getNextOrientation() throws NoValidOrientationException {
+	public Orientation findNextOrientation() throws NoValidOrientationException {
 		return this.graph.getRandomOrientation();
 	}
 
@@ -405,6 +405,10 @@ public class AI extends AbstractAI implements IModelObserver {
 		boolean isOccupied = true;
 
 		return isOccupied;
+	}
+	
+	public void fireNextOrientationEventProxy(Orientation orientation) {
+		this.fireNextOrientationEvent(orientation);
 	}
 
 	public IField getNextField() {
@@ -437,5 +441,21 @@ public class AI extends AbstractAI implements IModelObserver {
 
 	public void setGame(IGame game) {
 		this.game = game;
+	}
+	
+	public IRobotController getIRobotController() {
+		return this.iRobotController;
+	}
+	
+	public boolean isStarted() {
+		return this.hasStarted;
+	}
+	
+	public void setStarted(boolean started) {
+		this.hasStarted = started;
+	}
+	
+	public Orientation getNextOrientation() {
+		return this.nextOrientation;
 	}
 }
