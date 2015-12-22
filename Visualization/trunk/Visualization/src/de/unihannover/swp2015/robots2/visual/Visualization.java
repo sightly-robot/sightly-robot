@@ -119,7 +119,7 @@ public class Visualization extends ApplicationAdapter {
 			new TestApp(mqttHandler.getGame());
 		}
 		else {
-			final Thread mqttThread = new Thread(mqttHandler);
+			final Thread mqttThread = new Thread(mqttHandler, "MQTT");
 			mqttThread.start();
 		}
 		
@@ -135,7 +135,7 @@ public class Visualization extends ApplicationAdapter {
 
 	@Override
 	public void render() {
-					
+		
 		Gdx.gl.glClearColor(0f, 0f, 0f, 0f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 

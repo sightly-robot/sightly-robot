@@ -1,5 +1,6 @@
 package de.unihannover.swp2015.robots2.visual.entity;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
@@ -69,7 +70,7 @@ public class Field extends Entity {
 	 * @param renderer batch, which should be used to render the entity
 	 * @param gameHandler {@link IGameHandler}, which should own this entity.
 	 */
-	public Field(final IStage parent, final IField model, final RobotGameHandler gameHandler){
+	public Field(final IStage parent, final IField model, final RobotGameHandler gameHandler) {
 		super(model, gameHandler);
 		
 		this.model = model;
@@ -134,7 +135,7 @@ public class Field extends Entity {
 		food.draw(batch);
 				
 		final IField field = (IField) model;
-		
+		batch.setColor(Color.BROWN);
 		if(field.isWall(IPosition.Orientation.NORTH))
 			texWall[0].draw(batch, renderX, renderY, fieldWidth, fieldHeight);
 		
@@ -146,7 +147,8 @@ public class Field extends Entity {
 		
 		if(field.isWall(IPosition.Orientation.WEST))
 			texWall[3].draw(batch, renderX, renderY, fieldWidth, fieldHeight);
-		
+		batch.setColor(Color.WHITE);
+
 		} 
 	
 	@Override

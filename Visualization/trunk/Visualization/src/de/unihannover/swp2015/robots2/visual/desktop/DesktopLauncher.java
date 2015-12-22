@@ -1,5 +1,12 @@
 package de.unihannover.swp2015.robots2.visual.desktop;
 
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -14,7 +21,7 @@ import de.unihannover.swp2015.robots2.visual.Visualization;
 import de.unihannover.swp2015.robots2.visual.resource.ResConst;
 
 /**
- * Starter class for desktop systems.
+ * Starter class for desktop systems. Accepts three different arguments, use -h | --help for usage information.
  * 
  * @author Rico Schrage
  */
@@ -22,45 +29,113 @@ public class DesktopLauncher {
 	
 	private static final Logger log = LogManager.getLogger();
 	
-	private static final int INIT_WIDTH = 800;
-	private static final int INIT_HEIGHT = 800;
+	private static final String DEBUG_SHORT = "d";
+	private static final String DEBUG_LONG = "debug";
+	
+	private static final String HELP_SHORT = "h";
+	private static final String HELP_LONG = "help";
+	
+	private static final String IP_SHORT = "ip";
+	private static final String IP_LONG = "ipv4";
+	private static final String DEFAULT_IP = "127.0.0.1";
 	
 	private static final String IP_REGEX = "^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$";
-	private static final String DEBUG_SIGNAL = "debug";
+	private static final String HEADER = "Starts a Visualization of the robot game.";
+	private static final String FOOTER = "Part of the robot project.";
+	private static final String APP = "Visualization";
+	
+	private static final String SHADER_PATH = "resources/shaders/";
 	
 	private DesktopLauncher() {
 		//pure static class
 	}
 	
-	public static void main(String[] arg) {
-
-		boolean debug = false;
-		if (arg.length > 0 && arg[0].equals(DEBUG_SIGNAL)) {
-				debug = true;
-				log.info("Debug: {}", String.valueOf(debug));
-		}
+	/**
+	 * Entry point. 
+	 * 
+	 * @param args
+	 */
+	public static void main(String[] args) {
 		
-		String brokerIp = "localhost";
-		if (!debug && arg.length > 1 && arg[1].matches(IP_REGEX)) {
-				brokerIp = arg[1];
-				log.info("Broker ip: {}", brokerIp);
+		try {
+			//parsing arguments
+			Options opts = createOptions();
+			CommandLineParser clp = new DefaultParser();
+			CommandLine cl = clp.parse(opts, args);
+			
+			//prints usage information if the help flag is set
+			if (cl.hasOption(HELP_SHORT)) {
+				HelpFormatter form = new HelpFormatter();
+				form.printHelp(APP, HEADER, opts, FOOTER, true);
+				return;
+			}
+			
+			//sets debug to true if the debug flag has been set, default: false
+			boolean debugArg = cl.hasOption(DEBUG_SHORT);
+			log.info("Debug: {}", String.valueOf(debugArg));
+			
+			//sets broker ip to the given argument, if the argument has not been set: localhost (127.0.0.1)
+			String brokerIp = cl.getOptionValue(IP_SHORT, DEFAULT_IP);
+			if (!brokerIp.matches(IP_REGEX)) {
+				brokerIp = DEFAULT_IP;
+				log.warn("Given broker ip doesn't have the correct format. {} will be used instead", brokerIp);	
+			}
+			log.info("Broker ip: {}", brokerIp);
+			
+			//finally starts the 'real' app
+			startApp(debugArg, brokerIp);
 		}
-		
-		startApp(debug, brokerIp);
+		catch (ParseException e) {
+			log.error("A syntax error occured:");
+			log.error(e);
+		}
 	}
 	
+	/**
+	 * Creates options used for argument parsing.
+	 * 
+	 * @return {@link Options}
+	 */
+	private static Options createOptions() {
+		 Option help = Option.builder(HELP_SHORT)
+				 .required(false)
+			     .longOpt(HELP_LONG)
+				 .desc("Prints usage information.")
+			     .build();
+		 Option debug = Option.builder(DEBUG_SHORT)
+				 .required(false)
+			     .longOpt(DEBUG_LONG)
+				 .desc("Indicates if you want to enable the debug features, also affects the log level.")
+			     .build();
+		 Option ip = Option.builder(IP_SHORT)
+				 .required(false)
+				 .longOpt(IP_LONG)
+				 .type(String.class)
+				 .hasArg()
+				 .desc("The broker ip you want to use. Only works without debug flag")
+				 .build();
+		 
+		Options opts = new Options();
+		opts.addOption(help);
+		opts.addOption(debug);
+		opts.addOption(ip);
+		return opts;
+	}
+	
+	/**
+	 * Starts the application with the parsed arguments.
+	 * 
+	 * @param debug debug flag
+	 * @param brokerIp ip of the MQTT broker
+	 */
 	private static void startApp(final boolean debug, final String brokerIp) {
 	
-		ShaderLoader.BasePath = "resources/shaders/";
+		ShaderLoader.BasePath = SHADER_PATH;
 		
 		if (debug) {
-			/* 
-			* Will be replaced by a standalone packer app.
-			*/
-			
+			// Will be replaced by a standalone packer app.
 			// packs all textures of the default theme in a texture atlas
 			// name of the theme "default"
-
 			log.info("TexturePacker has been started:");
 			final Settings packSettings = new Settings();
 			packSettings.maxWidth = 1024*4;
@@ -70,10 +145,10 @@ public class DesktopLauncher {
 			TexturePacker.process(packSettings, "assets/tex/default_theme_src", ResConst.ATLAS_PATH.getName()+ "/default", ResConst.ATLAS_NAME.getName());
 			TexturePacker.process(packSettings, "assets/tex/earth_theme_src", ResConst.ATLAS_PATH.getName()+ "/earth", ResConst.ATLAS_NAME.getName());
 		}
-		
+				
 		final LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		config.width = INIT_WIDTH;
-		config.height = INIT_HEIGHT;
+		config.width = 800;
+		config.height = 800;
 		config.foregroundFPS = 120;
 		config.backgroundFPS = 60;
 		config.vSyncEnabled = false;
