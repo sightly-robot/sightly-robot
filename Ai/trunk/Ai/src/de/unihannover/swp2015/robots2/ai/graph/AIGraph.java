@@ -11,6 +11,8 @@ import de.unihannover.swp2015.robots2.ai.exceptions.NoValidOrientationException;
 import de.unihannover.swp2015.robots2.model.interfaces.IField;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
+import testpackage.Edge;
+import testpackage.Node;
 import de.unihannover.swp2015.robots2.model.interfaces.IStage;
 
 public class AIGraph extends Thread implements Runnable {
@@ -97,13 +99,6 @@ public class AIGraph extends Thread implements Runnable {
 		}
 	}
 	
-	/**
-	 * Loads map data into Graph object
-	 * 
-	 * @param stage
-	 *            IStage data object
-	 * @throws InvalidStageException
-	 */
 	public void loadFromStage(IStage stage) throws InvalidStageException {
 		/*
 		 * Handle exceptions for faulty stages
@@ -134,26 +129,54 @@ public class AIGraph extends Thread implements Runnable {
 				 */
 				Node source = this.nodes[i][j] == null ? new Node(field) : this.nodes[i][j];
 				if (i > 0 && !field.isWall(Orientation.WEST)) {
-					Node target = this.nodes[i - 1][j] == null ? new Node(stage.getField(i - 1, j))
-							: this.nodes[i - 1][j];
+					/*Node target = this.nodes[i - 1][j] == null ? new Node(stage.getField(i - 1, j))
+							: this.nodes[i - 1][j];*/
+					Node target;
+					if(this.nodes[i - 1][j] == null) {
+						target = new Node(stage.getField(i - 1, j));
+						nodes[i - 1][j] = target;
+					} else {
+						target = this.nodes[i - 1][j];
+					}
 					Edge edge = new Edge(source, target, Orientation.WEST);
 					source.getNeighbors().add(edge);
 				}
 				if (i < this.dimX - 1 && !field.isWall(Orientation.EAST)) {
-					Node target = this.nodes[i + 1][j] == null ? new Node(stage.getField(i + 1, j))
-							: this.nodes[i + 1][j];
+					/*Node target = this.nodes[i + 1][j] == null ? new Node(stage.getField(i + 1, j))
+							: this.nodes[i + 1][j];*/
+					Node target;
+					if(this.nodes[i + 1][j] == null) {
+						target = new Node(stage.getField(i + 1, j));
+						nodes[i + 1][j] = target;
+					} else {
+						target = this.nodes[i + 1][j];
+					}
 					Edge edge = new Edge(source, target, Orientation.EAST);
 					source.getNeighbors().add(edge);
 				}
 				if (j > 0 && !field.isWall(Orientation.NORTH)) {
-					Node target = this.nodes[i][j - 1] == null ? new Node(stage.getField(i, j - 1))
-							: this.nodes[i][j - 1];
+					/*Node target = this.nodes[i][j - 1] == null ? new Node(stage.getField(i, j - 1))
+							: this.nodes[i][j - 1];*/
+					Node target;
+					if(this.nodes[i][j - 1] == null) {
+						target = new Node(stage.getField(i, j - 1));
+						nodes[i][j - 1] = target;
+					} else {
+						target = this.nodes[i][j - 1];
+					}
 					Edge edge = new Edge(source, target, Orientation.NORTH);
 					source.getNeighbors().add(edge);
 				}
 				if (j < this.dimY - 1 && !field.isWall(Orientation.SOUTH)) {
-					Node target = this.nodes[i][j + 1] == null ? new Node(stage.getField(i, j + 1))
-							: this.nodes[i][j + 1];
+					/*Node target = this.nodes[i][j + 1] == null ? new Node(stage.getField(i, j + 1))
+							: this.nodes[i][j + 1];*/
+					Node target;
+					if(this.nodes[i][j + 1] == null) {
+						target = new Node(stage.getField(i, j + 1));
+						nodes[i][j + 1] = target;
+					} else {
+						target = this.nodes[i][j + 1];
+					}
 					Edge edge = new Edge(source, target, Orientation.SOUTH);
 					source.getNeighbors().add(edge);
 				}
