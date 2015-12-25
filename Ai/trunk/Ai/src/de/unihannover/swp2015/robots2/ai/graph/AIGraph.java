@@ -3,9 +3,15 @@ package de.unihannover.swp2015.robots2.ai.graph;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Queue;
+import java.util.Set;
 
 import de.unihannover.swp2015.robots2.ai.core.Robot;
+import de.unihannover.swp2015.robots2.ai.exceptions.InvalidPathException;
 import de.unihannover.swp2015.robots2.ai.exceptions.InvalidStageException;
 import de.unihannover.swp2015.robots2.ai.exceptions.NoValidOrientationException;
 import de.unihannover.swp2015.robots2.model.interfaces.IField;
@@ -269,6 +275,95 @@ public class AIGraph extends Thread implements Runnable {
 
 		Collections.shuffle(available);
 		return available.get(0);
+	}
+	
+	/**
+	 * Finds shortest path to given Node using breadth first search. Used to determine next Orientation, the robot 
+	 * should drive in.
+	 * @param target Node, the robot is supposed to drive to.
+	 * @return
+	 */
+	public List<Node> getBFSPath(Node target) {
+		System.out.println("target: [" + target.getX() + "," + target.getY() + "]");
+
+		Map<Node, Node> pred = new HashMap<Node, Node>();
+		Set<Node> visited = new HashSet<Node>();
+		Queue<Node> q = new LinkedList<Node>();
+		Node curr = myself.getPosition();
+		q.add(curr);
+		visited.add(curr);
+
+		while(curr != target) {
+			curr = q.remove();
+			
+			Set<Node> neighbors = new HashSet<Node>();
+			for(Edge edge : curr.getNeighbors()) {
+				neighbors.add(edge.getTarget());
+			}
+			for(Node node : neighbors) {
+				if(!visited.contains(node)) {
+					pred.put(node, curr);
+					visited.add(node);
+					q.add(node);
+				}
+			}
+		}
+		LinkedList<Node> path = new LinkedList<Node>();
+		Node tmp = target;
+		path.addFirst(target);
+		while(tmp != myself.getPosition()) {
+			path.addFirst(pred.get(tmp));
+			tmp = pred.get(tmp);
+		}
+		return path;
+	}
+
+	/**
+	 * Gets next Orientation to drive in from given path. Used, to find Orientation from path determined by 
+	 * getBFSPath().
+	 * @param path
+	 * @return
+	 * @throws Exception
+	 */
+	public Orientation getOrientationFromPath(List<Node> path) throws InvalidPathException {
+		
+		for(Edge edge : myself.getPosition().getNeighbors()) {
+			if(edge.getTarget() == path.get(1)) {
+				return edge.getDirection();
+			}
+		}
+		throw new InvalidPathException();
+	}
+	
+	/**
+	 * Finds node with highest amount of resources in given range (at this point not taking into account walls or other obstacles).
+	 * Used to find target node to drive towards.
+	 * @param range
+	 * @return
+	 */
+	public Node findBestNode(int range) {
+		int x = myself.getPosition().getX();
+		int y = myself.getPosition().getY();
+		//Set<Node> set = new HashSet<Node>();
+		Node curr = this.nodes[Math.max(x - range, 0)][Math.max(y - range, 0)];
+		for(int i = Math.max(x - range, 0); i < Math.min(x + range + 1, this.nodes.length); i++) {
+			for(int j = Math.max(y - range, 0); j < Math.min(y + range + 1, this.nodes[0].length); j++) {
+				if((i != x || j != y) 
+						&& this.nodes[i][j].getRessourceValue() > curr.getRessourceValue()) {
+					curr = this.nodes[i][j];
+				}
+			}
+		}
+		return curr;
+	}
+	/**
+	 * Sets food value on a specific Field.
+	 * @param x 
+	 * @param y
+	 * @param food
+	 */
+	public void setFood(int x, int y, int food) {
+		this.nodes[x][y].setRessourceValue(food);
 	}
 
 	/**
