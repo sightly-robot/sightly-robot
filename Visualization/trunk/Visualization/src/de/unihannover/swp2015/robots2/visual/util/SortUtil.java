@@ -5,8 +5,8 @@ import java.util.Comparator;
 import java.util.List;
 
 import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
-import de.unihannover.swp2015.robots2.visual.core.RobotGameHandler;
-import de.unihannover.swp2015.robots2.visual.entity.IEntity;
+import de.unihannover.swp2015.robots2.visual.game.RobotGameHandler;
+import de.unihannover.swp2015.robots2.visual.game.entity.IEntity;
 
 /**
  * All utility methods related to {@IEntity}.

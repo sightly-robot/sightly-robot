@@ -1,4 +1,4 @@
-package de.unihannover.swp2015.robots2.visual.entity.modifier.base;
+package de.unihannover.swp2015.robots2.visual.game.entity.modifier.base;
 
 import de.unihannover.swp2015.robots2.visual.core.base.IUpdateable;
 

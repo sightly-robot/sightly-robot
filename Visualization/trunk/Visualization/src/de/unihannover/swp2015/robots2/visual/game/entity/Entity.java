@@ -1,4 +1,4 @@
-package de.unihannover.swp2015.robots2.visual.entity;
+package de.unihannover.swp2015.robots2.visual.game.entity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,7 +8,7 @@ import com.badlogic.gdx.Gdx;
 import de.unihannover.swp2015.robots2.model.interfaces.IAbstractModel;
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
 import de.unihannover.swp2015.robots2.visual.core.base.IGameHandler;
-import de.unihannover.swp2015.robots2.visual.entity.modifier.base.IEntityModifier;
+import de.unihannover.swp2015.robots2.visual.game.entity.modifier.base.IEntityModifier;
 import de.unihannover.swp2015.robots2.visual.resource.IResourceHandler;
 import de.unihannover.swp2015.robots2.visual.util.pref.IPreferences;
 

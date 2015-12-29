@@ -1,11 +1,11 @@
-package de.unihannover.swp2015.robots2.visual.entity;
+package de.unihannover.swp2015.robots2.visual.game.entity;
 
 import de.unihannover.swp2015.robots2.model.externalInterfaces.IModelObserver;
 import de.unihannover.swp2015.robots2.model.interfaces.IAbstractModel;
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
 import de.unihannover.swp2015.robots2.visual.core.base.IDrawable;
 import de.unihannover.swp2015.robots2.visual.core.base.IUpdateable;
-import de.unihannover.swp2015.robots2.visual.entity.modifier.base.IEntityModifier;
+import de.unihannover.swp2015.robots2.visual.game.entity.modifier.base.IEntityModifier;
 import de.unihannover.swp2015.robots2.visual.util.pref.observer.IPreferencesObserver;
 
 public interface IEntity extends IDrawable, IModelObserver, Comparable<IEntity>, IPreferencesObserver, IUpdateable {

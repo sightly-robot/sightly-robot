@@ -1,4 +1,4 @@
-package de.unihannover.swp2015.robots2.visual.ui;
+package de.unihannover.swp2015.robots2.visual.game;
 
 import java.util.List;
 

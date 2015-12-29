@@ -1,4 +1,4 @@
-package de.unihannover.swp2015.robots2.visual.entity;
+package de.unihannover.swp2015.robots2.visual.game.entity;
 
 import java.util.ArrayList;
 
@@ -11,12 +11,12 @@ import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
 import de.unihannover.swp2015.robots2.model.interfaces.IRobot.RobotState;
 import de.unihannover.swp2015.robots2.visual.core.GameConst;
 import de.unihannover.swp2015.robots2.visual.core.PrefConst;
-import de.unihannover.swp2015.robots2.visual.core.RobotGameHandler;
-import de.unihannover.swp2015.robots2.visual.entity.modifier.MoveModifierX;
-import de.unihannover.swp2015.robots2.visual.entity.modifier.MoveModifierY;
-import de.unihannover.swp2015.robots2.visual.entity.modifier.RotationModifier;
-import de.unihannover.swp2015.robots2.visual.entity.modifier.base.IEntityModifier;
-import de.unihannover.swp2015.robots2.visual.entity.modifier.base.IFinishListener;
+import de.unihannover.swp2015.robots2.visual.game.RobotGameHandler;
+import de.unihannover.swp2015.robots2.visual.game.entity.modifier.MoveModifierX;
+import de.unihannover.swp2015.robots2.visual.game.entity.modifier.MoveModifierY;
+import de.unihannover.swp2015.robots2.visual.game.entity.modifier.RotationModifier;
+import de.unihannover.swp2015.robots2.visual.game.entity.modifier.base.IEntityModifier;
+import de.unihannover.swp2015.robots2.visual.game.entity.modifier.base.IFinishListener;
 import de.unihannover.swp2015.robots2.visual.resource.ResConst;
 import de.unihannover.swp2015.robots2.visual.resource.texture.RenderUnit;
 import de.unihannover.swp2015.robots2.visual.util.ColorUtil;

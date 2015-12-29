@@ -115,11 +115,9 @@ public class DesktopLauncher {
 				 .desc("The broker ip you want to use. Only works without debug flag")
 				 .build();
 		 
-		Options opts = new Options();
-		opts.addOption(help);
-		opts.addOption(debug);
-		opts.addOption(ip);
-		return opts;
+		return new Options().addOption(help)
+				.addOption(debug)
+				.addOption(ip);
 	}
 	
 	/**

@@ -1,7 +1,7 @@
-package de.unihannover.swp2015.robots2.visual.entity.modifier;
+package de.unihannover.swp2015.robots2.visual.game.entity.modifier;
 
-import de.unihannover.swp2015.robots2.visual.entity.IEntity;
-import de.unihannover.swp2015.robots2.visual.entity.modifier.base.SingleValueEntityModifier;
+import de.unihannover.swp2015.robots2.visual.game.entity.IEntity;
+import de.unihannover.swp2015.robots2.visual.game.entity.modifier.base.SingleValueEntityModifier;
 import de.unihannover.swp2015.robots2.visual.util.math.function.IEaseFunction;
 import de.unihannover.swp2015.robots2.visual.util.math.function.LinearEaseFunction;
 
@@ -11,7 +11,7 @@ import de.unihannover.swp2015.robots2.visual.util.math.function.LinearEaseFuncti
  * 
  * @author Rico Schrage
  */
-public class MoveModifierY extends SingleValueEntityModifier {
+public class RotationModifier extends SingleValueEntityModifier {
 	
 	/**
 	 * Constructs a MoveModifier using {@link LinearEaseFunction}.
@@ -21,7 +21,7 @@ public class MoveModifierY extends SingleValueEntityModifier {
 	 * @param fromValue start value
 	 * @param toValue end value
 	 */
-	public MoveModifierY(IEntity target, float duration, float fromValue, float toValue) {
+	public RotationModifier(IEntity target, float duration, float fromValue, float toValue) {
 		this(target, duration, fromValue, toValue, LinearEaseFunction.getInstance());
 	}
 	
@@ -34,17 +34,17 @@ public class MoveModifierY extends SingleValueEntityModifier {
 	 * @param toValue end value
 	 * @param easeFunction {@link IEaseFunction}
 	 */
-	public MoveModifierY(IEntity target, float duration, float fromValue, float toValue, final IEaseFunction easeFunction) {
+	public RotationModifier(IEntity target, float duration, float fromValue, float toValue, final IEaseFunction easeFunction) {
 		super(target, duration, fromValue, toValue, easeFunction);
 	}
 
 	@Override
 	protected void onSetInitialValue(float value, IEntity target) {
-		target.setPosition(target.getPositionX(), value);
+		target.setRotation(value);
 	}
 
 	@Override
 	protected void onSetValue(float value, IEntity target) {
-		target.setPosition(target.getPositionX(), value);
+		target.setRotation(value);
 	}
 }

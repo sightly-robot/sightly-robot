@@ -1,4 +1,4 @@
-package de.unihannover.swp2015.robots2.visual.core;
+package de.unihannover.swp2015.robots2.visual.game;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,13 +19,13 @@ import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
 import de.unihannover.swp2015.robots2.model.interfaces.IGame;
 import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
 import de.unihannover.swp2015.robots2.model.interfaces.IStage;
+import de.unihannover.swp2015.robots2.visual.core.PrefConst;
 import de.unihannover.swp2015.robots2.visual.core.base.GameHandler;
-import de.unihannover.swp2015.robots2.visual.entity.IEntity;
-import de.unihannover.swp2015.robots2.visual.entity.Map;
-import de.unihannover.swp2015.robots2.visual.entity.Robot;
-import de.unihannover.swp2015.robots2.visual.entity.modifier.base.IEntityModifier;
+import de.unihannover.swp2015.robots2.visual.game.entity.IEntity;
+import de.unihannover.swp2015.robots2.visual.game.entity.Map;
+import de.unihannover.swp2015.robots2.visual.game.entity.Robot;
+import de.unihannover.swp2015.robots2.visual.game.entity.modifier.base.IEntityModifier;
 import de.unihannover.swp2015.robots2.visual.resource.IResourceHandler;
-import de.unihannover.swp2015.robots2.visual.ui.UI;
 import de.unihannover.swp2015.robots2.visual.util.SortUtil;
 import de.unihannover.swp2015.robots2.visual.util.pref.IPreferences;
 import de.unihannover.swp2015.robots2.visual.util.pref.IPreferencesKey;
