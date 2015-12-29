@@ -135,7 +135,7 @@ public class Field extends Entity {
 		food.draw(batch);
 				
 		final IField field = (IField) model;
-		batch.setColor(Color.BROWN);
+
 		if(field.isWall(IPosition.Orientation.NORTH))
 			texWall[0].draw(batch, renderX, renderY, fieldWidth, fieldHeight);
 		
@@ -147,8 +147,6 @@ public class Field extends Entity {
 		
 		if(field.isWall(IPosition.Orientation.WEST))
 			texWall[3].draw(batch, renderX, renderY, fieldWidth, fieldHeight);
-		batch.setColor(Color.WHITE);
-
 		} 
 	
 	@Override
