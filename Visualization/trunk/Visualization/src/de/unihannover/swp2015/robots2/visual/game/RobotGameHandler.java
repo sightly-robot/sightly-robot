@@ -20,17 +20,18 @@ import de.unihannover.swp2015.robots2.model.interfaces.IGame;
 import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
 import de.unihannover.swp2015.robots2.model.interfaces.IStage;
 import de.unihannover.swp2015.robots2.visual.core.PrefConst;
-import de.unihannover.swp2015.robots2.visual.core.base.GameHandler;
-import de.unihannover.swp2015.robots2.visual.game.entity.IEntity;
+import de.unihannover.swp2015.robots2.visual.core.entity.Entity;
+import de.unihannover.swp2015.robots2.visual.core.entity.IEntity;
+import de.unihannover.swp2015.robots2.visual.core.entity.IEntityModifier;
+import de.unihannover.swp2015.robots2.visual.core.handler.GameHandler;
 import de.unihannover.swp2015.robots2.visual.game.entity.Map;
 import de.unihannover.swp2015.robots2.visual.game.entity.Robot;
-import de.unihannover.swp2015.robots2.visual.game.entity.modifier.base.IEntityModifier;
 import de.unihannover.swp2015.robots2.visual.resource.IResourceHandler;
 import de.unihannover.swp2015.robots2.visual.util.SortUtil;
 import de.unihannover.swp2015.robots2.visual.util.pref.IPreferences;
 import de.unihannover.swp2015.robots2.visual.util.pref.IPreferencesKey;
-import de.unihannover.swp2015.robots2.visual.util.pref.observer.IPreferencesObserver;
-import de.unihannover.swp2015.robots2.visual.util.pref.observer.PreferencesObservable;
+import de.unihannover.swp2015.robots2.visual.util.pref.IPreferencesObserver;
+import de.unihannover.swp2015.robots2.visual.util.pref.PreferencesObservable;
 
 /**
  * It handles all entities, resources and update processes of the RobotGame.
@@ -151,7 +152,7 @@ public class RobotGameHandler extends GameHandler implements IPreferencesObserve
 			this.robots.add(roboModel);
 		}
 		this.entityList.add(new Map(stage, this));
-		SortUtil.sortEntities(entityList);
+		Entity.sortEntities(entityList);
 		
 		//create ui
 		this.ui = new UI(robots, spriteBatch, this);
@@ -252,7 +253,7 @@ public class RobotGameHandler extends GameHandler implements IPreferencesObserve
 				final IRobot robot = (IRobot) event.getObject();
 				final Robot roboEntity = new Robot(robot, this);
 				roboEntity.setZIndex(1);
-				SortUtil.addEntitySorted(roboEntity, entityList);
+				Entity.addEntitySorted(roboEntity, entityList);
 				SortUtil.addRobotSorted(robot, robots);
 			}
 			break;

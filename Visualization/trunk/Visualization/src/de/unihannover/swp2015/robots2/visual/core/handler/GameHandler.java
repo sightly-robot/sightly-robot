@@ -1,4 +1,4 @@
-package de.unihannover.swp2015.robots2.visual.core.base;
+package de.unihannover.swp2015.robots2.visual.core.handler;
 
 import com.badlogic.gdx.Gdx;
 

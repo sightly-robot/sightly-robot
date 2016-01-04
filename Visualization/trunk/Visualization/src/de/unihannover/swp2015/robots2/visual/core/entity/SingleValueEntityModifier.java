@@ -1,6 +1,5 @@
-package de.unihannover.swp2015.robots2.visual.game.entity.modifier.base;
+package de.unihannover.swp2015.robots2.visual.core.entity;
 
-import de.unihannover.swp2015.robots2.visual.game.entity.IEntity;
 import de.unihannover.swp2015.robots2.visual.util.math.function.IEaseFunction;
 import de.unihannover.swp2015.robots2.visual.util.math.function.LinearEaseFunction;
 

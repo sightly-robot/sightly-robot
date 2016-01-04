@@ -1,4 +1,4 @@
-package de.unihannover.swp2015.robots2.visual.core;
+package de.unihannover.swp2015.robots2.visual.game;
 
 /**
  * Should be replaced by a texture-dependent solution.

@@ -1,4 +1,4 @@
-package de.unihannover.swp2015.robots2.visual.core.base;
+package de.unihannover.swp2015.robots2.visual.core;
 
 /**
  * All classes, which implement this interface are marked as <code>updateable</code>. This means you can call {@link IUpdateable#update()} to update the internal state of these objects.

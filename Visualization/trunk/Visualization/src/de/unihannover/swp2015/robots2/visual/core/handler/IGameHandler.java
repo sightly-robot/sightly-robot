@@ -1,9 +1,11 @@
-package de.unihannover.swp2015.robots2.visual.core.base;
+package de.unihannover.swp2015.robots2.visual.core.handler;
 
 import com.badlogic.gdx.utils.Disposable;
 
 import de.unihannover.swp2015.robots2.model.externalInterfaces.IModelObserver;
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
+import de.unihannover.swp2015.robots2.visual.core.IRenderable;
+import de.unihannover.swp2015.robots2.visual.core.IUpdateable;
 import de.unihannover.swp2015.robots2.visual.resource.IResourceHandler;
 import de.unihannover.swp2015.robots2.visual.util.pref.IPreferences;
 

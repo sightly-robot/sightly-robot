@@ -8,17 +8,16 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Rectangle;
 
 import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
-import de.unihannover.swp2015.robots2.visual.core.GameConst;
+import de.unihannover.swp2015.robots2.visual.core.IRenderable;
 import de.unihannover.swp2015.robots2.visual.core.PrefConst;
-import de.unihannover.swp2015.robots2.visual.core.base.IGameHandler;
-import de.unihannover.swp2015.robots2.visual.core.base.IRenderable;
+import de.unihannover.swp2015.robots2.visual.core.handler.IGameHandler;
 import de.unihannover.swp2015.robots2.visual.resource.IResourceHandler;
 import de.unihannover.swp2015.robots2.visual.resource.ResConst;
 import de.unihannover.swp2015.robots2.visual.resource.texture.RenderUnit;
 import de.unihannover.swp2015.robots2.visual.util.pref.IPreferences;
 import de.unihannover.swp2015.robots2.visual.util.pref.IPreferencesKey;
-import de.unihannover.swp2015.robots2.visual.util.pref.observer.IPreferencesObserver;
-import de.unihannover.swp2015.robots2.visual.util.pref.observer.PreferencesObservable;
+import de.unihannover.swp2015.robots2.visual.util.pref.IPreferencesObserver;
+import de.unihannover.swp2015.robots2.visual.util.pref.PreferencesObservable;
 
 /**
  * End-screen of the robot game.

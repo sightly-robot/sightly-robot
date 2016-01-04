@@ -1,7 +1,5 @@
 package de.unihannover.swp2015.robots2.visual.util.pref;
 
-import de.unihannover.swp2015.robots2.visual.util.pref.observer.IPreferencesObservable;
-
 /**
  * The interface describes a combination of a non-persistent and a persistent way to manage several options. It uses an internal {@link com.badlogic.gdx.Preferences} object
  * to handle the data, which should be saved in a persistent way. Furthermore there are several internal map to store settings non-persistent. But the way to access

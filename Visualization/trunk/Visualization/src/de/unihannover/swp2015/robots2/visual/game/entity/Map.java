@@ -9,11 +9,12 @@ import de.unihannover.swp2015.robots2.model.interfaces.IAbstractModel;
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
 import de.unihannover.swp2015.robots2.model.interfaces.IField;
 import de.unihannover.swp2015.robots2.model.interfaces.IStage;
-import de.unihannover.swp2015.robots2.visual.core.GameConst;
 import de.unihannover.swp2015.robots2.visual.core.PrefConst;
+import de.unihannover.swp2015.robots2.visual.core.entity.Entity;
+import de.unihannover.swp2015.robots2.visual.game.GameConst;
 import de.unihannover.swp2015.robots2.visual.game.RobotGameHandler;
 import de.unihannover.swp2015.robots2.visual.util.pref.IPreferencesKey;
-import de.unihannover.swp2015.robots2.visual.util.pref.observer.PreferencesObservable;
+import de.unihannover.swp2015.robots2.visual.util.pref.PreferencesObservable;
 
 /**
  * An entity, which is used for the construction of the map and that creates all field entities

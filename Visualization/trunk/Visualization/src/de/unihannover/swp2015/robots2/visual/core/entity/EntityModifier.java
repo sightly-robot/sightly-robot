@@ -1,11 +1,9 @@
-package de.unihannover.swp2015.robots2.visual.game.entity.modifier.base;
+package de.unihannover.swp2015.robots2.visual.core.entity;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.badlogic.gdx.Gdx;
-
-import de.unihannover.swp2015.robots2.visual.game.entity.IEntity;
 
 /**
  * Base class for most of the entity-modifier. Contains a standard implementation of {@link IUpdateable#update()}.

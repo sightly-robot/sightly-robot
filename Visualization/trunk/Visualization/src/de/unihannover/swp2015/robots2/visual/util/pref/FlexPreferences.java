@@ -6,8 +6,6 @@ import java.util.Map;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 
-import de.unihannover.swp2015.robots2.visual.util.pref.observer.PreferencesObservable;
-
 /**
  * It's an observable implementation of {@link IPreferences}.
  * 

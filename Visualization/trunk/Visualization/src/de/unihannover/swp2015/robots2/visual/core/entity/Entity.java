@@ -1,15 +1,17 @@
-package de.unihannover.swp2015.robots2.visual.game.entity;
+package de.unihannover.swp2015.robots2.visual.core.entity;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import com.badlogic.gdx.Gdx;
 
 import de.unihannover.swp2015.robots2.model.interfaces.IAbstractModel;
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
-import de.unihannover.swp2015.robots2.visual.core.base.IGameHandler;
-import de.unihannover.swp2015.robots2.visual.game.entity.modifier.base.IEntityModifier;
+import de.unihannover.swp2015.robots2.visual.core.handler.IGameHandler;
+import de.unihannover.swp2015.robots2.visual.game.RobotGameHandler;
 import de.unihannover.swp2015.robots2.visual.resource.IResourceHandler;
+import de.unihannover.swp2015.robots2.visual.util.SortUtil;
 import de.unihannover.swp2015.robots2.visual.util.pref.IPreferences;
 
 /**
@@ -170,6 +172,34 @@ public abstract class Entity implements IEntity {
 	@Override
 	public IAbstractModel getModel() {
 		return model;
+	}
+	
+	/**
+	 * Should be called, after you have added an entity to the {@link RobotGameHandler}. As alternative you can call {@link EntityUtil#addEntitySorted(IEntity, List)d} 
+	 * to add a new entity. 
+	 */
+	public static void sortEntities(final List<IEntity> entityList) {
+		Collections.sort(entityList);
+	}
+	
+	/**
+	 * Adds a new entity to <code>renderUnits</code>. The method uses insertion sort, so you don't have to call {@link SortUtil#sortEntities(List)}
+	 * 
+	 * @param entity new entity
+	 * @param entityList target list
+	 */
+	public static void addEntitySorted(final IEntity entity, final List<IEntity> entityList) {
+		for (int i = 0 ; i < entityList.size() + 1; ++i) {
+			if (i == entityList.size()) {
+				entityList.add(entity);
+				break;
+			}
+			
+			if (entity.getZIndex() < entityList.get(i).getZIndex()) {
+				entityList.add(i, entity);
+				break;
+			}
+		}
 	}
     
 }

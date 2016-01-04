@@ -17,7 +17,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 import de.unihannover.swp2015.robots2.visual.core.MqttHandler;
 import de.unihannover.swp2015.robots2.visual.core.PrefConst;
-import de.unihannover.swp2015.robots2.visual.core.base.IGameHandler;
+import de.unihannover.swp2015.robots2.visual.core.handler.IGameHandler;
 import de.unihannover.swp2015.robots2.visual.game.RobotGameHandler;
 import de.unihannover.swp2015.robots2.visual.resource.IResourceHandler;
 import de.unihannover.swp2015.robots2.visual.resource.ResConst;

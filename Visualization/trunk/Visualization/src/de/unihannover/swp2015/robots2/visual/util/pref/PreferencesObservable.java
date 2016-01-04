@@ -1,9 +1,7 @@
-package de.unihannover.swp2015.robots2.visual.util.pref.observer;
+package de.unihannover.swp2015.robots2.visual.util.pref;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import de.unihannover.swp2015.robots2.visual.util.pref.IPreferencesKey;
 
 public class PreferencesObservable implements IPreferencesObservable {
 
