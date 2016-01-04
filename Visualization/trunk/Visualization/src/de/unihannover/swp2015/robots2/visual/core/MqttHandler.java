@@ -41,7 +41,7 @@ public class MqttHandler implements IVisualization, Runnable {
 	public void setIp(final String ip) {
 		synchronized(ipLock) {
 			this.ip = ip;
-			this.ipLock.notify();
+			this.ipLock.notifyAll();
 			this.ipChanged = true;
 		}
 	}
