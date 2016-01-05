@@ -17,7 +17,6 @@ import de.unihannover.swp2015.robots2.visual.resource.texture.RenderUnit;
 import de.unihannover.swp2015.robots2.visual.util.ColorUtil;
 import de.unihannover.swp2015.robots2.visual.util.ModelUtil;
 import de.unihannover.swp2015.robots2.visual.util.pref.IPreferencesKey;
-import de.unihannover.swp2015.robots2.visual.util.pref.PreferencesObservable;
 
 /**
  * An entity used for the visualization of robots
@@ -133,7 +132,7 @@ public class Robot extends Entity {
 	}
 
 	@Override
-	public void onUpdatePreferences(PreferencesObservable o, IPreferencesKey updatedKey) {
+	public void onUpdatePreferences(Object o, IPreferencesKey updatedKey) {
 		
 		if (updatedKey.getEnum() == PrefConst.FIELD_HEIGHT_KEY || updatedKey.getEnum() == PrefConst.FIELD_WIDTH_KEY) {
 			this.fieldWidth = prefs.getFloat(PrefConst.FIELD_WIDTH_KEY);

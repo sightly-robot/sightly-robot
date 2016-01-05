@@ -17,7 +17,6 @@ import de.unihannover.swp2015.robots2.visual.resource.texture.RenderUnit;
 import de.unihannover.swp2015.robots2.visual.util.pref.IPreferences;
 import de.unihannover.swp2015.robots2.visual.util.pref.IPreferencesKey;
 import de.unihannover.swp2015.robots2.visual.util.pref.IPreferencesObserver;
-import de.unihannover.swp2015.robots2.visual.util.pref.PreferencesObservable;
 
 /**
  * End-screen of the robot game.
@@ -136,7 +135,7 @@ public class UI implements IRenderable, IPreferencesObserver {
 	}
 
 	@Override
-	public void onUpdatePreferences(PreferencesObservable o, IPreferencesKey updatedKey) {
+	public void onUpdatePreferences(Object o, IPreferencesKey updatedKey) {
 		final PrefConst key = (PrefConst) updatedKey.getEnum();
 		
 		switch(key) {

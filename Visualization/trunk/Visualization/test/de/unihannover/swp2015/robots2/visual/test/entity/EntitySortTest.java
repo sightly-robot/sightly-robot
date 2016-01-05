@@ -20,7 +20,6 @@ import de.unihannover.swp2015.robots2.visual.core.entity.IEntity;
 import de.unihannover.swp2015.robots2.visual.core.handler.IGameHandler;
 import de.unihannover.swp2015.robots2.visual.util.SortUtil;
 import de.unihannover.swp2015.robots2.visual.util.pref.IPreferencesKey;
-import de.unihannover.swp2015.robots2.visual.util.pref.PreferencesObservable;
 
 public class EntitySortTest {
 
@@ -29,7 +28,7 @@ public class EntitySortTest {
 		public TestEntity(IGameHandler gameHandler) {super(new Field(0,0), gameHandler);}
 		public void draw(Batch b) {}
 		public void onModelUpdate(IEvent event) {}
-		public void onUpdatePreferences(PreferencesObservable o, IPreferencesKey updatedKey) {}
+		public void onUpdatePreferences(Object o, IPreferencesKey updatedKey) {}
 		public void onManagedModelUpdate(IEvent event) {}
 
 	}	

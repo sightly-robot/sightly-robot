@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.viewport.Viewport;
+
 import com.bitfire.postprocessing.PostProcessor;
 import com.bitfire.postprocessing.effects.Bloom;
 import com.bitfire.postprocessing.effects.Fxaa;
@@ -31,7 +32,6 @@ import de.unihannover.swp2015.robots2.visual.util.SortUtil;
 import de.unihannover.swp2015.robots2.visual.util.pref.IPreferences;
 import de.unihannover.swp2015.robots2.visual.util.pref.IPreferencesKey;
 import de.unihannover.swp2015.robots2.visual.util.pref.IPreferencesObserver;
-import de.unihannover.swp2015.robots2.visual.util.pref.PreferencesObservable;
 
 /**
  * It handles all entities, resources and update processes of the RobotGame.
@@ -292,7 +292,7 @@ public class RobotGameHandler extends GameHandler implements IPreferencesObserve
 	}
 
 	@Override
-	public void onUpdatePreferences(PreferencesObservable o, IPreferencesKey updatedKey) {
+	public void onUpdatePreferences(Object o, IPreferencesKey updatedKey) {
 		PrefConst key = (PrefConst) updatedKey.getEnum();
 		switch (key) {
 		

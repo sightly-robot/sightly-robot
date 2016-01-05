@@ -14,7 +14,6 @@ import de.unihannover.swp2015.robots2.visual.resource.ResConst;
 import de.unihannover.swp2015.robots2.visual.resource.texture.RenderUnit;
 import de.unihannover.swp2015.robots2.visual.util.StageUtil;
 import de.unihannover.swp2015.robots2.visual.util.pref.IPreferencesKey;
-import de.unihannover.swp2015.robots2.visual.util.pref.PreferencesObservable;
 
 /**
  * An entity used for the visualization of the underground and walls
@@ -162,7 +161,7 @@ public class Field extends Entity {
 	}
 
 	@Override
-	public void onUpdatePreferences(PreferencesObservable o, IPreferencesKey updatedKey) {
+	public void onUpdatePreferences(Object o, IPreferencesKey updatedKey) {
 		// TODO Auto-generated method stub
 		
 	}

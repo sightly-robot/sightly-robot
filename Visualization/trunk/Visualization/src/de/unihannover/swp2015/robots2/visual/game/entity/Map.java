@@ -14,7 +14,6 @@ import de.unihannover.swp2015.robots2.visual.core.entity.Entity;
 import de.unihannover.swp2015.robots2.visual.game.GameConst;
 import de.unihannover.swp2015.robots2.visual.game.RobotGameHandler;
 import de.unihannover.swp2015.robots2.visual.util.pref.IPreferencesKey;
-import de.unihannover.swp2015.robots2.visual.util.pref.PreferencesObservable;
 
 /**
  * An entity, which is used for the construction of the map and that creates all field entities
@@ -107,7 +106,7 @@ public class Map extends Entity {
 	}
 
 	@Override
-	public void onUpdatePreferences(PreferencesObservable o, IPreferencesKey updatedKey) {
+	public void onUpdatePreferences(Object o, IPreferencesKey updatedKey) {
 		// TODO Auto-generated method stub
 	}
 
