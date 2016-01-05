@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.Batch;
 
 import de.unihannover.swp2015.robots2.model.interfaces.IAbstractModel;
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
@@ -28,12 +29,17 @@ public abstract class Entity implements IEntity {
 	/**
 	 * List of all modifiers created for the entity.
 	 */
-	protected List<IEntityModifier> modList;
+	protected final List<IEntityModifier> modList;
+	
+	/**
+	 * List of all components registered by the entity.
+	 */
+	protected final List<IComponent> componentList;
 	
 	/**
 	 * Data model of the entity.
 	 */
-	protected IAbstractModel model;
+	protected final IAbstractModel model;
 
 	/**
 	 * X-coordinate of the entity on the (virtual) screen.
@@ -44,6 +50,16 @@ public abstract class Entity implements IEntity {
 	 * Y-coordinate of the entity on the (virtual) screen.
 	 */
 	protected float renderY; 
+	
+	/**
+	 * X-coordinate of the entity on the (virtual) screen.
+	 */
+	protected float width; 
+
+	/**
+	 * Y-coordinate of the entity on the (virtual) screen.
+	 */
+	protected float height; 
 
 	/**
 	 * Z-coordinate of the entity on the (virtual) screen.
@@ -78,6 +94,9 @@ public abstract class Entity implements IEntity {
      * @param gameHandler parent
      */
     public Entity(final IAbstractModel model, final IGameHandler gameHandler) {
+    	this.modList = new ArrayList<>();
+    	this.componentList = new ArrayList<>();
+    	
     	this.gameHandler = gameHandler;
     	this.resHandler = gameHandler.getResourceHandler();
 
@@ -90,26 +109,49 @@ public abstract class Entity implements IEntity {
     
     @Override
     public void update() {
-    	if (modList == null)
-    		return;
-    	for (int i = modList.size()-1; i >= 0 ; --i) {
-    		final IEntityModifier mod = modList.get(i);
-    		if (mod.hasFinished()) {
-    			mod.onFinish();
-    			modList.remove(i);
-    			break;
-    		}
-    		mod.update();
+	    for (int i = modList.size()-1; i >= 0 ; --i) {
+	    	final IEntityModifier mod = modList.get(i);
+	    	if (mod.hasFinished()) {
+	    		mod.onFinish();
+	    		modList.remove(i);
+	    		break;
+	    	}
+	    	mod.update();
+	    }
+    	for (int i = 0 ; i < componentList.size(); ++i) {
+    		final IComponent comp = componentList.get(i);
+    		comp.update();
+    	}
+    }
+    
+    @Override
+    public void draw(final Batch batch) {
+    	for (int i = 0 ; i < componentList.size(); ++i) {
+    		final IComponent comp = componentList.get(i);
+    		comp.draw(batch);
     	}
     }
     
     @Override
     public void registerModifier(final IEntityModifier mod) {
-    	if (modList == null)
-    		this.modList = new ArrayList<>();
     	this.modList.add(mod);
-    	
     	mod.onInit();
+    }
+    
+    @Override
+    public void clearModifier() {
+    	this.modList.clear();
+    }
+    
+    @Override
+    public void registerComponent(final IComponent component) {
+    	this.componentList.add(component);
+    	component.onRegister(this);
+    }
+
+    @Override
+    public void unregisterComponent(final IComponent component) {
+    	this.componentList.remove(component);
     }
     
     @Override 
@@ -118,6 +160,10 @@ public abstract class Entity implements IEntity {
 			@Override
 			public void run() {
 				Entity.this.onManagedModelUpdate(event);
+				
+				for (int i = 0; i < componentList.size(); ++i) {
+					componentList.get(i).onEvent(event);
+				}
 			}
 		});
     }
@@ -157,6 +203,16 @@ public abstract class Entity implements IEntity {
 	@Override
 	public float getPositionY() {
 		return renderY;
+	}
+	
+	@Override
+	public float getWidth() {
+		return width;
+	}
+
+	@Override
+	public float getHeight() {
+		return height;
 	}
 	
 	@Override

@@ -38,6 +38,16 @@ public interface IEntity extends IDrawable, IModelObserver, Comparable<IEntity>,
 	 * @return y position of the entity
 	 */
 	float getPositionY();
+
+	/**
+	 * @return width of the entity
+	 */
+	float getWidth();
+	
+	/**
+	 * @return height of the entity
+	 */
+	float getHeight();
 	
 	/**
 	 * Sets the rotation of the entity.
@@ -72,7 +82,26 @@ public interface IEntity extends IDrawable, IModelObserver, Comparable<IEntity>,
 	void registerModifier(final IEntityModifier mod);
 	
 	/**
+	 * Removes all modifiers.
+	 */
+	void clearModifier();
+	
+	/**
 	 * Clears all references, hold by observables, to this entity.
 	 */
 	void clearReferences();
+
+	/**
+	 * Registers a component, which can update the entity or even act as autonomic unit and draw something by itself.
+	 * 
+	 * @param component {@link IComponent}
+	 */
+	void registerComponent(IComponent component);
+
+	/**
+	 * Unregisters a component.
+	 * 
+	 * @param component {@link IComponent}
+	 */
+	void unregisterComponent(IComponent component);
 }

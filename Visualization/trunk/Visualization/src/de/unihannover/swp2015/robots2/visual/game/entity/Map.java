@@ -80,6 +80,8 @@ public class Map extends Entity {
 	
 	@Override
 	public void draw(final Batch batch) {
+		super.draw(batch);
+		
 		for (int i = 0 ; i < fieldList.size() ; ++i) {
 			fieldList.get(i).draw(batch);
 		}

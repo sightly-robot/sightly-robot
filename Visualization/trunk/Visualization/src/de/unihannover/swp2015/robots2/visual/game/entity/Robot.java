@@ -1,7 +1,5 @@
 package de.unihannover.swp2015.robots2.visual.game.entity;
 
-import java.util.ArrayList;
-
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -11,16 +9,13 @@ import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
 import de.unihannover.swp2015.robots2.model.interfaces.IRobot.RobotState;
 import de.unihannover.swp2015.robots2.visual.core.PrefConst;
 import de.unihannover.swp2015.robots2.visual.core.entity.Entity;
-import de.unihannover.swp2015.robots2.visual.core.entity.IEntityModifier;
-import de.unihannover.swp2015.robots2.visual.core.entity.IFinishListener;
 import de.unihannover.swp2015.robots2.visual.game.GameConst;
 import de.unihannover.swp2015.robots2.visual.game.RobotGameHandler;
-import de.unihannover.swp2015.robots2.visual.game.entity.modifier.MoveModifierX;
-import de.unihannover.swp2015.robots2.visual.game.entity.modifier.MoveModifierY;
-import de.unihannover.swp2015.robots2.visual.game.entity.modifier.RotationModifier;
+import de.unihannover.swp2015.robots2.visual.game.entity.component.Engine;
 import de.unihannover.swp2015.robots2.visual.resource.ResConst;
 import de.unihannover.swp2015.robots2.visual.resource.texture.RenderUnit;
 import de.unihannover.swp2015.robots2.visual.util.ColorUtil;
+import de.unihannover.swp2015.robots2.visual.util.ModelUtil;
 import de.unihannover.swp2015.robots2.visual.util.pref.IPreferencesKey;
 import de.unihannover.swp2015.robots2.visual.util.pref.PreferencesObservable;
 
@@ -42,22 +37,10 @@ public class Robot extends Entity {
 	 */
 	private final Bubble bubble;
 	
-	/**
-	 * Width of the robot.
-	 */
-	private float width;
-	
-	/**
-	 * Height of the robot.
-	 */
-	private float height;
-	
 	private final RenderUnit startpos;
 	
 	private boolean startp = false;
-	
-	private int arrowrot = 0;
-	
+		
 	private float fieldWidth;
 	private float fieldHeight;
 	
@@ -73,22 +56,20 @@ public class Robot extends Entity {
 
 		this.robo = resHandler.createRenderUnit(ResConst.DEFAULT_ROBO);
 		this.bubble = new Bubble();
-		this.modList = new ArrayList<>();
 		this.startpos = resHandler.createRenderUnit(ResConst.DEFAULT_STARTPOS);
+		this.startp = robModel.getState() == RobotState.SETUPSTATE;
+		this.rotation = ModelUtil.calculateRotation(robModel.getPosition().getOrientation());
 
-		this.fieldWidth = prefs.getFloat(PrefConst.FIELD_WIDTH_KEY, 42);
-		this.fieldHeight = prefs.getFloat(PrefConst.FIELD_HEIGHT_KEY, 42);
+		this.fieldWidth = prefs.getFloat(PrefConst.FIELD_WIDTH_KEY);
+		this.fieldHeight = prefs.getFloat(PrefConst.FIELD_HEIGHT_KEY);
 
 		this.width = fieldWidth * GameConst.ROBOT_SCALE;
 		this.height = fieldHeight * GameConst.ROBOT_SCALE;
 		this.renderX = robModel.getPosition().getX() * fieldWidth + fieldWidth/2 - width/2;
 		this.renderY = robModel.getPosition().getY() * fieldHeight + fieldHeight/2 - height/2;
 		
-		this.initDirection(robModel);
 		this.initBubble(robModel, fieldWidth, fieldHeight);
-		if(robModel.getState() == RobotState.SETUPSTATE) {
-			this.drawStartPositions(robModel);
-		}
+		this.registerComponent(new Engine(prefs));
 	}
 	
 	/**
@@ -110,113 +91,14 @@ public class Robot extends Entity {
 		this.bubble.height = fieldHeight * 0.2f;
 	}
 	
-	private void drawStartPositions(final IRobot robo) {
-		this.startp = true;
-		switch(robo.getPosition().getOrientation()){
-		case SOUTH:
-			this.arrowrot = 180;
-			break;
-		case NORTH:
-			this.arrowrot = 0;
-			break;
-		case WEST:
-			this.arrowrot = -90;
-			break;
-		case EAST:
-			this.arrowrot = 90;
-			break;
-		default:
-			break;
-		}
-	}
-	
-	/**
-	 * Initializes the <code>rotation</code> of the robot.
-	 * 
-	 * @param robo data model of the robot
-	 */
-	private void initDirection(final IRobot robo) {
-		switch(robo.getPosition().getOrientation()) {
-		case SOUTH:
-			this.rotation = 180;
-			break;
-		case NORTH:
-			this.rotation = 0;
-			break;
-		case WEST:
-			this.rotation = -90;
-			break;
-		case EAST:
-			this.rotation = 90;
-			break;
-		default:
-			break;
-		}
-	}
-
-	/**
-	 * Updates x/y-coordinate of the robot. This method uses entityModifier for a smooth transition.
-	 * 
-	 * @see IEntityModifier
-	 * @param robo data model of the robot
-	 */
-	private void updateRobot(final IRobot robo) {
-
-		if (modList != null)
-			modList.clear();
-		
-		IEntityModifier mod;
-		
-		//TODO dynamic duration
-		//TODO use progress
-		switch (robo.getPosition().getOrientation()) {
-		case SOUTH:
-			mod = new RotationModifier(this, 0.1f, rotation, 180);
-			break;
-		case NORTH:
-			mod = new RotationModifier(this, 0.1f, rotation, 0);
-			break;
-		case WEST:
-			mod = new RotationModifier(this, 0.1f, rotation, -90);
-			break;
-		case EAST:
-			mod = new RotationModifier(this, 0.1f, rotation, 90);
-			break;
-		default:
-			mod = new RotationModifier(this, 0.1f, rotation, 90);
-			break;
-		}
-		
-		mod.addFinishListener(new IFinishListener() {
-			@Override
-			public void onFinish() {
-				Robot.this.updatePosition(robo);
-			}
-		});
-		this.registerModifier(mod);
-	}
-	
-	/**
-	 * Updated the position of the robot using {@link IEntityModifier}.
-	 * 
-	 * @param robo model of the robot
-	 */
-	private void updatePosition(final IRobot robo) { 
-
-		final float newRenderX = robo.getPosition().getX() * fieldWidth + fieldWidth/2 - width/2;
-		final float newRenderY = robo.getPosition().getY() * fieldHeight + fieldHeight/2 - height/2;
-
-		if ((int) renderX != (int) newRenderX) 
-			this.registerModifier(new MoveModifierX(this, 0.4f, renderX, newRenderX));
-		if ((int) renderY != (int) newRenderY) 
-			this.registerModifier(new MoveModifierY(this, 0.4f, renderY, newRenderY));
-	}
-	
 	@Override
 	public void draw(final Batch batch) {
-		if(this.startp) // TODO check in whole game
-			startpos.draw(batch, renderX, renderY, fieldWidth/2f, fieldHeight/2f, fieldWidth, fieldHeight, 1f, 1f, arrowrot);
-		else{
+		super.draw(batch);
+	
+		if( this.startp) {
+			startpos.draw(batch, renderX, renderY, fieldWidth/2f, fieldHeight/2f, fieldWidth, fieldHeight, 1f, 1f, rotation);
+		} 
+		else {
 			robo.draw(batch, renderX, renderY, width/2f, height/2f, width, height, 1f, 1f, rotation);	
 	
 			batch.setColor(bubble.color);		
@@ -236,11 +118,6 @@ public class Robot extends Entity {
 		
 			case ROBOT_ADD:
 				break;
-				
-			case ROBOT_POSITION:
-				if (this.modList != null && this.modList.size() == 0)
-					this.updateRobot(robotModel);
-				break;
 					
 			case ROBOT_SCORE:
 				this.bubble.points = robotModel.getId().substring(0, 4) + "  : " + robotModel.getScore() + "("
@@ -249,12 +126,8 @@ public class Robot extends Entity {
 	
 			case ROBOT_STATE:
 				this.startp = robotModel.getState() == RobotState.SETUPSTATE;
-	
-				break;
-			case STAGE_STARTPOSITIONS:
-				drawStartPositions(robotModel);
-				break;
-				default:
+				
+			default:
 				break;
 		}		
 	}
@@ -263,11 +136,10 @@ public class Robot extends Entity {
 	public void onUpdatePreferences(PreferencesObservable o, IPreferencesKey updatedKey) {
 		
 		if (updatedKey.getEnum() == PrefConst.FIELD_HEIGHT_KEY || updatedKey.getEnum() == PrefConst.FIELD_WIDTH_KEY) {
-			this.fieldWidth = prefs.getFloat(PrefConst.FIELD_WIDTH_KEY, 42);
-			this.fieldHeight = prefs.getFloat(PrefConst.FIELD_HEIGHT_KEY, 42);
+			this.fieldWidth = prefs.getFloat(PrefConst.FIELD_WIDTH_KEY);
+			this.fieldHeight = prefs.getFloat(PrefConst.FIELD_HEIGHT_KEY);
 
-			if (modList != null)
-				this.modList.clear();
+			this.modList.clear();
 			
 			final IRobot r = (IRobot) model;
 
@@ -284,7 +156,7 @@ public class Robot extends Entity {
 	}
 	
 	/**
-	 * Model for an information bubble.
+	 * Model for a bubble, which displays information about the robot.
 	 * 
 	 * @author Rico Schrage
 	 * @author Daphne Schössow

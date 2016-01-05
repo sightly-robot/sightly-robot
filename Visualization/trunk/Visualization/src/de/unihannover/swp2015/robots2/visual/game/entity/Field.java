@@ -72,9 +72,7 @@ public class Field extends Entity {
 	 */
 	public Field(final IStage parent, final IField model, final RobotGameHandler gameHandler) {
 		super(model, gameHandler);
-		
-		this.model = model;
-		this.model.observe(this);
+
 		this.parent = parent;
 		
 		this.food = new Resource(model, gameHandler);
@@ -88,7 +86,6 @@ public class Field extends Entity {
 		this.renderY = model.getY() * fieldHeight;
 
 		this.determineFieldTexture(model);
-		
 	}
 	
 	/**
@@ -121,6 +118,7 @@ public class Field extends Entity {
 	
 	@Override
 	public void draw(final Batch batch) {
+		super.draw(batch);
 		
 		fieldWidth = prefs.getFloat(PrefConst.FIELD_WIDTH_KEY, 50);
 		fieldHeight = prefs.getFloat(PrefConst.FIELD_HEIGHT_KEY, 50);

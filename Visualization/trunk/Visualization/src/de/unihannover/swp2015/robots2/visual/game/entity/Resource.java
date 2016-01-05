@@ -51,7 +51,8 @@ public class Resource extends Entity {
 
 	@Override
 	public void draw(final Batch batch) {
-
+		super.draw(batch);
+		
 		final IField field = (IField) model;
 		
 		if (field.getFood() == 0)
