@@ -20,8 +20,15 @@ public class Engine extends Component {
 	/**
 	 * Interval time used for the first calculation of the robot speed (in seconds).
 	 */
-	private static final float FIRST_INTERVAL_TIME = 0.1f;
+	private static final float FIRST_INTERVAL_GUESS = 0.1f;
 	
+	/**
+	 * Number of intervals which will be used to calculate the current interval
+	 */
+	private static final int INTERVAL_COUNT = 10;
+	
+	private float[] intervalHistory;
+	private int currentEnd;
 	private float interval;
 	private long lastEvent;
 	private boolean firstEvent;
@@ -36,7 +43,11 @@ public class Engine extends Component {
 	public void onRegister(final IEntity entity) {
 		super.onRegister(entity);
 		
-		interval = FIRST_INTERVAL_TIME;
+		this.intervalHistory = new float[INTERVAL_COUNT];
+		this.interval = FIRST_INTERVAL_GUESS;
+		this.firstEvent = false;
+		this.lastEvent = 0;
+		this.currentEnd = 0;
 	}
 
 	@Override
@@ -50,7 +61,7 @@ public class Engine extends Component {
 			break;
 			
 		case ROBOT_POSITION:
-			this.updateRobot((IRobot) event.getObject(), 1000);
+			this.updateRobot((IRobot) event.getObject(), 0);
 			break;
 			
 		default:
@@ -64,9 +75,15 @@ public class Engine extends Component {
 			firstEvent = true;
 		}
 		else {
-			interval = (System.currentTimeMillis() - lastEvent) / 1000f;
+			intervalHistory[currentEnd] = (System.nanoTime() - lastEvent) / 1000000000f; 
+			currentEnd = (currentEnd + 1) % INTERVAL_COUNT;
+			for (final float value : intervalHistory) {
+				interval += value;
+			}
+			interval /= INTERVAL_COUNT;
 		}
-		this.lastEvent = System.currentTimeMillis();
+		this.lastEvent = System.nanoTime();
+		System.out.println(interval);
 	}
 	
 	/**
