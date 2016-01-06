@@ -187,6 +187,8 @@ public class RobotGameHandler extends GameHandler implements IPreferencesObserve
 			this.resHandler.loadTexturePack("default");
 		if (Gdx.input.isKeyPressed(Keys.RIGHT))
 			this.resHandler.loadTexturePack("earth");
+		if (Gdx.input.isKeyPressed(Keys.UP))
+			this.resHandler.loadTexturePack("home");
 		
 		if (!game.isRunning()) {
 

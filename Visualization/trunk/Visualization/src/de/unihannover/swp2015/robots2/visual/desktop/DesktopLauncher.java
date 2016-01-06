@@ -142,6 +142,7 @@ public class DesktopLauncher {
 			packSettings.duplicatePadding = true;
 			TexturePacker.process(packSettings, "assets/tex/default_theme_src", ResConst.ATLAS_PATH.getName()+ "/default", ResConst.ATLAS_NAME.getName());
 			TexturePacker.process(packSettings, "assets/tex/earth_theme_src", ResConst.ATLAS_PATH.getName()+ "/earth", ResConst.ATLAS_NAME.getName());
+			TexturePacker.process(packSettings, "assets/tex/home_theme_src", ResConst.ATLAS_PATH.getName()+ "/home", ResConst.ATLAS_NAME.getName());
 		}
 				
 		final LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
