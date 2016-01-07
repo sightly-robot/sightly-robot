@@ -11,7 +11,7 @@ import de.unihannover.swp2015.robots2.visual.core.PrefConst;
 import de.unihannover.swp2015.robots2.visual.core.entity.Entity;
 import de.unihannover.swp2015.robots2.visual.game.GameConst;
 import de.unihannover.swp2015.robots2.visual.game.RobotGameHandler;
-import de.unihannover.swp2015.robots2.visual.game.entity.component.Engine;
+import de.unihannover.swp2015.robots2.visual.game.entity.component.RobotEngine;
 import de.unihannover.swp2015.robots2.visual.resource.ResConst;
 import de.unihannover.swp2015.robots2.visual.resource.texture.RenderUnit;
 import de.unihannover.swp2015.robots2.visual.util.ColorUtil;
@@ -68,7 +68,7 @@ public class Robot extends Entity {
 		this.renderY = robModel.getPosition().getY() * fieldHeight + fieldHeight/2 - height/2;
 		
 		this.initBubble(robModel, fieldWidth, fieldHeight);
-		this.registerComponent(new Engine(prefs));
+		this.registerComponent(new RobotEngine(prefs));
 	}
 	
 	/**

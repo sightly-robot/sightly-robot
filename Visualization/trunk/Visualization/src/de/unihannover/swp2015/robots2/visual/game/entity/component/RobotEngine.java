@@ -15,7 +15,7 @@ import de.unihannover.swp2015.robots2.visual.game.entity.modifier.RotationModifi
 import de.unihannover.swp2015.robots2.visual.util.ModelUtil;
 import de.unihannover.swp2015.robots2.visual.util.pref.IPreferences;
 
-public class Engine extends Component {
+public class RobotEngine extends Component {
 	
 	/**
 	 * Interval time used for the first calculation of the robot speed (in seconds).
@@ -35,7 +35,7 @@ public class Engine extends Component {
 
 	private final IPreferences pref;
 	
-	public Engine(final IPreferences pref) {
+	public RobotEngine(final IPreferences pref) {
 		this.pref = pref;
 	}
 	
@@ -49,7 +49,7 @@ public class Engine extends Component {
 		this.lastEvent = 0;
 		this.currentEnd = 0;
 	}
-
+	
 	@Override
 	public void onEvent(IEvent event) {
 		switch(event.getType()) {
@@ -130,13 +130,17 @@ public class Engine extends Component {
 	 */
 	private float calcFactorX(final Orientation orientation) {
 		switch (orientation) {
+		
 		case NORTH:
 		case SOUTH:
 			return 0;
+		
 		case EAST:
 			return 1;
+		
 		case WEST:
 			return -1;
+		
 		default:
 			return 0;
 		}
@@ -150,13 +154,17 @@ public class Engine extends Component {
 	 */
 	private float calcFactorY(final Orientation orientation) {
 		switch (orientation) {
+		
 		case EAST:
 		case WEST:
 			return 0;
+		
 		case NORTH:
 			return -1;
+		
 		case SOUTH:
 			return 1;
+		
 		default:
 			return 0;
 		}

@@ -5,16 +5,8 @@ import java.util.List;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.glutils.FrameBuffer;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.viewport.Viewport;
-
-import com.bitfire.postprocessing.PostProcessor;
-import com.bitfire.postprocessing.effects.Bloom;
-import com.bitfire.postprocessing.effects.Fxaa;
 
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
 import de.unihannover.swp2015.robots2.model.interfaces.IGame;
@@ -23,7 +15,6 @@ import de.unihannover.swp2015.robots2.model.interfaces.IStage;
 import de.unihannover.swp2015.robots2.visual.core.PrefConst;
 import de.unihannover.swp2015.robots2.visual.core.entity.Entity;
 import de.unihannover.swp2015.robots2.visual.core.entity.IEntity;
-import de.unihannover.swp2015.robots2.visual.core.entity.IEntityModifier;
 import de.unihannover.swp2015.robots2.visual.core.handler.GameHandler;
 import de.unihannover.swp2015.robots2.visual.game.entity.Map;
 import de.unihannover.swp2015.robots2.visual.game.entity.Robot;
@@ -39,11 +30,6 @@ import de.unihannover.swp2015.robots2.visual.util.pref.IPreferencesObserver;
  * @author Rico Schrage
  */
 public class RobotGameHandler extends GameHandler implements IPreferencesObserver {
-
-	/**
-	 * Contains all modifiers, which are updated every tick.
-	 */
-	protected final List<IEntityModifier> modifierList;
 	
 	/**
 	 * List of entities managed by this game handler.
@@ -64,21 +50,7 @@ public class RobotGameHandler extends GameHandler implements IPreferencesObserve
 	 * SpriteBatch for rendering textures.
 	 */
 	protected SpriteBatch spriteBatch;
-		
-	/**
-	 * Capable to render post-processing effects. For the map.
-	 */
-	protected PostProcessor pp;
-	/**
-	 * Capable to render post-processing effects. For the map.
-	 */
-	protected PostProcessor pp2;
-	
-	/**
-	 * Effect, which blurs the screen when game is stopped.
-	 */
-	protected Bloom bloom;
-	
+
 	/**
 	 * UI, which will be displayed if {@link IGame#isRunning()} == false
 	 */
@@ -90,15 +62,9 @@ public class RobotGameHandler extends GameHandler implements IPreferencesObserve
 	private final List<IRobot> robots;
 	
 	/**
-	 * TextureRegion, part of a workaround for a bug in the PP-lib.
-	 * Describes the resulting texture of the FBO as texture region.
+	 * Manages several post-processors.
 	 */
-	private TextureRegion reg;
-	
-	/**
-	 * FBO, part of a workaround for a bug in the PP-lib.
-	 */
-	private FrameBuffer fbo;
+	private final PostProcessHandler ppHandler;
 
 	/**
 	 * Construct a new RobotGameHandler and connects this handler (means it will directly observe the model) to the given model <code>game</code>
@@ -110,7 +76,6 @@ public class RobotGameHandler extends GameHandler implements IPreferencesObserve
 		super(resourceHandler, prefs);
 		
 		this.robots = new ArrayList<>();
-		this.modifierList = new ArrayList<>();
 		this.entityList = new ArrayList<>();
 		this.game = game;
 		this.view = view;
@@ -118,19 +83,8 @@ public class RobotGameHandler extends GameHandler implements IPreferencesObserve
 		this.spriteBatch.setProjectionMatrix(view.getCamera().combined);
 		this.game.observe(this);
 		this.prefs.addObserver(this);
+		this.ppHandler = new PostProcessHandler((int)view.getWorldWidth(), (int)view.getWorldHeight());
 		
-		this.fbo = new FrameBuffer(Pixmap.Format.RGBA4444, (int) (view.getWorldWidth()), (int) (view.getWorldHeight()), false);
-		this.reg = new TextureRegion(fbo.getColorBufferTexture());
-		this.pp = new PostProcessor(false, true, true);
-		this.pp2 = new PostProcessor(false, true, true);
-		this.bloom = new Bloom((int) (view.getWorldWidth()/2f), (int)(view.getWorldHeight()/2f));
-		this.bloom.setBaseIntesity(0);
-		this.bloom.setThreshold(0);
-		this.bloom.setBloomSaturation(0.3f);
-		this.bloom.setEnabled(false);
-		this.pp.addEffect(bloom);
-		this.pp2.addEffect(new Fxaa((int) (view.getWorldWidth() * 2), (int) (view.getWorldHeight() * 2)));
-
 		this.init();
 	}
 	
@@ -192,10 +146,10 @@ public class RobotGameHandler extends GameHandler implements IPreferencesObserve
 		
 		if (!game.isRunning()) {
 
-			if (bloom.isEnabled()) {
+			if (ppHandler.isBloomEnabled()) {
 				//TODO check whether the performance drop in this branch is acceptable.
 				//approx. 50% slower than the other branch.
-				pp.capture();
+				ppHandler.capturePP();
 				
 				spriteBatch.begin();
 				for (int i = 0; i < entityList.size(); ++i) {
@@ -203,19 +157,19 @@ public class RobotGameHandler extends GameHandler implements IPreferencesObserve
 				}
 				spriteBatch.end();
 				
-				pp.render(fbo);
-				pp2.capture();
+				ppHandler.renderPPToInternalBuffer();
+				ppHandler.capturePP2();
 				
 				spriteBatch.begin();
-				spriteBatch.draw(reg, 0, 0);
+				spriteBatch.draw(ppHandler.getReg(), 0, 0);
 				spriteBatch.end();
 				
 				ui.render();
 				
-				pp2.render();
+				ppHandler.renderPP2();
 			}
 			else {
-				pp2.capture();
+				ppHandler.capturePP2();
 				spriteBatch.begin();
 				for (int i = 0; i < entityList.size(); ++i) {
 					this.entityList.get(i).draw(spriteBatch);
@@ -224,17 +178,17 @@ public class RobotGameHandler extends GameHandler implements IPreferencesObserve
 				
 				ui.render();
 
-				pp2.render();
+				ppHandler.renderPP2();
 			}
 		}
 		else {
-			pp2.capture();
+			ppHandler.capturePP2();
 			spriteBatch.begin();
 			for (int i = 0; i < entityList.size(); ++i) {
 				this.entityList.get(i).draw(spriteBatch);
 			}
 			spriteBatch.end();
-			pp2.render();
+			ppHandler.renderPP2();
 		}
 	}
 
@@ -246,7 +200,7 @@ public class RobotGameHandler extends GameHandler implements IPreferencesObserve
 			break;
 			
 		case GAME_STATE:
-			bloom.setEnabled(!game.isRunning());
+			ppHandler.setBloomEnabled(!game.isRunning());
 			ui.setDisplay(true);
 			break;
 			
@@ -280,17 +234,12 @@ public class RobotGameHandler extends GameHandler implements IPreferencesObserve
 		super.dispose();
 		
 		this.spriteBatch.dispose();
-		this.pp.dispose();
-		this.pp2.dispose();
-		this.fbo.dispose();
+		this.ppHandler.dispose();
 	}
 	
 	@Override
 	public void resize(int width, int height) {
-		this.pp.setViewport(new Rectangle(view.getScreenX(), view.getScreenY(),
-				view.getScreenWidth(), view.getScreenHeight()));
-		this.pp2.setViewport(new Rectangle(view.getScreenX(), view.getScreenY(),
-				view.getScreenWidth(), view.getScreenHeight()));
+		ppHandler.onResize(view);
 	}
 
 	@Override
@@ -299,15 +248,13 @@ public class RobotGameHandler extends GameHandler implements IPreferencesObserve
 		switch (key) {
 		
 		case VIEW_HEIGHT:
-			this.view.setWorldHeight(prefs.getFloat(PrefConst.VIEW_HEIGHT));
 		case VIEW_WIDTH:
+			this.view.setWorldHeight(prefs.getFloat(PrefConst.VIEW_HEIGHT));
 			this.view.setWorldWidth(prefs.getFloat(PrefConst.VIEW_WIDTH));
 			this.view.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
 			this.spriteBatch.setProjectionMatrix(view.getCamera().combined);	
 			this.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-			this.fbo.dispose();
-			this.fbo = new FrameBuffer(Pixmap.Format.RGBA4444, (int) (view.getWorldWidth()), (int) (view.getWorldHeight()), false);
-			this.reg = new TextureRegion(fbo.getColorBufferTexture());
+			this.ppHandler.onViewUpdate(view);
 			break;
 			
 		default:
