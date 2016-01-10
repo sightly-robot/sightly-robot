@@ -62,13 +62,34 @@ public class Robot extends Entity {
 		this.fieldWidth = prefs.getFloat(PrefKey.FIELD_WIDTH_KEY);
 		this.fieldHeight = prefs.getFloat(PrefKey.FIELD_HEIGHT_KEY);
 
-		this.width = fieldWidth * GameConst.ROBOT_SCALE;
-		this.height = fieldHeight * GameConst.ROBOT_SCALE;
-		this.renderX = robot.getPosition().getX() * fieldWidth + fieldWidth/2 - width/2;
-		this.renderY = robot.getPosition().getY() * fieldHeight + fieldHeight/2 - height/2;
-		
+		this.updateWidth(robot);
+		this.updateHeight(robot);
 		this.initBubble(robot);
 		this.registerComponent(new RobotEngine(prefs));
+	}
+	
+	/**
+	 * Updates all values, which depend on {@link fieldWidth}
+	 * 
+	 * @param robot robot model
+	 */
+	private void updateWidth(final IRobot robot) {
+		this.width = fieldWidth * GameConst.ROBOT_SCALE;
+		this.renderX = robot.getPosition().getX() * fieldWidth + fieldWidth/2 - width/2;
+		this.bubble.x = robot.getPosition().getX() * fieldWidth - renderX;
+		this.bubble.width = fieldWidth * 0.75f;
+	}
+	
+	/**
+	 * Updates all values, which depend on {@link fieldHeight}
+	 * 
+	 * @param robot robot model
+	 */
+	private void updateHeight(final IRobot robot) {
+		this.height = fieldHeight * GameConst.ROBOT_SCALE;
+		this.renderY = robot.getPosition().getY() * fieldHeight + fieldHeight/2 - height/2;
+		this.bubble.height = fieldHeight * 0.2f;
+		this.bubble.y = robot.getPosition().getY() * fieldHeight - renderY;
 	}
 	
 	/**
@@ -84,10 +105,6 @@ public class Robot extends Entity {
 		this.bubble.color = bubble.color.set(bubble.color.r, bubble.color.g, bubble.color.b, bubble.color.a * 0.7f);
 		this.bubble.font = resHandler.getFont(ResConst.DEFAULT_FONT);
 		this.bubble.points = robo.getId().substring(0, 4) + " : " + robo.getScore() + "(" + ((RobotGameHandler) gameHandler).getRanking(robo) + ")";
-		this.bubble.x = robo.getPosition().getX() * fieldWidth - renderX;
-		this.bubble.y = robo.getPosition().getY() * fieldHeight - renderY;
-		this.bubble.width = fieldWidth * 0.75f;
-		this.bubble.height = fieldHeight * 0.2f;
 	}
 	
 	@Override
@@ -127,7 +144,7 @@ public class Robot extends Entity {
 				drawStartPosition = robotModel.getState() == RobotState.SETUPSTATE;
 				
 			default:
-				//other event won't be handled 
+				//other events won't be handled 
 				break;
 		}		
 	}
@@ -140,18 +157,14 @@ public class Robot extends Entity {
 		
 		case FIELD_HEIGHT_KEY:
 			modList.clear();
-			height = fieldHeight * GameConst.ROBOT_SCALE;
-			renderY = robot.getPosition().getY() * fieldHeight + fieldHeight/2 - height/2;
-			bubble.height = fieldHeight * 0.2f;
-			bubble.y = robot.getPosition().getY() * fieldHeight - renderY;
+			fieldHeight = (float) value;
+			updateHeight(robot);
 			break;
 			
 		case FIELD_WIDTH_KEY:
 			modList.clear();
-			width = fieldWidth * GameConst.ROBOT_SCALE;
-			renderX = robot.getPosition().getX() * fieldWidth + fieldWidth/2 - width/2;
-			bubble.width = fieldWidth * GameConst.BUBBLE_X_SCALE;
-			bubble.x = robot.getPosition().getX() * fieldWidth - renderX;
+			fieldWidth = (float) value;
+			updateWidth(robot);
 			break;
 			
 		default:

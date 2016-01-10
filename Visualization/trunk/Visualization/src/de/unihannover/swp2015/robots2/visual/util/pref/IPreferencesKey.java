@@ -5,7 +5,7 @@ package de.unihannover.swp2015.robots2.visual.util.pref;
  * 
  * @author Rico Schrage
  */
-public interface IPreferencesKey<T> {
+public interface IPreferencesKey {
 
 	/**
 	 * Returns a string representation of the object, which will be used as key.

@@ -6,7 +6,7 @@ package de.unihannover.swp2015.robots2.visual.util.pref;
  *
  * @param <T> enum, which implements {@link IPreferencesKey}
  */
-public interface IPreferencesObservable<T extends IPreferencesKey<T>> {
+public interface IPreferencesObservable<T extends IPreferencesKey> {
 
 	/**
 	 * Notify all observers that a value has changed.

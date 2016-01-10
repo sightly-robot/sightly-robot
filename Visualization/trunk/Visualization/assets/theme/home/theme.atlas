@@ -6,161 +6,161 @@ filter: MipMapNearestNearest,MipMapNearestNearest
 repeat: none
 default_bubble
   rotate: false
-  xy: 2511, 1929
+  xy: 2522, 1936
   size: 86, 78
   orig: 86, 78
   offset: 0, 0
   index: -1
 default_field
   rotate: false
-  xy: 1, 1507
+  xy: 2, 1514
   size: 500, 500
   orig: 500, 500
   offset: 0, 0
   index: -1
 default_field_2_c
   rotate: false
-  xy: 1, 1507
+  xy: 2, 1514
   size: 500, 500
   orig: 500, 500
   offset: 0, 0
   index: -1
 default_field_four
   rotate: false
-  xy: 1, 1507
+  xy: 2, 1514
   size: 500, 500
   orig: 500, 500
   offset: 0, 0
   index: -1
 default_field_one
   rotate: false
-  xy: 1, 1507
+  xy: 2, 1514
   size: 500, 500
   orig: 500, 500
   offset: 0, 0
   index: -1
 default_field_three
   rotate: false
-  xy: 1, 1507
+  xy: 2, 1514
   size: 500, 500
   orig: 500, 500
   offset: 0, 0
   index: -1
 default_field_two
   rotate: false
-  xy: 1, 1507
+  xy: 2, 1514
   size: 500, 500
   orig: 500, 500
   offset: 0, 0
   index: -1
 default_res_eight
   rotate: false
-  xy: 1, 1005
+  xy: 2, 1010
   size: 500, 500
   orig: 500, 500
   offset: 0, 0
   index: -1
 default_res_five
   rotate: false
-  xy: 503, 1507
+  xy: 506, 1514
   size: 500, 500
   orig: 500, 500
   offset: 0, 0
   index: -1
 default_res_four
   rotate: false
-  xy: 1, 503
+  xy: 2, 506
   size: 500, 500
   orig: 500, 500
   offset: 0, 0
   index: -1
 default_res_nine
   rotate: false
-  xy: 503, 1005
+  xy: 506, 1010
   size: 500, 500
   orig: 500, 500
   offset: 0, 0
   index: -1
 default_res_one
   rotate: false
-  xy: 1005, 1507
+  xy: 1010, 1514
   size: 500, 500
   orig: 500, 500
   offset: 0, 0
   index: -1
 default_res_seven
   rotate: false
-  xy: 1, 1
+  xy: 2, 2
   size: 500, 500
   orig: 500, 500
   offset: 0, 0
   index: -1
 default_res_six
   rotate: false
-  xy: 503, 503
+  xy: 506, 506
   size: 500, 500
   orig: 500, 500
   offset: 0, 0
   index: -1
 default_res_ten
   rotate: false
-  xy: 1005, 1005
+  xy: 1010, 1010
   size: 500, 500
   orig: 500, 500
   offset: 0, 0
   index: -1
 default_res_three
   rotate: false
-  xy: 1507, 1507
+  xy: 1514, 1514
   size: 500, 500
   orig: 500, 500
   offset: 0, 0
   index: -1
 default_res_two
   rotate: false
-  xy: 503, 1
+  xy: 506, 2
   size: 500, 500
   orig: 500, 500
   offset: 0, 0
   index: -1
 default_robo
   rotate: false
-  xy: 1005, 503
+  xy: 1010, 506
   size: 500, 500
   orig: 500, 500
   offset: 0, 0
   index: -1
 default_startpos
   rotate: false
-  xy: 1507, 1005
+  xy: 1514, 1010
   size: 500, 500
   orig: 500, 500
   offset: 0, 0
   index: -1
 default_wall_e
   rotate: false
-  xy: 2009, 1507
+  xy: 2018, 1514
   size: 500, 500
   orig: 500, 500
   offset: 0, 0
   index: -1
 default_wall_n
   rotate: false
-  xy: 1005, 1
+  xy: 1010, 2
   size: 500, 500
   orig: 500, 500
   offset: 0, 0
   index: -1
 default_wall_s
   rotate: false
-  xy: 1507, 503
+  xy: 1514, 506
   size: 500, 500
   orig: 500, 500
   offset: 0, 0
   index: -1
 default_wall_w
   rotate: false
-  xy: 2009, 1005
+  xy: 2018, 1010
   size: 500, 500
   orig: 500, 500
   offset: 0, 0

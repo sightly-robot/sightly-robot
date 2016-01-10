@@ -8,7 +8,7 @@ package de.unihannover.swp2015.robots2.visual.util.pref;
  * 
  * @author Rico Schrage
  */
-public interface IPreferences<T extends IPreferencesKey<T>> extends IPreferencesObservable<T> {
+public interface IPreferences<T extends IPreferencesKey> extends IPreferencesObservable<T> {
 
 	/**
 	 * Returns the boolean, which is mapped to <code>key</code>. If there is no value mapped to <code>key</code>, <code>def</code> will be returned.

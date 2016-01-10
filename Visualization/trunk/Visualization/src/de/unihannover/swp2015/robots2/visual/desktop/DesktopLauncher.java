@@ -3,6 +3,7 @@ package de.unihannover.swp2015.robots2.visual.desktop;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
@@ -24,7 +25,7 @@ public class DesktopLauncher {
 	
 	/** Logger (log4j) */
 	private static final Logger log = LogManager.getLogger();
-	/** Path to shaders of the PP-library */
+	/** Path to the shaders of the PP-library */
 	private static final String SHADER_PATH = "resources/shaders/";
 	
 	private DesktopLauncher() {
@@ -67,6 +68,8 @@ public class DesktopLauncher {
 			packSettings.maxHeight = 1024*4;
 			packSettings.pot = true;
 			packSettings.duplicatePadding = true;
+			packSettings.paddingX = 4;
+			packSettings.paddingY = 4;
 			packSettings.filterMag = TextureFilter.MipMapNearestNearest;
 			packSettings.filterMin = TextureFilter.MipMapNearestNearest;
 			TexturePacker.process(packSettings, "assets/tex/default_theme_src", ResConst.ATLAS_PATH.getName()+ "/default", ResConst.ATLAS_NAME.getName());
@@ -81,7 +84,7 @@ public class DesktopLauncher {
 		config.backgroundFPS = 60;
 		config.vSyncEnabled = false;
 		config.fullscreen = false;
-		new LwjglApplication(new Visualization(debug, brokerIp), config);
+		new LwjglApplication(new Visualization(debug, brokerIp), config).setLogLevel(Application.LOG_NONE);
 	}
 
 }

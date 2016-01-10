@@ -101,6 +101,7 @@ public class Visualization extends ApplicationAdapter {
 		prefs.putFloat(PrefKey.DEVICE_HEIGHT, device.getDisplayMode().getHeight());
 		
 		final IResourceHandler resHandler = new ResourceHandler(ResConst.ATLAS_PATH.getName());
+		gameHandlerList.add(new RobotGameHandler(mqttHandler.getGame(), fitViewport, resHandler, prefs));
 		
 		if (debug) {
 			new TestApp(mqttHandler.getGame());
@@ -109,8 +110,6 @@ public class Visualization extends ApplicationAdapter {
 			final Thread mqttThread = new Thread(mqttHandler, "MQTT");
 			mqttThread.start();
 		}
-		
-		gameHandlerList.add(new RobotGameHandler(mqttHandler.getGame(), fitViewport, resHandler, prefs));
 	}
 
 	@Override

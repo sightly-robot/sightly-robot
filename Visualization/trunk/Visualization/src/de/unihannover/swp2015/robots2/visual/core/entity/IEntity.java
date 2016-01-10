@@ -8,6 +8,11 @@ import de.unihannover.swp2015.robots2.visual.core.IUpdateable;
 import de.unihannover.swp2015.robots2.visual.core.PrefKey;
 import de.unihannover.swp2015.robots2.visual.util.pref.IPreferencesObserver;
 
+/**
+ * Describes a self updating/drawing entity, which will be based on a model class defined by the protocol.
+ * 
+ * @author Rico Schrage
+ */
 public interface IEntity extends IDrawable, IModelObserver, Comparable<IEntity>, IPreferencesObserver<PrefKey>, IUpdateable {
 
 	/**

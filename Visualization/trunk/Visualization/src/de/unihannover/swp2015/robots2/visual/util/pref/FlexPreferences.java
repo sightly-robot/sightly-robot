@@ -13,7 +13,7 @@ import com.badlogic.gdx.Preferences;
  * @see {@link IPreferences}
  * @author Rico Schrage
  */
-public class FlexPreferences<T extends IPreferencesKey<T>> extends PreferencesObservable<T> implements IPreferences<T> {
+public class FlexPreferences<T extends IPreferencesKey> extends PreferencesObservable<T> implements IPreferences<T> {
 
 	/**
 	 * Handler for saving data persistent.

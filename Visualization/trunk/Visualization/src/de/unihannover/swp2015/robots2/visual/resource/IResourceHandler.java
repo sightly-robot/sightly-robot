@@ -66,7 +66,10 @@ public interface IResourceHandler extends Disposable {
 	 */
 	public RenderUnit[] createRenderUnit(final ResConst... keys);
 	
-	//optional
+	/**
+	 * 
+	 * @param name
+	 */
 	public void loadTexturePack(final String name);
 	
 }

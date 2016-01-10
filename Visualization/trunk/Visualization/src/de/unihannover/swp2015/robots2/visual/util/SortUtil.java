@@ -17,6 +17,11 @@ public class SortUtil {
 		// utility class
 	}
 	
+	/**
+	 * Sort robots on basis of the score (descending). 
+	 *
+	 * @param robots list of robots you want to sort
+	 */
 	public static void sortRobots(final List<IRobot> robots) {
 		Collections.sort(robots, new Comparator<IRobot>() {
 			@Override

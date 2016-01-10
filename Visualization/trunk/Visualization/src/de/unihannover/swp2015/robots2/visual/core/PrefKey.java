@@ -7,7 +7,7 @@ import de.unihannover.swp2015.robots2.visual.util.pref.IPreferencesKey;
  * 
  * @author Rico Schrage
  */
-public enum PrefKey implements IPreferencesKey<PrefKey> {
+public enum PrefKey implements IPreferencesKey {
 
 	DEVICE_WIDTH("device_width"),
 	DEVICE_HEIGHT("device_height"),

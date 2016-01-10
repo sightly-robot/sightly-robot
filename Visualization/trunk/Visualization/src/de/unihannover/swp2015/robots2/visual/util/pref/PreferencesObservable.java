@@ -10,7 +10,7 @@ import java.util.List;
  *
  * @param <T> class, which has been used by the preference object to map to the values.
  */
-public class PreferencesObservable<T extends IPreferencesKey<T>> implements IPreferencesObservable<T> {
+public class PreferencesObservable<T extends IPreferencesKey> implements IPreferencesObservable<T> {
 
 	/** Contains all observers. */
 	private final List<IPreferencesObserver<T>> observerList = new ArrayList<>();

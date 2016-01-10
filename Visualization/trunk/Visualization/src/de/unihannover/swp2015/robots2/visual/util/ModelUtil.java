@@ -9,6 +9,10 @@ import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
  */
 public class ModelUtil {
 
+	private ModelUtil() {
+		// utility class
+	}
+	
 	/**
 	 * Maps the orientation to the rotation libgdx expects. Assumes that north equals 0°. <br>
 	 * <br>

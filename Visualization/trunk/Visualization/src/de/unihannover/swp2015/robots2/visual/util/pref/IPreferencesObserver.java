@@ -7,7 +7,7 @@ package de.unihannover.swp2015.robots2.visual.util.pref;
  *
  * @param <T> type of the key, which will be used for the preference object.
  */
-public interface IPreferencesObserver<T extends IPreferencesKey<T>> {
+public interface IPreferencesObserver<T extends IPreferencesKey> {
 	
 	/**
 	 * Will be called when a value has changed

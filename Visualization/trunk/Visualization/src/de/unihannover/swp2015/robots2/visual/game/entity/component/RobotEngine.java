@@ -95,7 +95,6 @@ public class RobotEngine extends Component {
 			interval /= INTERVAL_COUNT;
 		}
 		lastEvent = System.nanoTime();
-		System.out.println(interval);
 	}
 	
 	/**
