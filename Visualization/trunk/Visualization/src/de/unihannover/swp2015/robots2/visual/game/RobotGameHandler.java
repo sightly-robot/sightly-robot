@@ -3,9 +3,6 @@ package de.unihannover.swp2015.robots2.visual.game;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -31,9 +28,7 @@ import de.unihannover.swp2015.robots2.visual.util.pref.IPreferences;
  * @author Rico Schrage
  */
 public class RobotGameHandler extends GameHandler {
-	
-	private static final Logger log = LogManager.getLogger();
-	
+		
 	/** List of entities managed by this game handler.*/
 	protected final List<IEntity> entityList;
 	
@@ -190,9 +185,7 @@ public class RobotGameHandler extends GameHandler {
 				roboEntity.setZIndex(1);
 				Entity.addEntitySorted(roboEntity, entityList);
 				SortUtil.addRobotSorted(robot, robots);
-				log.info("Robot received");
 			}
-			log.info("Robot event received");
 			break;
 			
 		case ROBOT_DELETE:

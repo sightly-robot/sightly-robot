@@ -142,7 +142,8 @@ public class Robot extends Entity {
 	
 			case ROBOT_STATE:
 				drawStartPosition = robotModel.getState() == RobotState.SETUPSTATE;
-				
+				break;
+
 			default:
 				//other events won't be handled 
 				break;
