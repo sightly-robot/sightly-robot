@@ -1,5 +1,6 @@
 package de.unihannover.swp2015.robots2.ai.core;
 
+import de.unihannover.swp2015.robots2.ai.exceptions.InvalidPathException;
 import de.unihannover.swp2015.robots2.ai.exceptions.InvalidStageException;
 import de.unihannover.swp2015.robots2.ai.exceptions.NoValidOrientationException;
 import de.unihannover.swp2015.robots2.ai.graph.AIGraph;
@@ -393,7 +394,12 @@ public class AI extends AbstractAI implements IModelObserver {
 	 * @return Orientation, the robot is supposed to move in next.
 	 */
 	public Orientation findNextOrientation() throws NoValidOrientationException {
-		return this.graph.getRandomOrientation();
+		try {
+			return this.graph.getOrientationFromPath(this.graph.getBFSPath(this.graph.findBestNode(5)));
+		} catch (InvalidPathException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	/**
