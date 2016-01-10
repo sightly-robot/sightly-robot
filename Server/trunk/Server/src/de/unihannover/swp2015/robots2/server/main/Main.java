@@ -1,12 +1,18 @@
 package de.unihannover.swp2015.robots2.server.main;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import de.unihannover.swp2015.robots2.controller.interfaces.IServerController;
 import de.unihannover.swp2015.robots2.controller.interfaces.InfoType;
 import de.unihannover.swp2015.robots2.controller.main.ServerMainController;
+import de.unihannover.swp2015.robots2.controller.mqtt.MqttReceiver;
 import de.unihannover.swp2015.robots2.server.main.farm.Farmer;
 
 public class Main {
-
+	
+	private static Logger log = LogManager.getLogger(Main.class.getName());
+	
 	/**
 	 * main method for game server.
 	 * 
@@ -14,9 +20,9 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 		if (args.length != 1) {
-			System.out.println("Wrong number of cli arguments.");
-			System.out.println("Please specify exactly 1 argument: The MQTT broker location in format");
-			System.out.println("tcp://HostnameOrIP");
+			log.error("Wrong number of cli arguments.");
+			log.error("Please specify exactly 1 argument: The MQTT broker location in format");
+			log.error("tcp://HostnameOrIP");
 			return;
 		}
 		
@@ -29,8 +35,8 @@ public class Main {
 		try {
 			controller.startMqtt(args[0]);
 		} catch (Exception e) {
-			System.out.println("Could not connect to broker.");
-			System.out.println(e.toString());
+			log.error("Could not connect to broker.");
+			log.error(e.toString());
 			return;
 		}
 		
@@ -40,7 +46,7 @@ public class Main {
 				Thread.sleep(1000);
 			}
 		} catch (InterruptedException e) {
-			System.out.println("Server is terminating.");
+			log.info("Server is terminating.");
 		}
 	}
 

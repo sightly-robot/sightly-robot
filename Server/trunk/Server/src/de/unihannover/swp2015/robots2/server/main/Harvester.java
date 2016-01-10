@@ -14,7 +14,8 @@ import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
  */
 public class Harvester implements IModelObserver {
 	private final IServerController controller;
-
+	
+	
 	public Harvester(IServerController controller) {
 		this.controller = controller;
 
