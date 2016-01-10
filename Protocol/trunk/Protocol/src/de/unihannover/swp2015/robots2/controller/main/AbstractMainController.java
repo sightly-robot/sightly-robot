@@ -1,5 +1,7 @@
 package de.unihannover.swp2015.robots2.controller.main;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.eclipse.paho.client.mqttv3.MqttException;
 
 import de.unihannover.swp2015.robots2.controller.interfaces.IController;
@@ -29,6 +31,8 @@ public abstract class AbstractMainController implements IController,
 
 	private InfoType infoType = InfoType.WARNING;
 	protected String infoComponent = "general";
+	
+	private Logger log = LogManager.getLogger(AbstractMainController.class.getName());
 
 	public AbstractMainController() {
 		this.game = new Game();
@@ -52,7 +56,7 @@ public abstract class AbstractMainController implements IController,
 		if (type.compareTo(this.infoType) >= 0) {
 			this.mqttController.sendMessage("event/" + type.toString() + "/"
 					+ this.infoComponent + "/" + topic, message, false);
-			System.out.println(type.toString() + ": " + message);
+			this.log.info("sendInfoMessage: {}, {}", type.toString(), message);
 		}
 	}
 
@@ -82,6 +86,7 @@ public abstract class AbstractMainController implements IController,
 					.toString(topicKey);
 			this.mqttController.sendMessage(fullTopic, message,
 					topic.isRetained());
+			this.log.info("sendMqttMessage: {}, {}", fullTopic, message);
 		}
 	}
 
