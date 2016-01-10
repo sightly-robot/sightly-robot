@@ -2,6 +2,9 @@ package de.unihannover.swp2015.robots2.server.main.farm;
 
 import java.util.concurrent.DelayQueue;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import de.unihannover.swp2015.robots2.controller.interfaces.IServerController;
 
 /**
@@ -16,6 +19,8 @@ public class FarmWorker extends Thread {
 	private final IServerController controller;
 
 	private boolean paused;
+	
+	private Logger log = LogManager.getLogger(FarmWorker.class.getName());
 
 	public FarmWorker(DelayQueue<GrowEvent> growQueue,
 			IServerController controller) {
@@ -35,7 +40,7 @@ public class FarmWorker extends Thread {
 						wait();
 					}
 				}
-				System.out.println("Wait for grow event...");
+				this.log.info("Wait for grow event...");
 				GrowEvent ge = this.growQueue.take();
 				if (ge.getField().getFood() < 10) {
 					this.controller.increaseFood(ge.getField().getX(),
