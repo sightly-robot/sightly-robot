@@ -2,6 +2,11 @@ package de.unihannover.swp2015.robots2.visual.util;
 
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
 
+/**
+ * Utility methods for working with the model provided by the protocol.
+ * 
+ * @author Rico Schrage
+ */
 public class ModelUtil {
 
 	/**

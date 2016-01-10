@@ -3,26 +3,33 @@ package de.unihannover.swp2015.robots2.visual.util.pref;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PreferencesObservable implements IPreferencesObservable {
+/**
+ * Simple implementation of {@link IPreferencesObservable}.
+ * 
+ * @author Rico Schrage
+ *
+ * @param <T> class, which has been used by the preference object to map to the values.
+ */
+public class PreferencesObservable<T extends IPreferencesKey<T>> implements IPreferencesObservable<T> {
 
-	private final List<IPreferencesObserver> observerList = new ArrayList<>();
+	/** Contains all observers. */
+	private final List<IPreferencesObserver<T>> observerList = new ArrayList<>();
 	
 	@Override
-	public void notifyObserver(final IPreferencesKey changedKey) {
+	public void notifyObserver(final T changedKey, final Object value) {
 		for (int i = 0; i < observerList.size(); ++i) {
-			this.observerList.get(i).onUpdatePreferences(this, changedKey);
+			observerList.get(i).onUpdatePreferences(changedKey, value);
 		}
-		
 	}
 
 	@Override
-	public void addObserver(final IPreferencesObserver obs) {
-		this.observerList.add(obs);
+	public void addObserver(final IPreferencesObserver<T> obs) {
+		observerList.add(obs);
 	}
 	
 	@Override
-	public void removeObserver(final IPreferencesObserver obs) {
-		this.observerList.remove(obs);
+	public void removeObserver(final IPreferencesObserver<T> obs) {
+		observerList.remove(obs);
 	}
 	
 }

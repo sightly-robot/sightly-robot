@@ -40,22 +40,41 @@ public enum ResConst {
 	DEFAULT_FONT_BIG("default_font_big", ResType.FONT),
 	DEFAULT_FONT_TITLE("default_font_title", ResType.FONT);
 	
+	/** Name of the resource, should be equal to the real file */
 	private final String name;
+	/** {@link ResType} */
 	private final ResType type;
 	
-	private ResConst(final String name, final ResType type) {
-		this.name = name;
-		this.type = type;
+	/**
+	 * Constructs a resource constant, which describes a resource.
+	 * 
+	 * @param fileName name of the file, which should be loaded when loading this constant.
+	 * @param resType type of resource
+	 */
+	private ResConst(final String fileName, final ResType resType) {
+		this.name = fileName;
+		this.type = resType;
 	}
 	
+	/**
+	 * @return name of the resource
+	 */
 	public String getName() {
 		return name;
 	}
 	
+	/**
+	 * @return type of the resource
+	 */
 	public ResType getType() {
 		return type;
 	}
 	
+	/**
+	 * Available resources types.
+	 * 
+	 * @author Rico Schrage
+	 */
 	public enum ResType {
 		PATH, TEX, FONT, AUDIO;
 	}

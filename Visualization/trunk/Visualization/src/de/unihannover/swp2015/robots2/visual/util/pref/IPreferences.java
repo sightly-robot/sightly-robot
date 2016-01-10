@@ -8,7 +8,7 @@ package de.unihannover.swp2015.robots2.visual.util.pref;
  * 
  * @author Rico Schrage
  */
-public interface IPreferences extends IPreferencesObservable {
+public interface IPreferences<T extends IPreferencesKey<T>> extends IPreferencesObservable<T> {
 
 	/**
 	 * Returns the boolean, which is mapped to <code>key</code>. If there is no value mapped to <code>key</code>, <code>def</code> will be returned.
@@ -17,14 +17,14 @@ public interface IPreferences extends IPreferencesObservable {
 	 * @param def value, which should be returned when there is no value mapped to <code>key</code>
 	 * @return boolean from the internal map or <code>def</code>
 	 */
-	boolean getBoolean(final IPreferencesKey key, final boolean def);
+	boolean getBoolean(final T key, final boolean def);
 	
 	/**
 	 * Calls {@link #getBoolean(IPreferencesKey, boolean)} with false as default value.
 	 * @param key key of the value
 	 * @return boolean from the internal map or <code>false</code>
 	 */
-	boolean getBoolean(final IPreferencesKey key);
+	boolean getBoolean(final T key);
 	
 	/**
 	 * Returns the float value, which is mapped to <code>key</code>. If there is no value mapped to <code>key</code>, <code>def</code> will be returned.
@@ -33,14 +33,14 @@ public interface IPreferences extends IPreferencesObservable {
 	 * @param def value, which should be returned when there is no value mapped to <code>key</code>
 	 * @return float value from the internal map or <code>def</code>
 	 */
-	float getFloat(final IPreferencesKey key, final float def);
+	float getFloat(final T key, final float def);
 	
 	/**
 	 * Calls {@link #getFloat(IPreferencesKey, float)} with 0.0 as default value.
 	 * @param key key of the value
 	 * @return float from the internal map or <code>0.0</code>
 	 */
-	float getFloat(final IPreferencesKey key);
+	float getFloat(final T key);
 	
 	/**
 	 * Returns the integer value, which is mapped to <code>key</code>. If there is no value mapped to <code>key</code>, <code>def</code> will be returned.
@@ -49,14 +49,14 @@ public interface IPreferences extends IPreferencesObservable {
 	 * @param def value, which should be returned when there is no value mapped to <code>key</code>
 	 * @return integer value from the internal map or <code>def</code>
 	 */
-	int getInt(final IPreferencesKey key, final int def);
+	int getInt(final T key, final int def);
 	
 	/**
 	 * Calls {@link #getInt(IPreferencesKey, int)} with 0 as default value.
 	 * @param key key of the value
 	 * @return int from the internal map or <code>0</code>
 	 */
-	int getInt(final IPreferencesKey key);
+	int getInt(final T key);
 	
 	/**
 	 * Returns the string, which is mapped to <code>key</code>. If there is no value mapped to <code>key</code>, <code>def</code> will be returned.
@@ -65,14 +65,14 @@ public interface IPreferences extends IPreferencesObservable {
 	 * @param def value, which should be returned when there is no value mapped to <code>key</code>
 	 * @return string from the internal map or <code>def</code>
 	 */
-	String getString(final IPreferencesKey key, final String def);
+	String getString(final T key, final String def);
 	
 	/**
 	 * Calls {@link #getString(IPreferencesKey, String)} with <code>""</code> as default value.
 	 * @param key key of the value
 	 * @return string from the internal map or <code>""</code>
 	 */
-	String getString(final IPreferencesKey key);
+	String getString(final T key);
 	
 	/**
 	 * Puts given <code>value</code> in the map (non-persistent). 
@@ -80,7 +80,7 @@ public interface IPreferences extends IPreferencesObservable {
 	 * @param key - the key, the value should be mapped to
 	 * @param value - the value, which should be stored
 	 */
-	void putBoolean(final IPreferencesKey key, final boolean value);
+	void putBoolean(final T key, final boolean value);
 	
 	/**
 	 * Puts given <code>value</code> in the map. Depending on <code>persistent</code> the value will be stored persistent/non-persistent.
@@ -89,7 +89,7 @@ public interface IPreferences extends IPreferencesObservable {
 	 * @param value - the value, which should be stored
 	 * @param persistent - if true the value will be stored in a persistent way
 	 */
-	void putBoolean(final IPreferencesKey key, final boolean value, final boolean persistent);
+	void putBoolean(final T key, final boolean value, final boolean persistent);
 	
 	/**
 	 * Puts given <code>value</code> in the map (non-persistent). 
@@ -97,7 +97,7 @@ public interface IPreferences extends IPreferencesObservable {
 	 * @param key - the key, the value should be mapped to
 	 * @param value - the value, which should be stored
 	 */
-	void putFloat(final IPreferencesKey key, final float value);
+	void putFloat(final T key, final float value);
 	
 	/**
 	 * Puts given <code>value</code> in the map. Depending on <code>persistent</code> the value will be stored persistent/non-persistent.
@@ -106,24 +106,7 @@ public interface IPreferences extends IPreferencesObservable {
 	 * @param value - the value, which should be stored
 	 * @param persistent - if true the value will be stored in a persistent way
 	 */
-	void putFloat(final IPreferencesKey key, final float value, final boolean persistent);
-	
-	/**
-	 * Puts given <code>value</code> in the map (non-persistent). 
-	 * 
-	 * @param key - the key, the value should be mapped to.
-	 * @param value - the value, which should be stored
-	 */
-	void putInt(final IPreferencesKey key, final int value);
-	
-	/**
-	 * Puts given <code>value</code> in the map. Depending on <code>persistent</code> the value will be stored persistent/non-persistent.
-	 * 
-	 * @param key - the key, the value should be mapped to
-	 * @param value - the value, which should be stored
-	 * @param persistent - if true the value will be stored in a persistent way
-	 */
-	void putInt(final IPreferencesKey key, final int value, final boolean persistent);
+	void putFloat(final T key, final float value, final boolean persistent);
 	
 	/**
 	 * Puts given <code>value</code> in the map (non-persistent). 
@@ -131,7 +114,7 @@ public interface IPreferences extends IPreferencesObservable {
 	 * @param key - the key, the value should be mapped to.
 	 * @param value - the value, which should be stored
 	 */
-	void putString(final IPreferencesKey key, final String value);
+	void putInt(final T key, final int value);
 	
 	/**
 	 * Puts given <code>value</code> in the map. Depending on <code>persistent</code> the value will be stored persistent/non-persistent.
@@ -140,6 +123,23 @@ public interface IPreferences extends IPreferencesObservable {
 	 * @param value - the value, which should be stored
 	 * @param persistent - if true the value will be stored in a persistent way
 	 */
-	void putString(final IPreferencesKey key, final String value, final boolean persistent);
+	void putInt(final T key, final int value, final boolean persistent);
+	
+	/**
+	 * Puts given <code>value</code> in the map (non-persistent). 
+	 * 
+	 * @param key - the key, the value should be mapped to.
+	 * @param value - the value, which should be stored
+	 */
+	void putString(final T key, final String value);
+	
+	/**
+	 * Puts given <code>value</code> in the map. Depending on <code>persistent</code> the value will be stored persistent/non-persistent.
+	 * 
+	 * @param key - the key, the value should be mapped to
+	 * @param value - the value, which should be stored
+	 * @param persistent - if true the value will be stored in a persistent way
+	 */
+	void putString(final T key, final String value, final boolean persistent);
 	
 }

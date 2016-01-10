@@ -11,6 +11,9 @@ public class LinearEaseFunction implements IEaseFunction {
 	
 	private LinearEaseFunction() {}
 	
+	/**
+	 * @return the static instance of the function.
+	 */
 	public static LinearEaseFunction getInstance() {
 		return instance;
 	}

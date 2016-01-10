@@ -16,14 +16,16 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import de.unihannover.swp2015.robots2.visual.core.MqttHandler;
-import de.unihannover.swp2015.robots2.visual.core.PrefConst;
+import de.unihannover.swp2015.robots2.visual.core.PrefKey;
 import de.unihannover.swp2015.robots2.visual.core.handler.IGameHandler;
 import de.unihannover.swp2015.robots2.visual.game.RobotGameHandler;
 import de.unihannover.swp2015.robots2.visual.resource.IResourceHandler;
 import de.unihannover.swp2015.robots2.visual.resource.ResConst;
 import de.unihannover.swp2015.robots2.visual.resource.ResourceHandler;
 import de.unihannover.swp2015.robots2.visual.util.pref.IPreferences;
-import de.unihannover.swp2015.robots2.visual.util.TestApp;
+import de.unihannover.swp2015.robots2.visual.util.test.TestApp;
+import de.unihannover.swp2015.robots2.visual.util.LoopedTask;
+import de.unihannover.swp2015.robots2.visual.util.Task;
 import de.unihannover.swp2015.robots2.visual.util.pref.FlexPreferences;
 
 /**
@@ -33,54 +35,29 @@ import de.unihannover.swp2015.robots2.visual.util.pref.FlexPreferences;
  */
 public class Visualization extends ApplicationAdapter {
 	
+	/** Logger (log4j) */
 	private static final Logger log = LogManager.getLogger();
 	
-	/**
-	 * Broker-IP
-	 */
-	private final String brokerIp;
+	/** Broker-IP */
+	private final String ip;
 	
-	/**
-	 * Indicates whether this build is a debug build.
-	 * Have to be set before the application will be created.
-	 */
+	/** Indicates whether this build is a debug build. Have to be set before the application will be created. */
 	public final boolean debug;
 	
-	/**
-	 * List of all {@link IGameHandler}.
-	 */
+	/** List of all {@link IGameHandler}. */
 	private final List<IGameHandler> gameHandlerList;
 
-	/**
-	 * MqttHandler, handles connection fails.
-	 */
+	/** MqttHandler, handles connection fails. */
 	private final MqttHandler mqttHandler;
 	
-	/**
-	 * Settings received via MQTT
-	 */
-	private IPreferences prefs;
-
-	/**
-	 * Camera, which should be used as view.
-	 * {@link com.badlogic.gdx.graphics.OrthographicCamera}
-	 */
-	private OrthographicCamera cam;
-
-	/**
-	 * Handles virtual display. Furthermore it makes the application keep the aspect ratio.
-	 */
-	private Viewport fitViewport;
+	/** Settings received via MQTT */
+	private IPreferences<PrefKey> prefs;
 	
-	/**
-	 * Information about the system
-	 */
+	/** Information about the system */
 	private GraphicsDevice device;
 	
-	/**
-	 * For the timing of the debug output.
-	 */
-	float c = 5;
+	/** For the timing of the debug output. */
+	private LoopedTask fpsLogger;
 		
 	/**
 	 * Constructs a Visualization object.
@@ -88,30 +65,40 @@ public class Visualization extends ApplicationAdapter {
 	 * Important: Don't do OpenGL related things here! Use {@link #create()}
 	 * instead.
 	 */
-	public Visualization(final boolean debug, final String brokerIp) {
+	public Visualization(final boolean debugFlag, final String brokerIp) {
 		this.device = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 		this.gameHandlerList = new ArrayList<>();
-		this.brokerIp = brokerIp;
-		this.mqttHandler = new MqttHandler(this.brokerIp);
-		this.debug = debug;
+		this.ip = brokerIp;
+		this.mqttHandler = new MqttHandler(ip);
+		this.debug = debugFlag;
+		
+		if (debug) {
+			fpsLogger = new LoopedTask(5f, new Task() {
+				@Override
+				public void work() {
+					log.info("Current fps: " + Gdx.graphics.getFramesPerSecond());
+				}
+			});
+		}
 	}
 
 	@Override
 	public void create() {
 
-		int appWidth = Gdx.graphics.getWidth();
-		int appHeight = Gdx.graphics.getHeight();
-			
-		this.prefs = new FlexPreferences("prefs");
-		this.cam = new OrthographicCamera();
-		this.cam.setToOrtho(true, appWidth, appHeight);
-		this.fitViewport = new FitViewport(appWidth, appHeight, cam);
-		this.fitViewport.update(appWidth, appHeight, true);
+		final int appWidth = Gdx.graphics.getWidth();
+		final int appHeight = Gdx.graphics.getHeight();
+		
+		prefs = new FlexPreferences<PrefKey>("prefs");
 
-		this.prefs.putFloat(PrefConst.VIEW_WIDTH, appWidth);
-		this.prefs.putFloat(PrefConst.VIEW_HEIGHT, appHeight);
-		this.prefs.putFloat(PrefConst.DEVICE_WIDTH, device.getDisplayMode().getWidth());
-		this.prefs.putFloat(PrefConst.DEVICE_HEIGHT, device.getDisplayMode().getHeight());
+		final OrthographicCamera cam = new OrthographicCamera();
+		cam.setToOrtho(true);
+		final Viewport fitViewport = new FitViewport(appWidth, appHeight, cam);
+		fitViewport.update(appWidth, appHeight, true);
+
+		prefs.putFloat(PrefKey.VIEW_WIDTH, appWidth);
+		prefs.putFloat(PrefKey.VIEW_HEIGHT, appHeight);
+		prefs.putFloat(PrefKey.DEVICE_WIDTH, device.getDisplayMode().getWidth());
+		prefs.putFloat(PrefKey.DEVICE_HEIGHT, device.getDisplayMode().getHeight());
 		
 		final IResourceHandler resHandler = new ResourceHandler(ResConst.ATLAS_PATH.getName());
 		
@@ -123,7 +110,7 @@ public class Visualization extends ApplicationAdapter {
 			mqttThread.start();
 		}
 		
-		this.gameHandlerList.add(new RobotGameHandler(mqttHandler.getGame(), fitViewport, resHandler, prefs));
+		gameHandlerList.add(new RobotGameHandler(mqttHandler.getGame(), fitViewport, resHandler, prefs));
 	}
 
 	@Override
@@ -148,18 +135,12 @@ public class Visualization extends ApplicationAdapter {
 		}
 
 		if (debug) {
-			c -= Gdx.graphics.getDeltaTime();
-			if (c < 0) {
-				c = 5;
-				log.info(Gdx.graphics.getFramesPerSecond());
-			}
+			fpsLogger.update();
 		}
 	}
 	
 	@Override
 	public void resize(final int width, final int height) {
-		this.fitViewport.update(width, height);
-
 		for (int i = 0; i < gameHandlerList.size(); ++i) {
 			gameHandlerList.get(i).resize(width, height);
 		}

@@ -15,22 +15,16 @@ import com.badlogic.gdx.utils.Array;
  */
 public class RenderUnit {
 
-	/**
-	 * Can be null.
-	 */
+	/** Can be null. */
 	protected Animation animation;
 
-	/**
-	 * State of the animation.
-	 */
+	/** State of the animation. */
 	protected float stateTime = 0;
 
-	/**
-	 * Can be null.
-	 */
+	/** Can be null. */
 	protected TextureRegion tex;
 
-	/**
+	/** 
 	 * Creates an uninitialized instance of {@link RenderUnit}.
 	 */
 	public RenderUnit() {
@@ -69,11 +63,11 @@ public class RenderUnit {
 	 * @param y y coordinate
 	 */
 	public void draw(final Batch batch, final float x, final float y) {
-		if (this.isTexture()) {
+		if (isTexture()) {
 			batch.draw(tex, x, y);
 		} 
-		else if (this.isAnimation()) {
-			this.stateTime += Gdx.graphics.getDeltaTime();
+		else if (isAnimation()) {
+			stateTime += Gdx.graphics.getDeltaTime();
 
 			batch.draw(animation.getKeyFrame(stateTime), x, y);
 
@@ -95,11 +89,11 @@ public class RenderUnit {
 	 * @param height height
 	 */
 	public void draw(final Batch batch, final float x, final float y, final float width, final float height) {
-		if (this.isTexture()) {
+		if (isTexture()) {
 			batch.draw(tex, x, y, width, height);
 		} 
-		else if (this.isAnimation()) {
-			this.stateTime += Gdx.graphics.getDeltaTime();
+		else if (isAnimation()) {
+			stateTime += Gdx.graphics.getDeltaTime();
 
 			batch.draw(animation.getKeyFrame(stateTime), x, y, width, height);
 
@@ -129,11 +123,11 @@ public class RenderUnit {
 	public void draw(final Batch batch, final float x, final float y, final float width, final float height,
 			final float originX, final float originY, final float scaleX, final float scaleY, final float rotation) {
 		
-		if (this.isTexture()) {
+		if (isTexture()) {
 			batch.draw(tex, x, y, width, height, originX, originY, scaleX, scaleY, rotation);
 		} 
-		else if (this.isAnimation()) {
-			this.stateTime += Gdx.graphics.getDeltaTime();
+		else if (isAnimation()) {
+			stateTime += Gdx.graphics.getDeltaTime();
 
 			batch.draw(animation.getKeyFrame(stateTime), x, y, width, height, originX, originY, scaleX, scaleY, rotation);
 

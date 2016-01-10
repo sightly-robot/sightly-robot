@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
 import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
-import de.unihannover.swp2015.robots2.visual.core.PrefConst;
+import de.unihannover.swp2015.robots2.visual.core.PrefKey;
 import de.unihannover.swp2015.robots2.visual.core.entity.Component;
 import de.unihannover.swp2015.robots2.visual.core.entity.IEntity;
 import de.unihannover.swp2015.robots2.visual.core.entity.IEntityModifier;
@@ -15,39 +15,48 @@ import de.unihannover.swp2015.robots2.visual.game.entity.modifier.RotationModifi
 import de.unihannover.swp2015.robots2.visual.util.ModelUtil;
 import de.unihannover.swp2015.robots2.visual.util.pref.IPreferences;
 
+/**
+ * Component designed for {@link Robot}. It handles the movement of the robot using progress events. <br>
+ * If progress events are not fired, the engine will use robot position events instead.
+ * 
+ * @author Rico Schrage
+ */
 public class RobotEngine extends Component {
-	
-	/**
-	 * Interval time used for the first calculation of the robot speed (in seconds).
-	 */
+
+	/** Interval time used for the first calculation of the robot speed (in seconds). */
 	private static final float FIRST_INTERVAL_GUESS = 0.1f;
 	
-	/**
-	 * Number of intervals which will be used to calculate the current interval
-	 */
+	/** Number of intervals which will be used to calculate the current interval */
 	private static final int INTERVAL_COUNT = 10;
 	
+	/** History of intervals between the progress events */
 	private float[] intervalHistory;
+	/** Index of the last interval in {@link #intervalHistory} */
 	private int currentEnd;
+	/** Current interval based on the {@link #intervalHistory}*/
 	private float interval;
+	/** Time of the last progress event */
 	private long lastEvent;
+	/** True, if the component already handled an event */
 	private boolean firstEvent;
 
-	private final IPreferences pref;
-	
-	public RobotEngine(final IPreferences pref) {
-		this.pref = pref;
+	/**
+	 * Constructs a RobotEngine using <code>pref</code>.
+	 * @param pref
+	 */
+	public RobotEngine(IPreferences<PrefKey> pref) {
+		super(pref);
 	}
-	
+
 	@Override
 	public void onRegister(final IEntity entity) {
 		super.onRegister(entity);
 		
-		this.intervalHistory = new float[INTERVAL_COUNT];
-		this.interval = FIRST_INTERVAL_GUESS;
-		this.firstEvent = false;
-		this.lastEvent = 0;
-		this.currentEnd = 0;
+		intervalHistory = new float[INTERVAL_COUNT];
+		interval = FIRST_INTERVAL_GUESS;
+		firstEvent = false;
+		lastEvent = 0;
+		currentEnd = 0;
 	}
 	
 	@Override
@@ -55,13 +64,13 @@ public class RobotEngine extends Component {
 		switch(event.getType()) {
 
 		case ROBOT_PROGRESS:
-			this.calcInterval();			
+			calcInterval();			
 			final IRobot robot = (IRobot) event.getObject();
-			this.updateRobot(robot, robot.getPosition().getProgress());
+			updateRobot(robot, robot.getPosition().getProgress());
 			break;
 			
 		case ROBOT_POSITION:
-			this.updateRobot((IRobot) event.getObject(), 0);
+			updateRobot((IRobot) event.getObject(), 0);
 			break;
 			
 		default:
@@ -70,6 +79,9 @@ public class RobotEngine extends Component {
 		}
 	}
 	
+	/**
+	 * Calculates the interval based on the {@link #intervalHistory}
+	 */
 	private void calcInterval() {
 		if (!firstEvent) {
 			firstEvent = true;
@@ -82,7 +94,7 @@ public class RobotEngine extends Component {
 			}
 			interval /= INTERVAL_COUNT;
 		}
-		this.lastEvent = System.nanoTime();
+		lastEvent = System.nanoTime();
 		System.out.println(interval);
 	}
 	
@@ -101,8 +113,8 @@ public class RobotEngine extends Component {
 		
 		entity.registerModifier(rotationModifier);
 		
-		final float fieldWidth = pref.getFloat(PrefConst.FIELD_WIDTH_KEY);
-		final float fieldHeight = pref.getFloat(PrefConst.FIELD_HEIGHT_KEY);
+		final float fieldWidth = pref.getFloat(PrefKey.FIELD_WIDTH_KEY);
+		final float fieldHeight = pref.getFloat(PrefKey.FIELD_HEIGHT_KEY);
 		
 		final float factorX = calcFactorX(orientation);
 		final float factorY = calcFactorY(orientation);

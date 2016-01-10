@@ -1,4 +1,4 @@
-package de.unihannover.swp2015.robots2.visual.util;
+package de.unihannover.swp2015.robots2.visual.util.test;
 
 import java.util.UUID;
 

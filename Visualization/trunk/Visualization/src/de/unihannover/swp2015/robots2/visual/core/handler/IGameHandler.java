@@ -6,8 +6,10 @@ import de.unihannover.swp2015.robots2.model.externalInterfaces.IModelObserver;
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
 import de.unihannover.swp2015.robots2.visual.core.IRenderable;
 import de.unihannover.swp2015.robots2.visual.core.IUpdateable;
+import de.unihannover.swp2015.robots2.visual.core.PrefKey;
 import de.unihannover.swp2015.robots2.visual.resource.IResourceHandler;
 import de.unihannover.swp2015.robots2.visual.util.pref.IPreferences;
+import de.unihannover.swp2015.robots2.visual.util.pref.IPreferencesObserver;
 
 /**
  * A GameHandler manages/handles a specific group of entities. Therefore it owns the resources, updates all connected entities and manages necessary data.
@@ -15,7 +17,7 @@ import de.unihannover.swp2015.robots2.visual.util.pref.IPreferences;
  * 
  * @author Rico Schrage
  */
-public interface IGameHandler extends IUpdateable, IModelObserver, IRenderable, Disposable {
+public interface IGameHandler extends IUpdateable, IRenderable, Disposable, IModelObserver, IPreferencesObserver<PrefKey> {
 
 	/**
 	 * Sets the connected {@link IResourceHandler}.
@@ -36,7 +38,7 @@ public interface IGameHandler extends IUpdateable, IModelObserver, IRenderable, 
 	 * 
 	 * @return preferences object
 	 */
-	IPreferences getPreferences();
+	IPreferences<PrefKey> getPreferences();
 	
 	/**
 	 * Defines what happens on resize. Will be called in the 

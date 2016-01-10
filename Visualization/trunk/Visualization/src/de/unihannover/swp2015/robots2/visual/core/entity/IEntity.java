@@ -5,9 +5,10 @@ import de.unihannover.swp2015.robots2.model.interfaces.IAbstractModel;
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
 import de.unihannover.swp2015.robots2.visual.core.IDrawable;
 import de.unihannover.swp2015.robots2.visual.core.IUpdateable;
+import de.unihannover.swp2015.robots2.visual.core.PrefKey;
 import de.unihannover.swp2015.robots2.visual.util.pref.IPreferencesObserver;
 
-public interface IEntity extends IDrawable, IModelObserver, Comparable<IEntity>, IPreferencesObserver, IUpdateable {
+public interface IEntity extends IDrawable, IModelObserver, Comparable<IEntity>, IPreferencesObserver<PrefKey>, IUpdateable {
 
 	/**
 	 * @return the position on the z-axis.

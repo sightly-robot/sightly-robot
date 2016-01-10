@@ -12,29 +12,19 @@ import com.badlogic.gdx.Gdx;
  */
 public abstract class EntityModifier implements IEntityModifier {
 
-	/**
-	 * Estimated duration.
-	 */
+	/** Estimated duration. */
     protected final float duration;
     
-    /**
-     * Remaining duration. 
-     */
+    /** Remaining duration. */
     protected float currentDuration;
 
-    /**
-     * Target, which the modifier will affect.
-     */
+    /** Target, which the modifier will affect. */
     protected final IEntity target;
 
-    /**
-     * True if currentDuration <= 0
-     */
+    /** True if currentDuration <= 0. */
     protected boolean hasFinished = false;
 
-    /**
-     * List of {@link IFinishListener}
-     */
+    /** List of {@link IFinishListener}. */
     protected List<IFinishListener> finishListenerList;
 
     /**
@@ -44,22 +34,22 @@ public abstract class EntityModifier implements IEntityModifier {
      * @param duration estimated duration
      */
     public EntityModifier(final IEntity target, final float duration) {
-        this.duration = duration;
-        this.currentDuration = duration;
-        this.target = target;
-        this.finishListenerList = new ArrayList<>();
+    	this.duration = duration;
+    	this.currentDuration = duration;
+    	this.target = target;
+    	this.finishListenerList = new ArrayList<>();
     }
 
     @Override
     public void update() {
-        this.currentDuration -= Gdx.graphics.getDeltaTime();
+        currentDuration -= Gdx.graphics.getDeltaTime();
         if (currentDuration > 0) {
-            this.tick();
+            tick();
         }
         else if(!hasFinished) {
             currentDuration = 0;
-            this.tick();
-            this.hasFinished = true;
+            tick();
+            hasFinished = true;
         }
     }
 
@@ -82,7 +72,7 @@ public abstract class EntityModifier implements IEntityModifier {
 
     @Override
     public void kill() {
-        this.hasFinished = true;
+        hasFinished = true;
     }
 
 }

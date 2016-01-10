@@ -10,19 +10,13 @@ import de.unihannover.swp2015.robots2.visual.util.math.function.LinearEaseFuncti
  */
 public abstract class SingleValueEntityModifier extends EntityModifier {
 	
-	/**
-	 * Start value
-	 */
+	/** Start value */
 	protected final float fromValue;
     
-	/**
-	 * End value, it will always be the last value the modifier will set.
-	 */
+	/** End value, it will always be the last value the modifier will set. */
 	protected final float toValue;
 
-	/**
-	 * {@link IEaseFunction}
-	 */
+	/** {@link IEaseFunction} */
     protected final IEaseFunction easeFunction;
 
     /**
@@ -59,10 +53,10 @@ public abstract class SingleValueEntityModifier extends EntityModifier {
     public void tick() {
 
         if (fromValue >= toValue) {
-            this.onSetValue(easeFunction.getPercentage(currentDuration, duration) * Math.abs(toValue - fromValue) + toValue, this.target);
+            onSetValue(easeFunction.getPercentage(currentDuration, duration) * Math.abs(toValue - fromValue) + toValue, target);
         }
         else {
-            this.onSetValue(easeFunction.getPercentage(duration - currentDuration, duration) * Math.abs(toValue - fromValue) + fromValue, this.target);
+            onSetValue(easeFunction.getPercentage(duration - currentDuration, duration) * Math.abs(toValue - fromValue) + fromValue, target);
         }
     }
     
@@ -86,12 +80,12 @@ public abstract class SingleValueEntityModifier extends EntityModifier {
     public void onFinish() {
         super.onFinish();
 
-        this.onSetValue(toValue, target);
+        onSetValue(toValue, target);
     }
 
     @Override
     public void onInit() {
-        this.onSetInitialValue(fromValue, target);
+        onSetInitialValue(fromValue, target);
     }
 
 }

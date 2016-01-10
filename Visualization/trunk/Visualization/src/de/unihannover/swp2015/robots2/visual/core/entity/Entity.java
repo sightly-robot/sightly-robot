@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 
 import de.unihannover.swp2015.robots2.model.interfaces.IAbstractModel;
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
+import de.unihannover.swp2015.robots2.visual.core.PrefKey;
 import de.unihannover.swp2015.robots2.visual.core.handler.IGameHandler;
 import de.unihannover.swp2015.robots2.visual.game.RobotGameHandler;
 import de.unihannover.swp2015.robots2.visual.resource.IResourceHandler;
@@ -26,64 +27,40 @@ import de.unihannover.swp2015.robots2.visual.util.pref.IPreferences;
  */
 public abstract class Entity implements IEntity {
 
-	/**
-	 * List of all modifiers created for the entity.
-	 */
+	/** List of all modifiers created for the entity. */
 	protected final List<IEntityModifier> modList;
 	
-	/**
-	 * List of all components registered by the entity.
-	 */
+	/** List of all components registered by the entity. */
 	protected final List<IComponent> componentList;
 	
-	/**
-	 * Data model of the entity.
-	 */
+	/** Data model of the entity. */
 	protected final IAbstractModel model;
 
-	/**
-	 * X-coordinate of the entity on the (virtual) screen.
-	 */
+	/** X-coordinate of the entity on the (virtual) screen. */
 	protected float renderX; 
 
-	/**
-	 * Y-coordinate of the entity on the (virtual) screen.
-	 */
+	/** Y-coordinate of the entity on the (virtual) screen. */
 	protected float renderY; 
 	
-	/**
-	 * X-coordinate of the entity on the (virtual) screen.
-	 */
+	/** X-coordinate of the entity on the (virtual) screen. */
 	protected float width; 
 
-	/**
-	 * Y-coordinate of the entity on the (virtual) screen.
-	 */
+	/** Y-coordinate of the entity on the (virtual) screen. */
 	protected float height; 
 
-	/**
-	 * Z-coordinate of the entity on the (virtual) screen.
-	 */
+	/** Z-coordinate of the entity on the (virtual) screen. */
 	protected int zIndex = 0;
 	
-	/**
-	 * Rotation of the entity in degrees.
-	 */
+	/** Rotation of the entity in degrees. */
     protected float rotation = 0;
     
-    /**
-     * ResourceHandler, which should be used to obtain resources.
-     */
+    /** ResourceHandler, which should be used to obtain resources. */
     protected final IResourceHandler resHandler;
     
-    /**
-     * Preference object, which contains all necessary preferences.
-     */
-    protected final IPreferences prefs;
+    /** Preference object, which contains all necessary preferences. */
+    protected final IPreferences<PrefKey> prefs;
     
-    /**
-     * GameHandler, which owns the entity.
-     */
+    /** GameHandler, which owns the entity. */
     protected final IGameHandler gameHandler;
         
     /**
@@ -134,24 +111,24 @@ public abstract class Entity implements IEntity {
     
     @Override
     public void registerModifier(final IEntityModifier mod) {
-    	this.modList.add(mod);
+    	modList.add(mod);
     	mod.onInit();
     }
     
     @Override
     public void clearModifier() {
-    	this.modList.clear();
+    	modList.clear();
     }
     
     @Override
     public void registerComponent(final IComponent component) {
-    	this.componentList.add(component);
+    	componentList.add(component);
     	component.onRegister(this);
     }
 
     @Override
     public void unregisterComponent(final IComponent component) {
-    	this.componentList.remove(component);
+    	componentList.remove(component);
     }
     
     @Override 
@@ -170,8 +147,8 @@ public abstract class Entity implements IEntity {
         
     @Override
     public void clearReferences() {
-    	this.prefs.removeObserver(this);
-    	this.model.unobserve(this);
+    	prefs.removeObserver(this);
+    	model.unobserve(this);
     }
     
     @Override
@@ -186,13 +163,13 @@ public abstract class Entity implements IEntity {
     
 	@Override
 	public int compareTo(IEntity o) {
-		return this.zIndex - o.getZIndex();
+		return zIndex - o.getZIndex();
 	}
 
 	@Override
 	public void setPosition(float x, float y) {
-		this.renderX = x;
-		this.renderY = y;
+		renderX = x;
+		renderY = y;
 	}
 
 	@Override

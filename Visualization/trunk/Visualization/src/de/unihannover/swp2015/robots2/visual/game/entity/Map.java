@@ -9,11 +9,10 @@ import de.unihannover.swp2015.robots2.model.interfaces.IAbstractModel;
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
 import de.unihannover.swp2015.robots2.model.interfaces.IField;
 import de.unihannover.swp2015.robots2.model.interfaces.IStage;
-import de.unihannover.swp2015.robots2.visual.core.PrefConst;
+import de.unihannover.swp2015.robots2.visual.core.PrefKey;
 import de.unihannover.swp2015.robots2.visual.core.entity.Entity;
 import de.unihannover.swp2015.robots2.visual.game.GameConst;
 import de.unihannover.swp2015.robots2.visual.game.RobotGameHandler;
-import de.unihannover.swp2015.robots2.visual.util.pref.IPreferencesKey;
 
 /**
  * An entity, which is used for the construction of the map and that creates all field entities
@@ -23,9 +22,7 @@ import de.unihannover.swp2015.robots2.visual.util.pref.IPreferencesKey;
  */
 public class Map extends Entity {
 
-	/**
-	 * List of field-entities, which will be rendered by this entity.
-	 */
+	/** List of field-entities, which will be rendered by this entity. */
 	private final List<Field> fieldList;
 	
 	/**
@@ -53,28 +50,28 @@ public class Map extends Entity {
 		for (int x = 0; x < model.getWidth(); ++x) {
 			for (int y = 0; y < model.getHeight(); ++y) {
 				final IField field = model.getField(x, y);
-				this.fieldList.add(new Field(model, field, (RobotGameHandler) gameHandler));
+				fieldList.add(new Field(model, field, (RobotGameHandler) gameHandler));
 			}
 		}
 	}
 
 	private void resize() {
-		final IStage model = (IStage) this.model;
+		final IStage stageModel = (IStage) model;
 
 		for (int i = 0; i < fieldList.size(); ++i) {
 			fieldList.get(i).clearReferences();
 		}
-		this.fieldList.clear();
+		fieldList.clear();
 		
-		final float fieldSize = prefs.getFloat(PrefConst.DEVICE_HEIGHT) * GameConst.HEIGHT_SCALE / model.getHeight();
-		final float viewWidth = fieldSize * model.getWidth();
-		final float viewHeight = fieldSize * model.getHeight();
+		final float fieldSize = prefs.getFloat(PrefKey.DEVICE_HEIGHT) * GameConst.HEIGHT_SCALE / stageModel.getHeight();
+		final float viewWidth = fieldSize * stageModel.getWidth();
+		final float viewHeight = fieldSize * stageModel.getHeight();
 		
-		this.prefs.putFloat(PrefConst.FIELD_WIDTH_KEY, fieldSize);
-		this.prefs.putFloat(PrefConst.FIELD_HEIGHT_KEY, fieldSize);
-		this.prefs.putFloat(PrefConst.VIEW_WIDTH, viewWidth);
-		this.prefs.putFloat(PrefConst.VIEW_HEIGHT, viewHeight);
-		this.init(model);
+		prefs.putFloat(PrefKey.FIELD_WIDTH_KEY, fieldSize);
+		prefs.putFloat(PrefKey.FIELD_HEIGHT_KEY, fieldSize);
+		prefs.putFloat(PrefKey.VIEW_WIDTH, viewWidth);
+		prefs.putFloat(PrefKey.VIEW_HEIGHT, viewHeight);
+		init(stageModel);
 	}
 	
 	@Override
@@ -91,11 +88,11 @@ public class Map extends Entity {
 		switch(event.getType()) {
 		
 		case STAGE_SIZE:
-			this.resize();
+			resize();
 			break;
 			
 		case STAGE_WALL:
-			for (final Field f : this.fieldList)
+			for (final Field f : fieldList)
 				f.onModelUpdate(event);
 			break;
 			
@@ -106,8 +103,8 @@ public class Map extends Entity {
 	}
 
 	@Override
-	public void onUpdatePreferences(Object o, IPreferencesKey updatedKey) {
-		// TODO Auto-generated method stub
+	public void onUpdatePreferences(PrefKey updatedKey, Object value) {
+		// nothing to do
 	}
 
 	@Override

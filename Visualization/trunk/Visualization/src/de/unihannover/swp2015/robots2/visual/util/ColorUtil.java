@@ -3,7 +3,7 @@ package de.unihannover.swp2015.robots2.visual.util;
 import com.badlogic.gdx.graphics.Color;
 
 /**
- * All utility method related to {@link Color}.
+ * All utility methods related to {@link Color}.
  * 
  * @author Rico Schrage
  */

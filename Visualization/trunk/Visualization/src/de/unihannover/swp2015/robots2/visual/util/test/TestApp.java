@@ -1,4 +1,4 @@
-package de.unihannover.swp2015.robots2.visual.util;
+package de.unihannover.swp2015.robots2.visual.util.test;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -42,33 +42,38 @@ public class TestApp extends JFrame implements ActionListener {
 	private final JButton changeSize;
 	private final JButton startstop;
 	
-	public TestApp(IGame game) {
-		this.game = game;
+	/**
+	 * Constructs the test app.
+	 * 
+	 * @param debugGame game instance
+	 */
+	public TestApp(IGame debugGame) {
+		this.game = debugGame;
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setLayout(null);
 		this.changeRobotPos = new JButton("changeRobotPos");
-		changeRobotPos.setBounds(0, 0, 200, 50);
-		changeRobotPos.addActionListener(this);
+		this.changeRobotPos.setBounds(0, 0, 200, 50);
+		this.changeRobotPos.addActionListener(this);
 		
 		this.changeRobots = new JButton("addRobot");
-		changeRobots.setBounds(0, 50, 200, 50);
-		changeRobots.addActionListener(this);
+		this.changeRobots.setBounds(0, 50, 200, 50);
+		this.changeRobots.addActionListener(this);
 		
 		this.changeWalls = new JButton("changeWalls");
-		changeWalls.setBounds(0, 100, 200, 50);
-		changeWalls.addActionListener(this);
+		this.changeWalls.setBounds(0, 100, 200, 50);
+		this.changeWalls.addActionListener(this);
 
 		this.changeFood = new JButton("changeFood");
-		changeFood.setBounds(0, 150, 200, 50);
-		changeFood.addActionListener(this);
+		this.changeFood.setBounds(0, 150, 200, 50);
+		this.changeFood.addActionListener(this);
 
 		this.changeSize = new JButton("changeSize");
-		changeSize.setBounds(0, 200, 200, 50);
-		changeSize.addActionListener(this);
+		this.changeSize.setBounds(0, 200, 200, 50);
+		this.changeSize.addActionListener(this);
 		
 		this.startstop = new JButton("startstop");
-		startstop.setBounds(0, 250, 200, 50);
-		startstop.addActionListener(this);
+		this.startstop.setBounds(0, 250, 200, 50);
+		this.startstop.addActionListener(this);
 
 		this.add(changeRobotPos);
 		this.add(changeRobots);
@@ -84,7 +89,7 @@ public class TestApp extends JFrame implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == this.changeFood) {
+		if (e.getSource() == changeFood) {
 			final IStage stage = game.getStage();
 			for (int x = 0; x < stage.getWidth(); ++x) {
 				for (int y = 0; y < stage.getHeight(); ++y) {
@@ -97,7 +102,7 @@ public class TestApp extends JFrame implements ActionListener {
 				}
 			}
 		}
-		else if (e.getSource() == this.changeWalls) {
+		else if (e.getSource() == changeWalls) {
 			final Stage stage = (Stage)game.getStage();
 			for (int x = 0; x < stage.getWidth(); ++x) {
 				for (int y = 0; y < stage.getHeight(); ++y) {
@@ -111,7 +116,7 @@ public class TestApp extends JFrame implements ActionListener {
 			}
 			stage.emitEvent(UpdateType.STAGE_WALL);
 		}
-		else if (e.getSource() == this.changeRobotPos) {
+		else if (e.getSource() == changeRobotPos) {
 			final Map<String, ? extends IRobot> r = game.getRobots();
 			final Collection<? extends IRobot> s = r.values();
 			for (IRobot ro : s) {
@@ -120,7 +125,7 @@ public class TestApp extends JFrame implements ActionListener {
 				rob.emitEvent(UpdateType.ROBOT_POSITION);
 			}
 		}
-		else if (e.getSource() == this.changeRobots) {
+		else if (e.getSource() == changeRobots) {
 			final Game g = (Game) game;
 			final Robot robo = new Robot(UUID.randomUUID().toString(),true,true); 
 			if(!game.getStage().getStartPositions().isEmpty()){
@@ -136,13 +141,13 @@ public class TestApp extends JFrame implements ActionListener {
 			g.addRobot(robo);
 			g.emitEvent(UpdateType.ROBOT_ADD, robo);
 		}
-		else if (e.getSource() == this.changeSize) {
+		else if (e.getSource() == changeSize) {
 			final Stage g = (Stage) game.getStage();
 			g.changeSize(8, 6);
 			g.addStartPosition(2, 2, Orientation.EAST);
 			g.emitEvent(UpdateType.STAGE_SIZE);
 		}
-		else if (e.getSource() == this.startstop) {
+		else if (e.getSource() == startstop) {
 			final Game g = (Game) game;
 			Gdx.app.postRunnable(new Runnable() {
 

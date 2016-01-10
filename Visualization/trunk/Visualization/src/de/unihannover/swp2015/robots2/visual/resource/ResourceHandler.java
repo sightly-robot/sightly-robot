@@ -24,15 +24,20 @@ import de.unihannover.swp2015.robots2.visual.resource.texture.RenderUnit;
  */
 public class ResourceHandler implements IResourceHandler {
 	
-	/**
-	 * Will be returned if texMap.get(key) == null
-	 */
+	/** Will be returned if texMap.get(key) == null */
 	private static final ResConst placeholderKey = ResConst.DEFAULT_FIELD;
 	
-	/**
-	 * All chars (as char-array), which will be used by the visualization.
-	 */
+	/** All chars (as char-array), which will be used by the visualization. */
 	private static final String NECESSARY_CHARS = "abcdefghijklmnopqrstuvxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789()";
+
+	/** Base path to the texture themes. */
+	private final String themePath;
+	
+	/** Main textureAtlas. */
+	private TextureAtlas texAtlas;
+
+	/** Current texture pack. */
+	private String texPack = ResConst.DEFAULT_THEME.getName();
 	
 	/**
 	 * Map key->textureRegion.
@@ -65,21 +70,6 @@ public class ResourceHandler implements IResourceHandler {
 	 * Hint: <code>renderUnitMap.keySet() subset of (frameSetMap.keySet() union texMap.keySet())</code>.
 	 */
 	private final Map<ResConst, RenderUnit> renderUnitMap;
-		
-	/**
-	 * Base path to the texture themes.
-	 */
-	private final String pathToThemes;
-	
-	/**
-	 * Main textureAtlas.
-	 */
-	private TextureAtlas texAtlas;
-
-	/**
-	 * Current texture pack.
-	 */
-	private String texPack = ResConst.DEFAULT_THEME.getName();
 	
 	/**
 	 * Constructs ResourceHandler
@@ -89,7 +79,7 @@ public class ResourceHandler implements IResourceHandler {
 		this.frameSetMap = new HashMap<>();
 		this.renderUnitMap = new HashMap<>();
 		this.fontMap = new HashMap<>();
-		this.pathToThemes = pathToThemes;
+		this.themePath = pathToThemes;
 		
 		this.createRegions();
 		this.createFonts();
@@ -100,10 +90,10 @@ public class ResourceHandler implements IResourceHandler {
 	 */
 	private void createRegions() {
 		
-		this.texMap.clear();
-		this.frameSetMap.clear();
-		this.texAtlas = new TextureAtlas(Gdx.files.internal(getPathToTheme()), true);
-		
+		texMap.clear();
+		frameSetMap.clear();
+		texAtlas = new TextureAtlas(Gdx.files.internal(getPathToTheme()), true);
+
 		//TODO support animations
 		final ResConst[] resConsts = ResConst.values();
 		for (final ResConst res : resConsts) {
@@ -118,7 +108,7 @@ public class ResourceHandler implements IResourceHandler {
 	}
 	
 	private String getPathToTheme() {
-		return pathToThemes + File.separator + texPack + File.separator + ResConst.ATLAS_NAME.getName() + ".atlas";
+		return themePath + File.separator + texPack + File.separator + ResConst.ATLAS_NAME.getName() + ".atlas";
 	}
 	
 	/**
@@ -130,19 +120,29 @@ public class ResourceHandler implements IResourceHandler {
 		defPara.characters = NECESSARY_CHARS;
 		defPara.size = 15;
 		defPara.flip = true;
-		this.fontMap.put(ResConst.DEFAULT_FONT, defFontGen.generateFont(defPara));
+		fontMap.put(ResConst.DEFAULT_FONT, defFontGen.generateFont(defPara));
 		
 		final FreeTypeFontParameter bigDefFont = new FreeTypeFontParameter();
 		bigDefFont.characters = NECESSARY_CHARS;
 		bigDefFont.size = 28;
 		bigDefFont.flip = true;
-		this.fontMap.put(ResConst.DEFAULT_FONT_BIG, defFontGen.generateFont(bigDefFont));
+		fontMap.put(ResConst.DEFAULT_FONT_BIG, defFontGen.generateFont(bigDefFont));
 
 		final FreeTypeFontParameter titleDefFont = new FreeTypeFontParameter();
 		titleDefFont.characters = NECESSARY_CHARS;
 		titleDefFont.size = 36;
 		titleDefFont.flip = true;
-		this.fontMap.put(ResConst.DEFAULT_FONT_TITLE, defFontGen.generateFont(titleDefFont));
+		fontMap.put(ResConst.DEFAULT_FONT_TITLE, defFontGen.generateFont(titleDefFont));
+	}
+
+	/**
+	 * Load a texture-pack. This updates all renderUnits managed by this handler.
+	 * 
+	 * @param name name of the theme
+	 */
+	public void loadTexturePack(final String name) {
+		texPack = name;
+		createRegions();
 	}
 
 	@Override
@@ -161,7 +161,7 @@ public class ResourceHandler implements IResourceHandler {
 		else {
 			throw new IllegalArgumentException("No map contains the key: " + key + ".");
 		}
-		this.renderUnitMap.put(key, result);
+		renderUnitMap.put(key, result);
 		return result;
 	}
 
@@ -187,7 +187,7 @@ public class ResourceHandler implements IResourceHandler {
 			}
 
 			renderUnits[i] = result;
-			this.renderUnitMap.put(keys[i], result);
+			renderUnitMap.put(keys[i], result);
 		}
 		return renderUnits;
 	}
@@ -211,12 +211,7 @@ public class ResourceHandler implements IResourceHandler {
 
 	@Override
 	public void dispose() {
-		this.texAtlas.dispose();
-	}
-	
-	public void loadTexturePack(final String name) {
-		this.texPack = name;
-		this.createRegions();
+		texAtlas.dispose();
 	}
 
 	@Override
