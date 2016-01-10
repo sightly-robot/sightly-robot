@@ -54,6 +54,10 @@ public class AIEventManager extends Thread implements Runnable {
 				IEvent event = this.queue.take();
 				switch (event.getType()) {
 				case FIELD_FOOD:
+					if( graph != null ) {
+						IField f = (IField)event.getObject();
+						graph.setFood(f.getX(), f.getY(), f.getFood());
+					}
 					break;
 				case STAGE_WALL:
 					System.out.println("WALL");
