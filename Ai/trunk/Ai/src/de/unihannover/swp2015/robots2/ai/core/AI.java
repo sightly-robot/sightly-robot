@@ -61,7 +61,14 @@ public class AI extends AbstractAI implements IModelObserver {
 	@Override
 	public void onModelUpdate(IEvent event) {
 		switch (event.getType()) {
+	
 		case FIELD_FOOD:
+			if( graph != null ) {
+				IField f = (IField)event.getObject();
+				graph.setFood(f.getX(), f.getY(), f.getFood());
+				System.out.println("Food set in graph to x" + f.getX() +"," + f.getY() + f.getFood());
+			}
+			System.out.println("food event received!");
 			break;
 		case STAGE_WALL:
 			System.out.println("WALL");
