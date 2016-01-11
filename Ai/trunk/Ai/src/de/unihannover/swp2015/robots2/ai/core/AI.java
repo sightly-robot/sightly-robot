@@ -1,5 +1,7 @@
 package de.unihannover.swp2015.robots2.ai.core;
 
+import java.awt.Point;
+
 import de.unihannover.swp2015.robots2.ai.exceptions.InvalidPathException;
 import de.unihannover.swp2015.robots2.ai.exceptions.InvalidStageException;
 import de.unihannover.swp2015.robots2.ai.exceptions.NoValidOrientationException;
@@ -43,6 +45,16 @@ public class AI extends AbstractAI implements IModelObserver {
 		initialize();
 	}
 
+	private class Tuple<X, Y> {
+		public final X x;
+		public final Y y;
+
+		public Tuple(X x, Y y) {
+			this.x = x;
+			this.y = y;
+		}
+	}
+
 	public void initialize() {
 		if (this.game.getStage().getWidth() != 0 && this.game.getStage().getHeight() != 0) {
 			try {
@@ -66,9 +78,9 @@ public class AI extends AbstractAI implements IModelObserver {
 			if( graph != null ) {
 				IField f = (IField)event.getObject();
 				graph.setFood(f.getX(), f.getY(), f.getFood());
-				System.out.println("Food set in graph to x" + f.getX() +"," + f.getY() + f.getFood());
+				//System.out.println("Food set in graph to x" + f.getX() +"," + f.getY() + f.getFood());
 			}
-			System.out.println("food event received!");
+			//System.out.println("food event received!");
 			break;
 		case STAGE_WALL:
 			System.out.println("WALL");
@@ -114,40 +126,17 @@ public class AI extends AbstractAI implements IModelObserver {
 					case OCCUPIED:
 						// break;
 					case RANDOM_WAIT:
-						try {
-							iRobotController.releaseField(nextField.getX(), nextField.getY());
+						iRobotController.releaseField(nextField.getX(), nextField.getY());
 
-							Orientation orientation = findNextOrientation();
-							int x = myself.getPosition().getX();
-							int y = myself.getPosition().getY();
-							/*
-							 * Calculate next node position
-							 */
-							switch (orientation) {
-							case NORTH:
-								y -= 1;
-								break;
-							case EAST:
-								x += 1;
-								break;
-							case SOUTH:
-								y += 1;
-								break;
-							case WEST:
-								x -= 1;
-								break;
-							default:
-								break;
-							}
+								Tuple<Point, Orientation> tuple = this.getNewNode();
+								Point point = tuple.x;
+								int x = (int) point.getX();
+								int y = (int) point.getY();
 
-							iRobotController.requestField(x, y);
-							this.nextField = this.game.getStage().getField(x, y);
-							this.nextOrientation = orientation;
-
-						} catch (NoValidOrientationException e) {
-							e.printStackTrace();
-						}
-						break;
+								iRobotController.requestField(x, y);
+								nextField = game.getStage().getField(x, y);
+								nextOrientation = tuple.y;
+								break;
 					default:
 						break;
 					}
@@ -199,29 +188,10 @@ public class AI extends AbstractAI implements IModelObserver {
 							boolean requested = false;
 							while(!requested) {							
 								if (this.game.isRunning()) {
-									try {
-										Orientation orientation = findNextOrientation();
-										int x = myself.getPosition().getX();
-										int y = myself.getPosition().getY();
-										/*
-										 * Calculate next node position
-										 */
-										switch (orientation) { 
-										case NORTH:
-											y -= 1;
-											break;
-										case EAST:
-											x += 1;
-											break;
-										case SOUTH:
-											y += 1;
-											break;
-										case WEST:
-											x -= 1;
-											break;
-										default:
-											break;
-										}
+										Tuple<Point, Orientation> tuple = this.getNewNode();
+										Point point = tuple.x;
+										int x = (int) point.getX();
+										int y = (int) point.getY();
 										/*
 										 * Check if field on next orientation is
 										 * free before going
@@ -231,7 +201,7 @@ public class AI extends AbstractAI implements IModelObserver {
 										case FREE:
 											 iRobotController.requestField(x, y);
 											 this.nextField = this.game.getStage().getField(x, y);
-											 this.nextOrientation = orientation;
+											 this.nextOrientation = tuple.y;
 											 requested = true;
 											break;
 										// No need to use LOCKED state at the moment
@@ -259,9 +229,6 @@ public class AI extends AbstractAI implements IModelObserver {
 										default:
 											break;
 										}
-									} catch (NoValidOrientationException e) {
-										e.printStackTrace();
-									}
 								}
 							}
 						}
@@ -302,35 +269,14 @@ public class AI extends AbstractAI implements IModelObserver {
 			IGame game = (IGame) event.getObject();
 			if (game.isRunning() && graph != null && myself.getPosition() != null
 					&& iRobotController.getMyself().getState().equals(IRobot.RobotState.ENABLED)) {
-				try {
-					System.out.println("GAMEStart");
-					int x = myself.getPosition().getX();
-					int y = myself.getPosition().getY();
-					Orientation orientation = findNextOrientation();
-					/*
-					 * Calculate next node position
-					 */
-					switch (orientation) {
-					case NORTH:
-						y -= 1;
-						break;
-					case EAST:
-						x += 1;
-						break;
-					case SOUTH:
-						y += 1;
-						break;
-					case WEST:
-						x -= 1;
-						break;
-					default:
-						break;
-					}
-					iRobotController.requestField(x, y);
-					this.nextField = this.game.getStage().getField(x, y);
-					this.nextOrientation = orientation;
-				} catch (NoValidOrientationException e) {
-				}
+				Tuple<Point, Orientation> tuple = this.getNewNode();
+				Point point = tuple.x;
+				int x = (int) point.getX();
+				int y = (int) point.getY();
+
+				this.iRobotController.requestField(x, y);
+				this.nextField = game.getStage().getField(x, y);
+				this.nextOrientation = tuple.y;
 			}
 			break;
 		case GAME_PARAMETER:
@@ -344,35 +290,15 @@ public class AI extends AbstractAI implements IModelObserver {
 					if (robot.getState().equals(IRobot.RobotState.ENABLED)) {
 						this.hasStarted = true;
 						if (getController().getGame().isRunning() && graph != null && myself.getPosition() != null) {
-							try {
-								System.out.println("GAMEStart");
-								int x = myself.getPosition().getX();
-								int y = myself.getPosition().getY();
-								Orientation orientation = findNextOrientation();
-								/*
-								 * Calculate next node position
-								 */
-								switch (orientation) {
-								case NORTH:
-									y -= 1;
-									break;
-								case EAST:
-									x += 1;
-									break;
-								case SOUTH:
-									y += 1;
-									break;
-								case WEST:
-									x -= 1;
-									break;
-								default:
-									break;
-								}
-								iRobotController.requestField(x, y);
-								this.nextField = this.game.getStage().getField(x, y);
-								this.nextOrientation = orientation;
-							} catch (NoValidOrientationException e) {
-							}
+							System.out.println("GAMEStart");
+							Tuple<Point, Orientation> tuple = this.getNewNode();
+							Point point = tuple.x;
+							int x = (int) point.getX();
+							int y = (int) point.getY();
+
+							this.iRobotController.requestField(x, y);
+							this.nextField = this.game.getStage().getField(x, y);
+							this.nextOrientation = tuple.y;
 						}
 					}
 				}
@@ -382,6 +308,37 @@ public class AI extends AbstractAI implements IModelObserver {
 			break;
 		}
 
+	}
+
+	private Tuple<Point, Orientation> getNewNode() {
+		int x = this.myself.getPosition().getX();
+		int y = this.myself.getPosition().getY();
+		try {
+			Orientation orientation = this.findNextOrientation();
+			/*
+			 * Calculate next node position
+			 */
+			switch (orientation) {
+			case NORTH:
+				y -= 1;
+				break;
+			case EAST:
+				x += 1;
+				break;
+			case SOUTH:
+				y += 1;
+				break;
+			case WEST:
+				x -= 1;
+				break;
+			default:
+				break;
+			}
+			return new Tuple(new Point(x, y), orientation);
+		} catch (NoValidOrientationException e) {
+			e.printStackTrace();
+			return null; // TODO make sure no invalid value is returned
+		}
 	}
 
 	@Override
