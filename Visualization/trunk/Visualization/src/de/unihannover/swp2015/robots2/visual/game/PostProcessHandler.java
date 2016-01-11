@@ -1,5 +1,6 @@
 package de.unihannover.swp2015.robots2.visual.game;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
@@ -109,6 +110,7 @@ public class PostProcessHandler implements Disposable, Resizable {
 		
 		pp = new PostProcessor(worldWidth, worldHeight, false, true, true);
 		pp2 = new PostProcessor(worldWidth, worldHeight, false, true, true);
+		onResize(view);
 		
 		bloom = createBloom(worldWidth, worldHeight);
 		pp.addEffect(bloom);
