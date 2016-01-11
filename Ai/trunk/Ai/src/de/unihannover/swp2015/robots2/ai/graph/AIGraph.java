@@ -17,8 +17,8 @@ import de.unihannover.swp2015.robots2.ai.exceptions.NoValidOrientationException;
 import de.unihannover.swp2015.robots2.model.interfaces.IField;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
-import testpackage.Edge;
-import testpackage.Node;
+//import testpackage.Edge;
+//import testpackage.Node;
 import de.unihannover.swp2015.robots2.model.interfaces.IStage;
 
 public class AIGraph extends Thread implements Runnable {
@@ -218,61 +218,19 @@ public class AIGraph extends Thread implements Runnable {
 		int x = myPos.getX();
 		int y = myPos.getY();
 		
-		if (!myPos.isWall(Orientation.NORTH) 
-				/*&& this.stage.getField(x, y - 1).getState().equals(IField.State.LOCKED)*/) {
+		if (!myPos.isWall(Orientation.NORTH)) {
 			available.add(Orientation.NORTH);
 		}
-		if (!myPos.isWall(Orientation.EAST)
-				/*&& this.stage.getField(x + 1, y).getState().equals(IField.State.LOCKED)*/) {
+		if (!myPos.isWall(Orientation.EAST)) {
 			available.add(Orientation.EAST);
 		}			
-		if (!myPos.isWall(Orientation.SOUTH)
-				/*&& this.stage.getField(x, y + 1).getState().equals(IField.State.LOCKED)*/) {
+		if (!myPos.isWall(Orientation.SOUTH)) {
 			available.add(Orientation.SOUTH);
 		}			
-		if (!myPos.isWall(Orientation.WEST)
-				/*&& this.stage.getField(x - 1, y).getState().equals(IField.State.LOCKED)*/) {
+		if (!myPos.isWall(Orientation.WEST)) {
 			available.add(Orientation.WEST);
 		}
 			
-		
-		/* switch used to not return backwards, can be deleted once this updated version is tested
-		Orientation curr = this.myself.getOrientation();
-		switch (curr) {
-		case NORTH:
-			if (!myPos.isWall(Orientation.WEST))
-				available.add(Orientation.WEST);
-			if (!myPos.isWall(Orientation.NORTH))
-				available.add(Orientation.NORTH);
-			if (!myPos.isWall(Orientation.EAST))
-				available.add(Orientation.EAST);
-			break;
-		case EAST:
-			if (!myPos.isWall(Orientation.NORTH))
-				available.add(Orientation.NORTH);
-			if (!myPos.isWall(Orientation.EAST))
-				available.add(Orientation.EAST);
-			if (!myPos.isWall(Orientation.SOUTH))
-				available.add(Orientation.SOUTH);
-			break;
-		case SOUTH:
-			if (!myPos.isWall(Orientation.EAST))
-				available.add(Orientation.EAST);
-			if (!myPos.isWall(Orientation.SOUTH))
-				available.add(Orientation.SOUTH);
-			if (!myPos.isWall(Orientation.WEST))
-				available.add(Orientation.WEST);
-			break;
-		case WEST:
-			if (!myPos.isWall(Orientation.SOUTH))
-				available.add(Orientation.SOUTH);
-			if (!myPos.isWall(Orientation.WEST))
-				available.add(Orientation.WEST);
-			if (!myPos.isWall(Orientation.NORTH))
-				available.add(Orientation.NORTH);
-			break;
-		} */
-
 		Collections.shuffle(available);
 		return available.get(0);
 	}
