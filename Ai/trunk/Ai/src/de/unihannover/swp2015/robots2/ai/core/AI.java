@@ -352,11 +352,6 @@ public class AI extends AbstractAI implements IModelObserver {
 
 	}
 
-	// Backwards not in increment 1
-	public IField getRandomField() {
-		return null;
-	}
-
 	/**
 	 * Returns the next Orientation, the robot is supposed to move in.
 	 * 
