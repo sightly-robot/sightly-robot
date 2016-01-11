@@ -300,6 +300,7 @@ public class AIGraph extends Thread implements Runnable {
 	public Node findBestNode(int range) {
 		int x = myself.getPosition().getX();
 		int y = myself.getPosition().getY();
+		// for Timon
 		//Set<Node> set = new HashSet<Node>();
 		Node curr = this.nodes[Math.max(x - range, 0)][Math.max(y - range, 0)];
 		for(int i = Math.max(x - range, 0); i < Math.min(x + range + 1, this.nodes.length); i++) {
