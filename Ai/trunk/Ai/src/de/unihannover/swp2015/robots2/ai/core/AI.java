@@ -78,21 +78,11 @@ public class AI extends AbstractAI implements IModelObserver {
 			if( graph != null ) {
 				IField f = (IField)event.getObject();
 				graph.setFood(f.getX(), f.getY(), f.getFood());
-				//System.out.println("Food set in graph to x" + f.getX() +"," + f.getY() + f.getFood());
 			}
-			//System.out.println("food event received!");
 			break;
 		case STAGE_WALL:
 			System.out.println("WALL");
 			initialize();
-			// if (game.isRunning() && myself.getPosition() != null &&
-			// !getController().getMyself().isSetupState()) {
-			// try {
-			// System.out.println("WALLStart");
-			// fireNextOrientationEvent(getNextOrientation());
-			// } catch (NoValidOrientationException e) {
-			// }
-			// }
 			break;
 		case STAGE_SIZE:
 			if (this.game.getStage().getWidth() != 0 && this.game.getStage().getHeight() != 0) {
@@ -104,212 +94,227 @@ public class AI extends AbstractAI implements IModelObserver {
 			}
 			break;
 		case FIELD_STATE:
-			if (graph != null) {
-				IField field = (IField) event.getObject();
-				Node node = myself.getPosition();
-
-				// TODO nullpointerexception possible?
-				if (game.isRunning() && this.nextField == field && this.nextOrientation != null) {
-					switch (field.getState()) {
-					case OURS:
-						fireNextOrientationEvent(this.nextOrientation); // or
-						break;
-					case FREE:
-						int xCoord = this.nextField.getX();
-						int yCoord = this.nextField.getY();
-						iRobotController.requestField(xCoord, yCoord);
-						break;
-					case LOCK_WAIT:
-						break;
-					case LOCKED:
-						// break;
-					case OCCUPIED:
-						// break;
-					case RANDOM_WAIT:
-						iRobotController.releaseField(nextField.getX(), nextField.getY());
-
-								Tuple<Point, Orientation> tuple = this.getNewNode();
-								Point point = tuple.x;
-								int x = (int) point.getX();
-								int y = (int) point.getY();
-
-								iRobotController.requestField(x, y);
-								nextField = game.getStage().getField(x, y);
-								nextOrientation = tuple.y;
-								break;
-					default:
-						break;
-					}
-				}
-			}
+			handleFieldStateEvent(event);
 			break;
 		case ROBOT_SCORE:
 			break;
 		case ROBOT_POSITION:
-			if (graph != null) {
-				IRobot robot = (IRobot) event.getObject();
-				IPosition pos = robot.getPosition();
-				/*
-				 * If the position is not set yet, break and do nothing
-				 */
-				if (pos.getX() == -1 || pos.getY() == -1) {
-					break;
-				}
-
-				if (robot.isMyself()) {
-					/*
-					 * If no position was set for myself yet, then update it to
-					 * the current node (done in setRobotPosition)
-					 */
-					if (myself.getPosition() == null) {
-						this.graph.setRobotPosition(myself, pos);
-						break;
-					}
-					/*
-					 * If myself has a position, update it if it's not the same
-					 * as the old one
-					 */
-					else { //TODO add request for field etc back in
-						/*
-						 * Check if the new position is different than our old
-						 * one, only keep going if this is true
-						 */
-						if (pos.getX() == myself.getPosition().getX() && pos.getY() == myself.getPosition().getY()) {
-							System.out.println("New position is the same as the old one");
-							break;
-						} else {
-							Node position = this.myself.getPosition();
-							iRobotController.releaseField(position.getX(), position.getY());
-
-							this.getGraph().setRobotPosition(myself, pos);
-							/*
-							 * Only keep going if the game is running
-							 */
-							boolean requested = false;
-							while(!requested) {							
-								if (this.game.isRunning()) {
-										Tuple<Point, Orientation> tuple = this.getNewNode();
-										Point point = tuple.x;
-										int x = (int) point.getX();
-										int y = (int) point.getY();
-										/*
-										 * Check if field on next orientation is
-										 * free before going
-										 */
-										switch (this.game.getStage().getField(x, y).getState()) {
-										// Lock if free
-										case FREE:
-											 iRobotController.requestField(x, y);
-											 this.nextField = this.game.getStage().getField(x, y);
-											 this.nextOrientation = tuple.y;
-											 requested = true;
-											break;
-										// No need to use LOCKED state at the moment
-										case LOCKED:
-											break; 
-										// Calculate new field
-										case OCCUPIED: 
-											break;
-										// Drive on field if we have successfully
-										// got it
-										// (locked by us)
-										// Should be triggered by another event!!
-										// TODO
-										case OURS: 
-											// fireNextOrientationEvent(nextOrientation);
-											break;
-										// Don't use for now
-										case LOCK_WAIT: 
-											break;
-										// Don't use for now
-										case RANDOM_WAIT: 
-											break;
-										// Should throw error if a field has no
-										// event
-										default:
-											break;
-										}
-								}
-							}
-						}
-					}
-				}
-				/*
-				 * Case robot is not myself
-				 */
-				else {
-					/*
-					 * Get intern graph-robot object if it already exists, else
-					 * create new one and set position
-					 */
-					if (!this.graph.getRobots().containsKey(robot.getId())) {
-						Robot newRobot = new Robot(robot.getId());
-						this.graph.getRobots().put(robot.getId(), newRobot);
-						this.graph.setRobotPosition(newRobot, pos);
-					} else {
-						Robot otherRobot = this.graph.getRobots().get(robot.getId());
-						int x = otherRobot.getPosition().getX();
-						int y = otherRobot.getPosition().getY();
-						/*
-						 * Check if position was actually updated
-						 */
-						if (x == pos.getX() && y == pos.getY()) {
-							System.out.println("Other robot's position is the same as the old one!");
-							break;
-						} else {
-							this.graph.setRobotPosition(otherRobot, pos);
-						}
-					}
-				}
-			}
+			handleRobotPositionEvent(event);
 			break;
-		case GAME_STATE: // reicht das?
-			System.out.println("Game");
-			// TODO check hasStarted state!!
-			IGame game = (IGame) event.getObject();
-			if (game.isRunning() && graph != null && myself.getPosition() != null
-					&& iRobotController.getMyself().getState().equals(IRobot.RobotState.ENABLED)) {
-				Tuple<Point, Orientation> tuple = this.getNewNode();
-				Point point = tuple.x;
-				int x = (int) point.getX();
-				int y = (int) point.getY();
-
-				this.iRobotController.requestField(x, y);
-				this.nextField = game.getStage().getField(x, y);
-				this.nextOrientation = tuple.y;
-			}
+		case GAME_STATE: 
+			handleGameStateEvent(event);
 			break;
 		case GAME_PARAMETER:
 			break;
 		case ROBOT_ADD:
 			break;
 		case ROBOT_STATE:
-			IRobot robot = (IRobot) event.getObject();
-			if (robot.isMyself()) {
-				if (this.hasStarted == false) {
-					if (robot.getState().equals(IRobot.RobotState.ENABLED)) {
-						this.hasStarted = true;
-						if (getController().getGame().isRunning() && graph != null && myself.getPosition() != null) {
-							System.out.println("GAMEStart");
-							Tuple<Point, Orientation> tuple = this.getNewNode();
-							Point point = tuple.x;
-							int x = (int) point.getX();
-							int y = (int) point.getY();
-
-							this.iRobotController.requestField(x, y);
-							this.nextField = this.game.getStage().getField(x, y);
-							this.nextOrientation = tuple.y;
-						}
-					}
-				}
-			}
+			handleRobotStateEvent(event);
 			break;
 		default:
 			break;
 		}
 
 	}
+	
+	private void handleFieldStateEvent(IEvent event) {
+		if (graph != null) {
+			IField field = (IField) event.getObject();
+			Node node = myself.getPosition();
 
+			// TODO nullpointerexception possible?
+			if (game.isRunning() && this.nextField == field && this.nextOrientation != null) {
+				switch (field.getState()) {
+				case OURS:
+					fireNextOrientationEvent(this.nextOrientation); // or
+					break;
+				case FREE:
+					int xCoord = this.nextField.getX();
+					int yCoord = this.nextField.getY();
+					iRobotController.requestField(xCoord, yCoord);
+					break;
+				case LOCK_WAIT:
+					break;
+				case LOCKED:
+					// break;
+				case OCCUPIED:
+					// break;
+				case RANDOM_WAIT:
+					iRobotController.releaseField(nextField.getX(), nextField.getY());
+
+					Tuple<Point, Orientation> tuple = this.getNewNode();
+					Point point = tuple.x;
+					int x = (int) point.getX();
+					int y = (int) point.getY();
+
+					iRobotController.requestField(x, y);
+					nextField = game.getStage().getField(x, y);
+					nextOrientation = tuple.y;
+					break;
+				default:
+					break;
+				}
+			}
+		}
+	}
+	
+	private void handleRobotPositionEvent(IEvent event) {
+		if (graph != null) {
+			IRobot robot = (IRobot) event.getObject();
+			IPosition pos = robot.getPosition();
+			/*
+			 * If the position is not set yet, break and do nothing
+			 */
+			if (pos.getX() == -1 || pos.getY() == -1) {
+				return;
+			}
+
+			if (robot.isMyself()) {
+				/*
+				 * If no position was set for myself yet, then update it to
+				 * the current node (done in setRobotPosition)
+				 */
+				if (myself.getPosition() == null) {
+					this.graph.setRobotPosition(myself, pos);
+					return;
+				}
+				/*
+				 * If myself has a position, update it if it's not the same
+				 * as the old one
+				 */
+				else { //TODO add request for field etc back in
+					/*
+					 * Check if the new position is different than our old
+					 * one, only keep going if this is true
+					 */
+					if (pos.getX() == myself.getPosition().getX() && pos.getY() == myself.getPosition().getY()) {
+						System.out.println("New position is the same as the old one");
+						return;
+					} else {
+						Node position = this.myself.getPosition();
+						iRobotController.releaseField(position.getX(), position.getY());
+
+						this.graph.setRobotPosition(myself, pos);
+						/*
+						 * Only keep going if the game is running
+						 */
+						boolean requested = false;
+						while(!requested) {							
+							if (this.game.isRunning()) {
+									Tuple<Point, Orientation> tuple = this.getNewNode();
+									Point point = tuple.x;
+									int x = (int) point.getX();
+									int y = (int) point.getY();
+									/*
+									 * Check if field on next orientation is
+									 * free before going
+									 */
+									switch (this.game.getStage().getField(x, y).getState()) {
+									// Lock if free
+									case FREE:
+										 iRobotController.requestField(x, y);
+										 this.nextField = this.game.getStage().getField(x, y);
+										 this.nextOrientation = tuple.y;
+										 requested = true;
+										break;
+									// No need to use LOCKED state at the moment
+									case LOCKED:
+										break; 
+									// Calculate new field
+									case OCCUPIED: 
+										break;
+									// Drive on field if we have successfully
+									// got it
+									// (locked by us)
+									// Should be triggered by another event!!
+									// TODO
+									case OURS: 
+										// fireNextOrientationEvent(nextOrientation);
+										break;
+									// Don't use for now
+									case LOCK_WAIT: 
+										break;
+									// Don't use for now
+									case RANDOM_WAIT: 
+										break;
+									// Should throw error if a field has no
+									// event
+									default:
+										break;
+									}
+							}
+						}
+					}
+				}
+			}
+			/*
+			 * Case robot is not myself
+			 */
+			else {
+				/*
+				 * Get intern graph-robot object if it already exists, else
+				 * create new one and set position
+				 */
+				if (!this.graph.getRobots().containsKey(robot.getId())) {
+					Robot newRobot = new Robot(robot.getId());
+					this.graph.getRobots().put(robot.getId(), newRobot);
+					this.graph.setRobotPosition(newRobot, pos);
+				} else {
+					Robot otherRobot = this.graph.getRobots().get(robot.getId());
+					int x = otherRobot.getPosition().getX();
+					int y = otherRobot.getPosition().getY();
+					/*
+					 * Check if position was actually updated
+					 */
+					if (x == pos.getX() && y == pos.getY()) {
+						System.out.println("Other robot's position is the same as the old one!");
+						return;
+					} else {
+						this.graph.setRobotPosition(otherRobot, pos);
+					}
+				}
+			}
+		}
+	}
+
+	private void handleGameStateEvent(IEvent event) {
+		// TODO check hasStarted state!!
+		IGame game = (IGame) event.getObject();
+			if (game.isRunning() && graph != null && myself.getPosition() != null
+				&& iRobotController.getMyself().getState().equals(IRobot.RobotState.ENABLED)) {
+			Tuple<Point, Orientation> tuple = this.getNewNode();
+			Point point = tuple.x;
+			int x = (int) point.getX();
+			int y = (int) point.getY();
+				
+			this.iRobotController.requestField(x, y);
+			this.nextField = game.getStage().getField(x, y);
+			this.nextOrientation = tuple.y;
+		}
+	}
+	
+	private void handleRobotStateEvent(IEvent event) {
+		IRobot robot = (IRobot) event.getObject();
+		if (robot.isMyself()) {
+			if (this.hasStarted == false) {
+				if (robot.getState().equals(IRobot.RobotState.ENABLED)) {
+					this.hasStarted = true;
+					if (getController().getGame().isRunning() && graph != null && myself.getPosition() != null) {
+						System.out.println("GAMEStart");
+						Tuple<Point, Orientation> tuple = this.getNewNode();
+						Point point = tuple.x;
+						int x = (int) point.getX();
+						int y = (int) point.getY();
+
+						this.iRobotController.requestField(x, y);
+						this.nextField = this.game.getStage().getField(x, y);
+						this.nextOrientation = tuple.y;
+					}
+				}
+			}
+		}
+	}
+	
 	private Tuple<Point, Orientation> getNewNode() {
 		int x = this.myself.getPosition().getX();
 		int y = this.myself.getPosition().getY();
@@ -365,66 +370,7 @@ public class AI extends AbstractAI implements IModelObserver {
 		}
 		return null;
 	}
-
-	/**
-	 * 
-	 * @param field
-	 * @return
-	 */
-	public boolean occupy(IField field) {
-		boolean isOccupied = true;
-
-		return isOccupied;
-	}
-	
-	public void fireNextOrientationEventProxy(Orientation orientation) {
-		this.fireNextOrientationEvent(orientation);
-	}
-
-	public IField getNextField() {
-		return nextField;
-	}
-
-	public void setNextField(IField nextField) {
-		this.nextField = nextField;
-	}
-
-	public AIGraph getGraph() {
-		return graph;
-	}
-
-	public void setGraph(AIGraph graph) {
-		this.graph = graph;
-	}
-
-	public Robot getMyself() {
-		return myself;
-	}
-
-	public void setMyself(Robot myself) {
-		this.myself = myself;
-	}
-
-	public IGame getGame() {
-		return game;
-	}
-
-	public void setGame(IGame game) {
-		this.game = game;
-	}
-	
-	public IRobotController getIRobotController() {
-		return this.iRobotController;
-	}
-	
-	public boolean isStarted() {
-		return this.hasStarted;
-	}
-	
-	public void setStarted(boolean started) {
-		this.hasStarted = started;
-	}
-	
+		
 	public Orientation getNextOrientation() {
 		return this.nextOrientation;
 	}

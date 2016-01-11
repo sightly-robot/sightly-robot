@@ -17,8 +17,6 @@ import de.unihannover.swp2015.robots2.ai.exceptions.NoValidOrientationException;
 import de.unihannover.swp2015.robots2.model.interfaces.IField;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
-//import testpackage.Edge;
-//import testpackage.Node;
 import de.unihannover.swp2015.robots2.model.interfaces.IStage;
 
 public class AIGraph extends Thread implements Runnable {
