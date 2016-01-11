@@ -22,7 +22,7 @@ import de.unihannover.swp2015.robots2.model.interfaces.IStage;
 public class AIGraph extends Thread implements Runnable {
 
 	private IStage stage;
-
+	//testvar
 	private Node[][] nodes;
 
 	/*
@@ -297,12 +297,16 @@ public class AIGraph extends Thread implements Runnable {
 	 * @param range
 	 * @return
 	 */
-	public Node findBestNode(int range) {
+	public Node findBestNode(int range) { //TODO better way to determine best node via bfs
 		int x = myself.getPosition().getX();
 		int y = myself.getPosition().getY();
-		// for Timon
 		//Set<Node> set = new HashSet<Node>();
-		Node curr = this.nodes[Math.max(x - range, 0)][Math.max(y - range, 0)];
+		Node curr;
+		if(x != Math.max(x - range, 0) || y != Math.max(y - range, 0)) {
+			curr = this.nodes[Math.max(x - range, 0)][Math.max(y - range, 0)];
+		} else  {
+			curr = this.nodes[Math.max(x - range, 1)][Math.max(y - range, 0)]; //TODO make sure no inaccessible field is selected
+		}
 		for(int i = Math.max(x - range, 0); i < Math.min(x + range + 1, this.nodes.length); i++) {
 			for(int j = Math.max(y - range, 0); j < Math.min(y + range + 1, this.nodes[0].length); j++) {
 				if((i != x || j != y) 

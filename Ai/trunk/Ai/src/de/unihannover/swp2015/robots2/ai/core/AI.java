@@ -25,7 +25,6 @@ public class AI extends AbstractAI implements IModelObserver {
 	private AIGraph graph; // volatile
 
 	private IGame game;
-
 	private Robot myself;
 
 	public AI(IRobotController controller) { // controller from data modell
