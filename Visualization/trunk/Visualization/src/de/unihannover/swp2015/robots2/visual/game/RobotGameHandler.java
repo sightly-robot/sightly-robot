@@ -75,12 +75,6 @@ public class RobotGameHandler extends GameHandler {
 		prefs.putFloat(PrefKey.FIELD_WIDTH_KEY, view.getWorldWidth() / stage.getWidth());
 		prefs.putFloat(PrefKey.FIELD_HEIGHT_KEY, view.getWorldWidth() / stage.getHeight());
 		
-		for (final IRobot roboModel : game.getRobots().values()) {
-			final Robot robo = new Robot(roboModel, this);
-			robo.setZIndex(1);
-			entityList.add(robo);
-			robots.add(roboModel);
-		}
 		entityList.add(new Map(stage, this));
 		Entity.sortEntities(entityList);
 		
@@ -186,6 +180,7 @@ public class RobotGameHandler extends GameHandler {
 				Entity.addEntitySorted(roboEntity, entityList);
 				SortUtil.addRobotSorted(robot, robots);
 			}
+			System.out.println("new Robot added");
 			break;
 			
 		case ROBOT_DELETE:
