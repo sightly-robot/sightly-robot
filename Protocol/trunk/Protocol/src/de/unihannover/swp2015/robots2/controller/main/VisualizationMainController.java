@@ -37,6 +37,7 @@ public class VisualizationMainController extends AbstractMainController
 			this.mqttController = new MqttController(clientId, this,
 					Arrays.asList(subscribeTopics));
 		} catch (MqttException e) {
+			log.fatal("Error constructing MqttController:",e);
 		}
 	}
 
