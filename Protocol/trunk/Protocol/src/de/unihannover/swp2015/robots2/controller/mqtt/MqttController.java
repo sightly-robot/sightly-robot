@@ -45,8 +45,7 @@ public class MqttController implements IMqttController {
 	/** List of topics to subscribe after successful connection establishment */
 	private final List<String> subscribeTopics;
 
-	private Logger log = LogManager.getLogger(MqttController.class
-			.getName());
+	private Logger log = LogManager.getLogger(this.getClass().getSimpleName());
 
 	/**
 	 * Initialize a new MqttController and set lastWill message.

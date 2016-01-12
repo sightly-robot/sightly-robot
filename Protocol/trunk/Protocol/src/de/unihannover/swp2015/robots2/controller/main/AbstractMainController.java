@@ -32,7 +32,7 @@ public abstract class AbstractMainController implements IController,
 	private InfoType infoType = InfoType.WARNING;
 	protected String infoComponent = "general";
 	
-	protected Logger log = LogManager.getLogger(this.getClass().getName());
+	protected Logger log = LogManager.getLogger(this.getClass().getSimpleName());
 
 	public AbstractMainController() {
 		this.game = new Game();
@@ -56,7 +56,6 @@ public abstract class AbstractMainController implements IController,
 		if (type.compareTo(this.infoType) >= 0) {
 			this.mqttController.sendMessage("event/" + type.toString() + "/"
 					+ this.infoComponent + "/" + topic, message, false);
-			this.log.info("sendInfoMessage: {}, {}", type.toString(), message);
 		}
 	}
 
@@ -86,7 +85,6 @@ public abstract class AbstractMainController implements IController,
 					.toString(topicKey);
 			this.mqttController.sendMessage(fullTopic, message,
 					topic.isRetained());
-			this.log.info("sendMqttMessage: {}, {}", fullTopic, message);
 		}
 	}
 

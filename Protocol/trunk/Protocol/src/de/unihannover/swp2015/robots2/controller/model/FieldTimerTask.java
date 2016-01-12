@@ -14,8 +14,7 @@ public class FieldTimerTask implements Callable<Object> {
 	private final IFieldWriteable field;
 	private final IFieldTimerController callback;
 
-	private Logger log = LogManager.getLogger(FieldTimerTask.class
-			.getName());
+	private Logger log = LogManager.getLogger(this.getClass().getSimpleName());
 
 	public FieldTimerTask(IFieldWriteable field, IFieldTimerController callback) {
 		this.field = field;
