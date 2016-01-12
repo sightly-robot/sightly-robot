@@ -139,7 +139,7 @@ public class AI extends AbstractAI implements IModelObserver {
 				case OCCUPIED:
 					// break;
 				case RANDOM_WAIT:
-					iRobotController.releaseField(nextField.getX(), nextField.getY());
+					//iRobotController.releaseField(nextField.getX(), nextField.getY());
 
 					Tuple<Point, Orientation> tuple = this.getNewNode();
 					Point point = tuple.x;
@@ -338,7 +338,7 @@ public class AI extends AbstractAI implements IModelObserver {
 			default:
 				break;
 			}
-			return new Tuple(new Point(x, y), orientation);
+			return new Tuple<>(new Point(x, y), orientation);
 		} catch (NoValidOrientationException e) {
 			e.printStackTrace();
 			return null; // TODO make sure no invalid value is returned
