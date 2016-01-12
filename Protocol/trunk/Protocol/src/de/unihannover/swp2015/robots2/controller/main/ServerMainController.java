@@ -34,7 +34,7 @@ public class ServerMainController extends AbstractMainController implements
 					"extension/2/control/reset" };
 
 			this.mqttController = new MqttController(clientId, this,
-					Arrays.asList(subscribeTopics));
+					Arrays.asList(subscribeTopics), MqttTopic.EVENT_ERROR_SERVER_CONNECTION.toString(), "server disconnect", true);
 		} catch (MqttException e) {
 		}
 	}
@@ -134,6 +134,12 @@ public class ServerMainController extends AbstractMainController implements
 			break;
 		}
 
+	}
+	
+	@Override
+	public void onMqttStateChange(boolean state) {
+		super.onMqttStateChange(state);
+		this.sendMqttMessage(MqttTopic.EVENT_ERROR_SERVER_CONNECTION, null, null);
 	}
 
 	@Override

@@ -44,7 +44,7 @@ public class MqttController implements IMqttController {
 	private final List<String> subscribeTopics;
 
 	/**
-	 * Initialize a new MqttController.
+	 * Initialize a new MqttController and set lastWill message.
 	 * 
 	 * This constructor also initializes and starts the paho MQTT client,
 	 * connects to the MQTT broker and starts the send and receive worker
@@ -61,10 +61,21 @@ public class MqttController implements IMqttController {
 	 * @param subscribeTopics
 	 *            A list of MQTT topic names to subscribe. May contain wildcards
 	 *            according to the MQTT standard.
+	 * @param lastWillTopic
+	 *            The topic of the last will message of this client. If this
+	 *            topic is null, the MQTT client wont set a will.
+	 * @param lastWillMessage
+	 *            The message to be sent as last will of this MQTT client. If
+	 *            topic is not null and message is null, a zero byte message
+	 *            will be sent.
+	 * @param lastWillRetired
+	 *            Specifies whether the last will message will be a retired
+	 *            message. Parameter only has effect if lastWillMessage != null
 	 */
 	public MqttController(String mqttClientId,
-			IMqttMessageHandler receiveHandler, List<String> subscribeTopics)
-			throws MqttException {
+			IMqttMessageHandler receiveHandler, List<String> subscribeTopics,
+			String lastWillTopic, String lastWillMessage,
+			boolean lastWillRetired) throws MqttException {
 
 		this.receiveHandler = receiveHandler;
 		this.subscribeTopics = subscribeTopics;
@@ -78,9 +89,12 @@ public class MqttController implements IMqttController {
 		this.connOpt = new MqttConnectOptions();
 		connOpt.setCleanSession(true);
 		connOpt.setKeepAliveInterval(5);
-		// TODO Set last will
-		// connOpt.setWill("error/connection",
-		// "The important client lost its connection.".getBytes(), 0, false);
+		// set last will if required
+		if (lastWillTopic != null) {
+			byte[] message = lastWillMessage != null ? lastWillMessage
+					.getBytes() : new byte[0];
+			connOpt.setWill(lastWillTopic, message, 0, lastWillRetired);
+		}
 		connOpt.setMqttVersion(MqttConnectOptions.MQTT_VERSION_3_1);
 
 		// MQTT client callback methods
@@ -129,6 +143,31 @@ public class MqttController implements IMqttController {
 		Thread sendWorker = new Thread(new MqttSender(sendQueue, client,
 				this.waitForConnect));
 		sendWorker.start();
+	}
+
+	/**
+	 * Initialize a new MqttController (whithout last will)
+	 * 
+	 * This constructor also initializes and starts the paho MQTT client,
+	 * connects to the MQTT broker and starts the send and receive worker
+	 * threads.
+	 * 
+	 * @param mqttBrokerUrl
+	 *            URL of the MQTT broker to connect to
+	 * @param mqttClientId
+	 *            MQTT Client ID to be used to connect to the broker. Must be
+	 *            uniqe for each connecting device/client.
+	 * @param receiveHandler
+	 *            A Controller to call a method for each received MQTT message
+	 *            and encountered errors on.
+	 * @param subscribeTopics
+	 *            A list of MQTT topic names to subscribe. May contain wildcards
+	 *            according to the MQTT standard.
+	 */
+	public MqttController(String mqttClientId,
+			IMqttMessageHandler receiveHandler, List<String> subscribeTopics)
+			throws MqttException {
+		this(mqttClientId, receiveHandler, subscribeTopics, null, null, false);
 	}
 
 	/**

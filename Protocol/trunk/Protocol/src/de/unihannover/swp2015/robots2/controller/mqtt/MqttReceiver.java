@@ -6,8 +6,6 @@ import java.util.concurrent.BlockingQueue;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import de.unihannover.swp2015.robots2.controller.main.AbstractMainController;
-
 /**
  * Worker thread for receiving MQTT messages. Sequentially reads the messages
  * from the given BlockingQueue and calls the callback method of the given

@@ -1,7 +1,6 @@
 package de.unihannover.swp2015.robots2.controller.main;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.UUID;
 
 import org.eclipse.paho.client.mqttv3.MqttException;
