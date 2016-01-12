@@ -240,8 +240,9 @@ public class AIGraph extends Thread implements Runnable {
 	 * @return
 	 */
 	public List<Node> getBFSPath(Node target) {
-		System.out.println("target: [" + target.getX() + "," + target.getY() + "]");
-
+		//System.out.println("target: [" + target.getX() + "," + target.getY() + "]");
+		// TODO log4j with trace
+		
 		Map<Node, Node> pred = new HashMap<Node, Node>();
 		Set<Node> visited = new HashSet<Node>();
 		Queue<Node> q = new LinkedList<Node>();
