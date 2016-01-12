@@ -44,7 +44,7 @@ public class MqttReceiver implements Runnable {
 					this.log.error(e);
 				}
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				log.info("MQTT receive worker aborted by interrupt exception.",e);
 			}
 		}
 	}

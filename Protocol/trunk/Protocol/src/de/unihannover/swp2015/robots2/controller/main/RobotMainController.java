@@ -48,6 +48,7 @@ public class RobotMainController extends AbstractMainController implements
 			this.mqttController = new MqttController(clientId, this,
 					Arrays.asList(subscribeTopics));
 		} catch (MqttException e) {
+			log.fatal("Error constructing MqttController:",e);
 		}
 	}
 

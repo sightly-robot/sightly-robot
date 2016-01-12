@@ -141,6 +141,7 @@ public class MqttController implements IMqttController {
 						}
 					}
 				} catch (InterruptedException e) {
+					log.info("Reconnect aborted by interrupt exception.",e);
 				}
 			}
 		});

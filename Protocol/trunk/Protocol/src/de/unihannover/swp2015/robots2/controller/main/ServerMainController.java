@@ -36,6 +36,7 @@ public class ServerMainController extends AbstractMainController implements
 			this.mqttController = new MqttController(clientId, this,
 					Arrays.asList(subscribeTopics), MqttTopic.EVENT_ERROR_SERVER_CONNECTION.toString(), "server disconnect", true);
 		} catch (MqttException e) {
+			log.fatal("Error constructing MqttController:",e);
 		}
 	}
 

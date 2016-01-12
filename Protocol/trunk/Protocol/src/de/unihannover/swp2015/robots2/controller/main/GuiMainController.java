@@ -46,6 +46,7 @@ public class GuiMainController extends AbstractMainController implements
 			this.mqttController = new MqttController(clientId, this,
 					Arrays.asList(subscribeTopics));
 		} catch (MqttException e) {
+			log.fatal("Error constructing MqttController:",e);
 		}
 	}
 
@@ -130,7 +131,7 @@ public class GuiMainController extends AbstractMainController implements
 		case SETTINGS_VISU_SET:
 			if (this.visualizationControl != null)
 				this.visualizationControl.receiveSettings(message);
-
+			break;
 		default:
 			break;
 		}
@@ -259,7 +260,7 @@ public class GuiMainController extends AbstractMainController implements
 
 		// Release all fields occupied by this robot
 		for (int x = 0; x < this.game.getStage().getWidth(); x++) {
-			for (int y = 0; x < this.game.getStage().getHeight(); y++) {
+			for (int y = 0; y < this.game.getStage().getHeight(); y++) {
 				IField f = this.game.getStage().getField(x, y);
 				if (f.getState() == State.OCCUPIED
 						&& f.getLockedBy().equals(id))
