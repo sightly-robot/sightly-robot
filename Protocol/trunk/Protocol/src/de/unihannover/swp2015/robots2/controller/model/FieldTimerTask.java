@@ -39,9 +39,11 @@ public class FieldTimerTask implements Callable<Object> {
 
 			break;
 		case RANDOM_WAIT:
-			field.setState(State.FREE);
-			if (callback != null)
-				callback.retryLockField(field.getX(), field.getY());
+			log.debug(
+					"Random wait for field {}-{} finished. Changing to state FREE.",
+					field.getX(), field.getY());
+			this.field.setLockedBy("");
+			this.field.emitEvent(UpdateType.FIELD_STATE);
 
 			break;
 

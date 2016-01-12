@@ -10,16 +10,6 @@ package de.unihannover.swp2015.robots2.controller.main;
 public interface IFieldTimerController {
 	
 	/**
-	 * This method is called after the random wait when a conflict occurred.
-	 * 
-	 * The method will resend a MQTT "lock" message and reset the Field state to LOCK_WAIT. 
-	 * 
-	 * @param x x coordinate of the Field to try to lock again
-	 * @param y y coordinate of the Field to try to lock again
-	 */
-	public void retryLockField(int x, int y);
-	
-	/**
 	 * This method is called after the safety wait following a lock massage.
 	 * 
 	 * It will send a MQTT "occupy set" message and set the Field state to OURS. 

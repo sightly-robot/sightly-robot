@@ -48,7 +48,7 @@ public class RobotMainController extends AbstractMainController implements
 			this.mqttController = new MqttController(clientId, this,
 					Arrays.asList(subscribeTopics));
 		} catch (MqttException e) {
-			log.fatal("Error constructing MqttController:",e);
+			log.fatal("Error constructing MqttController:", e);
 		}
 	}
 
@@ -253,14 +253,13 @@ public class RobotMainController extends AbstractMainController implements
 	public void releaseField(int x, int y) {
 		IField f = this.game.getStage().getField(x, y);
 
-		// Releasing is not possible if not our field (or random wait state)
-		if (f.getState() != State.OURS && f.getState() != State.RANDOM_WAIT)
+		// Releasing is not possible if not our field
+		if (f.getState() != State.OURS)
 			return;
 
 		// Send release message if has been occupied by us
-		if (f.getState() == State.OURS)
-			this.sendMqttMessage(MqttTopic.FIELD_OCCUPIED_RELEASE,
-					(x + "-" + y), "");
+		this.sendMqttMessage(MqttTopic.FIELD_OCCUPIED_RELEASE, (x + "-" + y),
+				"");
 		this.fieldStateModelController.setFieldRelease(x, y);
 	}
 
@@ -308,11 +307,6 @@ public class RobotMainController extends AbstractMainController implements
 	@Override
 	public IRobot getMyself() {
 		return this.myself;
-	}
-
-	@Override
-	public void retryLockField(int x, int y) {
-		this.requestField(x, y);
 	}
 
 	@Override
