@@ -32,7 +32,7 @@ public abstract class AbstractMainController implements IController,
 	private InfoType infoType = InfoType.WARNING;
 	protected String infoComponent = "general";
 	
-	private Logger log = LogManager.getLogger(AbstractMainController.class.getName());
+	private Logger log = LogManager.getLogger(this.getClass().getName());
 
 	public AbstractMainController() {
 		this.game = new Game();

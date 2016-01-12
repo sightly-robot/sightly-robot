@@ -5,7 +5,6 @@ import java.util.concurrent.Callable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import de.unihannover.swp2015.robots2.controller.main.AbstractMainController;
 import de.unihannover.swp2015.robots2.controller.main.IFieldTimerController;
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent.UpdateType;
 import de.unihannover.swp2015.robots2.model.interfaces.IField.State;
@@ -15,7 +14,7 @@ public class FieldTimerTask implements Callable<Object> {
 	private final IFieldWriteable field;
 	private final IFieldTimerController callback;
 
-	private Logger log = LogManager.getLogger(AbstractMainController.class
+	private Logger log = LogManager.getLogger(FieldTimerTask.class
 			.getName());
 
 	public FieldTimerTask(IFieldWriteable field, IFieldTimerController callback) {

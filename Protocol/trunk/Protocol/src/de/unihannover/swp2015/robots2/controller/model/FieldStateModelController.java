@@ -8,7 +8,6 @@ import java.util.concurrent.TimeUnit;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import de.unihannover.swp2015.robots2.controller.main.AbstractMainController;
 import de.unihannover.swp2015.robots2.controller.main.IFieldTimerController;
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent.UpdateType;
 import de.unihannover.swp2015.robots2.model.interfaces.IField.State;
@@ -28,7 +27,7 @@ public class FieldStateModelController {
 	private IFieldTimerController fieldTimerCallback = null;
 	private Random random;
 
-	private Logger log = LogManager.getLogger(AbstractMainController.class
+	private Logger log = LogManager.getLogger(FieldStateModelController.class
 			.getName());
 
 	public FieldStateModelController(IStageWriteable stage) {
