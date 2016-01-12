@@ -2,6 +2,10 @@ package de.unihannover.swp2015.robots2.controller.model;
 
 import java.util.concurrent.Callable;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import de.unihannover.swp2015.robots2.controller.main.AbstractMainController;
 import de.unihannover.swp2015.robots2.controller.main.IFieldTimerController;
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent.UpdateType;
 import de.unihannover.swp2015.robots2.model.interfaces.IField.State;
@@ -10,6 +14,9 @@ import de.unihannover.swp2015.robots2.model.writeableInterfaces.IFieldWriteable;
 public class FieldTimerTask implements Callable<Object> {
 	private final IFieldWriteable field;
 	private final IFieldTimerController callback;
+
+	private Logger log = LogManager.getLogger(AbstractMainController.class
+			.getName());
 
 	public FieldTimerTask(IFieldWriteable field, IFieldTimerController callback) {
 		this.field = field;
@@ -20,6 +27,9 @@ public class FieldTimerTask implements Callable<Object> {
 	public Object call() {
 		switch (this.field.getState()) {
 		case LOCKED:
+			log.debug("Field " + field.getX() + "-" + field.getY()
+					+ " was auto released because robot " + field.getLockedBy()
+					+ " didn't occupy.");
 			this.field.setState(State.FREE);
 			this.field.setLockedBy("");
 			this.field.emitEvent(UpdateType.FIELD_STATE);
