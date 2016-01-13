@@ -46,7 +46,7 @@
 								
 								<TablePane.Row height="32">
 									<FillPane styles="{padding:4}">
-										<PushButton bxml:id="blinkButton" enabled="false" styles="{font:{size:16}, color:'#FFFFFF', backgroundColor:'#505050'}" buttonData="Indentify"/>
+										<PushButton bxml:id="blinkButton" enabled="false" styles="{font:{size:16}, color:'#FFFFFF', backgroundColor:'#505050'}" buttonData="Identify"/>
 										<PushButton bxml:id="disableRobotButton" enabled="false" styles="{font:{size:16}, color:'#FFFFFF', backgroundColor:'#505050'}" buttonData="Disable Robot"/>
 										<PushButton bxml:id="deleteRobotButton" enabled="false" styles="{font:{size:16}, color:'#FFFFFF', backgroundColor:'#505050'}" buttonData="Delete Robot"/>
 									</FillPane>
