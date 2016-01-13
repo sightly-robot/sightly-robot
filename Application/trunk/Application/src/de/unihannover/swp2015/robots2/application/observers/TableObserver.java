@@ -27,6 +27,7 @@ public class TableObserver implements IModelObserver {
 		this.controller = controller;
 		this.updated = true;
 		elements = new TableData();
+		table.setSelectMode(TableView.SelectMode.SINGLE);
 		
 		controller.getGame().observe(this);
 	}
@@ -54,8 +55,9 @@ public class TableObserver implements IModelObserver {
 			elements.add(element);
 		}
 
-		table.setTableData(elements.getData());		
-		table.setSelectedIndex(lastIndex);	
+		table.setTableData(elements.getData());
+		if (elements.getData().getLength() > lastIndex)
+			table.setSelectedIndex(lastIndex);	
 		updated = false;
 	}
 
