@@ -1,4 +1,4 @@
-package de.unihannover.swp2015.robots2.server.main;
+package de.unihannover.swp2015.robots2.server;
 
 import java.util.HashMap;
 import java.util.Map;

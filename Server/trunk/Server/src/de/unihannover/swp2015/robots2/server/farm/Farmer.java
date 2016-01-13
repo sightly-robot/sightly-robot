@@ -1,4 +1,4 @@
-package de.unihannover.swp2015.robots2.server.main.farm;
+package de.unihannover.swp2015.robots2.server.farm;
 
 import java.util.Iterator;
 import java.util.concurrent.DelayQueue;

@@ -1,4 +1,4 @@
-package de.unihannover.swp2015.robots2.server.main;
+package de.unihannover.swp2015.robots2.server;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -6,7 +6,7 @@ import org.apache.logging.log4j.Logger;
 import de.unihannover.swp2015.robots2.controller.interfaces.IServerController;
 import de.unihannover.swp2015.robots2.controller.interfaces.InfoType;
 import de.unihannover.swp2015.robots2.controller.main.ServerMainController;
-import de.unihannover.swp2015.robots2.server.main.farm.Farmer;
+import de.unihannover.swp2015.robots2.server.farm.Farmer;
 
 public class Main {
 

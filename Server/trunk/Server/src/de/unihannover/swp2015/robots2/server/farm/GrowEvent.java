@@ -1,4 +1,4 @@
-package de.unihannover.swp2015.robots2.server.main.farm;
+package de.unihannover.swp2015.robots2.server.farm;
 
 import java.util.concurrent.Delayed;
 import java.util.concurrent.TimeUnit;
