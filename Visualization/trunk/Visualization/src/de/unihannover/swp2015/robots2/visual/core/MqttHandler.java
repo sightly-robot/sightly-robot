@@ -43,7 +43,7 @@ public class MqttHandler implements IVisualization, Runnable {
 	 * 
 	 * @param ip IP of the broker
 	 */
-	public MqttHandler(final String ip) {
+	public MqttHandler(String ip) {
 		this.visController = new VisualizationMainController();
 		this.visController.registerVisualization(this);
 		this.ip = ip;
@@ -54,7 +54,7 @@ public class MqttHandler implements IVisualization, Runnable {
 	 * This method is thread safe.
 	 * @param ip new IP of the broker
 	 */
-	public void setIp(final String ip) {
+	public void setIp(String ip) {
 		synchronized(ipLock) {
 			this.ip = ip;
 			this.ipLock.notifyAll();
@@ -110,7 +110,7 @@ public class MqttHandler implements IVisualization, Runnable {
 					long startTime = System.currentTimeMillis();
 					while (!ipChanged && timePassed < ATTEMPT_INTERVAL) {
 						ipLock.wait(SLEEP_TIME);
-						timePassed = (System.currentTimeMillis() - startTime);
+						timePassed = System.currentTimeMillis() - startTime;
 					}
 					ipChanged = false;
 					

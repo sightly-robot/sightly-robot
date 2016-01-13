@@ -1,5 +1,8 @@
 package de.unihannover.swp2015.robots2.visual.game.entity.component;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.badlogic.gdx.graphics.g2d.Batch;
 
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
@@ -23,6 +26,8 @@ import de.unihannover.swp2015.robots2.visual.util.pref.IPreferences;
  */
 public class RobotEngine extends Component {
 
+	private static final Logger log = LogManager.getLogger();
+	
 	/** Interval time used for the first calculation of the robot speed (in seconds). */
 	private static final float FIRST_INTERVAL_GUESS = 0.1f;
 	
@@ -64,6 +69,10 @@ public class RobotEngine extends Component {
 		switch(event.getType()) {
 
 		case ROBOT_PROGRESS:
+			float realInterval = (System.nanoTime() - lastEvent) / 1000000000f;
+			if (realInterval > 0.2 || realInterval < 0.05) {
+				log.info("event time out of row {}" , realInterval);
+			}
 			calcInterval();			
 			final IRobot robot = (IRobot) event.getObject();
 			updateRobot(robot, robot.getPosition().getProgress());

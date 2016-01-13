@@ -180,7 +180,6 @@ public class RobotGameHandler extends GameHandler {
 				Entity.addEntitySorted(roboEntity, entityList);
 				SortUtil.addRobotSorted(robot, robots);
 			}
-			System.out.println("new Robot added");
 			break;
 			
 		case ROBOT_DELETE:

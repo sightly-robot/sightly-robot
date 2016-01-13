@@ -20,6 +20,7 @@ import de.unihannover.swp2015.robots2.visual.core.entity.Entity;
 import de.unihannover.swp2015.robots2.visual.core.entity.IEntity;
 import de.unihannover.swp2015.robots2.visual.core.handler.IGameHandler;
 import de.unihannover.swp2015.robots2.visual.util.SortUtil;
+import de.unihannover.swp2015.robots2.visual.util.pref.IPreferences;
 
 public class EntitySortTest {
 
@@ -33,9 +34,11 @@ public class EntitySortTest {
 
 	}	
 
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testSortEntities() {
 		final IGameHandler mockGameHandler = mock(IGameHandler.class);
+		when(mockGameHandler.getPreferences()).thenReturn(mock(IPreferences.class));
 		
 		final IEntity entity = new TestEntity(mockGameHandler);
 		entity.setZIndex(5);
@@ -59,17 +62,19 @@ public class EntitySortTest {
 		list.add(entity_four);
 		list.add(entity_five);
 
-		final List<IEntity> expected = Arrays.asList(entity_two, entity_four, entity, entity_five, entity_three);
+		final List<IEntity> expected = Arrays.asList( entity_two, entity_four, entity, entity_five,entity_three);
 
 		Entity.sortEntities(list);
 
 		assertTrue("Expect that 'list' and 'expected' are equal \n 'list' = " + list + "\n 'expected = " + expected,
 				list.equals(expected));
 	}
-	
+
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testInsertionSortEntities() {
 		final IGameHandler mockGameHandler = mock(IGameHandler.class);
+		when(mockGameHandler.getPreferences()).thenReturn(mock(IPreferences.class));
 		
 		final IEntity entity = new TestEntity(mockGameHandler);
 		entity.setZIndex(5);

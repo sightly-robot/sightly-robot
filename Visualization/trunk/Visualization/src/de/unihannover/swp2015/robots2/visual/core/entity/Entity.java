@@ -23,7 +23,7 @@ import de.unihannover.swp2015.robots2.visual.util.pref.IPreferences;
  * a rotation and a model that contains all information about the object.
  * 
  * @version 1.0
- * @author Daphne Schössow
+ * @author Daphne Schï¿½ssow
  */
 public abstract class Entity implements IEntity {
 
@@ -227,10 +227,9 @@ public abstract class Entity implements IEntity {
 				entityList.add(entity);
 				break;
 			}
-			
 			if (entity.getZIndex() < entityList.get(i).getZIndex()) {
 				entityList.add(i, entity);
-				break;
+				return;
 			}
 		}
 	}
