@@ -55,7 +55,7 @@ public class TableObserver implements IModelObserver {
 		}
 
 		table.setTableData(elements.getData());		
-		table.setSelectedIndex(lastIndex);		
+		table.setSelectedIndex(lastIndex);	
 		updated = false;
 	}
 
