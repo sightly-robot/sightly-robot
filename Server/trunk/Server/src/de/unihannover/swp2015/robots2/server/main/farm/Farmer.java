@@ -3,6 +3,9 @@ package de.unihannover.swp2015.robots2.server.main.farm;
 import java.util.Iterator;
 import java.util.concurrent.DelayQueue;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import de.unihannover.swp2015.robots2.controller.interfaces.IServerController;
 import de.unihannover.swp2015.robots2.model.externalInterfaces.IModelObserver;
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
@@ -20,6 +23,8 @@ public class Farmer implements IModelObserver {
 	private final IServerController controller;
 	private final FarmWorker farmworker;
 	private final DelayQueue<GrowEvent> growQueue;
+	
+	private final Logger log = LogManager.getLogger(this.getClass().getName());
 
 	private long stoppedTime;
 
@@ -81,6 +86,7 @@ public class Farmer implements IModelObserver {
 		this.shiftGrowQueue(System.currentTimeMillis() - this.stoppedTime);
 
 		if (!this.farmworker.isAlive()) {
+			this.log.info("Starting Farm Worker.");
 			this.farmworker.start();
 		}
 
@@ -92,8 +98,8 @@ public class Farmer implements IModelObserver {
 	 */
 	private void stopGrowQueue() {
 		this.stoppedTime = System.currentTimeMillis();
+		this.log.info("Stopping Farm Worker.");
 		this.farmworker.pause();
-
 	}
 
 	/**
@@ -104,6 +110,7 @@ public class Farmer implements IModelObserver {
 	 */
 	private void shiftGrowQueue(long shift) {
 		Iterator<GrowEvent> it = this.growQueue.iterator();
+		this.log.debug("Shifting grow queue by {} ms.",shift);
 		while (it.hasNext()) {
 			it.next().shiftNextGrow(shift);
 		}

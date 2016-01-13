@@ -3,6 +3,9 @@ package de.unihannover.swp2015.robots2.server.main.farm;
 import java.util.concurrent.Delayed;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import de.unihannover.swp2015.robots2.model.interfaces.IField;
 
 /**
@@ -16,8 +19,12 @@ public class GrowEvent implements Delayed {
 	private final IField field;
 	private long nextGrowTime;
 
+	private Logger log = LogManager.getLogger(this.getClass().getName());
+	
 	public GrowEvent(IField field) {
+		this.log.trace("Generating Grow Event for Field {}-{}",field.getX(),field.getY());
 		this.field = field;
+		this.calculateNextGrow();
 	}
 
 	/**
