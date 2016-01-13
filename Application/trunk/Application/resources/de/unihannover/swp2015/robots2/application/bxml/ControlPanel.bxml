@@ -24,8 +24,8 @@
 								</columns>
 								
 								<TablePane.Row height="24">
-									<PushButton bxml:id="connectButton" buttonData="Verbinden" styles="{font:{size:16}, color:'#FFFFFF', backgroundColor:'#505050'}"/>
-									<PushButton bxml:id="loadMap" enabled="false" buttonData="Karte Laden" styles="{font:{size:16}, color:'#FFFFFF', backgroundColor:'#505050'}"/>
+									<PushButton bxml:id="connectButton" buttonData="Connect" styles="{font:{size:16}, color:'#FFFFFF', backgroundColor:'#505050'}"/>
+									<PushButton bxml:id="loadMap" enabled="false" buttonData="Load Map" styles="{font:{size:16}, color:'#FFFFFF', backgroundColor:'#505050'}"/>
 								</TablePane.Row>
 								
 								<TablePane.Row height="24">
@@ -47,7 +47,8 @@
 								<TablePane.Row height="32">
 									<FillPane styles="{padding:4}">
 										<PushButton bxml:id="blinkButton" enabled="false" styles="{font:{size:16}, color:'#FFFFFF', backgroundColor:'#505050'}" buttonData="Indentify"/>
-										<PushButton bxml:id="stopRobotButton" enabled="false" styles="{font:{size:16}, color:'#FFFFFF', backgroundColor:'#505050'}" buttonData="Delete Robot"/>
+										<PushButton bxml:id="disableRobotButton" enabled="false" styles="{font:{size:16}, color:'#FFFFFF', backgroundColor:'#505050'}" buttonData="Disable Robot"/>
+										<PushButton bxml:id="deleteRobotButton" enabled="false" styles="{font:{size:16}, color:'#FFFFFF', backgroundColor:'#505050'}" buttonData="Delete Robot"/>
 									</FillPane>
 								</TablePane.Row>
 								
@@ -57,8 +58,8 @@
 										<TableView bxml:id="participantTable" x="8" y="192" width="373" height="300"
 												   styles="{backgroundColor:'#303030'}">
 											<columns>
-												<TableView.Column name="player" width="270" headerData="Spieler"/>
-												<TableView.Column name="points" headerData="Punkte"/>
+												<TableView.Column name="player" width="270" headerData="Player"/>
+												<TableView.Column name="points" headerData="Points"/>
 											</columns>
 										</TableView>
 										<columnHeader>
@@ -71,8 +72,8 @@
 								<TablePane.Row height="24">
 									<GridPane columnCount="5" styles="{horizontalSpacing: 8, verticalSpacing: 0}">
 										<GridPane.Row>
-											<PushButton bxml:id="openConfiguration" styles="{font:{size:16}, color:'#FFFFFF', backgroundColor:'#505050'}" buttonData="Konfiguration"/>
-											<PushButton bxml:id="closeVisualization" styles="{font:{size:16}, color:'#FFFFFF', backgroundColor:'#505050'}" buttonData="Beenden"/>
+											<PushButton bxml:id="openConfiguration" styles="{font:{size:16}, color:'#FFFFFF', backgroundColor:'#505050'}" buttonData="Configuration"/>
+											<PushButton bxml:id="closeVisualization" styles="{font:{size:16}, color:'#FFFFFF', backgroundColor:'#505050'}" buttonData="Close"/>
 										</GridPane.Row>
 									</GridPane>
 								</TablePane.Row>								

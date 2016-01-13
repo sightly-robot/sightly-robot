@@ -21,7 +21,7 @@ public class Configurator extends Window implements Bindable
 	// BXML bindings
 	@BXML private TabPane tabs;
 	@BXML private TextArea ipTextArea;
-	@BXML private TextArea portTextArea;
+	//@BXML private TextArea portTextArea;
 	
 	// Models
 	GeneralOptions generalOptions;
@@ -35,7 +35,9 @@ public class Configurator extends Window implements Bindable
 		setGeneralOptions(generalOptions); // set to defaults
 		
 		ipTextArea.getTextAreaContentListeners().add(ipChangeAction);
-		portTextArea.getTextAreaContentListeners().add(portChangeAction);
+		//portTextArea.getTextAreaContentListeners().add(portChangeAction);
+		
+		//portTextArea.setEnabled(false);
 	}
 
 	/**
@@ -53,7 +55,7 @@ public class Configurator extends Window implements Bindable
 	public void setGeneralOptions(GeneralOptions generalOptions) {
 		this.generalOptions = generalOptions;
 		ipTextArea.setText(generalOptions.getRemoteUrl());
-		portTextArea.setText(Integer.toString(generalOptions.getRemotePort()));
+		//portTextArea.setText(Integer.toString(generalOptions.getRemotePort()));
 	}	
 	
 	/**
@@ -72,6 +74,7 @@ public class Configurator extends Window implements Bindable
 		}		
 	};
 	
+	/*
 	private TextAreaContentListener portChangeAction = new TextAreaContentListener() {
 		@Override
 		public void paragraphInserted(TextArea self, int arg1) {}
@@ -91,4 +94,5 @@ public class Configurator extends Window implements Bindable
 			}
 		}
 	};
+	*/
 }

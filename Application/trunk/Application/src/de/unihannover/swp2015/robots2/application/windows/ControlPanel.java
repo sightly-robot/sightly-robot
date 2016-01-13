@@ -51,7 +51,8 @@ public class ControlPanel extends Window implements Bindable {
 	@BXML private PushButton closeVisualization;
 	@BXML private PushButton connectButton;
 	@BXML private PushButton blinkButton;
-	@BXML private PushButton stopRobotButton;
+	@BXML private PushButton deleteRobotButton;
+	@BXML private PushButton disableRobotButton;
 
 	// Participants table
 	@BXML private TableView participantTable; 
@@ -88,8 +89,9 @@ public class ControlPanel extends Window implements Bindable {
 		pauseGame.getButtonPressListeners().add(pauseGameAction);
 		connectButton.getButtonPressListeners().add(connectAction);
 		blinkButton.getButtonPressListeners().add(blinkAction);
-		stopRobotButton.getButtonPressListeners().add(stopRobotAction);
-	}	
+		deleteRobotButton.getButtonPressListeners().add(deleteRobotAction);
+		disableRobotButton.getButtonPressListeners().add(disableRobotAction);
+	}
 	
 	/**
 	 * Button for letting a robot blink.
@@ -106,15 +108,30 @@ public class ControlPanel extends Window implements Bindable {
 	};
 	
 	/**
-	 * Button to stop a robot (maybe disqualification) 
+	 * Button to delete a robot (bye bye)
 	 */
-	private ButtonPressListener stopRobotAction = new ButtonPressListener() {
+	private ButtonPressListener deleteRobotAction = new ButtonPressListener() {
 		
 		@Override
 		public void buttonPressed(Button button) {
 			TableElement elem = tableObserver.getSelected();
 			if (elem != null) {
 				controller.deleteRobot(elem.getId());
+			}
+		}
+	};
+
+	
+	/**
+	 * Button to disable a robot (maybe disqualification) 
+	 */
+	private ButtonPressListener disableRobotAction = new ButtonPressListener() {
+		
+		@Override
+		public void buttonPressed(Button button) {
+			TableElement elem = tableObserver.getSelected();
+			if (elem != null) {
+				controller.disableRobot(elem.getId());
 			}
 		}
 	};
@@ -216,7 +233,8 @@ public class ControlPanel extends Window implements Bindable {
 				pauseGame.setEnabled(synced);
 				stopGame.setEnabled(synced);
 				blinkButton.setEnabled(synced);
-				stopRobotButton.setEnabled(synced);
+				deleteRobotButton.setEnabled(synced);
+				disableRobotButton.setEnabled(synced);
 
 				connectButton.setEnabled(synced);
 				
@@ -244,7 +262,7 @@ public class ControlPanel extends Window implements Bindable {
 		@Override
 		public void buttonPressed(Button button) {
 			try {
-				controller.startMqtt("tcp://" + configurator.getGeneralOptions().getRemoteUrl());
+				controller.startMqtt(/*"tcp://" + */configurator.getGeneralOptions().getRemoteUrl());
 				loadMap.setEnabled(true);
 			}
 			catch (MqttException exc) {

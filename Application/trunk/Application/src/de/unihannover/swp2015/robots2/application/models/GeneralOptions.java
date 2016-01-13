@@ -6,7 +6,7 @@ public class GeneralOptions {
 	
 	public GeneralOptions() {
 		super();
-		this.remoteUrl = "127.0.0.1";
+		this.remoteUrl = "tcp://127.0.0.1";
 		this.remotePort = 1883;
 	}
 	
