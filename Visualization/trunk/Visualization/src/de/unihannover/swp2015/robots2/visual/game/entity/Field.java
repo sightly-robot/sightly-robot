@@ -3,6 +3,7 @@ package de.unihannover.swp2015.robots2.visual.game.entity;
 import com.badlogic.gdx.graphics.g2d.Batch;
 
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
+import de.unihannover.swp2015.robots2.model.interfaces.IEvent.UpdateType;
 import de.unihannover.swp2015.robots2.model.interfaces.IField;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
@@ -18,7 +19,7 @@ import de.unihannover.swp2015.robots2.visual.util.StageUtil;
  * An entity used for the visualization of the underground and walls
  * 
  * @version 1.0
- * @author Daphne Schössow
+ * @author Daphne Schï¿½ssow
  */
 public class Field extends Entity {
 
@@ -139,13 +140,8 @@ public class Field extends Entity {
 	public void onManagedModelUpdate(IEvent event) {
 		final IField field = (IField) model;
 		
-		switch(event.getType()) {
-			case STAGE_WALL:
-				determineFieldTexture(field);
-				break;
-				
-			default:
-				break;
+		if (event.getType() == UpdateType.STAGE_WALL) {
+			determineFieldTexture(field);
 		}		
 	}
 

@@ -54,6 +54,10 @@ public class FlexPreferences<T extends IPreferencesKey> extends PreferencesObser
 		this.persistentDataHandler = Gdx.app.getPreferences(name);
 	}
 	
+	private IllegalArgumentException createPersistentException() {
+		return new IllegalArgumentException("The key already exists for storing data in a persistent way!");
+	}
+	
 	@Override
 	public boolean getBoolean(T key) {
 		return getBoolean(key, false);
@@ -141,7 +145,7 @@ public class FlexPreferences<T extends IPreferencesKey> extends PreferencesObser
 			persistentDataHandler.putBoolean(key.getKey(), value);
 		}
 		else if (persistentDataHandler.contains(key.getKey())) {
-			throw new IllegalArgumentException("The key already exists for storing data in a persistent way!");
+			throw createPersistentException();
 		}
 		
 		booleanMap.put(key, value);
@@ -159,7 +163,7 @@ public class FlexPreferences<T extends IPreferencesKey> extends PreferencesObser
 			persistentDataHandler.putFloat(key.getKey(), value);
 		}
 		else if (persistentDataHandler.contains(key.getKey())) {
-			throw new IllegalArgumentException("The key already exists for storing data in a persistent way!");
+			throw createPersistentException();
 		}
 		
 		floatMap.put(key, value);
@@ -177,7 +181,7 @@ public class FlexPreferences<T extends IPreferencesKey> extends PreferencesObser
 			persistentDataHandler.putInteger(key.getKey(), value);
 		}
 		else if (persistentDataHandler.contains(key.getKey())) {
-			throw new IllegalArgumentException("The key already exists for storing data in a persistent way!");
+			throw createPersistentException();
 		}
 		
 		integerMap.put(key, value);
@@ -195,7 +199,7 @@ public class FlexPreferences<T extends IPreferencesKey> extends PreferencesObser
 			persistentDataHandler.putString(key.getKey(), value);
 		}
 		else if (persistentDataHandler.contains(key.getKey())) {
-			throw new IllegalArgumentException("The key already exists for storing data in a persistent way!");
+			throw createPersistentException();
 		}
 		
 		stringMap.put(key, value);

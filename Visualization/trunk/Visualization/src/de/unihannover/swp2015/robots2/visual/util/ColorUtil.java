@@ -20,8 +20,7 @@ public class ColorUtil {
 	 * @return converted badlogic color object
 	 */
 	public static Color fromAwtColor(final java.awt.Color color) {
-		final Color result = new Color(color.getRed()/255f, color.getGreen()/255f, color.getBlue()/255f, color.getAlpha()/255f);
-		return result;
+		return new Color(color.getRed()/255f, color.getGreen()/255f, color.getBlue()/255f, color.getAlpha()/255f);
 	}
 	
 }

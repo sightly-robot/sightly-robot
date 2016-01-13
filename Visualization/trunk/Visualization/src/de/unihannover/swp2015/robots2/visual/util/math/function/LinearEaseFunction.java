@@ -9,7 +9,9 @@ public class LinearEaseFunction implements IEaseFunction {
 
 	private static LinearEaseFunction instance = new LinearEaseFunction();
 	
-	private LinearEaseFunction() {}
+	private LinearEaseFunction() {
+		// nothing to do
+	}
 	
 	/**
 	 * @return the static instance of the function.

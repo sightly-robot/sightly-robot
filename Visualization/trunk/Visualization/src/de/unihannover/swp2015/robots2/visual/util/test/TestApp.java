@@ -150,10 +150,10 @@ public class TestApp extends JFrame implements ActionListener {
 		for (int x = 0; x < stage.getWidth(); ++x) {
 			for (int y = 0; y < stage.getHeight(); ++y) {
 				final Field f = (Field) stage.getField(x, y);
-				f.setWall(Orientation.NORTH, rb());
-				f.setWall(Orientation.SOUTH, rb());
-				f.setWall(Orientation.EAST, rb());
-				f.setWall(Orientation.WEST, rb());
+				f.setWall(Orientation.NORTH, TestApp.rb());
+				f.setWall(Orientation.SOUTH, TestApp.rb());
+				f.setWall(Orientation.EAST, TestApp.rb());
+				f.setWall(Orientation.WEST, TestApp.rb());
 				f.emitEvent(UpdateType.FIELD_FOOD);
 			}
 		}
@@ -187,8 +187,8 @@ public class TestApp extends JFrame implements ActionListener {
 		}
 	}
 	
-	private boolean rb() {
-		final int des = (int)rand.nextInt(10);
+	private static boolean rb() {
+		final int des = rand.nextInt(10);
 		if (des == 9)
 			return true;
 		return false;
