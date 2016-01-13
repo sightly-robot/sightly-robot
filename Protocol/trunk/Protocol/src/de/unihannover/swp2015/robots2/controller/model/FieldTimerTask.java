@@ -42,6 +42,7 @@ public class FieldTimerTask implements Callable<Object> {
 			log.debug(
 					"Random wait for field {}-{} finished. Changing to state FREE.",
 					field.getX(), field.getY());
+			this.field.setState(State.FREE);
 			this.field.setLockedBy("");
 			this.field.emitEvent(UpdateType.FIELD_STATE);
 

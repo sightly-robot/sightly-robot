@@ -42,11 +42,12 @@ public class GuiMainController extends AbstractMainController implements
 			String[] subscribeTopics = { "robot/#", "extension/2/robot/#",
 					"map/walls", "map/food", "map/food/+", "map/occupied/#",
 					"event/error/robot/#", "extension/2/settings/#",
-					"control/state", "extension/2/map/startpositions" };
+					"control/state", "extension/2/map/startpositions",
+					"extension/2/robot/#" };
 			this.mqttController = new MqttController(clientId, this,
 					Arrays.asList(subscribeTopics));
 		} catch (MqttException e) {
-			log.fatal("Error constructing MqttController:",e);
+			log.fatal("Error constructing MqttController:", e);
 		}
 	}
 

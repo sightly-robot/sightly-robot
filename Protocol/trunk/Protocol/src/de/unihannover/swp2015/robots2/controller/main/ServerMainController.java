@@ -29,14 +29,15 @@ public class ServerMainController extends AbstractMainController implements
 			String clientId = "server";
 			String[] subscribeTopics = { "robot/#", "map/walls",
 					"extension/2/map/setfood", "extension/2/map/setgrowrate",
-					"map/occupied/#", "control/state",
-					"extension/2/robot/hesitationtime", "event/error/robot/#",
-					"extension/2/control/reset" };
+					"map/occupied/#", "control/state", "extension/2/robot/#",
+					"event/error/robot/#", "extension/2/control/reset" };
 
 			this.mqttController = new MqttController(clientId, this,
-					Arrays.asList(subscribeTopics), MqttTopic.EVENT_ERROR_SERVER_CONNECTION.toString(), "server disconnect", true);
+					Arrays.asList(subscribeTopics),
+					MqttTopic.EVENT_ERROR_SERVER_CONNECTION.toString(),
+					"server disconnect", true);
 		} catch (MqttException e) {
-			log.fatal("Error constructing MqttController:",e);
+			log.fatal("Error constructing MqttController:", e);
 		}
 	}
 
@@ -136,11 +137,12 @@ public class ServerMainController extends AbstractMainController implements
 		}
 
 	}
-	
+
 	@Override
 	public void onMqttStateChange(boolean state) {
 		super.onMqttStateChange(state);
-		this.sendMqttMessage(MqttTopic.EVENT_ERROR_SERVER_CONNECTION, null, null);
+		this.sendMqttMessage(MqttTopic.EVENT_ERROR_SERVER_CONNECTION, null,
+				null);
 	}
 
 	@Override

@@ -44,7 +44,8 @@ public class RobotMainController extends AbstractMainController implements
 		try {
 			String clientId = "robot_" + this.myself.getId();
 			String[] subscribeTopics = { "robot/#", "map/walls", "map/food",
-					"map/food/+", "map/occupied/#", "control/state" };
+					"map/food/+", "map/occupied/#", "control/state",
+					"extension/2/robot/#" };
 			this.mqttController = new MqttController(clientId, this,
 					Arrays.asList(subscribeTopics));
 		} catch (MqttException e) {
