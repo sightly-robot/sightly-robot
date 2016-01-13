@@ -87,7 +87,7 @@ public class StrategicVisualization extends Panel implements Bindable {
             menu.getSections().add(menuSection);
             
             final int rx = (int)(game.getStage().getWidth() * ((double)x / (double)StrategicVisualization.this.getWidth()));
-            final int ry = (int)(game.getStage().getWidth() * ((double)y / (double)StrategicVisualization.this.getHeight()));
+            final int ry = (int)(game.getStage().getHeight() * ((double)y / (double)StrategicVisualization.this.getHeight()));
 			
             // Get Coordinate
             Menu.Item getCoord = new Menu.Item("Get Coordinate");
@@ -119,22 +119,32 @@ public class StrategicVisualization extends Panel implements Bindable {
             		
             		if (!found) {
 						Alert.alert(MessageType.ERROR, "Cannot place robot on field, that is not a start position", StrategicVisualization.this.getWindow());
-            		} else {
+            		} else {            			
             			// compile robot list
             			final List<IRobot> robots = new ArrayList<IRobot>();
             			org.apache.pivot.collections.List <String> shownList = new org.apache.pivot.collections.ArrayList <String>();
+            			
             			for (IRobot robot : game.getRobots().values()) {
-            				shownList.add(robot.getName());
+            				shownList.add(robot.getId());
             				robots.add(robot);
             			}
+            			
+            			//Robot robot = new Robot("223344", true, false);
+            			//shownList.add(robot.getId());
             			
             			final IPosition sp = startPos;
             			DialogFactory.createListDialog(StrategicVisualization.this.getWindow(), new DialogCloseListener() {
 							@Override
-							public void dialogClosed(Dialog dialog, boolean modal) {
+							public void dialogClosed(Dialog dialog, boolean modal) {								
 								ListDialog listDialog = (ListDialog)dialog;
+								
+								// do nothing if there is no selection
+								if (listDialog.getSelectedIndex() == -1)
+									return;
+								
 								controller.getGame().getRobots().get(robots.get(listDialog.getSelectedIndex()));
-		            			Robot robo = new Robot(((InputDialog)dialog).getText(), false, false);
+		            			//Robot robo = new Robot(((InputDialog)dialog).getText(), false, false);
+								IRobot robo = game.getRobots().get(((InputDialog)dialog).getText());
 		            			StrategicVisualization.this.controller.setRobotPosition(rx, ry, sp.getOrientation(), robo);						
 							}
             			}, shownList);
