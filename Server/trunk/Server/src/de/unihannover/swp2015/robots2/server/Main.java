@@ -4,13 +4,16 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.unihannover.swp2015.robots2.controller.interfaces.IServerController;
-import de.unihannover.swp2015.robots2.controller.interfaces.InfoType;
 import de.unihannover.swp2015.robots2.controller.main.ServerMainController;
 import de.unihannover.swp2015.robots2.server.farm.Farmer;
 
 public class Main {
 
 	private static Logger log = LogManager.getLogger(Main.class.getName());
+
+	// Prevent creation of Main object
+	private Main() {
+	}
 
 	/**
 	 * main method for game server.
@@ -37,8 +40,7 @@ public class Main {
 			controller.startMqtt(args[0]);
 			log.info("Connection to MQTT broker established.");
 		} catch (Exception e) {
-			log.error("Could not connect to broker.");
-			log.error(e.toString());
+			log.error("Could not connect to broker.", e);
 			return;
 		}
 

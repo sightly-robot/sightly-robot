@@ -31,7 +31,6 @@ public class FarmWorker extends Thread {
 
 	@Override
 	public void run() {
-		super.run();
 
 		try {
 			while (true) {
@@ -52,7 +51,7 @@ public class FarmWorker extends Thread {
 				this.growQueue.put(ge);
 			}
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			log.debug(e);
 		}
 	}
 
