@@ -7,6 +7,7 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 
 import de.unihannover.swp2015.robots2.controller.externalInterfaces.IHardwareRobot;
 import de.unihannover.swp2015.robots2.controller.interfaces.IRobotController;
+import de.unihannover.swp2015.robots2.controller.interfaces.ProtocolException;
 import de.unihannover.swp2015.robots2.controller.mqtt.MqttController;
 import de.unihannover.swp2015.robots2.controller.mqtt.MqttTopic;
 import de.unihannover.swp2015.robots2.model.implementation.Robot;
@@ -54,14 +55,12 @@ public class RobotMainController extends AbstractMainController implements
 	}
 
 	@Override
-	public void startMqtt(String brokerUrl) throws MqttException {
+	public void startMqtt(String brokerUrl) throws ProtocolException {
+		super.startMqtt(brokerUrl);
 
-		this.mqttController.connect(brokerUrl);
-
-		String hardwareRobot = (this.myself.isHardwareRobot()) ? "real"
-				: "virtual";
+		String robotType = this.myself.isHardwareRobot() ? "real" : "virtual";
 		this.sendMqttMessage(MqttTopic.ROBOT_TYPE, this.myself.getId(),
-				hardwareRobot);
+				robotType);
 		this.sendMqttMessage(MqttTopic.ROBOT_NEW, null, this.myself.getId());
 		this.sendMqttMessage(MqttTopic.ROBOT_DISCOVER, null, "");
 	}
@@ -75,10 +74,10 @@ public class RobotMainController extends AbstractMainController implements
 		// TODO handle robot settings
 		case ROBOT_DISCOVER:
 			/* Should be deprecated when using retained messages */
-			String hardwareRobot = (this.myself.isHardwareRobot()) ? "real"
+			String robotType = this.myself.isHardwareRobot() ? "real"
 					: "virtual";
 			this.sendMqttMessage(MqttTopic.ROBOT_TYPE, this.myself.getId(),
-					hardwareRobot);
+					robotType);
 			break;
 
 		case ROBOT_NEW:
@@ -178,7 +177,7 @@ public class RobotMainController extends AbstractMainController implements
 			break;
 
 		case FIELD_OCCUPIED_RELEASE:
-			this.fieldStateModelController.mqttFieldRelease(key, message);
+			this.fieldStateModelController.mqttFieldRelease(key);
 			break;
 
 		case CONTROL_STATE:
@@ -245,7 +244,7 @@ public class RobotMainController extends AbstractMainController implements
 		if (this.game.getStage().getField(x, y).getState() != State.FREE)
 			return;
 
-		this.sendMqttMessage(MqttTopic.FIELD_OCCUPIED_LOCK, (x + "-" + y),
+		this.sendMqttMessage(MqttTopic.FIELD_OCCUPIED_LOCK, x + "-" + y,
 				this.myself.getId());
 		this.fieldStateModelController.setFieldLock(x, y);
 	}
@@ -259,7 +258,7 @@ public class RobotMainController extends AbstractMainController implements
 			return;
 
 		// Send release message if has been occupied by us
-		this.sendMqttMessage(MqttTopic.FIELD_OCCUPIED_RELEASE, (x + "-" + y),
+		this.sendMqttMessage(MqttTopic.FIELD_OCCUPIED_RELEASE, x + "-" + y,
 				"");
 		this.fieldStateModelController.setFieldRelease(x, y);
 	}
@@ -312,7 +311,7 @@ public class RobotMainController extends AbstractMainController implements
 
 	@Override
 	public void occupyField(int x, int y) {
-		this.sendMqttMessage(MqttTopic.FIELD_OCCUPIED_SET, (x + "-" + y),
+		this.sendMqttMessage(MqttTopic.FIELD_OCCUPIED_SET, x + "-" + y,
 				this.myself.getId());
 		this.fieldStateModelController.setFieldOccupy(x, y);
 	}

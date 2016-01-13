@@ -48,7 +48,7 @@ public class MqttSender implements Runnable {
 						client.publish(message.getTopic(), message.getMessage());
 						break;
 					} catch (MqttException e) {
-						log.debug("Sending message failed. Retrying in 500ms.");
+						log.debug("Sending message failed. Retrying in 500ms.",e);
 						Thread.sleep(500);
 					}
 				}

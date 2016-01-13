@@ -52,7 +52,7 @@ public class ServerMainController extends AbstractMainController implements
 		switch (mqtttopic) {
 		case ROBOT_TYPE:
 			this.gameModelController.mqttAddRobot(key, message);
-			if (message.equals(""))
+			if ("".equals(message))
 				this.sendMqttMessage(MqttTopic.ROBOT_SCORE, key, null);
 			break;
 
@@ -102,7 +102,7 @@ public class ServerMainController extends AbstractMainController implements
 			break;
 
 		case FIELD_OCCUPIED_RELEASE:
-			this.fieldStateModelController.mqttFieldRelease(key, message);
+			this.fieldStateModelController.mqttFieldRelease(key);
 			break;
 
 		case CONTROL_STATE:
@@ -165,7 +165,7 @@ public class ServerMainController extends AbstractMainController implements
 		IFieldWriteable f = this.game.getStageWriteable().getFieldWriteable(x,
 				y);
 		f.setFood(value);
-		this.sendMqttMessage(MqttTopic.FIELD_FOOD, (x + "-" + y),
+		this.sendMqttMessage(MqttTopic.FIELD_FOOD, x + "-" + y,
 				Integer.toString(value));
 		f.emitEvent(UpdateType.FIELD_FOOD);
 	}
@@ -175,7 +175,7 @@ public class ServerMainController extends AbstractMainController implements
 		IFieldWriteable f = this.game.getStageWriteable().getFieldWriteable(x,
 				y);
 		int newFood = f.incrementFood(value);
-		this.sendMqttMessage(MqttTopic.FIELD_FOOD, (x + "-" + y),
+		this.sendMqttMessage(MqttTopic.FIELD_FOOD, x + "-" + y,
 				Integer.toString(newFood));
 		f.emitEvent(UpdateType.FIELD_FOOD);
 	}
@@ -224,7 +224,7 @@ public class ServerMainController extends AbstractMainController implements
 		if (newHeight < oldHeight) {
 			for (int y = oldHeight - 1; y > newHeight - 1; y--) {
 				for (int x = 0; x < oldWidth; x++) {
-					this.sendMqttMessage(MqttTopic.FIELD_FOOD, (x + "-" + y),
+					this.sendMqttMessage(MqttTopic.FIELD_FOOD, x + "-" + y,
 							null);
 				}
 			}
@@ -234,7 +234,7 @@ public class ServerMainController extends AbstractMainController implements
 				for (int x = 0; x < newWidth; x++) {
 					this.sendMqttMessage(
 							MqttTopic.FIELD_FOOD,
-							(x + "-" + y),
+							x + "-" + y,
 							Integer.toString(this.game.getStage()
 									.getField(x, y).getFood()));
 				}
@@ -246,7 +246,7 @@ public class ServerMainController extends AbstractMainController implements
 			// Delete retained food for obsolete fields at the end
 			if (newWidth < oldWidth) {
 				for (int x = oldWidth - 1; x > newWidth - 1; x--) {
-					this.sendMqttMessage(MqttTopic.FIELD_FOOD, (x + "-" + y),
+					this.sendMqttMessage(MqttTopic.FIELD_FOOD, x + "-" + y,
 							null);
 				}
 				// Send food for new fields

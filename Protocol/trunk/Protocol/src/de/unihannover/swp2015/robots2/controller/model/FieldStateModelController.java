@@ -152,7 +152,7 @@ public class FieldStateModelController {
 	 * @param message
 	 *            MQTT payload
 	 */
-	public void mqttFieldRelease(String key, String message) {
+	public void mqttFieldRelease(String key) {
 		String[] coord = key.split("-");
 		int x = Integer.parseInt(coord[0]);
 		int y = Integer.parseInt(coord[1]);

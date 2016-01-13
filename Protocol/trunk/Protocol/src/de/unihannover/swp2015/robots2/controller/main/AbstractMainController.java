@@ -6,6 +6,7 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 
 import de.unihannover.swp2015.robots2.controller.interfaces.IController;
 import de.unihannover.swp2015.robots2.controller.interfaces.InfoType;
+import de.unihannover.swp2015.robots2.controller.interfaces.ProtocolException;
 import de.unihannover.swp2015.robots2.controller.model.FieldStateModelController;
 import de.unihannover.swp2015.robots2.controller.model.GameModelController;
 import de.unihannover.swp2015.robots2.controller.model.RobotModelController;
@@ -31,8 +32,9 @@ public abstract class AbstractMainController implements IController,
 
 	private InfoType infoType = InfoType.WARNING;
 	protected String infoComponent = "general";
-	
-	protected Logger log = LogManager.getLogger(this.getClass().getSimpleName());
+
+	protected Logger log = LogManager
+			.getLogger(this.getClass().getSimpleName());
 
 	public AbstractMainController() {
 		this.game = new Game();
@@ -93,9 +95,13 @@ public abstract class AbstractMainController implements IController,
 		this.game.setSynced(connected);
 		this.game.emitEvent(UpdateType.MODEL_SYNC_STATE);
 	}
-	
+
 	@Override
-	public void startMqtt(String brokerUrl) throws MqttException {
-		this.mqttController.connect(brokerUrl);
+	public void startMqtt(String brokerUrl) throws ProtocolException {
+		try {
+			this.mqttController.connect(brokerUrl);
+		} catch (MqttException e) {
+			throw new ProtocolException("MQTT Connect failed.", e);
+		}
 	}
 }
