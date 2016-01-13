@@ -18,6 +18,7 @@ public class TableElement {
 	 */
 	public TableElement(String id, String player, int points) {
 		super();
+		this.id = id;
 		this.player = id;
 		// this.player = player
 		this.points = points;

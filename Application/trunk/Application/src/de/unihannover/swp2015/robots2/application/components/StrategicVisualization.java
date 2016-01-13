@@ -144,7 +144,7 @@ public class StrategicVisualization extends Panel implements Bindable {
 								
 								controller.getGame().getRobots().get(robots.get(listDialog.getSelectedIndex()));
 		            			//Robot robo = new Robot(((InputDialog)dialog).getText(), false, false);
-								IRobot robo = game.getRobots().get(((InputDialog)dialog).getText());
+								IRobot robo = game.getRobots().get(((ListDialog)dialog).getSelectedElement());
 		            			StrategicVisualization.this.controller.setRobotPosition(rx, ry, sp.getOrientation(), robo);						
 							}
             			}, shownList);

@@ -17,6 +17,7 @@ import org.apache.pivot.wtk.ListView;
 public class ListDialog extends Dialog implements Bindable {
 
 	private @BXML ListView list;
+	private List <String> elements;
 	
 	/**
 	 * BXML Bindable
@@ -26,10 +27,15 @@ public class ListDialog extends Dialog implements Bindable {
 	}
 	
 	public void setListElements(List <String> elements) {
+		this.elements = elements; 
 		list.setListData(elements);
 	}
 	
 	public int getSelectedIndex() {
 		return list.getSelectedIndex();
+	}
+	
+	public String getSelectedElement() {
+		return elements.get(list.getSelectedIndex());
 	}
 }
