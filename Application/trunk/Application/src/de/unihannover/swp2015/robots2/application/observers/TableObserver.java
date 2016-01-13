@@ -25,7 +25,7 @@ public class TableObserver implements IModelObserver {
 	public TableObserver(TableView table, GuiMainController controller) {
 		this.table = table;
 		this.controller = controller;
-		this.updated = false;
+		this.updated = true;
 		elements = new TableData();
 		
 		controller.getGame().observe(this);
@@ -39,6 +39,9 @@ public class TableObserver implements IModelObserver {
 			return;
 		
 		Map<String, ? extends IRobot> robots = controller.getGame().getRobots();
+		
+		int lastIndex = table.getSelectedIndex();
+		
 		elements.clear();
 		
 		for (Entry<String, ? extends IRobot> entry : robots.entrySet()) {
@@ -50,8 +53,10 @@ public class TableObserver implements IModelObserver {
 			
 			elements.add(element);
 		}
-		
-		table.setTableData(elements.getData());
+
+		table.setTableData(elements.getData());		
+		table.setSelectedIndex(lastIndex);		
+		updated = false;
 	}
 
 	/**
@@ -62,9 +67,12 @@ public class TableObserver implements IModelObserver {
 		if (event.getType() == IEvent.UpdateType.ROBOT_ADD)
 		{
 			((IRobot)event.getObject()).observe(this);
+			updated = true;
 		}
-		
-		updated = true;
+		if (event.getType() == IEvent.UpdateType.ROBOT_DELETE)
+			updated = true;
+		if (event.getType() == IEvent.UpdateType.ROBOT_SCORE)
+			updated = true;
 	}	
 	
 	/** 
