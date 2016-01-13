@@ -1,6 +1,6 @@
 package de.unihannover.swp2015.robots2.visual.desktop;
 
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.Map;
 
 import org.apache.commons.cli.CommandLine;
@@ -58,8 +58,8 @@ public class CommandLineHandler {
 	 * Construct a {@link CommandLineHandler}.
 	 */
 	public CommandLineHandler() {
-		this.options = new HashMap<>();
-		this.flags = new HashMap<>();
+		this.options = new EnumMap<>(OptionKey.class);
+		this.flags = new EnumMap<>(FlagKey.class);
 	}
 	
 	/**

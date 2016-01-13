@@ -47,7 +47,7 @@ public class SortUtil {
 			
 			if (robot.getScore() > roboList.get(i).getScore()) {
 				roboList.add(i, robot);
-				break;
+				return;
 			}
 		}
 	}

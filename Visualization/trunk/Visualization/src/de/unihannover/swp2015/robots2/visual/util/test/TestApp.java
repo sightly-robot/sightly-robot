@@ -90,31 +90,10 @@ public class TestApp extends JFrame implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == changeFood) {
-			final IStage stage = game.getStage();
-			for (int x = 0; x < stage.getWidth(); ++x) {
-				for (int y = 0; y < stage.getHeight(); ++y) {
-					final Field f = (Field) stage.getField(x, y);
-					int r = rand.nextInt(42);
-					r -= 32;
-					if (r < 0)
-						r = 0;
-					f.setFood(r);
-				}
-			}
+			changeFood();
 		}
 		else if (e.getSource() == changeWalls) {
-			final Stage stage = (Stage)game.getStage();
-			for (int x = 0; x < stage.getWidth(); ++x) {
-				for (int y = 0; y < stage.getHeight(); ++y) {
-					final Field f = (Field) stage.getField(x, y);
-					f.setWall(Orientation.NORTH, rb());
-					f.setWall(Orientation.SOUTH, rb());
-					f.setWall(Orientation.EAST, rb());
-					f.setWall(Orientation.WEST, rb());
-					f.emitEvent(UpdateType.FIELD_FOOD);
-				}
-			}
-			stage.emitEvent(UpdateType.STAGE_WALL);
+			changeWalls();
 		}
 		else if (e.getSource() == changeRobotPos) {
 			final Map<String, ? extends IRobot> r = game.getRobots();
@@ -148,17 +127,50 @@ public class TestApp extends JFrame implements ActionListener {
 			g.emitEvent(UpdateType.STAGE_SIZE);
 		}
 		else if (e.getSource() == startstop) {
-			final Game g = (Game) game;
-			Gdx.app.postRunnable(new Runnable() {
-
-				@Override
-				public void run() {
-					g.setRunning(!g.isRunning());
-					g.emitEvent(UpdateType.GAME_STATE);
-				}
-				
-			});
+			startStop();
 		}
+	}
+	
+	private void changeFood() {
+		final IStage stage = game.getStage();
+		for (int x = 0; x < stage.getWidth(); ++x) {
+			for (int y = 0; y < stage.getHeight(); ++y) {
+				final Field f = (Field) stage.getField(x, y);
+				int r = rand.nextInt(42);
+				r -= 32;
+				if (r < 0)
+					r = 0;
+				f.setFood(r);
+			}
+		}
+	}
+	
+	private void changeWalls() {
+		final Stage stage = (Stage)game.getStage();
+		for (int x = 0; x < stage.getWidth(); ++x) {
+			for (int y = 0; y < stage.getHeight(); ++y) {
+				final Field f = (Field) stage.getField(x, y);
+				f.setWall(Orientation.NORTH, rb());
+				f.setWall(Orientation.SOUTH, rb());
+				f.setWall(Orientation.EAST, rb());
+				f.setWall(Orientation.WEST, rb());
+				f.emitEvent(UpdateType.FIELD_FOOD);
+			}
+		}
+		stage.emitEvent(UpdateType.STAGE_WALL);
+	}
+	
+	private void startStop() {
+		final Game g = (Game) game;
+		Gdx.app.postRunnable(new Runnable() {
+
+			@Override
+			public void run() {
+				g.setRunning(!g.isRunning());
+				g.emitEvent(UpdateType.GAME_STATE);
+			}
+			
+		});
 	}
 	
 	private Orientation randomOrientation(){

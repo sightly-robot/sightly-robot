@@ -45,6 +45,8 @@ public class StageUtil {
 		case SOUTH:
 			if (model.getY()+1 == height)
 				return true;
+		default:
+			break;
 		}
 		return false;
 	}	
@@ -80,6 +82,8 @@ public class StageUtil {
 			if (model.getY()+1 == stage.getHeight())
 				return result;
 			return result || stage.getField(model.getX(), model.getY()+1).isWall(Orientation.NORTH);
+		default:
+			break;
 		}	
 		return result;
 	}
@@ -115,6 +119,8 @@ public class StageUtil {
 			if (model.getY()+1 == stage.getHeight())
 				return result;
 			return result && stage.getField(model.getX(), model.getY()+1).isWall(Orientation.NORTH);
+		default:
+			break;
 		}	
 		return result;
 	}

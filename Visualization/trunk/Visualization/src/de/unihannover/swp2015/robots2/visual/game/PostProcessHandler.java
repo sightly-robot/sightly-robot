@@ -72,12 +72,12 @@ public class PostProcessHandler implements Disposable, Resizable {
 	 * @return resulting bloom effect
 	 */
 	private Bloom createBloom(int worldWidth, int worldHeight) {
-		final Bloom bloom = new Bloom((int)(worldWidth/2f), (int)(worldHeight/2f));
-		bloom.setBaseIntesity(0);
-		bloom.setThreshold(0);
-		bloom.setBloomSaturation(0.3f);
-		bloom.setEnabled(false);
-		return bloom;
+		final Bloom newBloom = new Bloom((int)(worldWidth/2f), (int)(worldHeight/2f));
+		newBloom.setBaseIntesity(0);
+		newBloom.setThreshold(0);
+		newBloom.setBloomSaturation(0.3f);
+		newBloom.setEnabled(false);
+		return newBloom;
 	}
 	
 	/**
