@@ -36,7 +36,7 @@ public class RobotGameHandler extends GameHandler {
 	protected Viewport view;
 	
 	/** SpriteBatch for rendering textures. */
-	protected SpriteBatch spriteBatch;
+	protected SpriteBatch batch;
 
 	/** UI, which will be displayed if {@link IGame#isRunning()} == false */
 	protected UI ui;
@@ -59,8 +59,8 @@ public class RobotGameHandler extends GameHandler {
 		this.robots = new ArrayList<>();
 		this.entityList = new ArrayList<>();
 		this.view = viewport;
-		this.spriteBatch = new SpriteBatch();
-		this.spriteBatch.setProjectionMatrix(view.getCamera().combined);
+		this.batch = new SpriteBatch();
+		this.batch.setProjectionMatrix(view.getCamera().combined);
 		this.pp = new PostProcessHandler((int)view.getWorldWidth(), (int)view.getWorldHeight());
 		
 		this.init();
@@ -105,57 +105,57 @@ public class RobotGameHandler extends GameHandler {
 			
 	@Override
 	public void render() {
-		
+
 		if (Gdx.input.isKeyPressed(Keys.LEFT))
 			resHandler.loadTexturePack("default");
 		if (Gdx.input.isKeyPressed(Keys.RIGHT))
 			resHandler.loadTexturePack("earth");
 		if (Gdx.input.isKeyPressed(Keys.UP))
 			resHandler.loadTexturePack("home");
-		
+
 		if (!game.isRunning()) {
 
 			if (pp.isBloomEnabled()) {
 				//approx. 50% slower than the other branch.
 				pp.captureBloom();
 				
-				spriteBatch.begin();
+				batch.begin();
 				for (int i = 0; i < entityList.size(); ++i) {
-					entityList.get(i).draw(spriteBatch);
+					entityList.get(i).draw(batch);
 				}
-				spriteBatch.end();
+				batch.end();
 				
 				pp.renderBloomToInternalBuffer();
 				pp.captureFxaa();
 				
-				spriteBatch.begin();
-				spriteBatch.draw(pp.getBufferTexture(), 0, 0);
-				ui.draw(spriteBatch);
-				spriteBatch.end();
+				batch.begin();
+				batch.draw(pp.getBufferTexture(), 0, 0);
+				ui.draw(batch);
+				batch.end();
 				
 				pp.renderFxaa();
 			}
 			else {
 				pp.captureFxaa();
 				
-				spriteBatch.begin();
+				batch.begin();
 				for (int i = 0; i < entityList.size(); ++i) {
-					entityList.get(i).draw(spriteBatch);
+					entityList.get(i).draw(batch);
 				}
 
-				ui.draw(spriteBatch);
-				spriteBatch.end();
+				ui.draw(batch);
+				batch.end();
 
 				pp.renderFxaa();
 			}
 		}
 		else {
 			pp.captureFxaa();
-			spriteBatch.begin();
+			batch.begin();
 			for (int i = 0; i < entityList.size(); ++i) {
-				entityList.get(i).draw(spriteBatch);
+				entityList.get(i).draw(batch);
 			}
-			spriteBatch.end();
+			batch.end();
 			pp.renderFxaa();
 		}
 	}
@@ -201,7 +201,7 @@ public class RobotGameHandler extends GameHandler {
 	public void dispose() {
 		super.dispose();
 		
-		spriteBatch.dispose();
+		batch.dispose();
 		pp.dispose();
 	}
 	
@@ -219,14 +219,14 @@ public class RobotGameHandler extends GameHandler {
 		case VIEW_WIDTH:
 			view.setWorldWidth((float) value);
 			view.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
-			spriteBatch.setProjectionMatrix(view.getCamera().combined);
+			batch.setProjectionMatrix(view.getCamera().combined);
 			pp.onViewUpdate(view);
 			break;
 			
 		case VIEW_HEIGHT:
 			view.setWorldHeight((float) value);
 			view.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
-			spriteBatch.setProjectionMatrix(view.getCamera().combined);
+			batch.setProjectionMatrix(view.getCamera().combined);
 			pp.onViewUpdate(view);			
 			break;
 			

@@ -1,0 +1,20 @@
+precision mediump float; 
+
+varying vec4 v_color; 
+varying vec2 v_texCoords; 
+varying float v_border;
+varying vec2 v_shift;
+
+uniform sampler2D u_texture; 
+
+void main()                      
+{                        
+	if (gl_FragCoord[0] > v_border) 
+	{
+		gl_FragColor = v_color * texture2D(u_texture, v_texCoords + v_shift);
+	}
+	else 
+	{
+		gl_FragColor = v_color * texture2D(u_texture, v_texCoords);
+	}
+}
