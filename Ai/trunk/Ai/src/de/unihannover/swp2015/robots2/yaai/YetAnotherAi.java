@@ -28,7 +28,7 @@ public class YetAnotherAi extends AbstractAI implements IModelObserver {
 	private AiState state;
 	private CalculationWorker worker;
 
-	private Logger log = LogManager.getLogger(this.getClass().getName());
+	private static final Logger LOGGER = LogManager.getLogger(YetAnotherAi.class.getName());
 
 	/**
 	 * Constructs new YAAI, working with the given controller and using it's
@@ -42,7 +42,7 @@ public class YetAnotherAi extends AbstractAI implements IModelObserver {
 	 */
 	public YetAnotherAi(IRobotController iRobotController) {
 		super(iRobotController);
-		log.debug("Constructing YAAI Ai...");
+		LOGGER.debug("Constructing YAAI Ai...");
 		this.iRobotController.getMyself().observe(this);
 		this.iRobotController.getGame().observe(this);
 
@@ -119,7 +119,7 @@ public class YetAnotherAi extends AbstractAI implements IModelObserver {
 
 		default:
 			// Skip if already busy
-			log.trace(
+			LOGGER.trace(
 					"New target field {}-{} was refused because we are busy.",
 					field.getX(), field.getY());
 			return;
@@ -128,12 +128,12 @@ public class YetAnotherAi extends AbstractAI implements IModelObserver {
 		if (field == null)
 			return;
 
-		log.debug("We are targeting field {}-{} now...", field.getX(),
+		LOGGER.debug("We are targeting field {}-{} now...", field.getX(),
 				field.getY());
 
 		// Skip if invald field or we are already on this field
 		if (field == this.currentField) {
-			log.debug("but we are already standing there.");
+			LOGGER.debug("but we are already standing there.");
 			return;
 		}
 
@@ -141,7 +141,7 @@ public class YetAnotherAi extends AbstractAI implements IModelObserver {
 		int dx = this.currentField.getX() - field.getX();
 		int dy = this.currentField.getY() - field.getY();
 		if (Math.abs(dx) > 1 || Math.abs(dy) > 1) {
-			log.debug(
+			LOGGER.debug(
 					"but the field seems not neighboured to current field {}-{}.",
 					this.currentField.getX(), this.currentField.getY());
 			return;
@@ -158,18 +158,18 @@ public class YetAnotherAi extends AbstractAI implements IModelObserver {
 		// Wait if field not free
 		if (field.getState() != IField.State.FREE) {
 			this.state = AiState.WAITING_FOR_FREE;
-			log.debug("but its {} by {}. So we will wait.", field.getState()
+			LOGGER.debug("but its {} by {}. So we will wait.", field.getState()
 					.name(), field.getLockedBy());
 			return;
 		}
 		// Wait if game not started
 		if (!this.isReadyToDrive()) {
 			this.state = AiState.WAITING_FOR_GAME;
-			log.debug("but the current game/robot state doesn't allow us to drive.");
+			LOGGER.debug("but the current game/robot state doesn't allow us to drive.");
 			return;
 		}
 
-		log.debug("so, request it!");
+		LOGGER.debug("so, request it!");
 		this.iRobotController.requestField(this.nextField.getX(),
 				this.nextField.getY());
 		this.state = AiState.WATING_FOR_OURS;
@@ -183,7 +183,7 @@ public class YetAnotherAi extends AbstractAI implements IModelObserver {
 	 * state. On change to OURS: drive to field.
 	 */
 	private void onFieldStateChange(IField.State state) {
-		log.debug("Next field targeted by Ai changed state to {}.",
+		LOGGER.debug("Next field targeted by Ai changed state to {}.",
 				state.name());
 		switch (state) {
 		case OURS:
@@ -220,7 +220,7 @@ public class YetAnotherAi extends AbstractAI implements IModelObserver {
 		if (!this.isReadyToDrive())
 			return;
 
-		log.debug("Game or Robot changed state. Ai is doing things again.");
+		LOGGER.debug("Game or Robot changed state. Ai is doing things again.");
 
 		// If we already own a field and try to drive there
 		if (this.nextField != null
@@ -239,13 +239,13 @@ public class YetAnotherAi extends AbstractAI implements IModelObserver {
 	 * method after making sure, the nextField is OURS.
 	 */
 	private void driveToNextField() {
-		log.debug("We are now driving to the next Field: {}-{}",
+		LOGGER.debug("We are now driving to the next Field: {}-{}",
 				this.nextField.getX(), this.nextField.getY());
 
 		// Wait if game not started
 		if (!this.isReadyToDrive()) {
 			this.state = AiState.WAITING_FOR_GAME;
-			log.debug("but we should wait until game and robot state allow us to.");
+			LOGGER.debug("but we should wait until game and robot state allow us to.");
 			return;
 		}
 
@@ -262,12 +262,12 @@ public class YetAnotherAi extends AbstractAI implements IModelObserver {
 		} else if (dy == -1) {
 			o = Orientation.NORTH;
 		} else {
-			log.debug(
+			LOGGER.debug(
 					"The field is not a neighbor of current field {}-{}. Aborting drive.",
 					this.currentField.getX(), this.currentField.getY());
 			return;
 		}
-		log.debug("Direction is {} from our current field {}-{}. And ... go!",
+		LOGGER.debug("Direction is {} from our current field {}-{}. And ... go!",
 				o.name());
 
 		// Fire orientation
@@ -286,7 +286,7 @@ public class YetAnotherAi extends AbstractAI implements IModelObserver {
 		if (field == currentField)
 			return;
 
-		log.debug("We reached a new Field: {}-{}", field.getX(), field.getY());
+		LOGGER.debug("We reached a new Field: {}-{}", field.getX(), field.getY());
 
 		// Release current field (if any)
 		if (this.currentField != null)

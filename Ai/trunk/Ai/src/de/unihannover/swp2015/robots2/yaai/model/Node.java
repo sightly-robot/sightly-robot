@@ -4,7 +4,18 @@ import java.util.List;
 import java.util.Vector;
 
 import de.unihannover.swp2015.robots2.model.interfaces.IField;
+import de.unihannover.swp2015.robots2.yaai.YetAnotherAi;
 
+/**
+ * A node of the {@link Graph} corresponding to a single Field of the games
+ * Stage.
+ * 
+ * The node stores additional data used for different steps of path calculation
+ * by {@link YetAnotherAi} and holds a list of following nodes (reachable
+ * Fields) for faster iteration.
+ * 
+ * @author Michael Thies
+ */
 public class Node {
 	private final IField field;
 	private float weight;
@@ -12,7 +23,10 @@ public class Node {
 
 	/** distance from our current position. Used for weight calculation. */
 	private int distance;
-	/** likelihood that any other robot will reach this Node before us. Assuming they have random Ais. Used for weight calculation. */
+	/**
+	 * likelihood that any other robot will reach this Node before us. Assuming
+	 * they have random Ais. Used for weight calculation.
+	 */
 	private float otherRobotLikelihood;
 
 	public Node(IField field) {

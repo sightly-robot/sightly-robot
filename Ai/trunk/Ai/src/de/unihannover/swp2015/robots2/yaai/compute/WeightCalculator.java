@@ -5,11 +5,12 @@ import org.apache.logging.log4j.Logger;
 
 import de.unihannover.swp2015.robots2.controller.interfaces.IRobotController;
 import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
+import de.unihannover.swp2015.robots2.yaai.YetAnotherAi;
 import de.unihannover.swp2015.robots2.yaai.model.Graph;
 import de.unihannover.swp2015.robots2.yaai.model.Node;
 
 /**
- * Path calculator to be used with YAAI.
+ * Path calculator to be used with {@link YetAnotherAi} and its {@link CalculationWorker}.
  * 
  * Provides a method to calculate a weight for each Node of the Graph
  * (corresponding to each Field of the Stage). The calculation is based on the
@@ -23,7 +24,7 @@ public class WeightCalculator {
 
 	private final int ROBOT_MOVEMENT_DEPTH = 8;
 
-	private Logger log = LogManager.getLogger(this.getClass().getName());
+	private static final Logger LOGGER = LogManager.getLogger(CalculationWorker.class.getName());
 
 	public WeightCalculator(Graph graph, IRobotController controller) {
 		this.controller = controller;
@@ -47,7 +48,7 @@ public class WeightCalculator {
 		int height = this.controller.getGame().getStage().getHeight();
 
 		// Normalize distance and likelihoods.
-		log.trace("Deleting temporary data from Graph.");
+		LOGGER.trace("Deleting temporary data from Graph.");
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
 				Node node = graph.getNode(x, y);
@@ -57,16 +58,16 @@ public class WeightCalculator {
 		}
 
 		// calculate our distance to each Node
-		log.trace("Calculating distances from current position to each field.");
+		LOGGER.trace("Calculating distances from current position to each field.");
 		this.calcDistanceRecursive(startNode, 0);
 
 		// calculate likelihood of any other robot (with random ai) reaching any
 		// node before us
-		log.trace("Calculating Likelihoods for other robots reaching fields before us...");
+		LOGGER.trace("Calculating Likelihoods for other robots reaching fields before us...");
 		for (IRobot r : this.controller.getGame().getRobots().values()) {
 			if (r.isMyself())
 				continue;
-			log.trace("Calc Likelihood for robot {}...", r.getId());
+			LOGGER.trace("Calc Likelihood for robot {}...", r.getId());
 
 			try {
 				Node rNode = this.graph.getNode(r.getPosition().getX(), r
@@ -78,7 +79,7 @@ public class WeightCalculator {
 		}
 
 		// calculate new weights
-		log.trace("Calculating new node weights.");
+		LOGGER.trace("Calculating new node weights.");
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
 				Node node = graph.getNode(x, y);

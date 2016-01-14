@@ -8,11 +8,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.unihannover.swp2015.robots2.controller.interfaces.IRobotController;
+import de.unihannover.swp2015.robots2.yaai.YetAnotherAi;
 import de.unihannover.swp2015.robots2.yaai.model.Graph;
 import de.unihannover.swp2015.robots2.yaai.model.Node;
 
 /**
- * Path calculator to be used with YAAI.
+ * Path calculator to be used with {@link YetAnotherAi}.
  * 
  * Provides a method to calculate the best of all paths of a fixed length
  * beginning a one field.
@@ -25,7 +26,7 @@ public class PathCalculator {
 
 	private final int PATH_LENGTH = 10;
 
-	private Logger log = LogManager.getLogger(this.getClass().getName());
+	private static final Logger LOGGER = LogManager.getLogger(CalculationWorker.class.getName());
 	private Random random = new Random();
 
 	/**
@@ -53,13 +54,13 @@ public class PathCalculator {
 	 * @return The first node of the path.
 	 */
 	public Node calculate(Node currentNode) {
-		log.trace(
+		LOGGER.trace(
 				"Calculating best Path with length {} beginning at Field {}-{}...",
 				PATH_LENGTH, currentNode.getField().getX(), currentNode
 						.getField().getY());
 
 		if (currentNode.getEdges().size() == 0) {
-			log.trace("Current Position has no following fields.");
+			LOGGER.trace("Current Position has no following fields.");
 			return currentNode;
 		}
 
@@ -76,7 +77,7 @@ public class PathCalculator {
 			}
 		}
 
-		log.trace("Best Path has score {} and starts at {}-{}", bestScore,
+		LOGGER.trace("Best Path has score {} and starts at {}-{}", bestScore,
 				nextNode.getField().getX(), nextNode.getField().getY());
 
 		return nextNode;

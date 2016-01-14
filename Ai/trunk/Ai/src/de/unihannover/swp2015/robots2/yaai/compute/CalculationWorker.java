@@ -27,7 +27,7 @@ public class CalculationWorker implements Runnable {
 	private volatile IField startPosition;
 	private volatile IField nextField;
 
-	private Logger log = LogManager.getLogger(this.getClass().getName());
+	private static final Logger LOGGER = LogManager.getLogger(CalculationWorker.class.getName());
 
 	/** Calculate path each XX ms */
 	private final int CALCULATION_INTERVAL = 300;
@@ -52,7 +52,7 @@ public class CalculationWorker implements Runnable {
 	@Override
 	public void run() {
 		try {
-			log.info(
+			LOGGER.info(
 					"Ai Worker started. Entering calculation loop with delay {}ms.",
 					CALCULATION_INTERVAL);
 
@@ -76,27 +76,27 @@ public class CalculationWorker implements Runnable {
 						Node n = this.pathCalculator.calculate(startNode);
 						this.nextField = n.getField();
 
-						log.trace(
+						LOGGER.trace(
 								"New next field computed by Ai Worker: {}-{}",
 								this.nextField.getX(), this.nextField.getY());
 
 						// Inform AI about new calculated field
 						this.ai.onNewFieldComputed();
 					} catch (IndexOutOfBoundsException e) {
-						log.info(
+						LOGGER.info(
 								"Path could not be calculated because start node is out of range",
 								e);
 					}
 				}
 
-				log.trace("Ai Worker used {}ms for calculation.",
+				LOGGER.trace("Ai Worker used {}ms for calculation.",
 						System.currentTimeMillis() - startTime);
 
 				// Wait rest of interval for next execution
 				long sleepTime = CALCULATION_INTERVAL
 						- (System.currentTimeMillis() - startTime);
 				if (sleepTime < 0) {
-					log.debug(
+					LOGGER.debug(
 							"Ai Worker calculation Interval to short. Needed {} ms",
 							CALCULATION_INTERVAL - sleepTime);
 				} else {
@@ -125,7 +125,7 @@ public class CalculationWorker implements Runnable {
 	 */
 	public void setCurrentPosition(IField field) {
 		this.startPosition = field;
-		log.debug("New start position for Ai Worker: {}-{}", field.getX(),
+		LOGGER.debug("New start position for Ai Worker: {}-{}", field.getX(),
 				field.getY());
 	}
 }

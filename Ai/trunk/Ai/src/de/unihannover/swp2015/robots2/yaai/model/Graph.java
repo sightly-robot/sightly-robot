@@ -10,11 +10,24 @@ import de.unihannover.swp2015.robots2.model.externalInterfaces.IModelObserver;
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
 import de.unihannover.swp2015.robots2.model.interfaces.IStage;
+import de.unihannover.swp2015.robots2.yaai.YetAnotherAi;
 
+/**
+ * A data structure that stores additional information for each Field of the
+ * given Stage to be used by {@link YetAnotherAi}. The number of nodes and their
+ * links updated from the original Stage triggered by its events.
+ * 
+ * This data model also stores a graph structure (a list of following nodes for
+ * each node), but that's just redundant to the wall data of the Stage although
+ * nicer to iterate in path calculation.
+ * 
+ * @author Michael Thies
+ */
 public class Graph implements IModelObserver {
 	private IStage stage;
 	private List<List<Node>> nodes;
-	private Logger log = LogManager.getLogger(this.getClass().getSimpleName());
+	private static final Logger LOGGER = LogManager.getLogger(Graph.class
+			.getName());
 	private int width;
 	private int height;
 
@@ -30,12 +43,12 @@ public class Graph implements IModelObserver {
 	public void onModelUpdate(IEvent event) {
 		switch (event.getType()) {
 		case STAGE_SIZE:
-			log.debug("Stage was resized. Resizing Graph.");
+			LOGGER.debug("Stage was resized. Resizing Graph.");
 			this.resizeGraph();
 			break;
 
 		case STAGE_WALL:
-			log.debug("Walls of Map were updated. Updating Graph edges.");
+			LOGGER.debug("Walls of Map were updated. Updating Graph edges.");
 			this.rebuildEdges();
 			break;
 
@@ -50,7 +63,7 @@ public class Graph implements IModelObserver {
 	private void resizeGraph() {
 		int height = this.stage.getHeight();
 		int width = this.stage.getWidth();
-		
+
 		// Delete obsolete rows
 		if (height < this.height) {
 			for (int y = this.height - 1; y > height - 1; y--) {
@@ -91,26 +104,26 @@ public class Graph implements IModelObserver {
 		if (this.width != this.stage.getWidth()
 				|| this.height != this.stage.getHeight())
 			return;
-		
-		for (int x=0; x<this.width; x++) {
-			for (int y=0; y<this.height; y++) {
+
+		for (int x = 0; x < this.width; x++) {
+			for (int y = 0; y < this.height; y++) {
 				Node n = this.getNode(x, y);
 				n.getEdges().clear();
 				for (Orientation o : Orientation.values()) {
 					if (!n.getField().isWall(o)) {
-						Node nextNode=null;
+						Node nextNode = null;
 						switch (o) {
 						case EAST:
-							nextNode = this.getNode(x+1, y);
+							nextNode = this.getNode(x + 1, y);
 							break;
 						case NORTH:
-							nextNode = this.getNode(x, y-1);
+							nextNode = this.getNode(x, y - 1);
 							break;
 						case SOUTH:
-							nextNode = this.getNode(x, y+1);
+							nextNode = this.getNode(x, y + 1);
 							break;
 						case WEST:
-							nextNode = this.getNode(x-1, y);
+							nextNode = this.getNode(x - 1, y);
 							break;
 						}
 						n.getEdges().add(nextNode);
@@ -118,14 +131,16 @@ public class Graph implements IModelObserver {
 				}
 			}
 		}
-		
+
 	}
-	
+
 	/**
 	 * Get the Node of this Graph corresponding to the Field at Position x,y.
 	 * 
-	 * @param x X coordinate of the field/node
-	 * @param y Y coordinate of the field/node
+	 * @param x
+	 *            X coordinate of the field/node
+	 * @param y
+	 *            Y coordinate of the field/node
 	 * @return The node corresponding to the field at the given position
 	 */
 	public Node getNode(int x, int y) {
