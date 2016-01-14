@@ -11,6 +11,14 @@ import de.unihannover.swp2015.robots2.controller.interfaces.IRobotController;
 import de.unihannover.swp2015.robots2.yaai.model.Graph;
 import de.unihannover.swp2015.robots2.yaai.model.Node;
 
+/**
+ * Path calculator to be used with YAAI.
+ * 
+ * Provides a method to calculate the best of all paths of a fixed length
+ * beginning a one field.
+ * 
+ * @author Michael Thies
+ */
 public class PathCalculator {
 	private final Graph graph;
 	private final IRobotController controller;
@@ -20,13 +28,27 @@ public class PathCalculator {
 	private Logger log = LogManager.getLogger(this.getClass().getName());
 	private Random random = new Random();
 
+	/**
+	 * Construct a new path calculator to work on a specific graph and a
+	 * specific MainController.
+	 * 
+	 * @param graph
+	 *            The graph model to work on
+	 * @param controller
+	 *            The controller used by the Ai
+	 */
 	public PathCalculator(Graph graph, IRobotController controller) {
 		this.controller = controller;
 		this.graph = graph;
 	}
 
 	/**
-	 * Calculate the best path of the given length.
+	 * Calculate the best path of a fixed length starting at the given Node.
+	 * 
+	 * Paths are compared by their total weight: Sum of all contained nodes,
+	 * weighted by the distance of the node from start position. Therefore,
+	 * paths with heavy nodes at their beginning will be preferred over paths
+	 * with heavy nodes at their end.
 	 * 
 	 * @return The first node of the path.
 	 */
@@ -61,8 +83,9 @@ public class PathCalculator {
 	}
 
 	/**
-	 * Recursively (depth first search) search for the best path (measured by
-	 * sum of weights of nodes) with length PATH_LENGTH - depth.
+	 * Recursively (depth first search) calculate score of the best path
+	 * (measured by weighted sum of weights of nodes) with length PATH_LENGTH -
+	 * depth.
 	 * 
 	 * An already visited node will be weighted with 0.
 	 * 
@@ -72,7 +95,7 @@ public class PathCalculator {
 	 *            current depth of search
 	 * @param visitedNodes
 	 *            A set of all nodes visited up to here
-	 * @return Score (sum of weights) of the best path found from here
+	 * @return Score (weighted sum of weights) of the best path found from here
 	 */
 	private double searchBestPath(Node node, int depth, Set<Node> visitedNodes) {
 		if (depth > PATH_LENGTH)

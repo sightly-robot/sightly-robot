@@ -8,12 +8,21 @@ import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
 import de.unihannover.swp2015.robots2.yaai.model.Graph;
 import de.unihannover.swp2015.robots2.yaai.model.Node;
 
+/**
+ * Path calculator to be used with YAAI.
+ * 
+ * Provides a method to calculate a weight for each Node of the Graph
+ * (corresponding to each Field of the Stage). The calculation is based on the
+ * current food on the field and the position of other robots.
+ * 
+ * @author Michael Thies
+ */
 public class WeightCalculator {
 	private final Graph graph;
 	private final IRobotController controller;
 
 	private final int ROBOT_MOVEMENT_DEPTH = 8;
-	
+
 	private Logger log = LogManager.getLogger(this.getClass().getName());
 
 	public WeightCalculator(Graph graph, IRobotController controller) {
@@ -21,6 +30,18 @@ public class WeightCalculator {
 		this.graph = graph;
 	}
 
+	/**
+	 * Recalculate the weight for each node of the graph.
+	 * 
+	 * The calculation uses the current food on the field multiplied with the
+	 * likelihood of any opposing robot reaching the field before us. (Assuming
+	 * all opponents have random AIs.)
+	 * 
+	 * The temporary fields distance and otherRobotLikelyhood of the Nodes will
+	 * are overwritten and used for the calculation.
+	 * 
+	 * @param startNode
+	 */
 	public void calculate(Node startNode) {
 		int width = this.controller.getGame().getStage().getWidth();
 		int height = this.controller.getGame().getStage().getHeight();
@@ -45,7 +66,7 @@ public class WeightCalculator {
 		for (IRobot r : this.controller.getGame().getRobots().values()) {
 			if (r.isMyself())
 				continue;
-			log.trace("Calc Likelihood for robot {}...",r.getId());
+			log.trace("Calc Likelihood for robot {}...", r.getId());
 
 			try {
 				Node rNode = this.graph.getNode(r.getPosition().getX(), r
@@ -68,9 +89,9 @@ public class WeightCalculator {
 	}
 
 	/**
-	 * Recursively (depth first search) calculate and save the minimal
-	 * distance from a specific node to any other node. Given a distance offset
-	 * from start.
+	 * Recursively (depth first search) calculate and save the minimal distance
+	 * from a specific node to any other node. Given a distance offset from
+	 * start.
 	 * 
 	 * Only edit (and explore edges of) nodes that have
 	 * 

@@ -14,8 +14,8 @@ import de.unihannover.swp2015.robots2.robot.interfaces.AbstractAI;
 import de.unihannover.swp2015.robots2.yaai.compute.CalculationWorker;
 
 /**
- * Main component of the better Ai. This Class does all the initialization and
- * event handling.
+ * Main component of YAAI - Yet Another Ai. This Class does all the
+ * initialization and event handling.
  * 
  * @author Michael Thies
  */
@@ -30,9 +30,19 @@ public class YetAnotherAi extends AbstractAI implements IModelObserver {
 
 	private Logger log = LogManager.getLogger(this.getClass().getName());
 
+	/**
+	 * Constructs new YAAI, working with the given controller and using it's
+	 * model.
+	 * 
+	 * This constructor instantly starts a calculation thread periodically
+	 * recalculating a path to drive.
+	 * 
+	 * @param iRobotController
+	 *            The main controller to be used by this AI
+	 */
 	public YetAnotherAi(IRobotController iRobotController) {
 		super(iRobotController);
-		log.debug("Constructing Ai...");
+		log.debug("Constructing YAAI Ai...");
 		this.iRobotController.getMyself().observe(this);
 		this.iRobotController.getGame().observe(this);
 
@@ -77,16 +87,24 @@ public class YetAnotherAi extends AbstractAI implements IModelObserver {
 
 	}
 
+	/**
+	 * Event handler do be called when the Worker thread calculated a new next
+	 * field.
+	 * 
+	 * If the new field is actually different from current nextField, try to
+	 * initiate driving there.
+	 */
 	public void onNewFieldComputed() {
 		if (this.worker.getNextField() != this.nextField)
 			this.requestNewField(this.worker.getNextField());
 	}
 
 	/**
-	 * Set a field as next field and try to lock it.
+	 * Set a field as next field and try to request it.
 	 * 
 	 * This method will only work if we are standing or waiting, game is running
-	 * and the given field is FREE.
+	 * and the given field is FREE. In other cases it will discard the new field
+	 * or change to wait state.
 	 * 
 	 * @param field
 	 *            The field we want to go to next.
@@ -118,6 +136,7 @@ public class YetAnotherAi extends AbstractAI implements IModelObserver {
 			return;
 		}
 
+		// Check if field is reachable from current position.
 		int dx = this.currentField.getX() - field.getX();
 		int dy = this.currentField.getY() - field.getY();
 		if (Math.abs(dx) > 1 || Math.abs(dy) > 1) {
@@ -127,9 +146,10 @@ public class YetAnotherAi extends AbstractAI implements IModelObserver {
 			return;
 		}
 
+		// Observe correct field to be notified about changes
 		if (this.nextField != null)
 			this.nextField.unobserve(this);
-		field.observe(this);
+		field.observe(this); // TODO fix thread lock problem
 		this.nextField = field;
 
 		// Wait if field not free
@@ -155,6 +175,9 @@ public class YetAnotherAi extends AbstractAI implements IModelObserver {
 	/**
 	 * Event handler to be called when the field we are waiting for changes it's
 	 * state.
+	 * 
+	 * On change to FREE: Lock it. On change to any LOCKED state: Go to WAIT
+	 * state. On change to OURS: drive to field.
 	 */
 	private void onFieldStateChange(IField.State state) {
 		log.debug("Next field targeted by Ai changed state to {}.",
@@ -185,31 +208,32 @@ public class YetAnotherAi extends AbstractAI implements IModelObserver {
 	/**
 	 * Event handler to be called when game state or our robot state changes.
 	 * 
-	 * Checks if we already own a field or if one was calculated.
+	 * If we are allowed to drive, check our current state:
+	 * 
+	 * In case we already own our targeted next field: drive there. In other
+	 * cases try to lock our targeted field.
 	 */
 	private void onGameStateChange() {
 		if (!this.isReadyToDrive())
 			return;
 
-		log.debug("Game or Robot changed state. Ai is running again.");
+		log.debug("Game or Robot changed state. Ai is doing things again.");
 
 		// If we already own a field and try to drive there
 		if (this.nextField != null
 				&& this.nextField.getState() == IField.State.OURS)
 			this.driveToNextField();
 		// If we are sure about a new field but don't own it, try to get it
-		else if (this.nextField != null)
-			this.requestNewField(this.nextField);
 		else
-			this.requestNewField(this.worker.getNextField());
+			this.requestNewField(this.nextField);
 
 	}
 
 	/**
-	 * Tell our hardware to go the the next field.
+	 * Tell our robot to go the the next field.
 	 * 
 	 * This method will only work if game is running. Please only call this
-	 * method after making shure, the nextField is OURS.
+	 * method after making sure, the nextField is OURS.
 	 */
 	private void driveToNextField() {
 		log.debug("We are now driving to the next Field: {}-{}",
@@ -225,6 +249,7 @@ public class YetAnotherAi extends AbstractAI implements IModelObserver {
 			return;
 		}
 
+		// Calculate orientation
 		int dx = this.nextField.getX() - this.currentField.getX();
 		int dy = this.nextField.getY() - this.currentField.getY();
 		Orientation o = null;
@@ -245,6 +270,7 @@ public class YetAnotherAi extends AbstractAI implements IModelObserver {
 		log.debug("Direction is {} from our current field {}-{}. And ... go!",
 				o.name());
 
+		// Fire orientation
 		this.fireNextOrientationEvent(o);
 		this.state = AiState.DRIVING;
 		this.worker.setCurrentPosition(this.nextField);
@@ -252,6 +278,9 @@ public class YetAnotherAi extends AbstractAI implements IModelObserver {
 
 	/**
 	 * Event handler to be called when a field is reached after driving there.
+	 * 
+	 * This method releases the old field and initiates targeting the ntext
+	 * calculated field.
 	 */
 	private void onReachField(IField field) {
 		if (field == currentField)
