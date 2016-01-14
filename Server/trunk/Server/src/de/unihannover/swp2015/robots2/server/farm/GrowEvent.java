@@ -24,7 +24,7 @@ public class GrowEvent implements Delayed {
 	private static final Logger LOGGER = LogManager.getLogger(Farmer.class.getName());
 	
 	public GrowEvent(IField field) {
-		this.LOGGER.trace("Generating Grow Event for Field {}-{}",field.getX(),field.getY());
+		LOGGER.trace("Generating Grow Event for Field {}-{}",field.getX(),field.getY());
 		this.field = field;
 		this.calculateNextGrow();
 	}

@@ -39,10 +39,10 @@ public class FarmWorker extends Thread {
 						wait();
 					}
 				}
-				this.LOGGER.trace("Waiting for next grow event...");
+				LOGGER.trace("Waiting for next grow event...");
 				GrowEvent ge = this.growQueue.take();
 				if (ge.getField().getFood() < 10) {
-					this.LOGGER.trace("Growing Field {}-{}", ge.getField().getX(),
+					LOGGER.trace("Growing Field {}-{}", ge.getField().getX(),
 							ge.getField().getY());
 					this.controller.increaseFood(ge.getField().getX(), ge
 							.getField().getY(), 1);
