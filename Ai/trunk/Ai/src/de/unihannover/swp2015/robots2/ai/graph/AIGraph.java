@@ -22,7 +22,7 @@ import de.unihannover.swp2015.robots2.model.interfaces.IStage;
 public class AIGraph extends Thread implements Runnable {
 
 	private IStage stage;
-	//testvar
+
 	private Node[][] nodes;
 
 	/*
@@ -34,7 +34,7 @@ public class AIGraph extends Thread implements Runnable {
 	 * String is ID of the robot
 	 * TODO implement
 	 */
-	private HashMap<String, Robot> robots;
+	//private HashMap<String, Robot> robots;
 	
 	private int dimX;
 	private int dimY;
@@ -103,6 +103,13 @@ public class AIGraph extends Thread implements Runnable {
 		}
 	}
 	
+	/**
+	 * Loads map data into Graph object
+	 * 
+	 * @param stage
+	 *            IStage data object
+	 * @throws InvalidStageException
+	 */
 	public void loadFromStage(IStage stage) throws InvalidStageException {
 		/*
 		 * Handle exceptions for faulty stages
@@ -133,8 +140,6 @@ public class AIGraph extends Thread implements Runnable {
 				 */
 				Node source = this.nodes[i][j] == null ? new Node(field) : this.nodes[i][j];
 				if (i > 0 && !field.isWall(Orientation.WEST)) {
-					/*Node target = this.nodes[i - 1][j] == null ? new Node(stage.getField(i - 1, j))
-							: this.nodes[i - 1][j];*/
 					Node target;
 					if(this.nodes[i - 1][j] == null) {
 						target = new Node(stage.getField(i - 1, j));
@@ -146,8 +151,6 @@ public class AIGraph extends Thread implements Runnable {
 					source.getNeighbors().add(edge);
 				}
 				if (i < this.dimX - 1 && !field.isWall(Orientation.EAST)) {
-					/*Node target = this.nodes[i + 1][j] == null ? new Node(stage.getField(i + 1, j))
-							: this.nodes[i + 1][j];*/
 					Node target;
 					if(this.nodes[i + 1][j] == null) {
 						target = new Node(stage.getField(i + 1, j));
@@ -159,8 +162,6 @@ public class AIGraph extends Thread implements Runnable {
 					source.getNeighbors().add(edge);
 				}
 				if (j > 0 && !field.isWall(Orientation.NORTH)) {
-					/*Node target = this.nodes[i][j - 1] == null ? new Node(stage.getField(i, j - 1))
-							: this.nodes[i][j - 1];*/
 					Node target;
 					if(this.nodes[i][j - 1] == null) {
 						target = new Node(stage.getField(i, j - 1));
@@ -172,8 +173,6 @@ public class AIGraph extends Thread implements Runnable {
 					source.getNeighbors().add(edge);
 				}
 				if (j < this.dimY - 1 && !field.isWall(Orientation.SOUTH)) {
-					/*Node target = this.nodes[i][j + 1] == null ? new Node(stage.getField(i, j + 1))
-							: this.nodes[i][j + 1];*/
 					Node target;
 					if(this.nodes[i][j + 1] == null) {
 						target = new Node(stage.getField(i, j + 1));
@@ -187,22 +186,8 @@ public class AIGraph extends Thread implements Runnable {
 				this.nodes[i][j] = source;
 			}
 		}
-		/*
-		 * Set our and other robots positions
-		 */
-		if (stage.getStartPositions() != null) {
-//			for (IPosition pos : stage.getStartPositions()) {
-//				Node posNode = this.nodes[pos.getX()][pos.getY()];
-//				IField field = stage.getField(pos.getX(), pos.getY());
-//				String id = field.getLockedBy();
-//				Robot robot = new Robot(id, posNode, pos.getOrientation());
-//				this.myself = robot;
-//				posNode.setRobot(robot);
-//			}
-		}
 	}
 
-	// not returning backward in increment 1
 	/**
 	 * This method returns a random valid Orientation, which the robot is
 	 * supposed to move in next.
@@ -212,7 +197,7 @@ public class AIGraph extends Thread implements Runnable {
 	// TODO: Exception if there is no valid Orientation
 	public Orientation getRandomOrientation() throws NoValidOrientationException {
 		List<Orientation> available = new ArrayList<Orientation>();
-		Node myPos = getMyPosition();
+		Node myPos = this.myself.getPosition();
 		int x = myPos.getX();
 		int y = myPos.getY();
 		
@@ -228,11 +213,10 @@ public class AIGraph extends Thread implements Runnable {
 		if (!myPos.isWall(Orientation.WEST)) {
 			available.add(Orientation.WEST);
 		}
-			
+
 		Collections.shuffle(available);
 		return available.get(0);
 	}
-	
 	/**
 	 * Finds shortest path to given Node using breadth first search. Used to determine next Orientation, the robot 
 	 * should drive in.
@@ -240,9 +224,7 @@ public class AIGraph extends Thread implements Runnable {
 	 * @return
 	 */
 	public List<Node> getBFSPath(Node target) {
-		//System.out.println("target: [" + target.getX() + "," + target.getY() + "]");
-		// TODO log4j with trace
-		
+
 		Map<Node, Node> pred = new HashMap<Node, Node>();
 		Set<Node> visited = new HashSet<Node>();
 		Queue<Node> q = new LinkedList<Node>();
@@ -274,7 +256,6 @@ public class AIGraph extends Thread implements Runnable {
 		}
 		return path;
 	}
-
 	/**
 	 * Gets next Orientation to drive in from given path. Used, to find Orientation from path determined by 
 	 * getBFSPath().
@@ -282,14 +263,14 @@ public class AIGraph extends Thread implements Runnable {
 	 * @return
 	 * @throws Exception
 	 */
-	public Orientation getOrientationFromPath(List<Node> path) throws InvalidPathException {
+	public Orientation getOrientationFromPath(List<Node> path) throws Exception {
 		
 		for(Edge edge : myself.getPosition().getNeighbors()) {
 			if(edge.getTarget() == path.get(1)) {
 				return edge.getDirection();
 			}
 		}
-		throw new InvalidPathException();
+		throw new Exception();
 	}
 	
 	/**
@@ -327,7 +308,7 @@ public class AIGraph extends Thread implements Runnable {
 	public void setFood(int x, int y, int food) {
 		this.nodes[x][y].setRessourceValue(food);
 	}
-
+	
 	/**
 	 * Sets the new position of a robot in the graph and also sets it for the robot itself
 	 * 
@@ -353,65 +334,5 @@ public class AIGraph extends Thread implements Runnable {
 			this.nodes[newPosition.getX()][newPosition.getY()].setRobot(robot);
 			robot.setPosition(this.nodes[newPosition.getX()][newPosition.getY()]);
 		}
-	}
-
-	public void setStartPositions(IStage map) {
-
-	}
-
-	public Node[][] getNodes() {
-		return nodes;
-	}
-
-	public void setNodes(Node[][] nodes) {
-		this.nodes = nodes;
-	}
-
-	public Node getMyPosition() {
-		return this.myself.getPosition();
-	}
-
-	public void setMyPosition(Node myPosition) {
-		this.myself.setPosition(myPosition);
-	}
-
-	public int getDimX() {
-		return dimX;
-	}
-
-	public void setDimX(int dimX) {
-		this.dimX = dimX;
-	}
-
-	public int getDimY() {
-		return dimY;
-	}
-
-	public void setDimY(int dimY) {
-		this.dimY = dimY;
-	}
-
-	public IStage getStage() {
-		return stage;
-	}
-
-	public void setStage(IStage stage) {
-		this.stage = stage;
-	}
-
-	public Robot getMyself() {
-		return myself;
-	}
-
-	public void setMyself(Robot myself) {
-		this.myself = myself;
-	}
-
-	public HashMap<String, Robot> getRobots() {
-		return robots;
-	}
-
-	public void setRobots(HashMap<String, Robot> robots) {
-		this.robots = robots;
 	}
 }
