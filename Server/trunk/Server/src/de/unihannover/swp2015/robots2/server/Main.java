@@ -4,12 +4,13 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.unihannover.swp2015.robots2.controller.interfaces.IServerController;
+import de.unihannover.swp2015.robots2.controller.interfaces.ProtocolException;
 import de.unihannover.swp2015.robots2.controller.main.ServerMainController;
 import de.unihannover.swp2015.robots2.server.farm.Farmer;
 
 public class Main {
 
-	private static Logger log = LogManager.getLogger(Main.class.getName());
+	private static final Logger LOGGER = LogManager.getLogger(Main.class.getName());
 
 	// Prevent creation of Main object
 	private Main() {
@@ -23,24 +24,24 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 		if (args.length != 1) {
-			log.error("Wrong number of cli arguments.\n"
+			LOGGER.error("Wrong number of cli arguments.\n"
 					+ "Please specify exactly 1 argument: The MQTT broker location in format\n"
 					+ "tcp://HostnameOrIP");
 			return;
 		}
 
 		IServerController controller = new ServerMainController();
-		log.info("Controller initialized.");
+		LOGGER.info("Controller initialized.");
 
 		Harvester harvester = new Harvester(controller);
 		Farmer farmer = new Farmer(controller);
-		log.info("Worker Threads started.");
+		LOGGER.info("Worker Threads started.");
 
 		try {
 			controller.startMqtt(args[0]);
-			log.info("Connection to MQTT broker established.");
-		} catch (Exception e) {
-			log.error("Could not connect to broker.", e);
+			LOGGER.info("Connection to MQTT broker established.");
+		} catch (ProtocolException e) {
+			LOGGER.error("Could not connect to broker.", e);
 			return;
 		}
 
@@ -49,7 +50,7 @@ public class Main {
 				Thread.sleep(1000);
 			}
 		} catch (InterruptedException e) {
-			log.info("Server is terminating.");
+			LOGGER.info("Server is terminating.");
 		}
 	}
 

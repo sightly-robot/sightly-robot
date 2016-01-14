@@ -14,14 +14,16 @@ import de.unihannover.swp2015.robots2.model.interfaces.IField;
 import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
 
 /**
- * Game server component, that observes robots, harvests food and credit scores.
+ * Game server component, that observes robots, harvests food and credits the
+ * robot's scores.
  * 
  * @author Michael Thies
  */
 public class Harvester implements IModelObserver {
 	private final IServerController controller;
 
-	private Logger log = LogManager.getLogger(this.getClass().getName());
+	private static final Logger LOGGER = LogManager.getLogger(Harvester.class
+			.getName());
 
 	/** Map used to find robot on Field that just grew */
 	private final Map<IField, IRobot> fieldBlockingRobot;
@@ -79,7 +81,7 @@ public class Harvester implements IModelObserver {
 		IRobot robot = this.fieldBlockingRobot.get(field);
 		// If a robot is on this field and it is active
 		if (robot != null) {
-			log.debug("Field {}-{} grew and robot {} stays on it.",
+			LOGGER.debug("Field {}-{} grew and robot {} stays on it.",
 					field.getX(), field.getY(), robot.getId());
 			this.harvest(robot, field);
 		}
@@ -92,7 +94,7 @@ public class Harvester implements IModelObserver {
 	 *            The Robot that changed its position.
 	 */
 	private void onPositionChange(IRobot robot) {
-		log.debug("New position for robot {}.", robot.getId());
+		LOGGER.debug("New position for robot {}.", robot.getId());
 		// Manage fieldBlockingRobot map
 		IField lastPosition = this.lastRobotPosition.get(robot);
 		if (lastPosition != null) {
@@ -126,7 +128,7 @@ public class Harvester implements IModelObserver {
 	 *            The deleted robot.
 	 */
 	private void onRobotDelete(IRobot robot) {
-		log.debug("Deleting robot {} from data structures.",robot.getId());
+		LOGGER.debug("Deleting robot {} from data structures.", robot.getId());
 		IField lastposition = this.lastRobotPosition.get(robot);
 		if (lastposition != null) {
 			this.lastRobotPosition.remove(robot);
@@ -147,14 +149,14 @@ public class Harvester implements IModelObserver {
 	 */
 	private void harvest(IRobot robot, IField field) {
 		if (field.getFood() != 0 && this.controller.getGame().isRunning()) {
-			log.debug("Harvesting food for robot {} on field {}-{}",
+			LOGGER.debug("Harvesting food for robot {} on field {}-{}",
 					robot.getId(), field.getX(), field.getY());
 
 			this.controller.sendInfoMessage(InfoType.DEBUG, "score", "add "
 					+ field.getFood() + " to score of robot " + robot.getId());
 			controller.increaseScore(robot.getId(), field.getFood());
 			controller.updateFood(field.getX(), field.getY(), 0);
-			log.debug("Havested field {}-{} by robot {}", field.getX(),
+			LOGGER.debug("Havested field {}-{} by robot {}", field.getX(),
 					field.getY(), robot.getId());
 		}
 	}

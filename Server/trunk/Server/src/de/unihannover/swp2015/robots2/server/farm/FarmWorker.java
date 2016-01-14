@@ -20,7 +20,7 @@ public class FarmWorker extends Thread {
 
 	private boolean paused;
 
-	private Logger log = LogManager.getLogger(FarmWorker.class.getName());
+	private static final Logger LOGGER = LogManager.getLogger(Farmer.class.getName());
 
 	public FarmWorker(DelayQueue<GrowEvent> growQueue,
 			IServerController controller) {
@@ -39,10 +39,10 @@ public class FarmWorker extends Thread {
 						wait();
 					}
 				}
-				this.log.trace("Waiting for next grow event...");
+				this.LOGGER.trace("Waiting for next grow event...");
 				GrowEvent ge = this.growQueue.take();
 				if (ge.getField().getFood() < 10) {
-					this.log.trace("Growing Field {}-{}", ge.getField().getX(),
+					this.LOGGER.trace("Growing Field {}-{}", ge.getField().getX(),
 							ge.getField().getY());
 					this.controller.increaseFood(ge.getField().getX(), ge
 							.getField().getY(), 1);
@@ -51,7 +51,7 @@ public class FarmWorker extends Thread {
 				this.growQueue.put(ge);
 			}
 		} catch (InterruptedException e) {
-			log.debug(e);
+			LOGGER.debug(e);
 		}
 	}
 

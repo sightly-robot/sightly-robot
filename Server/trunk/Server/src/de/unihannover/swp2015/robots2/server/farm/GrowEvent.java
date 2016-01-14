@@ -11,6 +11,8 @@ import de.unihannover.swp2015.robots2.model.interfaces.IField;
 /**
  * The GrowEvent holds the IField, on which it will executed and its grow time.
  * 
+ * These objects are queued by the {@link FarmWorker}.
+ * 
  * @author Patrick Kawczynski
  * @version 0.1
  */
@@ -19,10 +21,10 @@ public class GrowEvent implements Delayed {
 	private final IField field;
 	private long nextGrowTime;
 
-	private Logger log = LogManager.getLogger(this.getClass().getName());
+	private static final Logger LOGGER = LogManager.getLogger(Farmer.class.getName());
 	
 	public GrowEvent(IField field) {
-		this.log.trace("Generating Grow Event for Field {}-{}",field.getX(),field.getY());
+		this.LOGGER.trace("Generating Grow Event for Field {}-{}",field.getX(),field.getY());
 		this.field = field;
 		this.calculateNextGrow();
 	}

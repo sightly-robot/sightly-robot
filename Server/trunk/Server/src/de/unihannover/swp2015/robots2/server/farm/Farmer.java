@@ -24,7 +24,7 @@ public class Farmer implements IModelObserver {
 	private final FarmWorker farmworker;
 	private final DelayQueue<GrowEvent> growQueue;
 	
-	private final Logger log = LogManager.getLogger(this.getClass().getName());
+	private static final Logger LOGGER = LogManager.getLogger(Farmer.class.getName());
 
 	private long stoppedTime;
 
@@ -86,7 +86,7 @@ public class Farmer implements IModelObserver {
 		this.shiftGrowQueue(System.currentTimeMillis() - this.stoppedTime);
 
 		if (!this.farmworker.isAlive()) {
-			this.log.info("Starting Farm Worker.");
+			this.LOGGER.info("Starting Farm Worker.");
 			this.farmworker.start();
 		}
 
@@ -98,7 +98,7 @@ public class Farmer implements IModelObserver {
 	 */
 	private void stopGrowQueue() {
 		this.stoppedTime = System.currentTimeMillis();
-		this.log.info("Stopping Farm Worker.");
+		this.LOGGER.info("Stopping Farm Worker.");
 		this.farmworker.pause();
 	}
 
@@ -110,7 +110,7 @@ public class Farmer implements IModelObserver {
 	 */
 	private void shiftGrowQueue(long shift) {
 		Iterator<GrowEvent> it = this.growQueue.iterator();
-		this.log.debug("Shifting grow queue by {} ms.",shift);
+		this.LOGGER.debug("Shifting grow queue by {} ms.",shift);
 		while (it.hasNext()) {
 			it.next().shiftNextGrow(shift);
 		}
