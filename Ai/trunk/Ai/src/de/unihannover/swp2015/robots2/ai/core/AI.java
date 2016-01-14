@@ -26,7 +26,7 @@ public class AI extends AbstractAI implements IModelObserver {
 
 	private IGame game;
 	private Robot myself;
-
+	
 	public AI(IRobotController controller) { // controller from data modell
 		super(controller);
 		this.game = controller.getGame();
@@ -358,13 +358,16 @@ public class AI extends AbstractAI implements IModelObserver {
 	 */
 	public Orientation findNextOrientation() throws NoValidOrientationException {
 		try {
-			return this.graph.getOrientationFromPath(this.graph.getBFSPath(this.graph.findBestNode(5)));
-		} catch (InvalidPathException e) {
+			return this.graph.getOrientationFromPath(this.graph.getBFSPath(this.graph.findBestNodeBFS(5)));
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
-		
+	/**
+	 * Returns currently planned next Orientation to drive in.
+	 * @return nextOrientation, the next Orientation, we plan to drive in
+	 */
 	public Orientation getNextOrientation() {
 		return this.nextOrientation;
 	}

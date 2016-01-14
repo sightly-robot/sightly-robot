@@ -17,6 +17,9 @@ import de.unihannover.swp2015.robots2.ai.exceptions.NoValidOrientationException;
 import de.unihannover.swp2015.robots2.model.interfaces.IField;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
+import testpackage.Edge;
+import testpackage.Node;
+import testpackage.AIGraphTest.Tuple;
 import de.unihannover.swp2015.robots2.model.interfaces.IStage;
 
 public class AIGraph extends Thread implements Runnable {
@@ -34,7 +37,7 @@ public class AIGraph extends Thread implements Runnable {
 	 * String is ID of the robot
 	 * TODO implement
 	 */
-	//private HashMap<String, Robot> robots;
+	private HashMap<String, Robot> robots;
 	
 	private int dimX;
 	private int dimY;
@@ -299,6 +302,55 @@ public class AIGraph extends Thread implements Runnable {
 		}
 		return curr;
 	}
+	
+	private class Tuple<X, Y> {
+		public final X x;
+		public final Y y;
+
+		public Tuple(X x, Y y) {
+			this.x = x;
+			this.y = y;
+		}
+	}
+	
+	/**
+	 * Finds node with highest amount of resources in given distance via breadth first search.
+	 * Used to find target node to drive towards.
+	 * @param range
+	 * @return
+	 */
+	public Node findBestNodeBFS(int range) {
+		Set<Node> visited = new HashSet<Node>();
+		Queue<Tuple<Node, Integer>> q = new LinkedList<Tuple<Node, Integer>>();
+		Tuple<Node, Integer> curr = new Tuple(myself.getPosition(), 0);
+		q.add(curr);
+		visited.add(curr.x);
+		
+		//initialize with random neighbor
+		List<Edge> myNeighbors = myself.getPosition().getNeighbors();
+		Node best = myNeighbors.get((int)(Math.random() * myNeighbors.size())).getTarget(); 
+		
+		while(curr.y <= range) { //TODO check for empty queue
+			curr = q.remove();
+			
+			Set<Node> neighbors = new HashSet<Node>();
+			for(Edge edge : curr.x.getNeighbors()) {
+				neighbors.add(edge.getTarget());
+			}
+			for(Node node : neighbors) {
+				if(!visited.contains(node)) {
+					if(node.getRessourceValue() > best.getRessourceValue()) {
+						best = node;
+					}
+					visited.add(node);
+					q.add(new Tuple(node, curr.y + 1));
+				}
+			}
+		}
+		return best;
+	}
+	
+	
 	/**
 	 * Sets food value on a specific Field.
 	 * @param x 
@@ -334,5 +386,9 @@ public class AIGraph extends Thread implements Runnable {
 			this.nodes[newPosition.getX()][newPosition.getY()].setRobot(robot);
 			robot.setPosition(this.nodes[newPosition.getX()][newPosition.getY()]);
 		}
+	}
+	
+	public HashMap<String, Robot> getRobots() {
+		return robots;
 	}
 }
