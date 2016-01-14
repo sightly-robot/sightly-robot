@@ -69,10 +69,6 @@ public class RobotEngine extends Component {
 		switch(event.getType()) {
 
 		case ROBOT_PROGRESS:
-			float realInterval = (System.nanoTime() - lastEvent) / 1000000000f;
-			if (realInterval > 0.2 || realInterval < 0.05) {
-				log.info("event time out of row {}" , realInterval);
-			}
 			calcInterval();			
 			final IRobot robot = (IRobot) event.getObject();
 			updateRobot(robot, robot.getPosition().getProgress());
@@ -92,6 +88,11 @@ public class RobotEngine extends Component {
 	 * Calculates the interval based on the {@link #intervalHistory}
 	 */
 	private void calcInterval() {
+		float realInterval = (System.nanoTime() - lastEvent) / 1000000000f;
+		if (realInterval > 0.2 || realInterval < 0.05) {
+			log.info("event time out of row {}" , realInterval);
+		}
+		
 		if (!firstEvent) {
 			firstEvent = true;
 		}

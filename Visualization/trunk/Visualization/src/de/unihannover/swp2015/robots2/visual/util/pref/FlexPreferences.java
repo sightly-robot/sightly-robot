@@ -54,7 +54,7 @@ public class FlexPreferences<T extends IPreferencesKey> extends PreferencesObser
 		this.persistentDataHandler = Gdx.app.getPreferences(name);
 	}
 	
-	private IllegalArgumentException createPersistentException() {
+	private static IllegalArgumentException createPersistentException() {
 		return new IllegalArgumentException("The key already exists for storing data in a persistent way!");
 	}
 	

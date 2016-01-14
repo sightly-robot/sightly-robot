@@ -187,42 +187,42 @@ public class Robot extends Entity {
 		/**
 		 * Texture of the bubble.
 		 */
-		public RenderUnit tex;
+		protected RenderUnit tex;
 		
 		/**
 		 * Width of the bubble.
 		 */
-		public float width;
+		protected float width;
 		
 		/**
 		 * Height of the bubble.
 		 */
-		public float height;
+		protected float height;
 		
 		/**
 		 * Color of the bubble. This value is based on the model.
 		 */
-		public Color color;
+		protected Color color;
 		
 		/**
 		 * Font of the name/score/rank.
 		 */
-		public BitmapFont font;
+		protected BitmapFont font;
 		
 		/**
 		 * Points as string.
 		 */
-		public CharSequence points;
+		protected CharSequence points;
 		
 		/**
 		 * X-position on (virtual) screen relative to the robot.
 		 */
-		public float x;
+		protected float x;
 	
 		/**
 		 * Y-position on (virtual) screen relative to the robot.
 		 */
-		public float y;
+		protected float y;
 	
 	}
 
