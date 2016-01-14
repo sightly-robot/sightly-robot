@@ -48,6 +48,7 @@ public class YetAnotherAi extends AbstractAI implements IModelObserver {
 
 		this.worker = new CalculationWorker(iRobotController, this);
 
+		// Start calculation worker
 		Thread thread = new Thread(this.worker);
 		thread.start();
 	}
@@ -147,10 +148,12 @@ public class YetAnotherAi extends AbstractAI implements IModelObserver {
 		}
 
 		// Observe correct field to be notified about changes
-		if (this.nextField != null)
-			this.nextField.unobserve(this);
-		field.observe(this); // TODO fix thread lock problem
-		this.nextField = field;
+		if (field != this.nextField) {
+			if (this.nextField != null)
+				this.nextField.unobserve(this);
+			field.observe(this);
+			this.nextField = field;
+		}
 
 		// Wait if field not free
 		if (field.getState() != IField.State.FREE) {
@@ -239,9 +242,6 @@ public class YetAnotherAi extends AbstractAI implements IModelObserver {
 		log.debug("We are now driving to the next Field: {}-{}",
 				this.nextField.getX(), this.nextField.getY());
 
-		// this.nextField.unobserve(this);
-		// TODO ... looking for workaround
-
 		// Wait if game not started
 		if (!this.isReadyToDrive()) {
 			this.state = AiState.WAITING_FOR_GAME;
@@ -279,7 +279,7 @@ public class YetAnotherAi extends AbstractAI implements IModelObserver {
 	/**
 	 * Event handler to be called when a field is reached after driving there.
 	 * 
-	 * This method releases the old field and initiates targeting the ntext
+	 * This method releases the old field and initiates targeting the next
 	 * calculated field.
 	 */
 	private void onReachField(IField field) {
@@ -293,7 +293,10 @@ public class YetAnotherAi extends AbstractAI implements IModelObserver {
 			this.iRobotController.releaseField(this.currentField.getX(),
 					this.currentField.getY());
 		this.currentField = field;
-		this.nextField = null;
+		if (this.nextField != null) {
+			this.nextField.unobserve(this);
+			this.nextField = null;
+		}
 		this.state = AiState.STANDING;
 		this.worker.setCurrentPosition(field);
 
