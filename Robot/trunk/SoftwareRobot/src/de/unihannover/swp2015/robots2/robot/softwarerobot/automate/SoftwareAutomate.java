@@ -8,10 +8,17 @@ import de.unihannover.swp2015.robots2.robot.abstractrobot.automate.AbstractAutom
 /**
  * Sample SoftwareAutomate as child of {@link AbstractAutomate}.
  * 
+ * It Configures the SoftwareState when GAME_PARAMETER occurs.
+ * 
  * @author Lenard Spiecker
  */
 public class SoftwareAutomate extends AbstractAutomate {
 
+	/**
+	 * For a new instance of SoftwareAutomate. 
+	 * It accesses the robotcontroller for getting the vSpeed.
+	 * @param robotController
+	 */
 	public SoftwareAutomate(IRobotController robotController) {
 		super(robotController, SoftwareState.WAIT, SoftwareState.SETUP, SoftwareState.DISABLED,
 				SoftwareState.CONNECTED);
@@ -20,7 +27,11 @@ public class SoftwareAutomate extends AbstractAutomate {
 			public void onModelUpdate(IEvent event) {
 				switch (event.getType()) {
 				case GAME_PARAMETER:
-					// SoftwareState.setVSpeed(SoftwareAutomate.this.robotController.getGame().getVRobotSpeed());
+					SoftwareState.setVSpeed(SoftwareAutomate.this.robotController.getGame().getVRobotSpeed());
+					for(int i=0;i<progressMeasurements.length;i++)
+					{
+						progressMeasurements[i] = SoftwareAutomate.this.robotController.getGame().getVRobotSpeed()*1000;
+					}
 					break;
 				default:
 					break;

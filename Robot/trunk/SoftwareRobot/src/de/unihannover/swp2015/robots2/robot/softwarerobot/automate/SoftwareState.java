@@ -10,24 +10,28 @@ import de.unihannover.swp2015.robots2.robot.abstractrobot.automate.IState;
  */
 public enum SoftwareState implements IState {
 
+	/**WAIT STATE while waiting*/
 	WAIT {
 		@Override
 		public IState execute() {
 			return this;
 		}
 	},
+	/**CONNECTED STATE while connecting*/
 	CONNECTED {
 		@Override
 		public IState execute() {
 			return this;
 		}
 	},
+	/**SETUP STATE while setup*/
 	SETUP {
 		@Override
 		public IState execute() {
 			return this;
 		}
 	},
+	/**DISABLED STATE while disabling*/
 	DISABLED {
 		@Override
 		public IState execute() {
@@ -39,6 +43,8 @@ public enum SoftwareState implements IState {
 	private static double DURATION = 2000;
 
 	private long startTime;
+
+	private Direction newxtButOneDirection;
 
 	private SoftwareState() {
 		// Nothing to do here
@@ -54,6 +60,10 @@ public enum SoftwareState implements IState {
 		return (System.currentTimeMillis() - getStartTime()) >= DURATION ? SoftwareState.WAIT : this;
 	}
 
+	/**
+	 * Returns the time of the last state-swicth.
+	 * @return
+	 */
 	protected long getStartTime() {
 		return startTime;
 	}
@@ -62,7 +72,7 @@ public enum SoftwareState implements IState {
 	public boolean isWait() {
 		return this == WAIT;
 	}
-	
+
 	@Override
 	public boolean isDriving() {
 		return this != WAIT && this != CONNECTED && this != DISABLED && this != SETUP;
@@ -83,7 +93,16 @@ public enum SoftwareState implements IState {
 		return FOREWARD;
 	}
 
+	/**
+	 * Sets the Speed of the Stateswitch in SecondsPerField.
+	 * @param secondsPerField
+	 */
 	public static void setVSpeed(float secondsPerField) {
 		DURATION = secondsPerField * 1000;
+	}
+	
+	public void setNextButOneDirection(Direction direction)
+	{
+		newxtButOneDirection = direction;
 	}
 }
