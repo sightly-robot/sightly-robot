@@ -13,7 +13,6 @@ import de.unihannover.swp2015.robots2.controller.interfaces.IRobotController;
 import de.unihannover.swp2015.robots2.controller.main.RobotMainController;
 import de.unihannover.swp2015.robots2.model.externalInterfaces.IModelObserver;
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
-import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
 import de.unihannover.swp2015.robots2.robot.abstractrobot.automate.AbstractAutomate;
 import de.unihannover.swp2015.robots2.robot.interfaces.AbstractAI;
 
@@ -39,14 +38,13 @@ public abstract class AbstractRobot {
 	 * Initializes the AbstractRobot instance by initializing the robot
 	 * controller and AI.
 	 */
-	public AbstractRobot(boolean isHardware,String brokerIP) {
+	public AbstractRobot(boolean isHardware, String brokerIP) {
 
 		robotController = new RobotMainController(isHardware);
 
-		System.out.println("My ID: "+robotController.getMyself().getId());
-		
-		if(brokerIP == null)
-		{
+		System.out.println("My ID: " + robotController.getMyself().getId());
+
+		if (brokerIP == null) {
 			// read broker IP from properties
 			Properties properties = new Properties();
 			BufferedInputStream is;
@@ -54,7 +52,7 @@ public abstract class AbstractRobot {
 				is = new BufferedInputStream(new FileInputStream("../config.properties"));
 				properties.load(is);
 				is.close();
-	
+
 			} catch (FileNotFoundException fnfe) {
 				fnfe.printStackTrace();
 			} catch (IOException ioe) {
@@ -63,7 +61,7 @@ public abstract class AbstractRobot {
 			brokerIP = properties.getProperty("brokerIP");
 		}
 		System.out.println("Loaded IP: " + brokerIP);
-		
+
 		while (!robotController.getGame().isSynced()) {
 			try {
 				System.out.println("start mqtt");
@@ -80,16 +78,17 @@ public abstract class AbstractRobot {
 			}
 		}
 		System.out.println("connected!");
-	
+
 		robotController.getGame().observe(new IModelObserver() {
 			@Override
 			public void onModelUpdate(IEvent event) {
 				switch (event.getType()) {
 				case ROBOT_DELETE:
-					if(event.getObject() == robotController.getMyself())
-					{
+					if (event.getObject() == robotController.getMyself()) {
 						System.exit(0);
 					}
+					break;
+				default:
 					break;
 				}
 			}

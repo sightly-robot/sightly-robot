@@ -38,7 +38,7 @@ public abstract class AbstractAutomate implements AiEventObserver, Runnable {
 	private long nextUpdateTime;
 	private int lastProgress = 0;
 
-	private double[] progressMeasurements = new double[] { 1000, 1000, 1000, 1000 };
+	protected double[] progressMeasurements = new double[] { 1000, 1000, 1000, 1000 };
 	private Direction currentDirection = Direction.FORWARDS;
 	private long lastWaitTime;
 
@@ -227,8 +227,9 @@ public abstract class AbstractAutomate implements AiEventObserver, Runnable {
 	}
 
 	@Override
-	public void nextButOneOrientationEvent(Orientation orientation) {
-		// TODO Blinking right or left.
+	public void nextButOneOrientationEvent(Orientation orientation){
+		Direction newDirection = Direction.calcDirection(robot.getPosition().getOrientation(), orientation);
+		state.setNextButOneDirection(newDirection);
 	}
 
 	public Thread getAutomation() {
