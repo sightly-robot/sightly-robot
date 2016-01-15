@@ -7,11 +7,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.unihannover.swp2015.robots2.controller.interfaces.IServerController;
-import de.unihannover.swp2015.robots2.controller.interfaces.InfoType;
 import de.unihannover.swp2015.robots2.model.externalInterfaces.IModelObserver;
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
 import de.unihannover.swp2015.robots2.model.interfaces.IField;
 import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
+import de.unihannover.swp2015.robots2.model.interfaces.IRobot.RobotState;
 
 /**
  * Game server component, that observes robots, harvests food and credits the
@@ -59,6 +59,7 @@ public class Harvester implements IModelObserver {
 			break;
 
 		case ROBOT_POSITION:
+		case ROBOT_STATE:
 			this.onPositionChange((IRobot) event.getObject());
 			break;
 
@@ -138,7 +139,8 @@ public class Harvester implements IModelObserver {
 
 	/**
 	 * Harvest the food on the given field and add the corresponding number of
-	 * points to the given Robot's score.
+	 * points to the given Robot's score. (But only if game is running and robot
+	 * is enabled.)
 	 * 
 	 * Please make shure the robot is really on this field.
 	 * 
@@ -148,16 +150,13 @@ public class Harvester implements IModelObserver {
 	 *            The field this robot is on.
 	 */
 	private void harvest(IRobot robot, IField field) {
-		if (field.getFood() != 0 && this.controller.getGame().isRunning()) {
+		if (field.getFood() != 0 && this.controller.getGame().isRunning()
+				&& robot.getState() == RobotState.ENABLED) {
 			LOGGER.debug("Harvesting food for robot {} on field {}-{}",
 					robot.getId(), field.getX(), field.getY());
 
-			this.controller.sendInfoMessage(InfoType.DEBUG, "score", "add "
-					+ field.getFood() + " to score of robot " + robot.getId());
 			controller.increaseScore(robot.getId(), field.getFood());
 			controller.updateFood(field.getX(), field.getY(), 0);
-			LOGGER.debug("Havested field {}-{} by robot {}", field.getX(),
-					field.getY(), robot.getId());
 		}
 	}
 
