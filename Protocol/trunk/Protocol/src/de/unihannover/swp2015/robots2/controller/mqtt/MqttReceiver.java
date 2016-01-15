@@ -17,7 +17,7 @@ public class MqttReceiver implements Runnable {
 	private final BlockingQueue<MqttFullMessage> queue;
 	private final IMqttMessageHandler handler;
 
-	private Logger log = LogManager.getLogger(MqttReceiver.class.getName());
+	private static final Logger LOGGER = LogManager.getLogger(MqttController.class.getName());
 
 	public MqttReceiver(BlockingQueue<MqttFullMessage> queue,
 			IMqttMessageHandler handler) {
@@ -30,21 +30,21 @@ public class MqttReceiver implements Runnable {
 		while (true) {
 			try {
 				MqttFullMessage message = this.queue.take();
-				log.trace("Processing message of Topic:\"{}\"",
+				LOGGER.trace("Processing message of Topic:\"{}\"",
 						message.getTopic());
 				try {
 					handler.handleMqttMessage(message.getTopic(), new String(
 							message.getMessage().getPayload(),
 							StandardCharsets.UTF_8));
 				} catch (Exception e) {
-					this.log.error(
+					LOGGER.error(
 							"Uncaught Exception while prossessing the following MQTT message: {}\n{}\n{}\n",
 							message.getTopic(), new String(message.getMessage()
 									.getPayload(), StandardCharsets.UTF_8));
-					this.log.error(e);
+					LOGGER.error(e);
 				}
 			} catch (InterruptedException e) {
-				log.info("MQTT receive worker aborted by interrupt exception.",e);
+				LOGGER.info("MQTT receive worker aborted by interrupt exception.",e);
 			}
 		}
 	}

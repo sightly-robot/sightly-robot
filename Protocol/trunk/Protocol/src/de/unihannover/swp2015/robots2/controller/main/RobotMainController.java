@@ -48,7 +48,9 @@ public class RobotMainController extends AbstractMainController implements
 					"map/food/+", "map/occupied/#", "control/state",
 					"extension/2/robot/#" };
 			this.mqttController = new MqttController(clientId, this,
-					Arrays.asList(subscribeTopics));
+					Arrays.asList(subscribeTopics),
+					MqttTopic.EVENT_ERROR_ROBOT_CONNECTION.toString(id),
+					"disconnect", true);
 		} catch (MqttException e) {
 			log.fatal("Error constructing MqttController:", e);
 		}
@@ -59,6 +61,8 @@ public class RobotMainController extends AbstractMainController implements
 		super.startMqtt(brokerUrl);
 
 		String robotType = this.myself.isHardwareRobot() ? "real" : "virtual";
+		this.sendMqttMessage(MqttTopic.EVENT_ERROR_ROBOT_CONNECTION,
+				this.myself.getId(), null);
 		this.sendMqttMessage(MqttTopic.ROBOT_TYPE, this.myself.getId(),
 				robotType);
 		this.sendMqttMessage(MqttTopic.ROBOT_NEW, null, this.myself.getId());
@@ -258,8 +262,7 @@ public class RobotMainController extends AbstractMainController implements
 			return;
 
 		// Send release message if has been occupied by us
-		this.sendMqttMessage(MqttTopic.FIELD_OCCUPIED_RELEASE, x + "-" + y,
-				"");
+		this.sendMqttMessage(MqttTopic.FIELD_OCCUPIED_RELEASE, x + "-" + y, "");
 		this.fieldStateModelController.setFieldRelease(x, y);
 	}
 

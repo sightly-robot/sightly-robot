@@ -18,7 +18,7 @@ public class MqttSender implements Runnable {
 	private final MqttClient client;
 	private final Object waitForConnect;
 
-	private Logger log = LogManager.getLogger(this.getClass().getName());
+	private static final Logger LOGGER = LogManager.getLogger(MqttController.class.getName());
 
 	public MqttSender(BlockingQueue<MqttFullMessage> queue, MqttClient client, Object waitObject) {
 		this.queue = queue;
@@ -32,12 +32,12 @@ public class MqttSender implements Runnable {
 			while (true) {
 				// Take message from queue or wait till one is available
 				MqttFullMessage message = this.queue.take();
-				log.trace("Sending message of Topic \"{}\".",message.getTopic());
+				LOGGER.trace("Sending message of Topic \"{}\".",message.getTopic());
 				
 				// Wait until MQTT connected
 				synchronized(this.waitForConnect) {
 					while(!client.isConnected()) {
-						log.debug("MQTT client not connected. Waiting to send until client is connected.");
+						LOGGER.debug("MQTT client not connected. Waiting to send until client is connected.");
 						this.waitForConnect.wait();
 					}
 				}
@@ -48,13 +48,13 @@ public class MqttSender implements Runnable {
 						client.publish(message.getTopic(), message.getMessage());
 						break;
 					} catch (MqttException e) {
-						log.debug("Sending message failed. Retrying in 500ms.",e);
+						LOGGER.debug("Sending message failed. Retrying in 500ms.",e);
 						Thread.sleep(500);
 					}
 				}
 			}
 		} catch (InterruptedException e) {
-			log.info("MQTT Send worker aborted by interrupt exception.",e);
+			LOGGER.info("MQTT Send worker aborted by interrupt exception.",e);
 		}
 	}
 }

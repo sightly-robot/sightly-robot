@@ -29,15 +29,6 @@ public class RobotTest {
 	}
 	
 	@Test
-	public void testName() {
-		String uuid = UUID.randomUUID().toString().substring(0, 8);
-		Robot robot = new Robot(uuid, true, false);
-		
-		robot.setName("TestRobot");
-		assertEquals("TestRobot", robot.getName());
-	}
-	
-	@Test
 	public void testScore() {
 		String uuid = UUID.randomUUID().toString().substring(0, 8);
 		Robot robot = new Robot(uuid, true, false);

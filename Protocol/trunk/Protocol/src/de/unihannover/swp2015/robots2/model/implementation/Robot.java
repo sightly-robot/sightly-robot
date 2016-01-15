@@ -23,8 +23,6 @@ public class Robot extends AbstractModel implements IRobot, IRobotWriteable {
 
 	/** ID of this robot. Never changes at runtime. */
 	private final String id;
-	/** Name of this robot. May be used as nice label in visualizations. */
-	private String name;
 	/**
 	 * true if this robot object represents a hardware robot in opposite to a
 	 * virtual robot.
@@ -99,18 +97,8 @@ public class Robot extends AbstractModel implements IRobot, IRobotWriteable {
 	}
 
 	@Override
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	@Override
 	public String getId() {
 		return this.id;
-	}
-
-	@Override
-	public String getName() {
-		return this.name;
 	}
 
 	@Override
@@ -186,6 +174,11 @@ public class Robot extends AbstractModel implements IRobot, IRobotWriteable {
 	public Color getColor() {
 		float hue = Integer.parseInt(this.id.substring(0, 2), 16) / 255f;
 		return new Color(Color.HSBtoRGB(hue, 1, 1));
+	}
+
+	@Override
+	public String getName() {
+		return RobotNames.getName(Integer.parseInt(this.id.substring(2, 6), 16));
 	}
 
 }

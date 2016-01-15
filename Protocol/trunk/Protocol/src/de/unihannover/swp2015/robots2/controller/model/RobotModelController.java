@@ -2,6 +2,9 @@ package de.unihannover.swp2015.robots2.controller.model;
 
 import java.util.Map;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent.UpdateType;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
 import de.unihannover.swp2015.robots2.model.interfaces.IRobot.RobotState;
@@ -19,6 +22,9 @@ public class RobotModelController {
 	public RobotModelController(Map<String, IRobotWriteable> robots) {
 		this.robots = robots;
 	}
+
+	private static Logger LOGGER = LogManager
+			.getLogger(RobotModelController.class.getName());
 
 	/**
 	 * 
@@ -111,6 +117,7 @@ public class RobotModelController {
 		if (r.isMyself() && state != RobotState.MANUAL_DISABLED_GUI)
 			return;
 
+		LOGGER.debug("Robot {} changed state to {}.", r.getId(), state.name());
 		r.setRobotState(state);
 		r.emitEvent(UpdateType.ROBOT_STATE);
 	}
@@ -132,7 +139,10 @@ public class RobotModelController {
 		if (r == null || r.isMyself())
 			return;
 
-		r.setRobotConnectionState("".equals(message));
+		boolean connected = "".equals(message);
+		LOGGER.debug("Robot {}'s connection state changed to {}.", r.getId(),
+				connected ? "connected" : "disconnected");
+		r.setRobotConnectionState(connected);
 		r.emitEvent(UpdateType.ROBOT_STATE);
 	}
 }
