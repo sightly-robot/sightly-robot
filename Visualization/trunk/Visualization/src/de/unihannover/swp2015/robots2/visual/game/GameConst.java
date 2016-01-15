@@ -11,6 +11,8 @@ public class GameConst {
 	public static final float BUBBLE_X_SCALE =  0.75f;
 	/** y-scale of the robot-bubble */
 	public static final float BUBBLE_Y_SCALE =  0.2f;
+	/** Alpha value of the bubble */
+	public static final float BUBBLE_ALPHA = 0.5f;
 	
 	/** coefficient of the device-height. Solution will be used to resize the window on an aspect ratio change. */
 	public static final float HEIGHT_SCALE = 0.75f;

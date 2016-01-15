@@ -35,8 +35,10 @@ public enum ResConst {
 	DEFAULT_ROBO("default_robo", ResType.TEX),
 	DEFAULT_BUBBLE("default_bubble", ResType.TEX),
 	DEFAULT_STARTPOS("default_startpos", ResType.TEX),
-	
+
+	DEFAULT_FONT_SMALL("default_font_small", ResType.FONT),
 	DEFAULT_FONT("default_font", ResType.FONT),
+	DEFAULT_FONT_POINTS("default_font_points", ResType.FONT),
 	DEFAULT_FONT_BIG("default_font_big", ResType.FONT),
 	DEFAULT_FONT_TITLE("default_font_title", ResType.FONT);
 	

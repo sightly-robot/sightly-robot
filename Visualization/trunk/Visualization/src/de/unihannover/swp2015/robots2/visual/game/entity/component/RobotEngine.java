@@ -44,6 +44,11 @@ public class RobotEngine extends Component {
 	private long lastEvent;
 	/** True, if the component already handled an event */
 	private boolean firstEvent;
+	
+	/** Width of a field */
+	private float fieldWidth;
+	/** Height of a field */
+	private float fieldHeight;
 
 	/**
 	 * Constructs a RobotEngine using <code>pref</code>.
@@ -51,6 +56,9 @@ public class RobotEngine extends Component {
 	 */
 	public RobotEngine(IPreferences<PrefKey> pref) {
 		super(pref);
+		
+		this.fieldWidth = pref.getFloat(PrefKey.FIELD_WIDTH_KEY);
+		this.fieldHeight = pref.getFloat(PrefKey.FIELD_HEIGHT_KEY);
 	}
 
 	@Override
@@ -90,7 +98,7 @@ public class RobotEngine extends Component {
 	private void calcInterval() {
 		float realInterval = (System.nanoTime() - lastEvent) / 1000000000f;
 		if (realInterval > 0.2 || realInterval < 0.05) {
-			log.info("event time out of row {}" , realInterval);
+			log.debug("event time out of row {}" , realInterval);
 		}
 		
 		if (!firstEvent) {
@@ -121,9 +129,6 @@ public class RobotEngine extends Component {
 		final IEntityModifier rotationModifier = new RotationModifier(entity, interval, entity.getRotation(), ModelUtil.calculateRotation(orientation));
 		
 		entity.registerModifier(rotationModifier);
-		
-		final float fieldWidth = pref.getFloat(PrefKey.FIELD_WIDTH_KEY);
-		final float fieldHeight = pref.getFloat(PrefKey.FIELD_HEIGHT_KEY);
 		
 		final float factorX = calcFactorX(orientation);
 		final float factorY = calcFactorY(orientation);
@@ -190,6 +195,24 @@ public class RobotEngine extends Component {
 			return 0;
 		}
 	}	
+
+	@Override
+	public void onUpdatePreferences(PrefKey updatedKey, Object value) {
+		switch(updatedKey) {
+		
+		case FIELD_HEIGHT_KEY:
+			this.fieldHeight = (float) value;
+			break;
+			
+		case FIELD_WIDTH_KEY:
+			this.fieldWidth = (float) value;
+			break;
+		
+		default:
+			break;
+		
+		}
+	}
 	
 	@Override
 	public void update() {

@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
@@ -35,7 +36,10 @@ public class ResourceHandler implements IResourceHandler {
 	
 	/** Main textureAtlas. */
 	private TextureAtlas texAtlas;
-
+	
+	/** Font-generator */
+	private FreeTypeFontGenerator fontGenerator;
+	
 	/** Current texture pack. */
 	private String texPack = ResConst.DEFAULT_THEME.getName();
 	
@@ -115,24 +119,42 @@ public class ResourceHandler implements IResourceHandler {
 	 * Creates all fonts, that can be used.
 	 */
 	private void createFonts() {
-		final FreeTypeFontGenerator defFontGen = new FreeTypeFontGenerator(Gdx.files.internal("assets/font/Roboto-Regular.ttf"));
-		final FreeTypeFontParameter defPara = new FreeTypeFontParameter();
-		defPara.characters = NECESSARY_CHARS;
-		defPara.size = 15;
-		defPara.flip = true;
-		fontMap.put(ResConst.DEFAULT_FONT, defFontGen.generateFont(defPara));
-		
-		final FreeTypeFontParameter bigDefFont = new FreeTypeFontParameter();
-		bigDefFont.characters = NECESSARY_CHARS;
-		bigDefFont.size = 28;
-		bigDefFont.flip = true;
-		fontMap.put(ResConst.DEFAULT_FONT_BIG, defFontGen.generateFont(bigDefFont));
-
-		final FreeTypeFontParameter titleDefFont = new FreeTypeFontParameter();
-		titleDefFont.characters = NECESSARY_CHARS;
-		titleDefFont.size = 36;
-		titleDefFont.flip = true;
-		fontMap.put(ResConst.DEFAULT_FONT_TITLE, defFontGen.generateFont(titleDefFont));
+		fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("assets/font/Roboto-Regular.ttf"));
+		fontMap.put(ResConst.DEFAULT_FONT, createFont(15, NECESSARY_CHARS, true, 1, Color.BLACK));
+		fontMap.put(ResConst.DEFAULT_FONT_SMALL, createFont(12, NECESSARY_CHARS, true, 1, Color.BLACK));
+		fontMap.put(ResConst.DEFAULT_FONT_POINTS, createFont(16, NECESSARY_CHARS, true, 1, Color.BLACK));
+		fontMap.put(ResConst.DEFAULT_FONT_BIG, createFont(28, NECESSARY_CHARS, true));
+		fontMap.put(ResConst.DEFAULT_FONT_TITLE, createFont(36, NECESSARY_CHARS, true));
+	}
+	
+	/**
+	 * Helper function to create a new bitmap-font using {@link #fontGenerator}.
+	 * 
+	 * @param size size of the glyphs
+	 * @param loadChars chars, which should will be used
+	 * @param flip flips y-axis
+	 * @return bitmap created with given values
+	 */
+	private BitmapFont createFont(int size, String loadChars, boolean flip) {
+		return createFont(size, loadChars, flip, 0, Color.WHITE);
+	}
+	
+	/**
+	 * Helper function to create a new bitmap-font using {@link #fontGenerator}.
+	 * 
+	 * @param size size of the glyphs
+	 * @param loadChars chars, which should will be used
+	 * @param flip flips y-axis
+	 * @return bitmap created with given values
+	 */
+	private BitmapFont createFont(int size, String loadChars, boolean flip, int borderWidth, Color borderColor) {
+		final FreeTypeFontParameter para = new FreeTypeFontParameter();
+		para.size = size;
+		para.characters = loadChars;
+		para.flip = flip;
+		para.borderColor = borderColor;
+		para.borderWidth = borderWidth;
+		return fontGenerator.generateFont(para);
 	}
 
 	/**
