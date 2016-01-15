@@ -33,7 +33,7 @@ public enum ResConst {
 	DEFAULT_ROBO("default_robo", ResType.TEX),
 	DEFAULT_BUBBLE("default_bubble", ResType.TEX),
 	DEFAULT_STARTPOS("default_startpos", ResType.TEX),
-	DEFAULT_WARNING("default_connection", ResType.TEX),
+	DEFAULT_WARNING("default_warning", ResType.TEX),
 	DEFAULT_CONNECTION("default_connection", ResType.TEX),
 
 	DEFAULT_FONT("default_font", ResType.FONT);

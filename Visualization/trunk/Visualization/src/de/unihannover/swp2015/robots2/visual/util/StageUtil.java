@@ -139,22 +139,22 @@ public class StageUtil {
 		switch(direction) {
 		case NORTH: 
 			if (model.getY() == 0)
-				return result;
+				return false;
 			return result && !stage.getField(model.getX(), model.getY()-1).isWall(Orientation.SOUTH);
 		
 		case EAST:
 			if (model.getX()+1 == stage.getWidth())
-				return result;
+				return false;
 			return result && !stage.getField(model.getX()+1, model.getY()).isWall(Orientation.WEST);
 		
 		case WEST:
 			if (model.getX() == 0) 
-				return result;
+				return false;
 			return result && !stage.getField(model.getX()-1, model.getY()).isWall(Orientation.EAST);
 			
 		case SOUTH:
 			if (model.getY()+1 == stage.getHeight())
-				return result;
+				return false;
 			return result && !stage.getField(model.getX(), model.getY()+1).isWall(Orientation.NORTH);
 		default:
 			break;

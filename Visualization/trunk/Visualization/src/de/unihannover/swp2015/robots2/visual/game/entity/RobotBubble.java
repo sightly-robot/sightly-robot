@@ -61,6 +61,18 @@ public class RobotBubble extends Entity {
 	
 	/** Parent of the bubble */
 	private Robot parent;
+	
+	/** Connection lost icon */
+	private RenderUnit connection;
+	
+	/** Warning icon */
+	private RenderUnit warning;
+	
+	/** References the current icon, which should be rendered*/
+	private RenderUnit currentIcon;
+	
+	/** True if an icon have to be rendered */
+	boolean renderIcon = false;
 		
 	/**
 	 * Constructs a bubble for a given robot.
@@ -83,6 +95,8 @@ public class RobotBubble extends Entity {
 		this.color.a = GameConst.BUBBLE_ALPHA;
 		this.tex = resHandler.createRenderUnit(ResConst.DEFAULT_BUBBLE);
 		this.parent = parent;
+		this.connection = resHandler.createRenderUnit(ResConst.DEFAULT_CONNECTION);
+		this.warning = resHandler.createRenderUnit(ResConst.DEFAULT_WARNING);
 		
 		this.updateWidth(model);
 		this.updateHeight(model);
@@ -107,6 +121,38 @@ public class RobotBubble extends Entity {
 		this.height = fieldHeight * 0.5f;
 		this.y = robot.getPosition().getY() * fieldHeight - parent.getPositionY() - fieldHeight * 0.1f;
 	}
+
+	/**
+	 * Updates the icon.
+	 */
+	private void updateState() {
+		IRobot robot = (IRobot) model;
+		
+		switch(robot.getState()) {
+		
+		case DISCONNECTED:
+			renderIcon = true;
+			currentIcon = connection;
+			break;
+		
+		case CONNECTED:
+		case MANUAL_DISABLED_GUI:
+		case MANUAL_DISABLED_ROBOT:
+		case ROBOTICS_ERROR:
+			renderIcon = true;
+			currentIcon = warning;
+			break;
+			
+		case ENABLED:
+		case SETUPSTATE:
+			renderIcon = false;
+			break;
+			
+		default:
+			break;
+		
+		}
+	}
 	
 	/**
 	 * Recreates the fonts.
@@ -125,9 +171,14 @@ public class RobotBubble extends Entity {
 		
 		batch.setColor(color);
 		tex.draw(batch, finalX, finalY, width, height);
+		batch.setColor(Color.WHITE);
+		
 		fontSmall.draw(batch, id, finalX + width/8, finalY + height/8, width, Align.left, false);
 		fontBig.draw(batch, points, finalX + width/8, finalY + height/3, width, Align.left, false);
-		batch.setColor(Color.WHITE);
+		
+		if (renderIcon) {
+			currentIcon.draw(batch, finalX + width/1.6f, finalY + height/8, width/4, width/4);
+		}
 	}
 	
 	@Override
@@ -162,6 +213,10 @@ public class RobotBubble extends Entity {
 			points = robot.getScore() + "(" + handler.getRanking(robot) + ")";
 			break;
 
+		case ROBOT_STATE:
+			updateState();
+			break;
+			
 		default:
 			break;
 		}			

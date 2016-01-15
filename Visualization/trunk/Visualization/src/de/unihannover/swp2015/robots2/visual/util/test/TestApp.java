@@ -23,6 +23,7 @@ import de.unihannover.swp2015.robots2.model.interfaces.IPosition;
 import de.unihannover.swp2015.robots2.model.interfaces.IStage;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
 import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
+import de.unihannover.swp2015.robots2.model.interfaces.IRobot.RobotState;
 
 /**
  * One-class swing app to test the reaction of the visualization when making changes to the IGame object.
@@ -102,6 +103,8 @@ public class TestApp extends JFrame implements ActionListener {
 				final Robot rob = (Robot) ro;
 				rob.setPosition(rand.nextInt(game.getStage().getWidth()), (int)(Math.random()*game.getStage().getHeight()), randomOrientation());
 				rob.emitEvent(UpdateType.ROBOT_POSITION);
+				rob.setRobotState(RobotState.ROBOTICS_ERROR);
+				rob.emitEvent(UpdateType.ROBOT_STATE);
 			}
 		}
 		else if (e.getSource() == changeRobots) {
@@ -114,7 +117,7 @@ public class TestApp extends JFrame implements ActionListener {
 					break;
 				}
 			}
-			else{
+			else {
 				robo.setPosition(1, 1, Orientation.EAST);	
 			}
 			g.addRobot(robo);
