@@ -70,20 +70,19 @@ public class RobotBubble extends Entity {
 	 */
 	public RobotBubble(RobotGameHandler handler, Robot parent) {
 		super(parent.getModel(), handler);
-	
+
+		this.fieldWidth = gameHandler.getPreferences().getFloat(PrefKey.FIELD_WIDTH_KEY);
+		this.fieldHeight = gameHandler.getPreferences().getFloat(PrefKey.FIELD_HEIGHT_KEY);
+		
 		final IRobot model = (IRobot) parent.getModel();
-		this.fontSmall = resHandler.getFont(ResConst.DEFAULT_FONT_SMALL);
-		this.fontBig = resHandler.getFont(ResConst.DEFAULT_FONT_POINTS);
+		this.fontSmall = resHandler.createFont((int) fieldWidth/12, ResourceHandler.NECESSARY_CHARS, true, 1, Color.BLACK);
+		this.fontBig = resHandler.createFont((int) fieldWidth/9, ResourceHandler.NECESSARY_CHARS, true, 1, Color.BLACK);
 		this.points = model.getScore() + "(" + handler.getRanking(model) + ")";
 		this.id = model.getName();
 		this.color = ColorUtil.fromAwtColor(model.getColor());
 		this.color.a = GameConst.BUBBLE_ALPHA;
 		this.tex = resHandler.createRenderUnit(ResConst.DEFAULT_BUBBLE);
 		this.parent = parent;
-		
-		
-		this.fieldWidth = gameHandler.getPreferences().getFloat(PrefKey.FIELD_WIDTH_KEY);
-		this.fieldHeight = gameHandler.getPreferences().getFloat(PrefKey.FIELD_HEIGHT_KEY);
 		
 		this.updateWidth(model);
 		this.updateHeight(model);
