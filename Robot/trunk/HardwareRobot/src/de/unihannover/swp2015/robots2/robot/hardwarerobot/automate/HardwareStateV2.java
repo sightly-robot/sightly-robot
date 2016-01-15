@@ -2,6 +2,7 @@ package de.unihannover.swp2015.robots2.robot.hardwarerobot.automate;
 
 import java.awt.Color;
 
+import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
 import de.unihannover.swp2015.robots2.robot.abstractrobot.Direction;
 import de.unihannover.swp2015.robots2.robot.abstractrobot.automate.IState;
 import de.unihannover.swp2015.robots2.robot.hardwarerobot.pi2gocontroller.LEDAndServoController;
@@ -11,7 +12,7 @@ import de.unihannover.swp2015.robots2.robot.hardwarerobot.pi2gocontroller.Pi2GoG
 /**
  * The states of the control automate of a hardware robot (Pi2Go).
  * 
- * @author Philipp Rohde & Lenard 
+ * @author Philipp Rohde & Lenard
  */
 public enum HardwareStateV2 implements IState {
 
@@ -22,14 +23,29 @@ public enum HardwareStateV2 implements IState {
 		@Override
 		public void start() {
 			super.start();
-			setCarLeds(false,false);
 			this.execute();
 		}
 
 		@Override
 		public IState execute() {
-			if(System.currentTimeMillis()-startTime > 5000)
-			{
+			// LEDS:
+			boolean blink = (System.currentTimeMillis() - startTime) % 800 < 400;
+			switch (nextButOneDirection) {
+			case LEFT:
+				setCarLeds(false, blink);
+				break;
+			case RIGHT:
+				setCarLeds(blink, false);
+				break;
+			case BACKWARDS:
+				setCarLeds(blink, blink);
+			case FORWARDS:
+				setCarLeds(false, false);
+				break;
+			}
+			;
+
+			if (System.currentTimeMillis() - startTime > 5000) {
 				return DISABLED;
 			}
 			boolean left = GPIO.isLineLeft();
@@ -40,7 +56,7 @@ public enum HardwareStateV2 implements IState {
 				return DRIVE_ON_CELL;
 			} else if (!left && !right) {
 				setServo(0);
-				MOTORS.go(calcProgress()<0.7?FASTER:NORMAL);
+				MOTORS.go(calcProgress() < 0.7 ? FASTER : NORMAL);
 			} else if (right) {
 				setServo(20);
 				MOTORS.go(FAST, SLOW);
@@ -57,18 +73,33 @@ public enum HardwareStateV2 implements IState {
 	DRIVE_ON_CELL {
 
 		private static final double DRIVE_DURATION = 310.0;
-		private long startTime;
 
 		@Override
 		public void start() {
 			super.start();
-			setCarLeds(false,false);
-			startTime = System.currentTimeMillis();
 			this.execute();
 		}
 
 		@Override
 		public IState execute() {
+			// LEDS:
+			boolean blink = (System.currentTimeMillis() - startTime) % 800 < 400;
+			switch (nextButOneDirection) {
+			case LEFT:
+				setCarLeds(false, blink);
+				break;
+			case RIGHT:
+				setCarLeds(blink, false);
+				break;
+			case BACKWARDS:
+				setCarLeds(blink, blink);
+			case FORWARDS:
+				setCarLeds(false, false);
+				break;
+			}
+			;
+
+			// MOTOR:
 			boolean left = GPIO.isLineLeft();
 			boolean right = GPIO.isLineRight();
 
@@ -103,10 +134,10 @@ public enum HardwareStateV2 implements IState {
 		}
 
 		@Override
-		public IState execute() {		
-			double i = 0.85 + ((System.currentTimeMillis()-startTime)%4000 - 2000)/14000.0;
-			LEDS.setAllLEDs(new Color((int) (LEDS.getAccentColor().getRed() * i), (int) (LEDS.getAccentColor().getGreen() * i),
-					(int) (LEDS.getAccentColor().getBlue() * i)));
+		public IState execute() {
+			double i = 0.85 + ((System.currentTimeMillis() - startTime) % 4000 - 2000) / 14000.0;
+			LEDS.setAllLEDs(new Color((int) (LEDS.getAccentColor().getRed() * i),
+					(int) (LEDS.getAccentColor().getGreen() * i), (int) (LEDS.getAccentColor().getBlue() * i)));
 			return this;
 		}
 	},
@@ -123,7 +154,7 @@ public enum HardwareStateV2 implements IState {
 
 		@Override
 		public IState execute() {
-			LEDS.setAllLEDs((System.currentTimeMillis()-startTime)%500<250?LEDS.getAccentColor():Color.WHITE);
+			LEDS.setAllLEDs((System.currentTimeMillis() - startTime) % 500 < 250 ? LEDS.getAccentColor() : Color.WHITE);
 			return this;
 		}
 	},
@@ -134,7 +165,7 @@ public enum HardwareStateV2 implements IState {
 		@Override
 		public void start() {
 			super.start();
-			setCarLeds(false,false);
+			setCarLeds(false, false);
 			MOTORS.go(STOP);
 			this.execute();
 		}
@@ -157,9 +188,9 @@ public enum HardwareStateV2 implements IState {
 
 		@Override
 		public IState execute() {
-			double i = 0.25 + ((System.currentTimeMillis()-startTime)%4000 - 2000)/14000.0;
-			LEDS.setAllLEDs(new Color((int) (LEDS.getAccentColor().getRed() * i), (int) (LEDS.getAccentColor().getGreen() * i),
-					(int) (LEDS.getAccentColor().getBlue() * i)));
+			double i = 0.25 + ((System.currentTimeMillis() - startTime) % 4000 - 2000) / 14000.0;
+			LEDS.setAllLEDs(new Color((int) (LEDS.getAccentColor().getRed() * i),
+					(int) (LEDS.getAccentColor().getGreen() * i), (int) (LEDS.getAccentColor().getBlue() * i)));
 			return this;
 		}
 	},
@@ -170,7 +201,7 @@ public enum HardwareStateV2 implements IState {
 		@Override
 		public void start() {
 			super.start();
-			setCarLeds(false,true);
+			setCarLeds(false, true);
 			LEDS.setLED(LEDS_LEFT, COLOR_BLINK);
 			this.execute();
 		}
@@ -193,7 +224,7 @@ public enum HardwareStateV2 implements IState {
 		@Override
 		public void start() {
 			super.start();
-			setCarLeds(false,true);
+			setCarLeds(false, true);
 			this.execute();
 		}
 
@@ -215,7 +246,7 @@ public enum HardwareStateV2 implements IState {
 		@Override
 		public void start() {
 			super.start();
-			setCarLeds(true,false);
+			setCarLeds(true, false);
 			this.execute();
 		}
 
@@ -237,7 +268,7 @@ public enum HardwareStateV2 implements IState {
 		@Override
 		public void start() {
 			super.start();
-			setCarLeds(true,false);
+			setCarLeds(true, false);
 			this.execute();
 		}
 
@@ -259,7 +290,7 @@ public enum HardwareStateV2 implements IState {
 		@Override
 		public void start() {
 			super.start();
-			setCarLeds(false,true);
+			setCarLeds(false, true);
 			this.execute();
 		}
 
@@ -281,7 +312,7 @@ public enum HardwareStateV2 implements IState {
 		@Override
 		public void start() {
 			super.start();
-			setCarLeds(false,true);
+			setCarLeds(false, true);
 			this.execute();
 		}
 
@@ -303,7 +334,7 @@ public enum HardwareStateV2 implements IState {
 		@Override
 		public void start() {
 			super.start();
-			setCarLeds(false,false);
+			setCarLeds(true, true);
 			this.execute();
 		}
 
@@ -325,7 +356,7 @@ public enum HardwareStateV2 implements IState {
 		@Override
 		public void start() {
 			super.start();
-			setCarLeds(false,true);
+			setCarLeds(false, true);
 			this.execute();
 		}
 
@@ -362,12 +393,13 @@ public enum HardwareStateV2 implements IState {
 
 	// LED colors
 	private static final Color COLOR_BREAK = Color.RED;
+	private static final Color COLOR_REAR = Color.RED.darker().darker();
 	private static final Color COLOR_FRONT = Color.WHITE;
 	private static final Color COLOR_BLINK = Color.ORANGE;
-	
-	private static long[] measurements = new long[]{100,100,100,100,100,100,100,100,100,100,100};
-	protected long startTime = 0;
-	                               
+
+	private static long[] measurements = new long[] { 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100 };
+	protected static long startTime = 0;
+	protected static Direction nextButOneDirection;
 
 	/**
 	 * Should be called at start to reset the measurements.
@@ -376,23 +408,24 @@ public enum HardwareStateV2 implements IState {
 	public void start() {
 		startTime = System.currentTimeMillis();
 	}
-	
+
 	/**
 	 * Should be called at end of an State Lifecircle
 	 */
 	protected void measure() {
-		measurements[this.ordinal()] = (long) (measurements[this.ordinal()]*0.8+0.2*(System.currentTimeMillis()-startTime));
+		measurements[this.ordinal()] = (long) (measurements[this.ordinal()] * 0.8
+				+ 0.2 * (System.currentTimeMillis() - startTime));
 	}
 
 	/**
 	 * Can be called while executing to calculate the current measured Progress.
+	 * 
 	 * @return progress double 0 to 1
 	 */
-	protected double calcProgress()
-	{
-		return Math.min(((double)(System.currentTimeMillis()-startTime))/measurements[this.ordinal()],1);
+	protected double calcProgress() {
+		return Math.min(((double) (System.currentTimeMillis() - startTime)) / measurements[this.ordinal()], 1);
 	}
-	
+
 	/**
 	 * Returns whether the current state is the wait state or not.
 	 * 
@@ -401,9 +434,9 @@ public enum HardwareStateV2 implements IState {
 	 */
 	@Override
 	public boolean isWait() {
-		return this == WAIT ; //TODO || this == SETUP || this == DISABLED
+		return this == WAIT; // TODO || this == SETUP || this == DISABLED
 	}
-	
+
 	@Override
 	public boolean isDriving() {
 		return this != WAIT && this != SETUP && this != DISABLED && this != CONNECTED;
@@ -422,27 +455,21 @@ public enum HardwareStateV2 implements IState {
 	/**
 	 * Sets the Car Led style.
 	 */
-	protected void setCarLeds(boolean right, boolean left)
-	{
+	protected void setCarLeds(boolean right, boolean left) {
 		LEDS.setLED(LEDS_FRONT, COLOR_FRONT);
-		LEDS.setLED(LEDS_REAR, COLOR_BREAK);
-		if(right)
-		{
+		LEDS.setLED(LEDS_REAR, this == DRIVE_ON_CELL ? COLOR_BREAK : COLOR_REAR);
+		if (right) {
 			LEDS.setLED(LEDS_RIGHT, COLOR_BLINK);
-		}else
-		{
+		} else {
 			LEDS.setLED(LEDS_RIGHT, Color.BLACK);
 		}
-		if(left)
-		{
+		if (left) {
 			LEDS.setLED(LEDS_LEFT, COLOR_BLINK);
-		}else
-		{
+		} else {
 			LEDS.setLED(LEDS_LEFT, Color.BLACK);
 		}
 	}
 
-	
 	/**
 	 * Returns the state for driving into the specified direction.
 	 * 
@@ -463,5 +490,9 @@ public enum HardwareStateV2 implements IState {
 			return TURN_LEFT_1;
 		}
 		return FOLLOW_LINE;
+	}
+
+	public void setNextButOneDirection(Direction direction) {
+		this.nextButOneDirection = direction;
 	}
 }
