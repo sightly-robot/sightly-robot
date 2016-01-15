@@ -44,9 +44,12 @@ public class RobotMainController extends AbstractMainController implements
 		// Start MQTTController
 		try {
 			String clientId = "robot_" + this.myself.getId();
-			String[] subscribeTopics = { "robot/#", "map/walls", "map/food",
-					"map/food/+", "map/occupied/#", "control/state",
-					"extension/2/robot/#" };
+
+			MqttTopic[] extendedTopics = { MqttTopic.ROBOT_DISCOVER,
+					MqttTopic.ROBOT_NEW, MqttTopic.ROBOT_SETPOSITION,
+					MqttTopic.ROBOT_BLINK, MqttTopic.CONTROL_VIRTUALSPEED };
+			String[] subscribeTopics = this.getSubscribeTopcis(extendedTopics);
+
 			this.mqttController = new MqttController(clientId, this,
 					Arrays.asList(subscribeTopics),
 					MqttTopic.EVENT_ERROR_ROBOT_CONNECTION.toString(id),
@@ -94,56 +97,9 @@ public class RobotMainController extends AbstractMainController implements
 			}
 			break;
 
-		case ROBOT_TYPE:
-			this.gameModelController.mqttAddRobot(key, message);
-			break;
-
-		case ROBOT_STATE:
-			this.robotModelController.mqttRobotState(key, message);
-			break;
-
 		case ROBOT_SETPOSITION:
 			// TODO refactor to own method
-			if (this.myself.getId().equals(key)) {
-				String[] positionParts = message.split(",");
-				int x = Integer.parseInt(positionParts[0]);
-				int y = Integer.parseInt(positionParts[1]);
-				Orientation o = Orientation.getBy(positionParts[2]);
 
-				// Don't do anything if the target field is occupied by another
-				// robot
-				IField.State state = this.game.getStage().getField(x, y)
-						.getState();
-				if (state == State.LOCKED || state == State.OCCUPIED)
-					return;
-
-				// Occupy target field and release old fields
-				for (IFieldWriteable ourField : this.stageModelController
-						.getOurFields()) {
-					this.releaseField(ourField.getX(), ourField.getY());
-				}
-				this.occupyField(x, y);
-
-				// Broadcast new position and SETUPSTATE
-				this.sendMqttMessage(MqttTopic.ROBOT_POSITION,
-						this.myself.getId(), Integer.toString(x) + ","
-								+ Integer.toString(y) + "," + o.toString());
-				this.sendMqttMessage(MqttTopic.ROBOT_STATE,
-						this.myself.getId(), RobotState.SETUPSTATE.toString());
-
-				// Change local model (position and state)
-				this.myself.setPosition(x, y, o);
-				this.myself.setRobotState(RobotState.SETUPSTATE);
-
-				// Emit model events
-				this.myself.emitEvent(UpdateType.ROBOT_POSITION);
-				this.myself.emitEvent(UpdateType.ROBOT_PROGRESS);
-				this.myself.emitEvent(UpdateType.ROBOT_STATE);
-			}
-			break;
-
-		case ROBOT_POSITION:
-			this.robotModelController.mqttRobotPosition(key, message);
 			break;
 
 		case ROBOT_BLINK:
@@ -156,18 +112,6 @@ public class RobotMainController extends AbstractMainController implements
 		case CONTROL_VIRTUALSPEED:
 			this.gameModelController.mqttSetRobotVirtualspeed(Float
 					.valueOf(message));
-			break;
-
-		case MAP_WALLS:
-			this.stageModelController.mqttSetWalls(message);
-			break;
-
-		case MAP_FOOD:
-			this.stageModelController.mqttSetFood(message);
-			break;
-
-		case FIELD_FOOD:
-			this.stageModelController.mqttSetFieldFood(key, message);
 			break;
 
 		case FIELD_OCCUPIED_LOCK:
@@ -184,11 +128,8 @@ public class RobotMainController extends AbstractMainController implements
 			this.fieldStateModelController.mqttFieldRelease(key);
 			break;
 
-		case CONTROL_STATE:
-			this.gameModelController.mqttSetGameState(message);
-			break;
-
 		default:
+			this.processGeneralMessage(mqtttopic, key, message);
 			break;
 		}
 
@@ -223,6 +164,55 @@ public class RobotMainController extends AbstractMainController implements
 
 		// Emit correct model events
 		this.game.emitEvent(UpdateType.MODEL_SYNC_STATE);
+		this.myself.emitEvent(UpdateType.ROBOT_STATE);
+	}
+
+	/**
+	 * Event handler to be called when we receive a MQTT "set position" message.
+	 * 
+	 * @param key
+	 *            The robot id extracted from the MQTT topic
+	 * @param message
+	 *            The payload of the MQTT message
+	 */
+	public void onMqttSetPosition(String key, String message) {
+		if (!this.myself.getId().equals(key))
+			return;
+
+		String[] positionParts = message.split(",");
+		int x = Integer.parseInt(positionParts[0]);
+		int y = Integer.parseInt(positionParts[1]);
+		Orientation o = Orientation.getBy(positionParts[2]);
+
+		// Don't do anything if the target field is occupied by another
+		// robot
+		IField.State state = this.game.getStage().getField(x, y).getState();
+		if (state == State.LOCKED || state == State.OCCUPIED)
+			return;
+
+		// Occupy target field and release old fields
+		for (IFieldWriteable ourField : this.stageModelController
+				.getOurFields()) {
+			this.releaseField(ourField.getX(), ourField.getY());
+		}
+		this.occupyField(x, y);
+
+		// Broadcast new position and SETUPSTATE
+		this.sendMqttMessage(
+				MqttTopic.ROBOT_POSITION,
+				this.myself.getId(),
+				Integer.toString(x) + "," + Integer.toString(y) + ","
+						+ o.toString());
+		this.sendMqttMessage(MqttTopic.ROBOT_STATE, this.myself.getId(),
+				RobotState.SETUPSTATE.toString());
+
+		// Change local model (position and state)
+		this.myself.setPosition(x, y, o);
+		this.myself.setRobotState(RobotState.SETUPSTATE);
+
+		// Emit model events
+		this.myself.emitEvent(UpdateType.ROBOT_POSITION);
+		this.myself.emitEvent(UpdateType.ROBOT_PROGRESS);
 		this.myself.emitEvent(UpdateType.ROBOT_STATE);
 	}
 
