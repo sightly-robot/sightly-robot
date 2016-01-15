@@ -35,7 +35,6 @@ public class TestUtil {
 			final Robot rob = new Robot(UUID.randomUUID().toString(), i % 2 == 0, false); 
 			rob.addScore(i*23);
 			rob.setPosition(i % fieldWidth, (i+3) % fieldHeight, Orientation.NORTH);
-			rob.setName(rob.getId());
 			game.addRobot(rob);		
 		}
 		final Stage s = (Stage) game.getStage();

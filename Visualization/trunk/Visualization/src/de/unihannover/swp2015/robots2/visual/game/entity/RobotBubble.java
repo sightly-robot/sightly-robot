@@ -75,7 +75,7 @@ public class RobotBubble extends Entity {
 		this.fontSmall = resHandler.getFont(ResConst.DEFAULT_FONT_SMALL);
 		this.fontBig = resHandler.getFont(ResConst.DEFAULT_FONT_POINTS);
 		this.points = model.getScore() + "(" + handler.getRanking(model) + ")";
-		this.id = model.getId().substring(0, 8);
+		this.id = model.getName();
 		this.color = ColorUtil.fromAwtColor(model.getColor());
 		this.color.a = GameConst.BUBBLE_ALPHA;
 		this.tex = resHandler.createRenderUnit(ResConst.DEFAULT_BUBBLE);
