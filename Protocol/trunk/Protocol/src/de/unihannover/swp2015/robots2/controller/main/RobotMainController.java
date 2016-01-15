@@ -98,8 +98,7 @@ public class RobotMainController extends AbstractMainController implements
 			break;
 
 		case ROBOT_SETPOSITION:
-			// TODO refactor to own method
-
+			this.onMqttSetPosition(key, message);
 			break;
 
 		case ROBOT_BLINK:
