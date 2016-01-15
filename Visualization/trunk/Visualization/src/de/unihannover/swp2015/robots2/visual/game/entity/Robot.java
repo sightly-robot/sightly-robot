@@ -9,7 +9,6 @@ import de.unihannover.swp2015.robots2.visual.core.PrefKey;
 import de.unihannover.swp2015.robots2.visual.core.entity.Entity;
 import de.unihannover.swp2015.robots2.visual.game.GameConst;
 import de.unihannover.swp2015.robots2.visual.game.RobotGameHandler;
-import de.unihannover.swp2015.robots2.visual.game.entity.component.RobotBubble;
 import de.unihannover.swp2015.robots2.visual.game.entity.component.RobotEngine;
 import de.unihannover.swp2015.robots2.visual.resource.ResConst;
 import de.unihannover.swp2015.robots2.visual.resource.texture.RenderUnit;

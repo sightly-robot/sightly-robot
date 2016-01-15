@@ -90,12 +90,12 @@ public class StageUtil {
 	
 	/**
 	 * Checks if there is a wall in the drive direction. In this method the wall have to be set in the current field (<code>model</code>)
-	 * <b>and</b> in the regarding neighbor.
+	 * <b>and not</b> in the regarding neighbor.
 	 * 
 	 * @param model target field
 	 * @param stage parent
 	 * @param direction direction you want to drive in
-	 * @return true if there is a wall in the model in that direction and in the regarding neighbor, false otherwise
+	 * @return true if there is a wall in the model in that direction and not in the regarding neighbor, false otherwise
 	 */
 	public static boolean checkDriveDirectionAndNeighbours(final IField model, final IStage stage, final Orientation direction) {
 		boolean result = checkDriveDirection(model, direction, stage.getWidth(), stage.getHeight());
@@ -119,6 +119,43 @@ public class StageUtil {
 			if (model.getY()+1 == stage.getHeight())
 				return result;
 			return result && stage.getField(model.getX(), model.getY()+1).isWall(Orientation.NORTH);
+		default:
+			break;
+		}	
+		return result;
+	}
+	
+	/**
+	 * Checks if there is a wall in the drive direction. In this method the wall have to be set in the current field (<code>model</code>)
+	 * <b>and</b> in the regarding neighbor.
+	 * 
+	 * @param model target field
+	 * @param stage parent
+	 * @param direction direction you want to drive in
+	 * @return true if there is a wall in the model in that direction and in the regarding neighbor, false otherwise
+	 */
+	public static boolean checkDriveDirectionAndNotNeighbours(final IField model, final IStage stage, final Orientation direction) {
+		boolean result = checkDriveDirection(model, direction, stage.getWidth(), stage.getHeight());
+		switch(direction) {
+		case NORTH: 
+			if (model.getY() == 0)
+				return result;
+			return result && !stage.getField(model.getX(), model.getY()-1).isWall(Orientation.SOUTH);
+		
+		case EAST:
+			if (model.getX()+1 == stage.getWidth())
+				return result;
+			return result && !stage.getField(model.getX()+1, model.getY()).isWall(Orientation.WEST);
+		
+		case WEST:
+			if (model.getX() == 0) 
+				return result;
+			return result && !stage.getField(model.getX()-1, model.getY()).isWall(Orientation.EAST);
+			
+		case SOUTH:
+			if (model.getY()+1 == stage.getHeight())
+				return result;
+			return result && !stage.getField(model.getX(), model.getY()+1).isWall(Orientation.NORTH);
 		default:
 			break;
 		}	

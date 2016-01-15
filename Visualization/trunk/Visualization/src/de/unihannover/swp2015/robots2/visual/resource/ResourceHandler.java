@@ -26,10 +26,10 @@ import de.unihannover.swp2015.robots2.visual.resource.texture.RenderUnit;
 public class ResourceHandler implements IResourceHandler {
 	
 	/** Will be returned if texMap.get(key) == null */
-	private static final ResConst placeholderKey = ResConst.DEFAULT_FIELD;
+	private static final ResConst PLACEHOLDER = ResConst.DEFAULT_FIELD;
 	
 	/** All chars (as char-array), which will be used by the visualization. */
-	private static final String NECESSARY_CHARS = "abcdefghijklmnopqrstuvxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789()";
+	public static final String NECESSARY_CHARS = "abcdefghijklmnopqrstuvxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789()";
 
 	/** Base path to the texture themes. */
 	private final String themePath;
@@ -127,27 +127,13 @@ public class ResourceHandler implements IResourceHandler {
 		fontMap.put(ResConst.DEFAULT_FONT_TITLE, createFont(36, NECESSARY_CHARS, true));
 	}
 	
-	/**
-	 * Helper function to create a new bitmap-font using {@link #fontGenerator}.
-	 * 
-	 * @param size size of the glyphs
-	 * @param loadChars chars, which should will be used
-	 * @param flip flips y-axis
-	 * @return bitmap created with given values
-	 */
-	private BitmapFont createFont(int size, String loadChars, boolean flip) {
+	@Override
+	public BitmapFont createFont(int size, String loadChars, boolean flip) {
 		return createFont(size, loadChars, flip, 0, Color.WHITE);
 	}
 	
-	/**
-	 * Helper function to create a new bitmap-font using {@link #fontGenerator}.
-	 * 
-	 * @param size size of the glyphs
-	 * @param loadChars chars, which should will be used
-	 * @param flip flips y-axis
-	 * @return bitmap created with given values
-	 */
-	private BitmapFont createFont(int size, String loadChars, boolean flip, int borderWidth, Color borderColor) {
+	@Override
+	public BitmapFont createFont(int size, String loadChars, boolean flip, int borderWidth, Color borderColor) {
 		final FreeTypeFontParameter para = new FreeTypeFontParameter();
 		para.size = size;
 		para.characters = loadChars;
@@ -218,7 +204,7 @@ public class ResourceHandler implements IResourceHandler {
 	public TextureRegion getRegion(final ResConst key) {
 		final TextureRegion region = texMap.get(key);
 		if (region == null)
-			return texMap.get(placeholderKey);
+			return texMap.get(PLACEHOLDER);
 		return region;
 	}
 	

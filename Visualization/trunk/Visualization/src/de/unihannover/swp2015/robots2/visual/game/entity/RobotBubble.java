@@ -1,4 +1,4 @@
-package de.unihannover.swp2015.robots2.visual.game.entity.component;
+package de.unihannover.swp2015.robots2.visual.game.entity;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -11,8 +11,8 @@ import de.unihannover.swp2015.robots2.visual.core.PrefKey;
 import de.unihannover.swp2015.robots2.visual.core.entity.Entity;
 import de.unihannover.swp2015.robots2.visual.game.GameConst;
 import de.unihannover.swp2015.robots2.visual.game.RobotGameHandler;
-import de.unihannover.swp2015.robots2.visual.game.entity.Robot;
 import de.unihannover.swp2015.robots2.visual.resource.ResConst;
+import de.unihannover.swp2015.robots2.visual.resource.ResourceHandler;
 import de.unihannover.swp2015.robots2.visual.resource.texture.RenderUnit;
 import de.unihannover.swp2015.robots2.visual.util.ColorUtil;
 
@@ -109,6 +109,18 @@ public class RobotBubble extends Entity {
 		this.y = robot.getPosition().getY() * fieldHeight - parent.getPositionY() - fieldHeight * 0.1f;
 	}
 	
+	/**
+	 * Recreates the fonts.
+	 * 
+	 * @param value new size of the fields.
+	 */
+	private void updateFonts(float value) {
+		fontSmall.dispose();
+		fontBig.dispose();
+		fontSmall = resHandler.createFont((int) value/12, ResourceHandler.NECESSARY_CHARS, true, 1, Color.BLACK);
+		fontBig = resHandler.createFont((int) value/9, ResourceHandler.NECESSARY_CHARS, true, 1, Color.BLACK);
+	}
+
 	@Override
 	public void draw(Batch batch) {
 		final float finalX = parent.getPositionX() + x;
@@ -128,11 +140,13 @@ public class RobotBubble extends Entity {
 		case FIELD_HEIGHT_KEY:
 			this.fieldHeight = (float) value;
 			updateHeight((IRobot) parent.getModel());
+			updateFonts((float) value);
 			break;
 			
 		case FIELD_WIDTH_KEY:
 			this.fieldWidth = (float) value;
 			updateWidth((IRobot) parent.getModel());
+			updateFonts((float) value);
 			break;
 		
 		default:
@@ -140,7 +154,7 @@ public class RobotBubble extends Entity {
 		
 		}
 	}
-
+	
 	@Override
 	public void onManagedModelUpdate(IEvent event) {
 		switch(event.getType()) {

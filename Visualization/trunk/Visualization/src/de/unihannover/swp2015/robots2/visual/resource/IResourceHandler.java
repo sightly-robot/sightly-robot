@@ -1,5 +1,6 @@
 package de.unihannover.swp2015.robots2.visual.resource;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Disposable;
@@ -72,5 +73,31 @@ public interface IResourceHandler extends Disposable {
 	 * @param name id of the pack
 	 */
 	public void loadTexturePack(final String name);
+	
+	/**
+	 * Creates a new bitmap font using an internal generator with the give parameters. If you create
+	 * a font with this method, the resource handler does not manage them, so you have to call dispose 
+	 * yourself.
+	 * 
+	 * @param size size of the font
+	 * @param loadChars chars you want to display
+	 * @param flip inverts y-axes 
+	 * @return font
+	 */
+	public BitmapFont createFont(int size, String loadChars, boolean flip);
+	
+	/**
+	 * Creates a new bitmap font using an internal generator with the give parameters. If you create
+	 * a font with this method, the resource handler does not manage them, so you have to call dispose 
+	 * yourself.
+	 * 
+	 * @param size size of the font
+	 * @param loadChars chars you want to display
+	 * @param flip inverts y-axes 
+	 * @param width of the stroke
+	 * @param color of the stroke 
+	 * @return font
+	 */
+	public BitmapFont createFont(int size, String loadChars, boolean flip, int borderWidth, Color borderColor);
 	
 }

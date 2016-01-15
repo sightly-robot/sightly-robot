@@ -2,15 +2,13 @@ package de.unihannover.swp2015.robots2.visual.util;
 
 import com.badlogic.gdx.Gdx;
 
-import de.unihannover.swp2015.robots2.visual.core.IUpdateable;
-
 /**
  * Will perform a task with a given interval.
  * 
  * @author Rico Schrage
  *
  */
-public class LoopedTask implements IUpdateable {
+public class LoopedTask {
 	
 	/** Task, which will be executed */
 	private final Task task;
@@ -32,7 +30,6 @@ public class LoopedTask implements IUpdateable {
 		this.task = job;
 	}
 
-	@Override
 	public void update() {
 		progress -= Gdx.graphics.getDeltaTime();
 		if (progress <= 0) {
