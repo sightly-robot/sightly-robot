@@ -5,6 +5,7 @@ import org.apache.logging.log4j.Logger;
 
 import de.unihannover.swp2015.robots2.controller.externalInterfaces.IVisualization;
 import de.unihannover.swp2015.robots2.controller.interfaces.IVisualizationController;
+import de.unihannover.swp2015.robots2.controller.interfaces.ProtocolException;
 import de.unihannover.swp2015.robots2.controller.main.VisualizationMainController;
 import de.unihannover.swp2015.robots2.model.interfaces.IGame;
 
@@ -94,8 +95,8 @@ public class MqttHandler implements IVisualization, Runnable {
 				attempts = 0;
 				log.info("Connection established");
 			} 
-			catch (Exception e) {
-				log.warn("Connection could'nt be established.");
+			catch (ProtocolException e) {
+				log.warn("Connection could'nt be established.", e);
 				
 				attempts++;
 					
