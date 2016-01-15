@@ -140,7 +140,7 @@ public class RobotBubble extends Entity {
 		case FIELD_HEIGHT_KEY:
 			this.fieldHeight = (float) value;
 			updateHeight((IRobot) parent.getModel());
-			updateFonts((float) value);
+			//updateFonts((float) value);
 			break;
 			
 		case FIELD_WIDTH_KEY:
