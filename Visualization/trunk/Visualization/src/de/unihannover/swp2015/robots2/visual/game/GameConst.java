@@ -6,10 +6,7 @@ package de.unihannover.swp2015.robots2.visual.game;
  * @author Rico Schrage
  */
 public class GameConst {
-	
-	/** Alpha value of one-way walls */
-	public static final float ONEWAY_ALPHA = 0.7f;
-	
+		
 	/** x-scale of the robot-bubble */
 	public static final float BUBBLE_X_SCALE =  0.75f;
 	/** y-scale of the robot-bubble */

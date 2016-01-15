@@ -32,21 +32,21 @@ public interface IResourceHandler extends Disposable {
 	public TextureRegion[] getRegion(final ResConst... keys);
 
 	/**
-	 * Returns the font, which is mapped to the given key.
+	 * Returns the font, which is mapped to the given key, with the size <code>size</code>.
 	 * 
 	 * @param key {@link ResConst}
 	 * @return BitmapFont
 	 */
-	public BitmapFont getFont(final ResConst key);
+	public BitmapFont getFont(int size, ResConst key);
 	
 	/**
-	 * Returns the fonts, which are mapped to the given keyk. Key order defines the order of the resulting texture-regions.
+	 * Returns the fonts, which are mapped to the given key's with the given size. Key order defines the order of the resulting texture-regions.
 	 * E.g. input "a", "b"; Result: Font mapped to "a", Font mapped to "b".
 	 * 
 	 * @param keys {@link ResConst}
 	 * @return array of fonts.
 	 */
-	public BitmapFont[] getFont(final ResConst... keys); 
+	public BitmapFont[] getFont(int size, final ResConst... keys); 
 	
 	/**
 	 * Creates render unit, created with the texture region(s), which are mapped to <code>key</code>. 
@@ -76,7 +76,7 @@ public interface IResourceHandler extends Disposable {
 	
 	/**
 	 * Creates a new bitmap font using an internal generator with the give parameters. If you create
-	 * a font with this method, the resource handler does not manage them, so you have to call dispose 
+	 * a font with this method, the resource handler manages them, so you must not call dispose 
 	 * yourself.
 	 * 
 	 * @param size size of the font
@@ -88,7 +88,7 @@ public interface IResourceHandler extends Disposable {
 	
 	/**
 	 * Creates a new bitmap font using an internal generator with the give parameters. If you create
-	 * a font with this method, the resource handler does not manage them, so you have to call dispose 
+	 * a font with this method, the resource handler manages them, so you must not call dispose 
 	 * yourself.
 	 * 
 	 * @param size size of the font

@@ -114,8 +114,6 @@ public class RobotBubble extends Entity {
 	 * @param value new size of the fields.
 	 */
 	private void updateFonts(float value) {
-		fontSmall.dispose();
-		fontBig.dispose();
 		fontSmall = resHandler.createFont((int) value/12, ResourceHandler.NECESSARY_CHARS, true, 1, Color.BLACK);
 		fontBig = resHandler.createFont((int) value/9, ResourceHandler.NECESSARY_CHARS, true, 1, Color.BLACK);
 	}
@@ -139,7 +137,7 @@ public class RobotBubble extends Entity {
 		case FIELD_HEIGHT_KEY:
 			this.fieldHeight = (float) value;
 			updateHeight((IRobot) parent.getModel());
-			//updateFonts((float) value);
+			updateFonts((float) value);
 			break;
 			
 		case FIELD_WIDTH_KEY:

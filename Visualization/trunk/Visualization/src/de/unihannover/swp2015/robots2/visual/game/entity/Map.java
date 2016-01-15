@@ -24,6 +24,9 @@ public class Map extends Entity {
 
 	/** List of field-entities, which will be rendered by this entity. */
 	private final List<Field> fieldList;
+
+	/** List of wall-entities, which will be rendered by this entity. */
+	private final List<Wall> wallList;
 	
 	/**
 	 * Constructs a map.
@@ -36,6 +39,7 @@ public class Map extends Entity {
 		super(model, gameHandler);
 	
 		this.fieldList = new ArrayList<>(model.getWidth() * model.getHeight());
+		this.wallList = new ArrayList<>(model.getWidth() * model.getHeight());
 		
 		if (model.getHeight() != 0 && model.getWidth() != 0)
 			this.resize();
@@ -53,6 +57,12 @@ public class Map extends Entity {
 				fieldList.add(new Field(model, field, (RobotGameHandler) gameHandler));
 			}
 		}
+		for (int x = 0; x < model.getWidth(); ++x) {
+			for (int y = 0; y < model.getHeight(); ++y) {
+				final IField field = model.getField(x, y);
+				wallList.add(new Wall(model, field, (RobotGameHandler) gameHandler));
+			}
+		}
 	}
 
 	private void resize() {
@@ -60,8 +70,10 @@ public class Map extends Entity {
 
 		for (int i = 0; i < fieldList.size(); ++i) {
 			fieldList.get(i).clearReferences();
+			wallList.get(i).clearReferences();
 		}
 		fieldList.clear();
+		wallList.clear();
 		
 		final float fieldSize = prefs.getFloat(PrefKey.DEVICE_HEIGHT) * GameConst.HEIGHT_SCALE / stageModel.getHeight();
 		final float viewWidth = fieldSize * stageModel.getWidth();
@@ -81,6 +93,9 @@ public class Map extends Entity {
 		for (int i = 0 ; i < fieldList.size() ; ++i) {
 			fieldList.get(i).draw(batch);
 		}
+		for (int i = 0 ; i < fieldList.size() ; ++i) {
+			wallList.get(i).draw(batch);
+		}
 	}
 	
 	@Override
@@ -92,8 +107,12 @@ public class Map extends Entity {
 			break;
 			
 		case STAGE_WALL:
-			for (final Field f : fieldList)
+			for (final Field f : fieldList) {
 				f.onModelUpdate(event);
+			}
+			for (final Wall w : wallList) {
+				w.onModelUpdate(event);
+			}
 			break;
 			
 		default:

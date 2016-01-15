@@ -1,167 +1,160 @@
 
 theme.png
-size: 4096,2048
+size: 4096,1024
 format: RGBA8888
 filter: MipMapNearestNearest,MipMapNearestNearest
 repeat: none
 default_bubble
   rotate: false
-  xy: 2, 1514
+  xy: 2, 606
   size: 800, 400
   orig: 800, 400
   offset: 0, 0
   index: -1
+default_connection
+  rotate: false
+  xy: 3530, 374
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
 default_field
   rotate: false
-  xy: 2, 1010
+  xy: 2, 102
   size: 500, 500
   orig: 500, 500
   offset: 0, 0
   index: -1
 default_field_2_c
   rotate: false
-  xy: 2, 1010
+  xy: 2, 102
   size: 500, 500
   orig: 500, 500
   offset: 0, 0
   index: -1
 default_field_four
   rotate: false
-  xy: 2, 1010
+  xy: 2, 102
   size: 500, 500
   orig: 500, 500
   offset: 0, 0
   index: -1
 default_field_one
   rotate: false
-  xy: 2, 1010
+  xy: 2, 102
   size: 500, 500
   orig: 500, 500
   offset: 0, 0
   index: -1
 default_field_three
   rotate: false
-  xy: 2, 1010
+  xy: 2, 102
   size: 500, 500
   orig: 500, 500
   offset: 0, 0
   index: -1
 default_field_two
   rotate: false
-  xy: 2, 1010
+  xy: 2, 102
   size: 500, 500
   orig: 500, 500
   offset: 0, 0
   index: -1
 default_res_eight
   rotate: false
-  xy: 2, 506
+  xy: 806, 506
   size: 500, 500
   orig: 500, 500
   offset: 0, 0
   index: -1
 default_res_five
   rotate: false
-  xy: 2, 2
+  xy: 1310, 506
   size: 500, 500
   orig: 500, 500
   offset: 0, 0
   index: -1
 default_res_four
   rotate: false
-  xy: 806, 1414
+  xy: 1814, 506
   size: 500, 500
   orig: 500, 500
   offset: 0, 0
   index: -1
 default_res_nine
   rotate: false
-  xy: 1310, 1414
+  xy: 2318, 506
   size: 500, 500
   orig: 500, 500
   offset: 0, 0
   index: -1
 default_res_one
   rotate: false
-  xy: 1814, 1414
+  xy: 2822, 506
   size: 500, 500
   orig: 500, 500
   offset: 0, 0
   index: -1
 default_res_seven
   rotate: false
-  xy: 2318, 1414
+  xy: 3326, 506
   size: 500, 500
   orig: 500, 500
   offset: 0, 0
   index: -1
 default_res_six
   rotate: false
-  xy: 2822, 1414
+  xy: 506, 2
   size: 500, 500
   orig: 500, 500
   offset: 0, 0
   index: -1
 default_res_ten
   rotate: false
-  xy: 3326, 1414
+  xy: 1010, 2
   size: 500, 500
   orig: 500, 500
   offset: 0, 0
   index: -1
 default_res_three
   rotate: false
-  xy: 506, 910
+  xy: 1514, 2
   size: 500, 500
   orig: 500, 500
   offset: 0, 0
   index: -1
 default_res_two
   rotate: false
-  xy: 506, 406
+  xy: 2018, 2
   size: 500, 500
   orig: 500, 500
   offset: 0, 0
   index: -1
 default_robo
   rotate: false
-  xy: 1010, 910
+  xy: 2522, 2
   size: 500, 500
   orig: 500, 500
   offset: 0, 0
   index: -1
 default_startpos
   rotate: false
-  xy: 1010, 406
+  xy: 3026, 2
   size: 500, 500
   orig: 500, 500
   offset: 0, 0
   index: -1
-default_wall_e
+default_wall
   rotate: false
-  xy: 1514, 910
-  size: 500, 500
-  orig: 500, 500
+  xy: 3830, 506
+  size: 45, 500
+  orig: 45, 500
   offset: 0, 0
   index: -1
-default_wall_n
+default_warning
   rotate: false
-  xy: 1514, 406
-  size: 500, 500
-  orig: 500, 500
-  offset: 0, 0
-  index: -1
-default_wall_s
-  rotate: false
-  xy: 2018, 910
-  size: 500, 500
-  orig: 500, 500
-  offset: 0, 0
-  index: -1
-default_wall_w
-  rotate: false
-  xy: 2018, 406
-  size: 500, 500
-  orig: 500, 500
+  xy: 3879, 878
+  size: 128, 128
+  orig: 128, 128
   offset: 0, 0
   index: -1

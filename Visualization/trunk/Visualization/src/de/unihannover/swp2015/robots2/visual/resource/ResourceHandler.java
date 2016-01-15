@@ -1,6 +1,7 @@
 package de.unihannover.swp2015.robots2.visual.resource;
 
 import java.io.File;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -62,11 +63,11 @@ public class ResourceHandler implements IResourceHandler {
 	private final Map<ResConst, Array<TextureRegion>> frameSetMap;
 	
 	/**
-	 * Map key->font.
+	 * Map key->map(size->font).
 	 * 
 	 * @see {@link ResConst} for available keys
 	 */
-	private final Map<ResConst, BitmapFont> fontMap; 
+	private final Map<ResConst, Map<Integer, BitmapFont>> fontMap; 
 	
 	/**
 	 * Map key->RendeUnit
@@ -79,10 +80,10 @@ public class ResourceHandler implements IResourceHandler {
 	 * Constructs ResourceHandler
 	 */
 	public ResourceHandler(final String pathToThemes) {
-		this.texMap = new HashMap<>();
-		this.frameSetMap = new HashMap<>();
-		this.renderUnitMap = new HashMap<>();
-		this.fontMap = new HashMap<>();
+		this.texMap = new EnumMap<>(ResConst.class);
+		this.frameSetMap = new EnumMap<>(ResConst.class);
+		this.renderUnitMap = new EnumMap<>(ResConst.class);
+		this.fontMap = new EnumMap<>(ResConst.class);
 		this.themePath = pathToThemes;
 		
 		this.createRegions();
@@ -120,11 +121,8 @@ public class ResourceHandler implements IResourceHandler {
 	 */
 	private void createFonts() {
 		fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("assets/font/Roboto-Regular.ttf"));
-		fontMap.put(ResConst.DEFAULT_FONT, createFont(15, NECESSARY_CHARS, true, 1, Color.BLACK));
-		fontMap.put(ResConst.DEFAULT_FONT_SMALL, createFont(12, NECESSARY_CHARS, true, 1, Color.BLACK));
-		fontMap.put(ResConst.DEFAULT_FONT_POINTS, createFont(16, NECESSARY_CHARS, true, 1, Color.BLACK));
-		fontMap.put(ResConst.DEFAULT_FONT_BIG, createFont(28, NECESSARY_CHARS, true));
-		fontMap.put(ResConst.DEFAULT_FONT_TITLE, createFont(36, NECESSARY_CHARS, true));
+		fontMap.put(ResConst.DEFAULT_FONT, new HashMap<Integer, BitmapFont>());
+		fontMap.get(ResConst.DEFAULT_FONT).put(15, createFont(15, NECESSARY_CHARS, true, 1, Color.BLACK));
 	}
 	
 	@Override
@@ -134,12 +132,18 @@ public class ResourceHandler implements IResourceHandler {
 	
 	@Override
 	public BitmapFont createFont(int size, String loadChars, boolean flip, int borderWidth, Color borderColor) {
+		if (fontMap.get(ResConst.DEFAULT_FONT).containsKey(size)) {
+			return fontMap.get(ResConst.DEFAULT_FONT).get(size);
+		}
+		
 		final FreeTypeFontParameter para = new FreeTypeFontParameter();
 		para.size = size;
 		para.characters = loadChars;
 		para.flip = flip;
 		para.borderColor = borderColor;
 		para.borderWidth = borderWidth;
+		final BitmapFont font = fontGenerator.generateFont(para); 
+		fontMap.get(ResConst.DEFAULT_FONT).put(size, font);
 		return fontGenerator.generateFont(para);
 	}
 
@@ -223,15 +227,15 @@ public class ResourceHandler implements IResourceHandler {
 	}
 
 	@Override
-	public BitmapFont getFont(ResConst key) {
-		return fontMap.get(key);
+	public BitmapFont getFont(int size, ResConst key) {
+		return fontMap.get(key).get(size);
 	}
 
 	@Override
-	public BitmapFont[] getFont(ResConst... keys) {
+	public BitmapFont[] getFont(int size, ResConst... keys) {
 		BitmapFont[] regionArray = new BitmapFont[keys.length];
         for (int i = 0 ; i < keys.length; ++i) {
-            regionArray[i] = fontMap.get(keys[i]);
+            regionArray[i] = fontMap.get(keys[i]).get(size);
         }
         return regionArray;
 	}

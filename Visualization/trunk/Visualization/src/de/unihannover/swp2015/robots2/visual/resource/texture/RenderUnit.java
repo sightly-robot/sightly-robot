@@ -124,12 +124,12 @@ public class RenderUnit {
 			final float originX, final float originY, final float scaleX, final float scaleY, final float rotation) {
 		
 		if (isTexture()) {
-			batch.draw(tex, x, y, width, height, originX, originY, scaleX, scaleY, rotation);
+			batch.draw(tex, x, y, originX, originY, width, height, scaleX, scaleY, rotation);
 		} 
 		else if (isAnimation()) {
 			stateTime += Gdx.graphics.getDeltaTime();
 
-			batch.draw(animation.getKeyFrame(stateTime), x, y, width, height, originX, originY, scaleX, scaleY, rotation);
+			batch.draw(animation.getKeyFrame(stateTime), x, y, originX, originY, width, height, scaleX, scaleY, rotation);
 
 			if (stateTime > animation.getAnimationDuration())
 				stateTime = 0;
@@ -157,6 +157,32 @@ public class RenderUnit {
 	 */
 	public boolean isTexture() {
 		return tex != null;
+	}
+	
+	/**
+	 * @return width of the render-unit
+	 */
+	public float getWidth() {
+		if (isTexture()) {
+			return tex.getRegionWidth();
+		}
+		else if (isAnimation()) {
+			return animation.getKeyFrame(stateTime).getRegionWidth();
+		}
+		throw new IllegalStateException("The TextureUnit is not initialized!");
+	}
+	
+	/**
+	 * @return height of the render unit
+	 */
+	public float getHeight() {
+		if (isTexture()) {
+			return tex.getRegionHeight();
+		}
+		else if (isAnimation()) {
+			return animation.getKeyFrame(stateTime).getRegionHeight();
+		}
+		throw new IllegalStateException("The TextureUnit is not initialized!");
 	}
 
 }

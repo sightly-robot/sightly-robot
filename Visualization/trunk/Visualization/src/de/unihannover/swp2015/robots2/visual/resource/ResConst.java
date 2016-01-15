@@ -12,10 +12,8 @@ public enum ResConst {
 	ATLAS_NAME("theme", ResType.PATH),
 	DEFAULT_THEME("default", ResType.PATH),
 	
-	DEFAULT_WALL_N("default_wall_n", ResType.TEX),
-	DEFAULT_WALL_W("default_wall_w", ResType.TEX),
-	DEFAULT_WALL_E("default_wall_e", ResType.TEX),
-	DEFAULT_WALL_S("default_wall_s", ResType.TEX),
+	DEFAULT_WALL("default_wall", ResType.TEX),
+	DEFAULT_ONEWAY("default_oneway", ResType.TEX),
 	DEFAULT_FIELD("default_field", ResType.TEX),
 	DEFAULT_FIELD_1("default_field_one", ResType.TEX),
 	DEFAULT_FIELD_2("default_field_two", ResType.TEX),
@@ -35,12 +33,10 @@ public enum ResConst {
 	DEFAULT_ROBO("default_robo", ResType.TEX),
 	DEFAULT_BUBBLE("default_bubble", ResType.TEX),
 	DEFAULT_STARTPOS("default_startpos", ResType.TEX),
+	DEFAULT_WARNING("default_connection", ResType.TEX),
+	DEFAULT_CONNECTION("default_connection", ResType.TEX),
 
-	DEFAULT_FONT_SMALL("default_font_small", ResType.FONT),
-	DEFAULT_FONT("default_font", ResType.FONT),
-	DEFAULT_FONT_POINTS("default_font_points", ResType.FONT),
-	DEFAULT_FONT_BIG("default_font_big", ResType.FONT),
-	DEFAULT_FONT_TITLE("default_font_title", ResType.FONT);
+	DEFAULT_FONT("default_font", ResType.FONT);
 	
 	/** Name of the resource, should be equal to the real file */
 	private final String name;
