@@ -1,5 +1,8 @@
 package de.unihannover.swp2015.robots2.visual.resource;
 
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
+
 /**
  * All available keys for resources in {@link IResourceHandler}. 
  * The names of the enums are the same as the filenames of the packed textures.
@@ -13,7 +16,7 @@ public enum ResConst {
 	DEFAULT_THEME("default", ResType.PATH),
 	
 	DEFAULT_WALL("default_wall", ResType.TEX),
-	DEFAULT_ONEWAY("default_oneway", ResType.TEX),
+	DEFAULT_ONEWAY("default_oneway", ResType.TEX, TextureFilter.MipMapLinearLinear),
 	DEFAULT_FIELD("default_field", ResType.TEX),
 	DEFAULT_FIELD_1("default_field_one", ResType.TEX),
 	DEFAULT_FIELD_2("default_field_two", ResType.TEX),
@@ -42,6 +45,8 @@ public enum ResConst {
 	private final String name;
 	/** {@link ResType} */
 	private final ResType type;
+	/** Filter of the resource (only relevant for TEX and FONT)*/
+	private final TextureFilter filter;
 	
 	/**
 	 * Constructs a resource constant, which describes a resource.
@@ -50,8 +55,13 @@ public enum ResConst {
 	 * @param resType type of resource
 	 */
 	private ResConst(final String fileName, final ResType resType) {
+		this(fileName, resType, TextureFilter.Nearest);
+	}
+	
+	private ResConst(final String fileName, final ResType resType, TextureFilter filter) {
 		this.name = fileName;
 		this.type = resType;
+		this.filter = filter;
 	}
 	
 	/**
@@ -66,6 +76,13 @@ public enum ResConst {
 	 */
 	public ResType getType() {
 		return type;
+	}
+	
+	/**
+	 * @return filter of the resource, only relevant when type TEX or FONT, null otherwise.
+	 */
+	public Texture.TextureFilter getFilter() {
+		return filter;
 	}
 	
 	/**

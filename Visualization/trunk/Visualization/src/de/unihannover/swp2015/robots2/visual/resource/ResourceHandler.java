@@ -104,6 +104,7 @@ public class ResourceHandler implements IResourceHandler {
 		for (final ResConst res : resConsts) {
 			if (res.getType() == ResType.TEX) {
 				AtlasRegion region = texAtlas.findRegion(res.getName());
+				region.getTexture().setFilter(res.getFilter(), res.getFilter());
 				texMap.put(res, region);
 				if (renderUnitMap.containsKey(res)) {
 					renderUnitMap.get(res).initAsTexture(region);
