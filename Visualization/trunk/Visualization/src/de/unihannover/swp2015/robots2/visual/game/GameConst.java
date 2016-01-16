@@ -6,11 +6,29 @@ package de.unihannover.swp2015.robots2.visual.game;
  * @author Rico Schrage
  */
 public class GameConst {
-		
-	/** x-scale of the robot-bubble */
-	public static final float BUBBLE_X_SCALE =  0.75f;
-	/** y-scale of the robot-bubble */
-	public static final float BUBBLE_Y_SCALE =  0.2f;
+
+	/** Height of the icon realtive to the height of the bubble*/
+	public static final float BUBBLE_ICON_HEIGHT_REL = 1f/4f;
+	/** Width of the icon relative to the bubble width*/
+	public static final float BUBBLE_ICON_WIDTH_REL = 1f/4f;
+	/** Y position of the icon relative to the bubble height*/
+	public static final float BUBBLE_ICON_Y_REL = 1f/8f;
+	/** X position of the icon relative to the bubble width */
+	public static final float BUBBLE_ICON_X_REL = 1f/1.6f;
+	/** Y position of the font for the name relative to the height of the bubble */
+	public static final float BUBBLE_FONT_NAME_Y_REL = 1f/8f;
+	/** Y position of the font for the points relative to the height of the bubble */
+	public static final float BUBBLE_FONT_POINTS_Y_REL = 1f/3f;
+	/** Left padding of the bubble relative to the bubble width */
+	public static final float BUBBLE_PADDING_LEFT_REL = 1f/8f;
+	/** Y offset of the bubble relative to the field-size */
+	public static final float BUBBLE_Y_OFFSET_REL = 0.1f;
+	/** Height of the bubble relative to the field-size */
+	public static final float BUBBLE_HEIGHT_REL = 0.5f;
+	/** Font size of the name, relative to the field-size */
+	public static final float BUBBLE_NAME_FONT_SIZE_REL = 1f/12f;
+	/** Font size of the name, relative to the field-size */
+	public static final float BUBBLE_NAME_POINTS_SIZE_REL = 1f/9f;
 	/** Alpha value of the bubble */
 	public static final float BUBBLE_ALPHA = 0.5f;
 	

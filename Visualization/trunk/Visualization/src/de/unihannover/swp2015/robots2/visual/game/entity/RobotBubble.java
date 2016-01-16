@@ -85,18 +85,20 @@ public class RobotBubble extends Entity {
 
 		this.fieldWidth = gameHandler.getPreferences().getFloat(PrefKey.FIELD_WIDTH_KEY);
 		this.fieldHeight = gameHandler.getPreferences().getFloat(PrefKey.FIELD_HEIGHT_KEY);
-		
+	
 		final IRobot model = (IRobot) parent.getModel();
-		this.fontSmall = resHandler.createFont((int) fieldWidth/12, ResourceHandler.NECESSARY_CHARS, true, 1, Color.BLACK);
-		this.fontBig = resHandler.createFont((int) fieldWidth/9, ResourceHandler.NECESSARY_CHARS, true, 1, Color.BLACK);
+		
+		this.fontSmall = resHandler.createFont((int) (fieldWidth * GameConst.BUBBLE_NAME_FONT_SIZE_REL), ResourceHandler.NECESSARY_CHARS, true, 1, Color.BLACK);
+		this.fontBig = resHandler.createFont((int) (fieldWidth * GameConst.BUBBLE_NAME_POINTS_SIZE_REL), ResourceHandler.NECESSARY_CHARS, true, 1, Color.BLACK);
+		this.connection = resHandler.createRenderUnit(ResConst.DEFAULT_CONNECTION);
+		this.warning = resHandler.createRenderUnit(ResConst.DEFAULT_WARNING);
+		this.tex = resHandler.createRenderUnit(ResConst.DEFAULT_BUBBLE);
+		
 		this.points = model.getScore() + "(" + handler.getRanking(model) + ")";
 		this.id = model.getName();
 		this.color = ColorUtil.fromAwtColor(model.getColor());
 		this.color.a = GameConst.BUBBLE_ALPHA;
-		this.tex = resHandler.createRenderUnit(ResConst.DEFAULT_BUBBLE);
 		this.parent = parent;
-		this.connection = resHandler.createRenderUnit(ResConst.DEFAULT_CONNECTION);
-		this.warning = resHandler.createRenderUnit(ResConst.DEFAULT_WARNING);
 		
 		this.updateWidth(model);
 		this.updateHeight(model);
@@ -118,8 +120,8 @@ public class RobotBubble extends Entity {
 	 * @param robot robot model
 	 */
 	private void updateHeight(final IRobot robot) {
-		this.height = fieldHeight * 0.5f;
-		this.y = robot.getPosition().getY() * fieldHeight - parent.getPositionY() - fieldHeight * 0.1f;
+		this.height = fieldHeight * GameConst.BUBBLE_HEIGHT_REL;
+		this.y = robot.getPosition().getY() * fieldHeight - parent.getPositionY() - fieldHeight * GameConst.BUBBLE_Y_OFFSET_REL;
 	}
 
 	/**
@@ -160,8 +162,8 @@ public class RobotBubble extends Entity {
 	 * @param value new size of the fields.
 	 */
 	private void updateFonts(float value) {
-		fontSmall = resHandler.createFont((int) value/12, ResourceHandler.NECESSARY_CHARS, true, 1, Color.BLACK);
-		fontBig = resHandler.createFont((int) value/9, ResourceHandler.NECESSARY_CHARS, true, 1, Color.BLACK);
+		fontSmall = resHandler.createFont((int) (value * GameConst.BUBBLE_NAME_FONT_SIZE_REL), ResourceHandler.NECESSARY_CHARS, true, 1, Color.BLACK);
+		fontBig = resHandler.createFont((int) (value * GameConst.BUBBLE_NAME_POINTS_SIZE_REL), ResourceHandler.NECESSARY_CHARS, true, 1, Color.BLACK);
 	}
 
 	@Override
@@ -173,11 +175,14 @@ public class RobotBubble extends Entity {
 		tex.draw(batch, finalX, finalY, width, height);
 		batch.setColor(Color.WHITE);
 		
-		fontSmall.draw(batch, id, finalX + width/8, finalY + height/8, width, Align.left, false);
-		fontBig.draw(batch, points, finalX + width/8, finalY + height/3, width, Align.left, false);
+		final float fontX = finalX + width * GameConst.BUBBLE_PADDING_LEFT_REL;
+		
+		fontSmall.draw(batch, id, fontX, finalY + height * GameConst.BUBBLE_FONT_NAME_Y_REL, width, Align.left, false);
+		fontBig.draw(batch, points, fontX, finalY + height * GameConst.BUBBLE_FONT_POINTS_Y_REL, width, Align.left, false);
 		
 		if (renderIcon) {
-			currentIcon.draw(batch, finalX + width/1.6f, finalY + height/8, width/4, width/4);
+			currentIcon.draw(batch, finalX + width * GameConst.BUBBLE_ICON_X_REL, finalY + height * GameConst.BUBBLE_ICON_Y_REL, 
+					width * GameConst.BUBBLE_ICON_WIDTH_REL, width * GameConst.BUBBLE_ICON_HEIGHT_REL);
 		}
 	}
 	
