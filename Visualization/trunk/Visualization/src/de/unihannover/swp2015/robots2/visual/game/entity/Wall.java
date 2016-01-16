@@ -77,13 +77,13 @@ public class Wall extends Entity {
 				fieldWidth, fieldHeight);
 		
 		texWall[1] = new TransformedRenderUnit(isOneway[1] ? onewayTexture : wallTexture, renderX - fieldWidth/2, renderY, 
-				fieldWidth, fieldHeight);
+				fieldWidth, fieldHeight, fieldWidth/2, fieldHeight/2, 180);
 		
 		texWall[2] = new TransformedRenderUnit(isOneway[2] ? onewayTexture : wallTexture, renderX, renderY - fieldHeight/2, 
 				fieldWidth, fieldHeight, fieldWidth/2, fieldHeight/2, -90);
 		
 		texWall[3] = new TransformedRenderUnit(isOneway[3] ? onewayTexture : wallTexture, renderX, renderY + fieldHeight/2, 
-				fieldWidth, fieldHeight, fieldWidth/2, fieldHeight/2, -90);
+				fieldWidth, fieldHeight, fieldWidth/2, fieldHeight/2, 90);
 	}
 	
 	private void determineOneway(IField model) {
@@ -102,6 +102,9 @@ public class Wall extends Entity {
 		for (int i = 0; i < orientations.length; ++i) {
 			if (field.isWall(orientations[i])) {
 				texWall[i].draw(batch);
+				System.out.println("x:"+field.getX());
+				System.out.println("y:"+field.getY());
+				System.out.println("ori"+orientations[i]);
 			}
 		}
 	}
