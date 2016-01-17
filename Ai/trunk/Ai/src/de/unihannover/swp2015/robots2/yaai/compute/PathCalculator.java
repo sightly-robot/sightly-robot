@@ -13,7 +13,7 @@ import de.unihannover.swp2015.robots2.yaai.model.Graph;
 import de.unihannover.swp2015.robots2.yaai.model.Node;
 
 /**
- * Path calculator to be used with {@link YetAnotherAi}.
+ * Path calculator to be used with {@link YetAnotherAi} and its {@link CalculationWorker}.
  * 
  * Provides a method to calculate the best of all paths of a fixed length
  * beginning a one field.
@@ -112,7 +112,7 @@ public class PathCalculator {
 				bestScore = score;
 		}
 		visitedNodes.remove(node);
-		return bestScore + thisWeight * Math.sqrt(depth);
+		return bestScore + thisWeight / Math.sqrt(depth);
 	}
 
 }

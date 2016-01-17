@@ -268,7 +268,7 @@ public class YetAnotherAi extends AbstractAI implements IModelObserver {
 			return;
 		}
 		LOGGER.debug("Direction is {} from our current field {}-{}. And ... go!",
-				o.name());
+				o.name(),this.currentField.getX(),this.currentField.getY());
 
 		// Fire orientation
 		this.fireNextOrientationEvent(o);
