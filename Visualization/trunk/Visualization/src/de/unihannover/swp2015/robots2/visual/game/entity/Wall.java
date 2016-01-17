@@ -74,16 +74,16 @@ public class Wall extends Entity {
 		final RenderUnit onewayTexture = resHandler.createRenderUnit(ResConst.DEFAULT_ONEWAY);
 		
 		texWall[0] = new TransformedRenderUnit(isOneway[0] ? onewayTexture : wallTexture, renderX + fieldWidth/2, renderY, 
-				fieldWidth, fieldHeight);
-		
-		texWall[1] = new TransformedRenderUnit(isOneway[1] ? onewayTexture : wallTexture, renderX - fieldWidth/2, renderY, 
 				fieldWidth, fieldHeight, fieldWidth/2, fieldHeight/2, 180);
 		
+		texWall[1] = new TransformedRenderUnit(isOneway[1] ? onewayTexture : wallTexture, renderX - fieldWidth/2, renderY, 
+				fieldWidth, fieldHeight, fieldWidth/2, fieldHeight/2, 0);
+		
 		texWall[2] = new TransformedRenderUnit(isOneway[2] ? onewayTexture : wallTexture, renderX, renderY - fieldHeight/2, 
-				fieldWidth, fieldHeight, fieldWidth/2, fieldHeight/2, -90);
+				fieldWidth, fieldHeight, fieldWidth/2, fieldHeight/2, 90);
 		
 		texWall[3] = new TransformedRenderUnit(isOneway[3] ? onewayTexture : wallTexture, renderX, renderY + fieldHeight/2, 
-				fieldWidth, fieldHeight, fieldWidth/2, fieldHeight/2, 90);
+				fieldWidth, fieldHeight, fieldWidth/2, fieldHeight/2, -90);
 	}
 	
 	private void determineOneway(IField model) {
