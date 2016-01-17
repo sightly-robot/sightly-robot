@@ -40,6 +40,12 @@ public class Robot extends Entity {
 	/** Bubble of the robot, which displays some information about the robot */
 	private RobotBubble bubble;
 	
+	/** True if the robot should get rendered */
+	private boolean renderRobot;
+	
+	/** True if the bubble should get rendered (if renderRobot == false this has no effect) */
+	private boolean renderBubble;
+	
 	/**
 	 * Constructs a robot entity using given parameters.
 	 * 
@@ -57,7 +63,9 @@ public class Robot extends Entity {
 		
 		this.fieldWidth = prefs.getFloat(PrefKey.FIELD_WIDTH_KEY);
 		this.fieldHeight = prefs.getFloat(PrefKey.FIELD_HEIGHT_KEY);
-
+		this.renderRobot = robot.isHardwareRobot() ? prefs.getBoolean(PrefKey.RENDER_ROBOTS) : prefs.getBoolean(PrefKey.RENDER_VIRTUAL_ROBOTS);
+		this.renderBubble = prefs.getBoolean(PrefKey.RENDER_SCORE);
+		
 		this.updateWidth(robot);
 		this.updateHeight(robot);
 		this.bubble = new RobotBubble(gameHandler, this);
@@ -87,16 +95,20 @@ public class Robot extends Entity {
 	
 	@Override
 	public void draw(final Batch batch) {
-		super.draw(batch);
-	
-		final IRobot robot = (IRobot) model; 	
+		if (renderRobot) {
+			super.draw(batch);
 		
-		if (drawStartPosition) {
-			startPositionTexture.draw(batch, fieldWidth*robot.getPosition().getX(), fieldHeight*robot.getPosition().getY(), fieldWidth/2f, fieldHeight/2f, fieldWidth, fieldHeight, 1f, 1f, rotation);
-		} 
-		else {
-			robo.draw(batch, renderX, renderY, width, height, width/2f, height/2f, 1f, 1f, rotation);
-			bubble.draw(batch);
+			final IRobot robot = (IRobot) model; 	
+			
+			if (drawStartPosition) {
+				startPositionTexture.draw(batch, fieldWidth*robot.getPosition().getX(), fieldHeight*robot.getPosition().getY(), fieldWidth/2f, fieldHeight/2f, fieldWidth, fieldHeight, 1f, 1f, rotation);
+			} 
+			else {
+				robo.draw(batch, renderX, renderY, width, height, width/2f, height/2f, 1f, 1f, rotation);
+				if (renderBubble) {
+					bubble.draw(batch);
+				}
+			}
 		}
 	}
 
@@ -135,6 +147,19 @@ public class Robot extends Entity {
 			modList.clear();
 			fieldWidth = (float) value;
 			updateWidth(robot);
+			break;
+
+		case RENDER_ROBOTS:
+			renderRobot = robot.isHardwareRobot() ? (boolean) value : renderRobot; 
+			break;
+			
+		case RENDER_SCORE:
+		case RENDER_NAME:
+			renderBubble = (boolean) value;
+			break;
+			
+		case RENDER_VIRTUAL_ROBOTS:
+			renderRobot = robot.isHardwareRobot() ? renderRobot : (boolean) value; 
 			break;
 			
 		default:

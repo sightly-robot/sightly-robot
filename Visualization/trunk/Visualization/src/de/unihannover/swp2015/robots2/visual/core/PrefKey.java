@@ -18,8 +18,8 @@ public enum PrefKey implements IPreferencesKey {
 
 	X_OFFSET("abscissaOffset", 0f),
 	Y_OFFSET("ordinateOffset", 0f),
-	X_SCALE("abscissaScale", 0f),
-	Y_SCALE("ordinateScale", 0f),
+	X_SCALE("abscissaScale", 1f),
+	Y_SCALE("ordinateScale", 1f),
 	RENDER_WALL("renderWalls", true),
 	RENDER_RESOURCES("renderResources", true),
 	RENDER_NAME("renderName", true),

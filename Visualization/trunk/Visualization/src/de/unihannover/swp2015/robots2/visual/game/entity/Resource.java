@@ -17,7 +17,7 @@ import de.unihannover.swp2015.robots2.visual.resource.texture.RenderUnit;
  * @author Daphne Schössow
  */
 public class Resource extends Entity {
-
+	
 	/** Visual representation of the different stages of the food. */
 	private final RenderUnit[] tex;
 

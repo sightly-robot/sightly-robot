@@ -36,9 +36,6 @@ public class Field extends Entity {
 	/** Stage, the field belongs to. */
 	private final IStage parent;
 	
-	/** Resource as entity, based on this <code>model</code>. */
-	private final Resource food;
-	
 	/** Visual representation of the ground. */
 	private RenderUnit fieldUnit;
 	
@@ -63,8 +60,6 @@ public class Field extends Entity {
 		super(model, gameHandler);
 
 		this.parent = parentStage;
-		
-		this.food = new Resource(model, gameHandler);
 		this.fieldUnit = resHandler.createRenderUnit(ResConst.DEFAULT_FIELD);
 		this.fieldWidth = prefs.getFloat(PrefKey.FIELD_WIDTH_KEY, 50);
 		this.fieldHeight = prefs.getFloat(PrefKey.FIELD_HEIGHT_KEY, 50);
@@ -118,8 +113,6 @@ public class Field extends Entity {
 			fieldUnit.draw(batch, renderX, renderY, fieldWidth, fieldHeight, fieldWidth/2f, fieldHeight/2f, 1f, 1f, rotation);
 			break;
 		}
-	
-		food.draw(batch);
 	}
 	
 	@Override

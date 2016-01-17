@@ -221,6 +221,7 @@ public class RobotGameHandler extends GameHandler {
 			view.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
 			batch.setProjectionMatrix(view.getCamera().combined);
 			pp.onViewUpdate(view);
+			batch.getProjectionMatrix().translate(111, 11, 0);
 			break;
 			
 		case VIEW_HEIGHT:
@@ -228,6 +229,14 @@ public class RobotGameHandler extends GameHandler {
 			view.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
 			batch.setProjectionMatrix(view.getCamera().combined);
 			pp.onViewUpdate(view);			
+			batch.getProjectionMatrix().translate(111, 11, 0);
+			break;
+			
+		case X_OFFSET:
+		case X_SCALE:
+		case Y_OFFSET:
+		case Y_SCALE:
+			//TODO implement
 			break;
 			
 		default:

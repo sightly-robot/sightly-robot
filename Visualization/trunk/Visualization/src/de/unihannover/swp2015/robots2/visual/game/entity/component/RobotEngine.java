@@ -98,7 +98,7 @@ public class RobotEngine extends Component {
 	private void calcInterval() {
 		float realInterval = (System.nanoTime() - lastEvent) / 1000000000f;
 		if (realInterval > 0.2 || realInterval < 0.05) {
-			log.debug("event time out of row {}" , realInterval);
+			log.debug("Progress-event: time out of row {} (s)" , realInterval);
 		}
 		
 		if (!firstEvent) {
