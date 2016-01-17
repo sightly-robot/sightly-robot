@@ -18,7 +18,7 @@ import de.unihannover.swp2015.robots2.visual.util.StageUtil;
  * An entity used for the visualization of the underground and walls
  * 
  * @version 1.0
- * @author Daphne Schï¿½ssow
+ * @author Daphne Schössow
  */
 public class Field extends Entity {
 
