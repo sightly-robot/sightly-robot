@@ -102,9 +102,6 @@ public class Wall extends Entity {
 		for (int i = 0; i < orientations.length; ++i) {
 			if (field.isWall(orientations[i])) {
 				texWall[i].draw(batch);
-				System.out.println("x:"+field.getX());
-				System.out.println("y:"+field.getY());
-				System.out.println("ori"+orientations[i]);
 			}
 		}
 	}
