@@ -14,4 +14,9 @@ public interface IPreferencesKey {
 	 */
 	public String getKey();
 	
+	/**
+	 * @return default value of the key
+	 */
+	public Object getDefault();
+	
 }

@@ -7,7 +7,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
  * 
  * @author Rico Schrage
  */
-public interface Resizable {
+public interface IResizable {
 	
 	/**
 	 * Will be called when the application has been resized.

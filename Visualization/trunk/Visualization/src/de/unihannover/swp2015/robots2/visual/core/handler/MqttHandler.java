@@ -1,4 +1,4 @@
-package de.unihannover.swp2015.robots2.visual.core;
+package de.unihannover.swp2015.robots2.visual.core.handler;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -15,7 +15,7 @@ import de.unihannover.swp2015.robots2.model.interfaces.IGame;
  * 
  * @author Rico Schrage
  */
-public class MqttHandler implements IVisualization, Runnable {
+public class MqttHandler implements Runnable {
 
 	/** Logger (log4j) */
 	private static final Logger log = LogManager.getLogger();
@@ -44,9 +44,9 @@ public class MqttHandler implements IVisualization, Runnable {
 	 * 
 	 * @param ip IP of the broker
 	 */
-	public MqttHandler(String ip) {
+	public MqttHandler(String ip, IVisualization preferenceHandler) {
 		this.visController = new VisualizationMainController();
-		this.visController.registerVisualization(this);
+		this.visController.registerVisualization(preferenceHandler);
 		this.ip = ip;
 	}
 	
@@ -122,17 +122,6 @@ public class MqttHandler implements IVisualization, Runnable {
 				}
 			}
 		}
-	}
-	
-	@Override
-	public void setSettings(String settings) {
-		//TODO json->preferences
-	}
-
-	@Override
-	public String getSettings() {
-		//TODO preferences->json
-		return null;
 	}
 
 }

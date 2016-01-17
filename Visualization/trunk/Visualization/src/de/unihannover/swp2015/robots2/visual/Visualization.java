@@ -15,9 +15,10 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-import de.unihannover.swp2015.robots2.visual.core.MqttHandler;
 import de.unihannover.swp2015.robots2.visual.core.PrefKey;
 import de.unihannover.swp2015.robots2.visual.core.handler.IGameHandler;
+import de.unihannover.swp2015.robots2.visual.core.handler.MqttHandler;
+import de.unihannover.swp2015.robots2.visual.core.handler.PreferenceHandler;
 import de.unihannover.swp2015.robots2.visual.game.RobotGameHandler;
 import de.unihannover.swp2015.robots2.visual.resource.IResourceHandler;
 import de.unihannover.swp2015.robots2.visual.resource.ResConst;
@@ -48,7 +49,7 @@ public class Visualization extends ApplicationAdapter {
 	private final List<IGameHandler> gameHandlerList;
 
 	/** MqttHandler, handles connection fails. */
-	private final MqttHandler mqttHandler;
+	private MqttHandler mqttHandler;
 	
 	/** Settings received via MQTT */
 	private IPreferences<PrefKey> prefs;
@@ -58,7 +59,7 @@ public class Visualization extends ApplicationAdapter {
 	
 	/** For the timing of the debug output. */
 	private LoopedTask fpsLogger;
-		
+	
 	/**
 	 * Constructs a Visualization object.
 	 * 
@@ -69,7 +70,6 @@ public class Visualization extends ApplicationAdapter {
 		this.device = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 		this.gameHandlerList = new ArrayList<>();
 		this.ip = brokerIp;
-		this.mqttHandler = new MqttHandler(ip);
 		this.debug = debugFlag;
 		
 		if (debug) {
@@ -85,11 +85,12 @@ public class Visualization extends ApplicationAdapter {
 	@Override
 	public void create() {
 
+		prefs = new FlexPreferences<PrefKey>("prefs");
+		mqttHandler = new MqttHandler(ip, new PreferenceHandler(prefs));
+		
 		final int appWidth = Gdx.graphics.getWidth();
 		final int appHeight = Gdx.graphics.getHeight();
 		
-		prefs = new FlexPreferences<PrefKey>("prefs");
-
 		final OrthographicCamera cam = new OrthographicCamera();
 		cam.setToOrtho(true);
 		final Viewport fitViewport = new FitViewport(appWidth, appHeight, cam);

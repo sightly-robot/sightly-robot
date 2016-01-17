@@ -16,7 +16,7 @@ public enum ResConst {
 	DEFAULT_THEME("default", ResType.PATH),
 	
 	DEFAULT_WALL("default_wall", ResType.TEX),
-	DEFAULT_ONEWAY("default_oneway", ResType.TEX, TextureFilter.MipMapLinearLinear),
+	DEFAULT_ONEWAY("default_oneway", ResType.TEX, TextureFilter.Linear),
 	DEFAULT_FIELD("default_field", ResType.TEX),
 	DEFAULT_FIELD_1("default_field_one", ResType.TEX),
 	DEFAULT_FIELD_2("default_field_two", ResType.TEX),
@@ -35,7 +35,7 @@ public enum ResConst {
 	DEFAULT_RES_10("default_res_ten", ResType.TEX),
 	DEFAULT_ROBO("default_robo", ResType.TEX),
 	DEFAULT_BUBBLE("default_bubble", ResType.TEX),
-	DEFAULT_STARTPOS("default_startpos", ResType.TEX),
+	DEFAULT_STARTPOS("default_startpos", ResType.TEX, TextureFilter.Linear),
 	DEFAULT_WARNING("default_warning", ResType.TEX),
 	DEFAULT_CONNECTION("default_connection", ResType.TEX),
 

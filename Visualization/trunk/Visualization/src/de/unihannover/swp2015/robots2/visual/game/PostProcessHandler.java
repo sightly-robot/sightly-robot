@@ -10,7 +10,7 @@ import com.bitfire.postprocessing.PostProcessor;
 import com.bitfire.postprocessing.effects.Bloom;
 import com.bitfire.postprocessing.effects.Fxaa;
 
-import de.unihannover.swp2015.robots2.visual.core.Resizable;
+import de.unihannover.swp2015.robots2.visual.core.IResizable;
 
 /**
  * Manages all post processing effects.
@@ -26,7 +26,7 @@ import de.unihannover.swp2015.robots2.visual.core.Resizable;
  * 
  * @author Rico Schrage
  */
-public class PostProcessHandler implements Disposable, Resizable {
+public class PostProcessHandler implements Disposable, IResizable {
 	
 	/** Capable to render post-processing effects. Renders bloom effect. */
 	private PostProcessor pp;

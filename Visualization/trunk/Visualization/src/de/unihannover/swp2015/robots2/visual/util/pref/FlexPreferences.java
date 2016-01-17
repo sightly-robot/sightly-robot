@@ -60,7 +60,7 @@ public class FlexPreferences<T extends IPreferencesKey> extends PreferencesObser
 	
 	@Override
 	public boolean getBoolean(T key) {
-		return getBoolean(key, false);
+		return getBoolean(key, (boolean) key.getDefault());
 	}
 
 	@Override
@@ -79,7 +79,7 @@ public class FlexPreferences<T extends IPreferencesKey> extends PreferencesObser
 
 	@Override
 	public float getFloat(T key) {
-		return getFloat(key, 0f);
+		return getFloat(key, (float) key.getDefault());
 	}
 	
 	@Override
@@ -98,7 +98,7 @@ public class FlexPreferences<T extends IPreferencesKey> extends PreferencesObser
 
 	@Override
 	public int getInt(T key) {
-		return getInt(key, 0);
+		return getInt(key, (int) key.getDefault());
 	}
 	
 	@Override
@@ -117,7 +117,7 @@ public class FlexPreferences<T extends IPreferencesKey> extends PreferencesObser
 
 	@Override
 	public String getString(T key) {
-		return getString(key, "");
+		return getString(key, (String) key.getDefault());
 	}
 	
 	@Override
