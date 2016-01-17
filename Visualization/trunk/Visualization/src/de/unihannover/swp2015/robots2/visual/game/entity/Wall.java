@@ -61,7 +61,7 @@ public class Wall extends Entity {
 		this.renderY = model.getY() * fieldHeight;
 
 		this.determineOneway(model);
-		this.createRenderUnits(model);
+		this.createRenderUnits();
 	}
 	
 	/**
@@ -69,7 +69,7 @@ public class Wall extends Entity {
 	 * 
 	 * @param model field model of this entity
 	 */
-	private void createRenderUnits(IField model) {
+	private void createRenderUnits() {
 		final RenderUnit wallTexture = resHandler.createRenderUnit(ResConst.DEFAULT_WALL);
 		final RenderUnit onewayTexture = resHandler.createRenderUnit(ResConst.DEFAULT_ONEWAY);
 		
@@ -112,7 +112,7 @@ public class Wall extends Entity {
 		
 		if (event.getType() == UpdateType.STAGE_WALL) {
 			determineOneway(field);
-			createRenderUnits(field);
+			createRenderUnits();
 		}
 	}
 

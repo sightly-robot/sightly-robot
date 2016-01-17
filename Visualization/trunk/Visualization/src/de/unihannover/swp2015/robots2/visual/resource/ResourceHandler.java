@@ -168,7 +168,6 @@ public class ResourceHandler implements IResourceHandler {
 			result.initAsTexture(texMap.get(key));
 		}
 		else if (frameSetMap.containsKey(key)) {
-			//TODO modify for texture-packs (optional)
 			result.initAsAnimation(frameSetMap.get(key), PlayMode.LOOP, 1); 
 		}
 		else {
@@ -192,7 +191,6 @@ public class ResourceHandler implements IResourceHandler {
 				result.initAsTexture(texMap.get(keys[i]));
 			}
 			else if (frameSetMap.containsKey(keys[i])) {
-				//TODO modify for texture-packs (optional)
 				result.initAsAnimation(frameSetMap.get(keys[i]), PlayMode.LOOP, 1);
 			}
 			else {

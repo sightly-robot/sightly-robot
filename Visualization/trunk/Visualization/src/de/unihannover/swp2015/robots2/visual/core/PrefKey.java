@@ -15,7 +15,7 @@ public enum PrefKey implements IPreferencesKey {
 	FIELD_HEIGHT_KEY("field_height", 0f), 
 	VIEW_WIDTH("view_width", 0f), 
 	VIEW_HEIGHT("view_height", 0f),
-	
+
 	X_OFFSET("abscissaOffset", 0f),
 	Y_OFFSET("ordinateOffset", 0f),
 	X_SCALE("abscissaScale", 0f),

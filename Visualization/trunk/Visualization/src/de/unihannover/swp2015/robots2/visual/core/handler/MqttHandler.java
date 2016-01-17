@@ -99,14 +99,13 @@ public class MqttHandler implements Runnable {
 				log.warn("Connection could'nt be established.", e);
 				
 				attempts++;
-					
-				if (attempts >= MAX_ATTEMPTS)
+				if (attempts >= MAX_ATTEMPTS) {
 					return;
+				}
 				
 				log.info("Trying again in {} seconds.", ATTEMPT_INTERVAL/1000);
 				
 				try {
-					
 					long timePassed = 0;
 					long startTime = System.currentTimeMillis();
 					while (!ipChanged && timePassed < ATTEMPT_INTERVAL) {
@@ -118,7 +117,7 @@ public class MqttHandler implements Runnable {
 					connect();
 				} 
 				catch (InterruptedException e1) {
-					log.error("ipLock.wait(...) has been interrupted!");
+					log.error("ipLock.wait(...) has been interrupted!", e);
 				}
 			}
 		}
