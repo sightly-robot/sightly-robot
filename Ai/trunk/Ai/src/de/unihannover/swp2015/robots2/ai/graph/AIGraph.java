@@ -10,19 +10,20 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import de.unihannover.swp2015.robots2.ai.core.Robot;
-import de.unihannover.swp2015.robots2.ai.exceptions.InvalidPathException;
 import de.unihannover.swp2015.robots2.ai.exceptions.InvalidStageException;
 import de.unihannover.swp2015.robots2.ai.exceptions.NoValidOrientationException;
 import de.unihannover.swp2015.robots2.model.interfaces.IField;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
-import testpackage.Edge;
-import testpackage.Node;
-import testpackage.AIGraphTest.Tuple;
 import de.unihannover.swp2015.robots2.model.interfaces.IStage;
 
 public class AIGraph extends Thread implements Runnable {
+
+	private static Logger logger = LogManager.getLogger(AIGraph.class.getName());
 
 	private IStage stage;
 
@@ -33,23 +34,21 @@ public class AIGraph extends Thread implements Runnable {
 	 */
 	private Robot myself;
 	/*
-	 * To identify other robots
-	 * String is ID of the robot
-	 * TODO implement
+	 * To identify other robots String is ID of the robot TODO implement
 	 */
 	private HashMap<String, Robot> robots;
-	
+
 	private int dimX;
 	private int dimY;
 
 	public AIGraph(IStage stage, Robot myself) throws InvalidStageException {
 		super();
-		
+		logger.debug("Initializing AIGraph from stage");
 		this.stage = stage;
 		this.loadFromStage(stage);
-		
+
 		this.myself = myself;
-		
+
 		this.start();
 	}
 
@@ -61,7 +60,7 @@ public class AIGraph extends Thread implements Runnable {
 	 */
 	public AIGraph(int x, int y) {
 		super();
-		
+		logger.debug("Initializing AIGraph from ({},{})", x, y);
 		this.nodes = new Node[x][y];
 		this.dimX = x;
 		this.dimY = y;
@@ -96,16 +95,16 @@ public class AIGraph extends Thread implements Runnable {
 
 	@Override
 	public void run() {
-		while(true) { //TODO something better than while true?
-			try{
-				sleep(10); //TODO this is supposed to keep the thread alive and waiting for method calls...
-			} 
-			catch(InterruptedException e) {
-				e.printStackTrace();
+		while (true) { // TODO something better than while true?
+			try {
+				sleep(10); // TODO this is supposed to keep the thread alive and
+							// waiting for method calls...
+			} catch (InterruptedException e) {
+				logger.error("AIGraph: thread was interrupted", e);
 			}
 		}
 	}
-	
+
 	/**
 	 * Loads map data into Graph object
 	 * 
@@ -114,14 +113,18 @@ public class AIGraph extends Thread implements Runnable {
 	 * @throws InvalidStageException
 	 */
 	public void loadFromStage(IStage stage) throws InvalidStageException {
+		logger.debug("Loading AIGraph from stage");
 		/*
 		 * Handle exceptions for faulty stages
 		 */
 		if (stage == null) {
+			logger.error("loadFromStage: stage is empty!");
 			throw new InvalidStageException("Stage is empty");
 		} else if (stage.getWidth() < 1) {
+			logger.error("loadFromStage: width is too small!");
 			throw new InvalidStageException("Width of stage is too small");
 		} else if (stage.getHeight() < 1) {
+			logger.error("loadFromStage: height is too small!");
 			throw new InvalidStageException("Height of stage is too small");
 		}
 
@@ -138,13 +141,14 @@ public class AIGraph extends Thread implements Runnable {
 		for (int i = 0; i < width; i++) {
 			for (int j = 0; j < height; j++) {
 				IField field = stage.getField(i, j);
+				logger.trace("Setting node for field ({},{})", i, j);
 				/*
 				 * Check if node already exists and eventually create new one
 				 */
 				Node source = this.nodes[i][j] == null ? new Node(field) : this.nodes[i][j];
 				if (i > 0 && !field.isWall(Orientation.WEST)) {
 					Node target;
-					if(this.nodes[i - 1][j] == null) {
+					if (this.nodes[i - 1][j] == null) {
 						target = new Node(stage.getField(i - 1, j));
 						nodes[i - 1][j] = target;
 					} else {
@@ -155,7 +159,7 @@ public class AIGraph extends Thread implements Runnable {
 				}
 				if (i < this.dimX - 1 && !field.isWall(Orientation.EAST)) {
 					Node target;
-					if(this.nodes[i + 1][j] == null) {
+					if (this.nodes[i + 1][j] == null) {
 						target = new Node(stage.getField(i + 1, j));
 						nodes[i + 1][j] = target;
 					} else {
@@ -166,7 +170,7 @@ public class AIGraph extends Thread implements Runnable {
 				}
 				if (j > 0 && !field.isWall(Orientation.NORTH)) {
 					Node target;
-					if(this.nodes[i][j - 1] == null) {
+					if (this.nodes[i][j - 1] == null) {
 						target = new Node(stage.getField(i, j - 1));
 						nodes[i][j - 1] = target;
 					} else {
@@ -177,7 +181,7 @@ public class AIGraph extends Thread implements Runnable {
 				}
 				if (j < this.dimY - 1 && !field.isWall(Orientation.SOUTH)) {
 					Node target;
-					if(this.nodes[i][j + 1] == null) {
+					if (this.nodes[i][j + 1] == null) {
 						target = new Node(stage.getField(i, j + 1));
 						nodes[i][j + 1] = target;
 					} else {
@@ -199,34 +203,40 @@ public class AIGraph extends Thread implements Runnable {
 	 */
 	// TODO: Exception if there is no valid Orientation
 	public Orientation getRandomOrientation() throws NoValidOrientationException {
+		logger.trace("Calling getRandomOrientation");
 		List<Orientation> available = new ArrayList<Orientation>();
 		Node myPos = this.myself.getPosition();
 		int x = myPos.getX();
 		int y = myPos.getY();
-		
+
 		if (!myPos.isWall(Orientation.NORTH)) {
 			available.add(Orientation.NORTH);
 		}
 		if (!myPos.isWall(Orientation.EAST)) {
 			available.add(Orientation.EAST);
-		}			
+		}
 		if (!myPos.isWall(Orientation.SOUTH)) {
 			available.add(Orientation.SOUTH);
-		}			
+		}
 		if (!myPos.isWall(Orientation.WEST)) {
 			available.add(Orientation.WEST);
 		}
 
 		Collections.shuffle(available);
+		logger.trace("Returning orientation {}", available.get(0));
 		return available.get(0);
 	}
+
 	/**
-	 * Finds shortest path to given Node using breadth first search. Used to determine next Orientation, the robot 
-	 * should drive in.
-	 * @param target Node, the robot is supposed to drive to.
+	 * Finds shortest path to given Node using breadth first search. Used to
+	 * determine next Orientation, the robot should drive in.
+	 * 
+	 * @param target
+	 *            Node, the robot is supposed to drive to.
 	 * @return
 	 */
 	public List<Node> getBFSPath(Node target) {
+		logger.trace("Calling getBFSPath");
 
 		Map<Node, Node> pred = new HashMap<Node, Node>();
 		Set<Node> visited = new HashSet<Node>();
@@ -235,15 +245,15 @@ public class AIGraph extends Thread implements Runnable {
 		q.add(curr);
 		visited.add(curr);
 
-		while(curr != target) {
+		while (curr != target) {
 			curr = q.remove();
-			
+
 			Set<Node> neighbors = new HashSet<Node>();
-			for(Edge edge : curr.getNeighbors()) {
+			for (Edge edge : curr.getNeighbors()) {
 				neighbors.add(edge.getTarget());
 			}
-			for(Node node : neighbors) {
-				if(!visited.contains(node)) {
+			for (Node node : neighbors) {
+				if (!visited.contains(node)) {
 					pred.put(node, curr);
 					visited.add(node);
 					q.add(node);
@@ -253,56 +263,70 @@ public class AIGraph extends Thread implements Runnable {
 		LinkedList<Node> path = new LinkedList<Node>();
 		Node tmp = target;
 		path.addFirst(target);
-		while(tmp != myself.getPosition()) {
+		while (tmp != myself.getPosition()) {
 			path.addFirst(pred.get(tmp));
 			tmp = pred.get(tmp);
 		}
 		return path;
 	}
+
 	/**
-	 * Gets next Orientation to drive in from given path. Used, to find Orientation from path determined by 
-	 * getBFSPath().
+	 * Gets next Orientation to drive in from given path. Used, to find
+	 * Orientation from path determined by getBFSPath().
+	 * 
 	 * @param path
 	 * @return
 	 * @throws Exception
 	 */
 	public Orientation getOrientationFromPath(List<Node> path) throws Exception {
-		
-		for(Edge edge : myself.getPosition().getNeighbors()) {
-			if(edge.getTarget() == path.get(1)) {
+		logger.trace("Calling getOrientationFromPath");
+
+		for (Edge edge : myself.getPosition().getNeighbors()) {
+			if (edge.getTarget() == path.get(1)) {
 				return edge.getDirection();
 			}
 		}
+		logger.error("getOrientationFromPath: No neighbors for current node found!");
 		throw new Exception();
 	}
-	
+
 	/**
-	 * Finds node with highest amount of resources in given range (at this point not taking into account walls or other obstacles).
-	 * Used to find target node to drive towards.
+	 * Finds node with highest amount of resources in given range (at this point
+	 * not taking into account walls or other obstacles). Used to find target
+	 * node to drive towards.
+	 * 
 	 * @param range
 	 * @return
 	 */
-	public Node findBestNode(int range) { //TODO better way to determine best node via bfs
+	public Node findBestNode(int range) { // TODO better way to determine best
+											// node via bfs
+		logger.trace("Calling findBestNode");
 		int x = myself.getPosition().getX();
 		int y = myself.getPosition().getY();
-		//Set<Node> set = new HashSet<Node>();
+		// Set<Node> set = new HashSet<Node>();
 		Node curr;
-		if(x != Math.max(x - range, 0) || y != Math.max(y - range, 0)) {
+		if (x != Math.max(x - range, 0) || y != Math.max(y - range, 0)) {
 			curr = this.nodes[Math.max(x - range, 0)][Math.max(y - range, 0)];
-		} else  {
-			curr = this.nodes[Math.max(x - range, 1)][Math.max(y - range, 0)]; //TODO make sure no inaccessible field is selected
+		} else {
+			curr = this.nodes[Math.max(x - range, 1)][Math.max(y - range, 0)]; // TODO
+																				// make
+																				// sure
+																				// no
+																				// inaccessible
+																				// field
+																				// is
+																				// selected
 		}
-		for(int i = Math.max(x - range, 0); i < Math.min(x + range + 1, this.nodes.length); i++) {
-			for(int j = Math.max(y - range, 0); j < Math.min(y + range + 1, this.nodes[0].length); j++) {
-				if((i != x || j != y) 
-						&& this.nodes[i][j].getRessourceValue() > curr.getRessourceValue()) {
+		for (int i = Math.max(x - range, 0); i < Math.min(x + range + 1, this.nodes.length); i++) {
+			for (int j = Math.max(y - range, 0); j < Math.min(y + range + 1, this.nodes[0].length); j++) {
+				if ((i != x || j != y) && this.nodes[i][j].getRessourceValue() > curr.getRessourceValue()) {
 					curr = this.nodes[i][j];
 				}
 			}
 		}
 		return curr;
 	}
-	
+
 	private class Tuple<X, Y> {
 		public final X x;
 		public final Y y;
@@ -312,34 +336,36 @@ public class AIGraph extends Thread implements Runnable {
 			this.y = y;
 		}
 	}
-	
+
 	/**
-	 * Finds node with highest amount of resources in given distance via breadth first search.
-	 * Used to find target node to drive towards.
+	 * Finds node with highest amount of resources in given distance via breadth
+	 * first search. Used to find target node to drive towards.
+	 * 
 	 * @param range
 	 * @return
 	 */
 	public Node findBestNodeBFS(int range) {
+		logger.trace("Calling findBestNodeBFS");
 		Set<Node> visited = new HashSet<Node>();
 		Queue<Tuple<Node, Integer>> q = new LinkedList<Tuple<Node, Integer>>();
 		Tuple<Node, Integer> curr = new Tuple(myself.getPosition(), 0);
 		q.add(curr);
 		visited.add(curr.x);
-		
-		//initialize with random neighbor
+
+		// initialize with random neighbor
 		List<Edge> myNeighbors = myself.getPosition().getNeighbors();
-		Node best = myNeighbors.get((int)(Math.random() * myNeighbors.size())).getTarget(); 
-		
-		while(curr.y <= range) { //TODO check for empty queue
+		Node best = myNeighbors.get((int) (Math.random() * myNeighbors.size())).getTarget();
+
+		while (curr.y <= range) { // TODO check for empty queue
 			curr = q.remove();
-			
+
 			Set<Node> neighbors = new HashSet<Node>();
-			for(Edge edge : curr.x.getNeighbors()) {
+			for (Edge edge : curr.x.getNeighbors()) {
 				neighbors.add(edge.getTarget());
 			}
-			for(Node node : neighbors) {
-				if(!visited.contains(node)) {
-					if(node.getRessourceValue() > best.getRessourceValue()) {
+			for (Node node : neighbors) {
+				if (!visited.contains(node)) {
+					if (node.getRessourceValue() > best.getRessourceValue()) {
 						best = node;
 					}
 					visited.add(node);
@@ -349,20 +375,22 @@ public class AIGraph extends Thread implements Runnable {
 		}
 		return best;
 	}
-	
-	
+
 	/**
 	 * Sets food value on a specific Field.
-	 * @param x 
+	 * 
+	 * @param x
 	 * @param y
 	 * @param food
 	 */
 	public void setFood(int x, int y, int food) {
+		logger.trace("Setting {} food on ({},{})", food, x, y);
 		this.nodes[x][y].setRessourceValue(food);
 	}
-	
+
 	/**
-	 * Sets the new position of a robot in the graph and also sets it for the robot itself
+	 * Sets the new position of a robot in the graph and also sets it for the
+	 * robot itself
 	 * 
 	 * @param robot
 	 *            Robot to be set
@@ -370,24 +398,25 @@ public class AIGraph extends Thread implements Runnable {
 	 *            new position
 	 */
 	public void setRobotPosition(Robot robot, IPosition newPosition) {
-		if(robot.getPosition() != null)
-		{
+		logger.trace("Calling setRobotPosition");
+		if (robot.getPosition() != null) {
 			/*
 			 * Delete robot from old position in graph
 			 */
+			logger.debug("Deleting robot from old position");
 			robot.getPosition().setRobot(null);
 		}
-		if(newPosition.getX() != -1)
-		{
+		if (newPosition.getX() != -1) {
 			/*
 			 * Set new orientation for robot Set robot on new position in graph
 			 */
+			logger.debug("Setting new orientation and position for robot");
 			robot.setOrientation(newPosition.getOrientation());
 			this.nodes[newPosition.getX()][newPosition.getY()].setRobot(robot);
 			robot.setPosition(this.nodes[newPosition.getX()][newPosition.getY()]);
 		}
 	}
-	
+
 	public HashMap<String, Robot> getRobots() {
 		return robots;
 	}

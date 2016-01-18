@@ -2,7 +2,9 @@ package de.unihannover.swp2015.robots2.ai.core;
 
 import java.awt.Point;
 
-import de.unihannover.swp2015.robots2.ai.exceptions.InvalidPathException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import de.unihannover.swp2015.robots2.ai.exceptions.InvalidStageException;
 import de.unihannover.swp2015.robots2.ai.exceptions.NoValidOrientationException;
 import de.unihannover.swp2015.robots2.ai.graph.AIGraph;
@@ -19,6 +21,8 @@ import de.unihannover.swp2015.robots2.robot.interfaces.AbstractAI;
 
 public class AI extends AbstractAI implements IModelObserver {
 
+	private static Logger logger = LogManager.getLogger(AI.class.getName());
+
 	private boolean hasStarted = false;
 	private IField nextField;
 	private Orientation nextOrientation;
@@ -26,9 +30,12 @@ public class AI extends AbstractAI implements IModelObserver {
 
 	private IGame game;
 	private Robot myself;
-	
+
 	public AI(IRobotController controller) { // controller from data modell
 		super(controller);
+
+		logger.debug("Loading map from stage");
+
 		this.game = controller.getGame();
 		this.game.observe(this);
 		this.game.getStage().observe(this);
@@ -36,6 +43,7 @@ public class AI extends AbstractAI implements IModelObserver {
 		if (this.game.getStage().getWidth() != 0 && this.game.getStage().getHeight() != 0) {
 			for (int i = 0; i < this.game.getStage().getWidth(); i++) {
 				for (int j = 0; j < this.game.getStage().getHeight(); j++) {
+					logger.trace("Observing field ({}, {})", i, j);
 					this.game.getStage().getField(i, j).observe(this);
 				}
 			}
@@ -55,10 +63,12 @@ public class AI extends AbstractAI implements IModelObserver {
 	}
 
 	public void initialize() {
+		logger.debug("Initialize AI");
+
 		if (this.game.getStage().getWidth() != 0 && this.game.getStage().getHeight() != 0) {
 			try {
 				this.graph = new AIGraph(this.game.getStage(), myself);
-
+				logger.debug("Positioning myself");
 				this.graph.setRobotPosition(myself, iRobotController.getMyself().getPosition());
 			} catch (InvalidStageException e) {
 				e.printStackTrace();
@@ -71,12 +81,14 @@ public class AI extends AbstractAI implements IModelObserver {
 	 */
 	@Override
 	public void onModelUpdate(IEvent event) {
+		logger.trace("Received event: {}", event);
 		switch (event.getType()) {
-	
+
 		case FIELD_FOOD:
-			if( graph != null ) {
-				IField f = (IField)event.getObject();
+			if (graph != null) {
+				IField f = (IField) event.getObject();
 				graph.setFood(f.getX(), f.getY(), f.getFood());
+				logger.trace("Positioned food on ({},{})", f.getX(), f.getY());
 			}
 			break;
 		case STAGE_WALL:
@@ -85,9 +97,11 @@ public class AI extends AbstractAI implements IModelObserver {
 			break;
 		case STAGE_SIZE:
 			if (this.game.getStage().getWidth() != 0 && this.game.getStage().getHeight() != 0) {
+				logger.debug("Received new {} event", event);
 				for (int i = 0; i < this.game.getStage().getWidth(); i++) {
 					for (int j = 0; j < this.game.getStage().getHeight(); j++) {
 						this.game.getStage().getField(i, j).observe(this);
+						logger.trace("Observing field ({},{}", i, j);
 					}
 				}
 			}
@@ -100,7 +114,7 @@ public class AI extends AbstractAI implements IModelObserver {
 		case ROBOT_POSITION:
 			handleRobotPositionEvent(event);
 			break;
-		case GAME_STATE: 
+		case GAME_STATE:
 			handleGameStateEvent(event);
 			break;
 		case GAME_PARAMETER:
@@ -115,8 +129,9 @@ public class AI extends AbstractAI implements IModelObserver {
 		}
 
 	}
-	
+
 	private void handleFieldStateEvent(IEvent event) {
+		logger.trace("Calling handleFieldStateEvent");
 		if (graph != null) {
 			IField field = (IField) event.getObject();
 			Node node = myself.getPosition();
@@ -125,12 +140,14 @@ public class AI extends AbstractAI implements IModelObserver {
 			if (game.isRunning() && this.nextField == field && this.nextOrientation != null) {
 				switch (field.getState()) {
 				case OURS:
+					logger.debug("Sending new orientation to robot: {}", this.nextOrientation);
 					fireNextOrientationEvent(this.nextOrientation); // or
 					break;
 				case FREE:
 					int xCoord = this.nextField.getX();
 					int yCoord = this.nextField.getY();
 					iRobotController.requestField(xCoord, yCoord);
+					logger.debug("Requesting field ({},{})", xCoord, yCoord);
 					break;
 				case LOCK_WAIT:
 					break;
@@ -139,7 +156,8 @@ public class AI extends AbstractAI implements IModelObserver {
 				case OCCUPIED:
 					// break;
 				case RANDOM_WAIT:
-					//iRobotController.releaseField(nextField.getX(), nextField.getY());
+					// iRobotController.releaseField(nextField.getX(),
+					// nextField.getY());
 
 					Tuple<Point, Orientation> tuple = this.getNewNode();
 					Point point = tuple.x;
@@ -156,8 +174,9 @@ public class AI extends AbstractAI implements IModelObserver {
 			}
 		}
 	}
-	
+
 	private void handleRobotPositionEvent(IEvent event) {
+		logger.trace("Calling handleRobotPositionEvent");
 		if (graph != null) {
 			IRobot robot = (IRobot) event.getObject();
 			IPosition pos = robot.getPosition();
@@ -165,29 +184,31 @@ public class AI extends AbstractAI implements IModelObserver {
 			 * If the position is not set yet, break and do nothing
 			 */
 			if (pos.getX() == -1 || pos.getY() == -1) {
+				logger.error("Position is invalid!");
 				return;
 			}
 
 			if (robot.isMyself()) {
 				/*
-				 * If no position was set for myself yet, then update it to
-				 * the current node (done in setRobotPosition)
+				 * If no position was set for myself yet, then update it to the
+				 * current node (done in setRobotPosition)
 				 */
 				if (myself.getPosition() == null) {
 					this.graph.setRobotPosition(myself, pos);
+					logger.debug("Set position for the first time for myself");
 					return;
 				}
 				/*
-				 * If myself has a position, update it if it's not the same
-				 * as the old one
+				 * If myself has a position, update it if it's not the same as
+				 * the old one
 				 */
-				else { //TODO add request for field etc back in
+				else { // TODO add request for field etc back in
 					/*
-					 * Check if the new position is different than our old
-					 * one, only keep going if this is true
+					 * Check if the new position is different than our old one,
+					 * only keep going if this is true
 					 */
 					if (pos.getX() == myself.getPosition().getX() && pos.getY() == myself.getPosition().getY()) {
-						System.out.println("New position is the same as the old one");
+						logger.warn("New position is the same as the old one!");
 						return;
 					} else {
 						Node position = this.myself.getPosition();
@@ -198,49 +219,50 @@ public class AI extends AbstractAI implements IModelObserver {
 						 * Only keep going if the game is running
 						 */
 						boolean requested = false;
-						while(!requested) {							
+						while (!requested) {
 							if (this.game.isRunning()) {
-									Tuple<Point, Orientation> tuple = this.getNewNode();
-									Point point = tuple.x;
-									int x = (int) point.getX();
-									int y = (int) point.getY();
-									/*
-									 * Check if field on next orientation is
-									 * free before going
-									 */
-									switch (this.game.getStage().getField(x, y).getState()) {
-									// Lock if free
-									case FREE:
-										 iRobotController.requestField(x, y);
-										 this.nextField = this.game.getStage().getField(x, y);
-										 this.nextOrientation = tuple.y;
-										 requested = true;
-										break;
-									// No need to use LOCKED state at the moment
-									case LOCKED:
-										break; 
-									// Calculate new field
-									case OCCUPIED: 
-										break;
-									// Drive on field if we have successfully
-									// got it
-									// (locked by us)
-									// Should be triggered by another event!!
-									// TODO
-									case OURS: 
-										// fireNextOrientationEvent(nextOrientation);
-										break;
-									// Don't use for now
-									case LOCK_WAIT: 
-										break;
-									// Don't use for now
-									case RANDOM_WAIT: 
-										break;
-									// Should throw error if a field has no
-									// event
-									default:
-										break;
-									}
+								Tuple<Point, Orientation> tuple = this.getNewNode();
+								Point point = tuple.x;
+								int x = (int) point.getX();
+								int y = (int) point.getY();
+								/*
+								 * Check if field on next orientation is free
+								 * before going
+								 */
+								switch (this.game.getStage().getField(x, y).getState()) {
+								// Lock if free
+								case FREE:
+									logger.debug("Requesting field ({},{})", x, y);
+									iRobotController.requestField(x, y);
+									this.nextField = this.game.getStage().getField(x, y);
+									this.nextOrientation = tuple.y;
+									requested = true;
+									break;
+								// No need to use LOCKED state at the moment
+								case LOCKED:
+									break;
+								// Calculate new field
+								case OCCUPIED:
+									break;
+								// Drive on field if we have successfully
+								// got it
+								// (locked by us)
+								// Should be triggered by another event!!
+								// TODO
+								case OURS:
+									// fireNextOrientationEvent(nextOrientation);
+									break;
+								// Don't use for now
+								case LOCK_WAIT:
+									break;
+								// Don't use for now
+								case RANDOM_WAIT:
+									break;
+								// Should throw error if a field has no
+								// event
+								default:
+									break;
+								}
 							}
 						}
 					}
@@ -266,9 +288,10 @@ public class AI extends AbstractAI implements IModelObserver {
 					 * Check if position was actually updated
 					 */
 					if (x == pos.getX() && y == pos.getY()) {
-						System.out.println("Other robot's position is the same as the old one!");
+						logger.warn("Other robot's position is the same as the old one!");
 						return;
 					} else {
+						logger.trace("Setting other robots position");
 						this.graph.setRobotPosition(otherRobot, pos);
 					}
 				}
@@ -277,22 +300,25 @@ public class AI extends AbstractAI implements IModelObserver {
 	}
 
 	private void handleGameStateEvent(IEvent event) {
+		logger.trace("Calling handleGameStateEvent");
 		// TODO check hasStarted state!!
 		IGame game = (IGame) event.getObject();
-			if (game.isRunning() && graph != null && myself.getPosition() != null
+		if (game.isRunning() && graph != null && myself.getPosition() != null
 				&& iRobotController.getMyself().getState().equals(IRobot.RobotState.ENABLED)) {
 			Tuple<Point, Orientation> tuple = this.getNewNode();
 			Point point = tuple.x;
 			int x = (int) point.getX();
 			int y = (int) point.getY();
-				
+
+			logger.debug("Requesting field ({},{})", x, y);
 			this.iRobotController.requestField(x, y);
 			this.nextField = game.getStage().getField(x, y);
 			this.nextOrientation = tuple.y;
 		}
 	}
-	
+
 	private void handleRobotStateEvent(IEvent event) {
+		logger.trace("Calling handleRobotStateEvent");
 		IRobot robot = (IRobot) event.getObject();
 		if (robot.isMyself()) {
 			if (this.hasStarted == false) {
@@ -305,15 +331,17 @@ public class AI extends AbstractAI implements IModelObserver {
 						int x = (int) point.getX();
 						int y = (int) point.getY();
 
+						logger.debug("Requesting field ({},{})", x, y);
 						this.iRobotController.requestField(x, y);
 						this.nextField = this.game.getStage().getField(x, y);
 						this.nextOrientation = tuple.y;
 					}
 				}
 			}
+			logger.trace("Game has not started!");
 		}
 	}
-	
+
 	private Tuple<Point, Orientation> getNewNode() {
 		int x = this.myself.getPosition().getX();
 		int y = this.myself.getPosition().getY();
@@ -338,9 +366,10 @@ public class AI extends AbstractAI implements IModelObserver {
 			default:
 				break;
 			}
+			logger.debug("New node is ({},{})", x, y);
 			return new Tuple<>(new Point(x, y), orientation);
 		} catch (NoValidOrientationException e) {
-			e.printStackTrace();
+			logger.error("getNewNode: no valid orientation was found!", e);
 			return null; // TODO make sure no invalid value is returned
 		}
 	}
@@ -357,18 +386,22 @@ public class AI extends AbstractAI implements IModelObserver {
 	 * @return Orientation, the robot is supposed to move in next.
 	 */
 	public Orientation findNextOrientation() throws NoValidOrientationException {
+		logger.trace("Calling findNextOrientation");
 		try {
 			return this.graph.getOrientationFromPath(this.graph.getBFSPath(this.graph.findBestNodeBFS(5)));
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("findNextOrientation: no valid orientation was found!", e);
 		}
 		return null;
 	}
+
 	/**
 	 * Returns currently planned next Orientation to drive in.
+	 * 
 	 * @return nextOrientation, the next Orientation, we plan to drive in
 	 */
 	public Orientation getNextOrientation() {
+		logger.trace("Calling getNextOrientation");
 		return this.nextOrientation;
 	}
 }
