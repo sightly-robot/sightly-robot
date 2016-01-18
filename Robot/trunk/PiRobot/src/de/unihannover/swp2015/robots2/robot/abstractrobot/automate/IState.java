@@ -1,5 +1,6 @@
 package de.unihannover.swp2015.robots2.robot.abstractrobot.automate;
 
+import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
 import de.unihannover.swp2015.robots2.robot.abstractrobot.Direction;
 
 /**
@@ -46,4 +47,6 @@ public interface IState {
 	 * @return the state for driving into the direction
 	 */
 	public IState getStateForDirection(Direction direction);
+
+	public void setNextButOneDirection(Direction newDirection);
 }

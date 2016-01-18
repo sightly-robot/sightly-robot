@@ -2,6 +2,9 @@ package de.unihannover.swp2015.robots2.robot.abstractrobot.automate;
 
 import java.awt.Point;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import de.unihannover.swp2015.robots2.controller.interfaces.IRobotController;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
 import de.unihannover.swp2015.robots2.robot.abstractrobot.Direction;
@@ -19,6 +22,8 @@ import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
  */
 public abstract class AbstractAutomate implements AiEventObserver, Runnable {
 
+	//LOGGER:
+	private static Logger LOGGER = LogManager.getLogger(AbstractAutomate.class.getName());
 	// model
 	protected IRobotController robotController;
 	protected IRobot robot;
@@ -38,7 +43,7 @@ public abstract class AbstractAutomate implements AiEventObserver, Runnable {
 	private long nextUpdateTime;
 	private int lastProgress = 0;
 
-	private double[] progressMeasurements = new double[] { 1000, 1000, 1000, 1000 };
+	protected double[] progressMeasurements = new double[] { 1000, 1000, 1000, 1000 };
 	private Direction currentDirection = Direction.FORWARDS;
 	private long lastWaitTime;
 
@@ -185,12 +190,13 @@ public abstract class AbstractAutomate implements AiEventObserver, Runnable {
 					nextPosition.translate(-1, 0);
 					break;
 				}
+				
 
 				// set new state
 				currentDirection = Direction.calcDirection(robot.getPosition().getOrientation(), orientation);
+				LOGGER.trace("Positioning: "+robot.getPosition().getX()+" "+robot.getPosition().getY() + " Next: "+nextPosition.x+" "+nextPosition.y+" Orientation: "+orientation.name()+" Direction: "+currentDirection.name());
 				state = state.getStateForDirection(currentDirection);
 				state.start();
-				System.out.println(currentDirection.name());
 
 				updateOrientation(orientation);
 
@@ -202,6 +208,7 @@ public abstract class AbstractAutomate implements AiEventObserver, Runnable {
 				}
 				return true;
 			}
+			LOGGER.warn("NextOrientationEvents while driving are not allowed!");
 			return false;
 		}
 	}
@@ -226,8 +233,9 @@ public abstract class AbstractAutomate implements AiEventObserver, Runnable {
 	}
 
 	@Override
-	public void nextButOneOrientationEvent(Orientation orientation) {
-		// TODO Blinking right or left.
+	public void nextButOneOrientationEvent(Orientation orientation){
+		Direction newDirection = Direction.calcDirection(robot.getPosition().getOrientation(), orientation);
+		state.setNextButOneDirection(newDirection);
 	}
 
 	public Thread getAutomation() {
