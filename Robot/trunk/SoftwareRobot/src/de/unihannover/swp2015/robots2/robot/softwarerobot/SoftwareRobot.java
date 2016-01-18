@@ -1,5 +1,8 @@
 package de.unihannover.swp2015.robots2.robot.softwarerobot;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import de.unihannover.swp2015.robots2.model.externalInterfaces.IModelObserver;
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
 import de.unihannover.swp2015.robots2.robot.abstractrobot.AbstractRobot;
@@ -13,6 +16,9 @@ import de.unihannover.swp2015.robots2.robot.softwarerobot.automate.SoftwareAutom
  * @author Lenard Spiecker
  */
 public class SoftwareRobot extends AbstractRobot {
+
+	/** LOGGER: */
+	private static Logger LOGGER = LogManager.getLogger(SoftwareRobot.class.getName());
 
 	AbstractAutomate automate;
 
@@ -35,7 +41,7 @@ public class SoftwareRobot extends AbstractRobot {
 				case ROBOT_STATE:
 					switch (robotController.getMyself().getState()) {
 					case SETUPSTATE:
-						System.out.println("READY!");
+						LOGGER.info("Robot - READY!");
 						robotController.setRobotReady();
 						break;
 					default:

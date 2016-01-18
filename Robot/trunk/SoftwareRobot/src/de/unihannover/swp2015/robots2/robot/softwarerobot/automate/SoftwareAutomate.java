@@ -1,5 +1,8 @@
 package de.unihannover.swp2015.robots2.robot.softwarerobot.automate;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import de.unihannover.swp2015.robots2.controller.interfaces.IRobotController;
 import de.unihannover.swp2015.robots2.model.externalInterfaces.IModelObserver;
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
@@ -14,9 +17,13 @@ import de.unihannover.swp2015.robots2.robot.abstractrobot.automate.AbstractAutom
  */
 public class SoftwareAutomate extends AbstractAutomate {
 
+	/** LOGGER: */
+	private static Logger LOGGER = LogManager.getLogger(SoftwareAutomate.class.getName());
+
 	/**
-	 * For a new instance of SoftwareAutomate. 
-	 * It accesses the robotcontroller for getting the vSpeed.
+	 * For a new instance of SoftwareAutomate. It accesses the robotcontroller
+	 * for getting the vSpeed.
+	 * 
 	 * @param robotController
 	 */
 	public SoftwareAutomate(IRobotController robotController) {
@@ -27,10 +34,11 @@ public class SoftwareAutomate extends AbstractAutomate {
 			public void onModelUpdate(IEvent event) {
 				switch (event.getType()) {
 				case GAME_PARAMETER:
+					LOGGER.info("VSpeed changed!");
 					SoftwareState.setVSpeed(SoftwareAutomate.this.robotController.getGame().getVRobotSpeed());
-					for(int i=0;i<progressMeasurements.length;i++)
-					{
-						progressMeasurements[i] = SoftwareAutomate.this.robotController.getGame().getVRobotSpeed()*1000;
+					for (int i = 0; i < progressMeasurements.length; i++) {
+						progressMeasurements[i] = SoftwareAutomate.this.robotController.getGame().getVRobotSpeed()
+								* 1000;
 					}
 					break;
 				default:
