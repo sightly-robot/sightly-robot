@@ -1,5 +1,9 @@
 package de.unihannover.swp2015.robots2.robot.softwarerobot.automate;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import de.unihannover.swp2015.robots2.robot.abstractrobot.AbstractRobot;
 import de.unihannover.swp2015.robots2.robot.abstractrobot.Direction;
 import de.unihannover.swp2015.robots2.robot.abstractrobot.automate.IState;
 
@@ -39,12 +43,15 @@ public enum SoftwareState implements IState {
 		}
 	},
 	FOREWARD, RIGHT, BACKWARD, LEFT;
+	
+	/**LOGGER:*/
+	private static Logger LOGGER = LogManager.getLogger(SoftwareState.class.getName());
 
 	private static double DURATION = 2000;
 
 	private long startTime;
 
-	private Direction newxtButOneDirection;
+	private Direction nextButOneDirection;
 
 	private SoftwareState() {
 		// Nothing to do here
@@ -52,6 +59,7 @@ public enum SoftwareState implements IState {
 
 	@Override
 	public void start() {
+		LOGGER.trace("Start State: "+toString());
 		startTime = System.currentTimeMillis();
 	}
 
@@ -103,6 +111,6 @@ public enum SoftwareState implements IState {
 	
 	public void setNextButOneDirection(Direction direction)
 	{
-		newxtButOneDirection = direction;
+		nextButOneDirection = direction;
 	}
 }

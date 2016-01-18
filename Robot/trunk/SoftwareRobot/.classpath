@@ -5,5 +5,11 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/AbstractRobot"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/AiInterface"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Protocol"/>
+	<classpathentry kind="lib" path="/Protocol/lib/log4j-api-2.5.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="http://logging.apache.org/log4j/2.x/log4j-api/apidocs"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/Protocol/lib/log4j-core-2.5.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
