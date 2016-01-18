@@ -7,7 +7,6 @@ import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
 import de.unihannover.swp2015.robots2.model.writeableInterfaces.IPositionWritable;
 import de.unihannover.swp2015.robots2.model.writeableInterfaces.IRobotWriteable;
 
-;
 
 /**
  * Basic implementation of the interface IRobotWritable.
@@ -150,19 +149,6 @@ public class Robot extends AbstractModel implements IRobot, IRobotWriteable {
 	@Override
 	public void setRobotConnectionState(boolean state) {
 		this.connectionState = state;
-	}
-
-	@Override
-	@Deprecated
-	public boolean isSetupState() {
-		return (this.state == RobotState.SETUPSTATE && this.connectionState);
-	}
-
-	@Override
-	@Deprecated
-	public boolean isErrorState() {
-		return (!this.connectionState || this.state != RobotState.SETUPSTATE
-				&& this.state != RobotState.ENABLED);
 	}
 
 	@Override

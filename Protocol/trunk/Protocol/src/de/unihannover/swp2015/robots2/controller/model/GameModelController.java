@@ -25,17 +25,16 @@ public class GameModelController {
 	 */
 	public void mqttAddRobot(String robotId, String message) {
 		// Empty message means: delete robot
-		if (message.equals("")) {
+		if ("".equals(message)) {
 			IRobotWriteable r = this.game.getRobotsWriteable().get(robotId);
 			if (r != null) {
-				// TODO agree on this behaviour
 				this.game.getRobotsWriteable().remove(robotId);
 				this.game.emitEvent(UpdateType.ROBOT_DELETE, r);
 			}
 
 			// Else check if robot does exist and add if not
 		} else if (!this.game.getRobots().containsKey(robotId)) {
-			IRobotWriteable r = new Robot(robotId, message.equals("real"),
+			IRobotWriteable r = new Robot(robotId, "real".equals(message),
 					false);
 			this.game.addRobot(r);
 			this.game.emitEvent(UpdateType.ROBOT_ADD, r);
@@ -48,7 +47,7 @@ public class GameModelController {
 	 * @param message
 	 */
 	public void mqttSetGameState(String message) {
-		this.game.setRunning(message.equals("running"));
+		this.game.setRunning("running".equals(message));
 		this.game.emitEvent(UpdateType.GAME_STATE);
 	}
 
@@ -73,6 +72,7 @@ public class GameModelController {
 			this.game.setHesitationTime(Integer.parseInt(message));
 			this.game.emitEvent(UpdateType.GAME_PARAMETER);
 		} catch (NumberFormatException e) {
+			// Skip message if invalid number format
 		}
 	}
 }

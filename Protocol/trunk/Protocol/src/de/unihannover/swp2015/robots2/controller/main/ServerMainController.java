@@ -156,7 +156,7 @@ public class ServerMainController extends AbstractMainController implements
 			for (int x = 0; x < Math.min(this.game.getStage().getWidth(), maxX); x++) {
 				this.sendMqttMessage(
 						MqttTopic.FIELD_FOOD,
-						(x + "-" + y),
+						x + "-" + y,
 						Integer.toString(this.game.getStage().getField(x, y)
 								.getFood()));
 			}
@@ -215,7 +215,7 @@ public class ServerMainController extends AbstractMainController implements
 				for (int x = oldWidth; x < newWidth; x++) {
 					this.sendMqttMessage(
 							MqttTopic.FIELD_FOOD,
-							(x + "-" + y),
+							x + "-" + y,
 							Integer.toString(this.game.getStage()
 									.getField(x, y).getFood()));
 				}

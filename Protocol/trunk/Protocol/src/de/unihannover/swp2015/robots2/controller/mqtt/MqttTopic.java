@@ -87,46 +87,6 @@ public enum MqttTopic {
 	private final String topic;
 	private final boolean retained;
 
-	/**
-	 * Returns the MqttTopic-Object by the given topic string. This method is
-	 * able to expand mqtt wildcards (+, #) used in stored topics.
-	 * 
-	 * @param input
-	 *            The topic
-	 * @return A mqtt-topic object or null, if the given topic does not exists
-	 *         in this enumeration.
-	 */
-	public static MqttTopic getBy(String input) {
-
-		for (MqttTopic topic : MqttTopic.values()) {
-			String expression = topic.toString();
-			int i = 0, j = 0;
-			while (i < input.length() && j < expression.length()) {
-				if (input.charAt(i) == expression.charAt(j)) {
-					i++;
-					j++;
-				} else if (expression.charAt(j) == '#') {
-					// Wildcard for any following string => accept
-					return topic;
-				} else if (expression.charAt(j) == '+') {
-					// Wildcard for any string before next slash
-					while (i < input.length() && input.charAt(i) != '/')
-						i++;
-					j++;
-				} else {
-					// Strings to not match
-					break;
-				}
-			}
-			if (i == input.length() && j == expression.length()) {
-				// Exact match
-				return topic;
-			}
-		}
-
-		return null;
-	}
-
 	private MqttTopic(String topic, boolean retained) {
 		this.topic = topic;
 		this.retained = retained;
@@ -180,4 +140,43 @@ public enum MqttTopic {
 		return this.retained;
 	}
 
+	/**
+	 * Returns the MqttTopic-Object by the given topic string. This method is
+	 * able to expand mqtt wildcards (+, #) used in stored topics.
+	 * 
+	 * @param input
+	 *            The topic
+	 * @return A mqtt-topic object or null, if the given topic does not exists
+	 *         in this enumeration.
+	 */
+	public static MqttTopic getBy(String input) {
+
+		for (MqttTopic topic : MqttTopic.values()) {
+			String expression = topic.toString();
+			int i = 0, j = 0;
+			while (i < input.length() && j < expression.length()) {
+				if (input.charAt(i) == expression.charAt(j)) {
+					i++;
+					j++;
+				} else if (expression.charAt(j) == '#') {
+					// Wildcard for any following string => accept
+					return topic;
+				} else if (expression.charAt(j) == '+') {
+					// Wildcard for any string before next slash
+					while (i < input.length() && input.charAt(i) != '/')
+						i++;
+					j++;
+				} else {
+					// Strings to not match
+					break;
+				}
+			}
+			if (i == input.length() && j == expression.length()) {
+				// Exact match
+				return topic;
+			}
+		}
+
+		return null;
+	}
 }

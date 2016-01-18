@@ -122,25 +122,6 @@ public interface IRobot extends IAbstractModel {
 	public RobotState getState();
 
 	/**
-	 * Returns whether the robot is in setup state. Please use the new method
-	 * {@link #getState()} instead and check for RobotState.SETUPSTATE.
-	 * 
-	 * @return true if robot is connected and robot's state is SETUPSTATE
-	 */
-	@Deprecated
-	public boolean isSetupState();
-
-	/**
-	 * Returns whether the robot is in any disabled state. Please use the new
-	 * method {@link #getState()} instead and check for all individual disabled
-	 * states or check if not in SETUPSTATE or ENABLED.
-	 * 
-	 * @return true if robot is connected and not in SETUPSTATE or ENABLED.
-	 */
-	@Deprecated
-	public boolean isErrorState();
-
-	/**
 	 * Returns true, if the instance of the class run on the robot who's
 	 * described by the instance.
 	 * 

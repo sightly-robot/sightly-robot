@@ -1,5 +1,6 @@
 package de.unihannover.swp2015.robots2.controller.main;
 
+import java.awt.Color;
 import java.util.Arrays;
 import java.util.UUID;
 
@@ -78,7 +79,6 @@ public class RobotMainController extends AbstractMainController implements
 		String key = mqtttopic.getKey(topic);
 
 		switch (mqtttopic) {
-		// TODO handle robot settings
 		case ROBOT_DISCOVER:
 			/* Should be deprecated when using retained messages */
 			String robotType = this.myself.isHardwareRobot() ? "real"
@@ -103,8 +103,11 @@ public class RobotMainController extends AbstractMainController implements
 
 		case ROBOT_BLINK:
 			if (this.hardwareRobot != null) {
-				// TODO correct color handling
-				this.hardwareRobot.blink(this.myself.getColor());
+				try {
+					this.hardwareRobot.blink(parseColor(message));
+				} catch (IllegalArgumentException e) {
+					this.hardwareRobot.blink(this.myself.getColor());
+				}
 			}
 			break;
 
@@ -126,6 +129,18 @@ public class RobotMainController extends AbstractMainController implements
 		case FIELD_OCCUPIED_RELEASE:
 			this.fieldStateModelController.mqttFieldRelease(key);
 			break;
+
+		case SETTINGS_ROBOT_REQUEST:
+			if (this.hardwareRobot != null)
+				this.sendMqttMessage(MqttTopic.SETTINGS_ROBOT_RESPONSE, null,
+						this.hardwareRobot.getSettings());
+			break;
+
+		case SETTINGS_ROBOT_SET:
+			if (this.hardwareRobot != null)
+				this.hardwareRobot.setSettings(message);
+			break;
+
 
 		default:
 			this.processGeneralMessage(mqtttopic, key, message);
@@ -311,5 +326,28 @@ public class RobotMainController extends AbstractMainController implements
 	@Override
 	public void registerHardwareRobot(IHardwareRobot hardwareRobot) {
 		this.hardwareRobot = hardwareRobot;
+	}
+
+	/**
+	 * Parse color as transmitted via ROBOT_BLINK message.
+	 * 
+	 * @param message
+	 *            The MQTT message containing the color
+	 * @return The parsed color
+	 * @throws IllegalArgumentException
+	 *             if the message is not a valid color encoding;
+	 */
+	private static Color parseColor(String message)
+			throws IllegalArgumentException {
+		String[] parts = message.split(",");
+		if (parts.length != 3)
+			throw new IllegalArgumentException(
+					"Number of commas or message format not valid.");
+
+		int r = Integer.parseInt(parts[0]);
+		int g = Integer.parseInt(parts[1]);
+		int b = Integer.parseInt(parts[2]);
+
+		return new Color(r, g, b);
 	}
 }

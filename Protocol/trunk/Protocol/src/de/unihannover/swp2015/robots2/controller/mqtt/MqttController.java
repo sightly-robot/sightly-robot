@@ -45,7 +45,8 @@ public class MqttController implements IMqttController {
 	/** List of topics to subscribe after successful connection establishment */
 	private final List<String> subscribeTopics;
 
-	private static final Logger LOGGER = LogManager.getLogger(MqttController.class.getName());
+	private static final Logger LOGGER = LogManager
+			.getLogger(MqttController.class.getName());
 
 	/**
 	 * Initialize a new MqttController and set lastWill message.
@@ -115,12 +116,14 @@ public class MqttController implements IMqttController {
 					MqttController.this.receiveQueue.put(new MqttFullMessage(
 							topic, message));
 				} catch (InterruptedException e) {
+					// Should not happen as receiveQueue has infinite length.
 				}
 			}
 
 			@Override
 			public void deliveryComplete(IMqttDeliveryToken arg0) {
-
+				// We assume all messages to be delivered correctly. So we don't
+				// need this event.
 			}
 
 			@Override
@@ -140,7 +143,7 @@ public class MqttController implements IMqttController {
 						}
 					}
 				} catch (InterruptedException e) {
-					LOGGER.info("Reconnect aborted by interrupt exception.",e);
+					LOGGER.info("Reconnect aborted by interrupt exception.", e);
 				}
 			}
 		});
@@ -192,7 +195,7 @@ public class MqttController implements IMqttController {
 	@Override
 	public void connect(String brokerUrl) throws MqttException {
 		LOGGER.trace("Entry to MqttController.connect()");
-		
+
 		// Disconnect if connected
 		if (this.client.isConnected()) {
 			LOGGER.trace("Client was already connectec. Disconnecting.");
@@ -229,7 +232,7 @@ public class MqttController implements IMqttController {
 	public void sendMessage(String topic, String message, boolean retained) {
 		LOGGER.trace(
 				"Adding MQTT message to Send queue. Topic:\"{}\", Message: \"{}\"{}",
-				topic, message, (retained ? ", r" : ""));
+				topic, message, retained ? ", r" : "");
 		byte[] rawMessage = (message == null) ? new byte[] {} : message
 				.getBytes(StandardCharsets.UTF_8);
 
@@ -239,6 +242,7 @@ public class MqttController implements IMqttController {
 		try {
 			this.sendQueue.put(new MqttFullMessage(topic, mqttMessage));
 		} catch (InterruptedException e) {
+			// Should not happen as sendQueue has infinite length
 		}
 	}
 }

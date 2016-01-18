@@ -134,13 +134,13 @@ public class GuiMainController extends AbstractMainController implements
 	@Override
 	public void sendFood(List<List<Integer>> food) {
 		this.sendMqttMessage(MqttTopic.MAP_INIT_FOOD, null,
-				this.food2String(food));
+				food2String(food));
 	}
 
 	@Override
 	public void sendGrowingRates(List<List<Integer>> growingRates) {
 		this.sendMqttMessage(MqttTopic.MAP_INIT_GROWINGRATE, null,
-				this.food2String(growingRates));
+				food2String(growingRates));
 	}
 
 	@Override
@@ -243,7 +243,7 @@ public class GuiMainController extends AbstractMainController implements
 	 *            List
 	 * @return String: <width>,<height>,<f>,<f>,...
 	 */
-	private String food2String(List<List<Integer>> food) {
+	private static String food2String(List<List<Integer>> food) {
 		int height = food.size();
 		if (height == 0)
 			throw new IllegalArgumentException(

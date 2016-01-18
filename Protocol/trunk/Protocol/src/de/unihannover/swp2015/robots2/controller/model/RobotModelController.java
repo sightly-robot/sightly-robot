@@ -19,12 +19,12 @@ public class RobotModelController {
 
 	private Map<String, IRobotWriteable> robots;
 
+	private static final Logger LOGGER = LogManager
+			.getLogger(RobotModelController.class.getName());
+
 	public RobotModelController(Map<String, IRobotWriteable> robots) {
 		this.robots = robots;
 	}
-
-	private static Logger LOGGER = LogManager
-			.getLogger(RobotModelController.class.getName());
 
 	/**
 	 * 
@@ -49,6 +49,7 @@ public class RobotModelController {
 				r.emitEvent(UpdateType.ROBOT_POSITION);
 				r.emitEvent(UpdateType.ROBOT_PROGRESS);
 			} catch (NumberFormatException e) {
+				// Skip message if invalid number format
 			}
 		}
 	}
@@ -70,6 +71,7 @@ public class RobotModelController {
 				r.setProgress(Integer.parseInt(message));
 				r.emitEvent(UpdateType.ROBOT_PROGRESS);
 			} catch (NumberFormatException e) {
+				// Skip message if invalid number format
 			}
 		}
 	}
@@ -91,6 +93,7 @@ public class RobotModelController {
 			r.setScore(Integer.parseInt(message));
 			r.emitEvent(UpdateType.ROBOT_SCORE);
 		} catch (NumberFormatException e) {
+			// Skip message if invalid number format
 		}
 	}
 
