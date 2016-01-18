@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttClient;
@@ -43,8 +45,121 @@ public class MqttController implements IMqttController {
 	/** List of topics to subscribe after successful connection establishment */
 	private final List<String> subscribeTopics;
 
+	private Logger log = LogManager.getLogger(this.getClass().getSimpleName());
+
 	/**
-	 * Initialize a new MqttController.
+	 * Initialize a new MqttController and set lastWill message.
+	 * 
+	 * This constructor also initializes and starts the paho MQTT client,
+	 * connects to the MQTT broker and starts the send and receive worker
+	 * threads.
+	 * 
+	 * @param mqttBrokerUrl
+	 *            URL of the MQTT broker to connect to
+	 * @param mqttClientId
+	 *            MQTT Client ID to be used to connect to the broker. Must be
+	 *            uniqe for each connecting device/client.
+	 * @param receiveHandler
+	 *            A Controller to call a method for each received MQTT message
+	 *            and encountered errors on.
+	 * @param subscribeTopics
+	 *            A list of MQTT topic names to subscribe. May contain wildcards
+	 *            according to the MQTT standard.
+	 * @param lastWillTopic
+	 *            The topic of the last will message of this client. If this
+	 *            topic is null, the MQTT client wont set a will.
+	 * @param lastWillMessage
+	 *            The message to be sent as last will of this MQTT client. If
+	 *            topic is not null and message is null, a zero byte message
+	 *            will be sent.
+	 * @param lastWillRetired
+	 *            Specifies whether the last will message will be a retired
+	 *            message. Parameter only has effect if lastWillMessage != null
+	 */
+	public MqttController(String mqttClientId,
+			IMqttMessageHandler receiveHandler, List<String> subscribeTopics,
+			String lastWillTopic, String lastWillMessage,
+			boolean lastWillRetired) throws MqttException {
+
+		log.debug("Constructing MqttController");
+		this.receiveHandler = receiveHandler;
+		this.subscribeTopics = subscribeTopics;
+
+		// The broker url is only temprorary and will be specified finally via
+		// the MQTTConnectOptions in connect().
+		this.client = new MqttClient("tcp://localhost", mqttClientId,
+				new MemoryPersistence());
+
+		// mqtt connection options
+		this.connOpt = new MqttConnectOptions();
+		connOpt.setCleanSession(true);
+		connOpt.setKeepAliveInterval(5);
+		// set last will if required
+		if (lastWillTopic != null) {
+			log.debug("MQTT client will have last will Message.");
+			byte[] message = lastWillMessage != null ? lastWillMessage
+					.getBytes() : new byte[0];
+			connOpt.setWill(lastWillTopic, message, 0, lastWillRetired);
+		}
+		connOpt.setMqttVersion(MqttConnectOptions.MQTT_VERSION_3_1);
+
+		// MQTT client callback methods
+		client.setCallback(new MqttCallback() {
+
+			@Override
+			public void messageArrived(String topic, MqttMessage message) {
+				log.trace(
+						"Received MQTT message and add to receive queue. Topic: \"{}\" Message: \"{}\"",
+						topic, message);
+				try {
+					MqttController.this.receiveQueue.put(new MqttFullMessage(
+							topic, message));
+				} catch (InterruptedException e) {
+				}
+			}
+
+			@Override
+			public void deliveryComplete(IMqttDeliveryToken arg0) {
+
+			}
+
+			@Override
+			public void connectionLost(Throwable arg0) {
+				log.warn("Connection to MQTT broker lost.");
+				MqttController.this.receiveHandler.onMqttStateChange(false);
+
+				// Try to reconnect every 2 seconds
+				try {
+					while (!client.isConnected()) {
+						Thread.sleep(2000);
+						try {
+							log.debug("Trying reconnect to MQTT broker.");
+							MqttController.this.connect(null);
+						} catch (MqttException e) {
+							log.info("Reconnect failed:", e);
+						}
+					}
+				} catch (InterruptedException e) {
+					log.info("Reconnect aborted by interrupt exception.",e);
+				}
+			}
+		});
+
+		// message queues
+		this.sendQueue = new LinkedBlockingQueue<MqttFullMessage>();
+		this.receiveQueue = new LinkedBlockingQueue<MqttFullMessage>();
+
+		// send- and receive worker threads
+		Thread receiveWorker = new Thread(new MqttReceiver(receiveQueue,
+				receiveHandler));
+		receiveWorker.start();
+		Thread sendWorker = new Thread(new MqttSender(sendQueue, client,
+				this.waitForConnect));
+		sendWorker.start();
+	}
+
+	/**
+	 * Initialize a new MqttController (whithout last will)
 	 * 
 	 * This constructor also initializes and starts the paho MQTT client,
 	 * connects to the MQTT broker and starts the send and receive worker
@@ -65,70 +180,7 @@ public class MqttController implements IMqttController {
 	public MqttController(String mqttClientId,
 			IMqttMessageHandler receiveHandler, List<String> subscribeTopics)
 			throws MqttException {
-
-		this.receiveHandler = receiveHandler;
-		this.subscribeTopics = subscribeTopics;
-
-		// The broker url is only temprorary and will be specified finally via
-		// the MQTTConnectOptions in connect().
-		this.client = new MqttClient("tcp://localhost", mqttClientId,
-				new MemoryPersistence());
-
-		// mqtt connection options
-		this.connOpt = new MqttConnectOptions();
-		connOpt.setCleanSession(true);
-		connOpt.setKeepAliveInterval(5);
-		// TODO Set last will
-		// connOpt.setWill("error/connection",
-		// "The important client lost its connection.".getBytes(), 0, false);
-		connOpt.setMqttVersion(MqttConnectOptions.MQTT_VERSION_3_1);
-
-		// MQTT client callback methods
-		client.setCallback(new MqttCallback() {
-
-			@Override
-			public void messageArrived(String topic, MqttMessage message) {
-				try {
-					MqttController.this.receiveQueue.put(new MqttFullMessage(
-							topic, message));
-				} catch (InterruptedException e) {
-				}
-			}
-
-			@Override
-			public void deliveryComplete(IMqttDeliveryToken arg0) {
-
-			}
-
-			@Override
-			public void connectionLost(Throwable arg0) {
-				MqttController.this.receiveHandler.onMqttStateChange(false);
-
-				// Try to reconnect every 2 seconds
-				try {
-					while (!client.isConnected()) {
-						Thread.sleep(2000);
-						try {
-							MqttController.this.connect(null);
-						} catch (MqttException e) {
-						}
-					}
-				} catch (InterruptedException e) {
-				}
-			}
-		});
-
-		// message queues
-		this.sendQueue = new LinkedBlockingQueue<MqttFullMessage>();
-		this.receiveQueue = new LinkedBlockingQueue<MqttFullMessage>();
-
-		// send- and receive worker threads
-		Thread receiveWorker = new Thread(new MqttReceiver(receiveQueue,
-				receiveHandler));
-		receiveWorker.start();
-		Thread sendWorker = new Thread(new MqttSender(sendQueue, client,
-				this.waitForConnect));
-		sendWorker.start();
+		this(mqttClientId, receiveHandler, subscribeTopics, null, null, false);
 	}
 
 	/**
@@ -139,8 +191,12 @@ public class MqttController implements IMqttController {
 	 */
 	@Override
 	public void connect(String brokerUrl) throws MqttException {
+		log.trace("Entry to MqttController.connect()");
+		
 		// Disconnect if connected
 		if (this.client.isConnected()) {
+			log.trace("Client was already connectec. Disconnecting.");
+
 			this.client.disconnect();
 			this.receiveHandler.onMqttStateChange(false);
 		}
@@ -161,7 +217,6 @@ public class MqttController implements IMqttController {
 			this.waitForConnect.notifyAll();
 		}
 		receiveHandler.onMqttStateChange(true);
-
 	}
 
 	/**
@@ -172,6 +227,9 @@ public class MqttController implements IMqttController {
 	 */
 	@Override
 	public void sendMessage(String topic, String message, boolean retained) {
+		log.trace(
+				"Adding MQTT message to Send queue. Topic:\"{}\", Message: \"{}\"{}",
+				topic, message, (retained ? ", r" : ""));
 		byte[] rawMessage = (message == null) ? new byte[] {} : message
 				.getBytes(StandardCharsets.UTF_8);
 
@@ -183,5 +241,4 @@ public class MqttController implements IMqttController {
 		} catch (InterruptedException e) {
 		}
 	}
-
 }

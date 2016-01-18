@@ -3,7 +3,7 @@ package de.unihannover.swp2015.robots2.ai.graph;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
 
 public class Edge {
-	private Node source; // Ggf. redundant
+	private Node source; 
 	private Node target;
 	private Orientation direction;
 
@@ -17,23 +17,11 @@ public class Edge {
 		return source;
 	}
 
-	public void setSource(Node source) {
-		this.source = source;
-	}
-
 	public Node getTarget() {
 		return target;
 	}
 
-	public void setTarget(Node target) {
-		this.target = target;
-	}
-
 	public Orientation getDirection() {
 		return direction;
-	}
-
-	public void setDirection(Orientation direction) {
-		this.direction = direction;
 	}
 }

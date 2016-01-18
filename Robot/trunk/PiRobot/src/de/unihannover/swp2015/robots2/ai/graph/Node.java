@@ -48,30 +48,12 @@ public class Node {
 		this.neighbors = new ArrayList<Edge>();
 	}
 	
-
-	/**
-	 * Returns true if node is occupied with a robot, else false
-	 * 
-	 * @return if occupied
-	 */
-	public boolean isOccupied() {
-		return !(this.robot == null);
-	}
-
-	public Robot getRobot() {
-		return this.robot;
-	}
-
 	public void setRobot(Robot robot) {
 		this.robot = robot;
 	}
 
 	public List<Edge> getNeighbors() {
 		return neighbors;
-	}
-
-	public void setNeighbors(List<Edge> neighbors) {
-		this.neighbors = neighbors;
 	}
 
 	public int getRessourceValue() {
@@ -86,24 +68,8 @@ public class Node {
 		return x;
 	}
 
-	public void setX(int x) {
-		this.x = x;
-	}
-
 	public int getY() {
 		return y;
-	}
-
-	public void setY(int y) {
-		this.y = y;
-	}
-
-	public int getGrowRate() {
-		return growRate;
-	}
-
-	public void setGrowRate(int growRate) {
-		this.growRate = growRate;
 	}
 	/**
 	 * This method checks, whether or not there is a Wall in the given Orientation, to 

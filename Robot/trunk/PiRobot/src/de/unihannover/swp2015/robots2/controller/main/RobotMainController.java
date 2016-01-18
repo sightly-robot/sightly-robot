@@ -1,7 +1,6 @@
 package de.unihannover.swp2015.robots2.controller.main;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.UUID;
 
 import org.eclipse.paho.client.mqttv3.MqttException;
@@ -49,6 +48,7 @@ public class RobotMainController extends AbstractMainController implements
 			this.mqttController = new MqttController(clientId, this,
 					Arrays.asList(subscribeTopics));
 		} catch (MqttException e) {
+			log.fatal("Error constructing MqttController:", e);
 		}
 	}
 
@@ -100,7 +100,7 @@ public class RobotMainController extends AbstractMainController implements
 
 		case ROBOT_SETPOSITION:
 			// TODO refactor to own method
-			if (this.myself.getId().equals(message)) {
+			if (this.myself.getId().equals(key)) {
 				String[] positionParts = message.split(",");
 				int x = Integer.parseInt(positionParts[0]);
 				int y = Integer.parseInt(positionParts[1]);
@@ -114,16 +114,16 @@ public class RobotMainController extends AbstractMainController implements
 					return;
 
 				// Occupy target field and release old fields
-				this.occupyField(x, y);
 				for (IFieldWriteable ourField : this.stageModelController
 						.getOurFields()) {
 					this.releaseField(ourField.getX(), ourField.getY());
 				}
+				this.occupyField(x, y);
 
 				// Broadcast new position and SETUPSTATE
 				this.sendMqttMessage(MqttTopic.ROBOT_POSITION,
-						this.myself.getId(), Integer.toString(x) + "-"
-								+ Integer.toString(y) + "-" + o.toString());
+						this.myself.getId(), Integer.toString(x) + ","
+								+ Integer.toString(y) + "," + o.toString());
 				this.sendMqttMessage(MqttTopic.ROBOT_STATE,
 						this.myself.getId(), RobotState.SETUPSTATE.toString());
 
@@ -253,14 +253,13 @@ public class RobotMainController extends AbstractMainController implements
 	public void releaseField(int x, int y) {
 		IField f = this.game.getStage().getField(x, y);
 
-		// Releasing is not possible if not our field (or random wait state)
-		if (f.getState() != State.OURS && f.getState() != State.RANDOM_WAIT)
+		// Releasing is not possible if not our field
+		if (f.getState() != State.OURS)
 			return;
 
 		// Send release message if has been occupied by us
-		if (f.getState() == State.OURS)
-			this.sendMqttMessage(MqttTopic.FIELD_OCCUPIED_RELEASE,
-					(x + "-" + y), "");
+		this.sendMqttMessage(MqttTopic.FIELD_OCCUPIED_RELEASE, (x + "-" + y),
+				"");
 		this.fieldStateModelController.setFieldRelease(x, y);
 	}
 
@@ -308,11 +307,6 @@ public class RobotMainController extends AbstractMainController implements
 	@Override
 	public IRobot getMyself() {
 		return this.myself;
-	}
-
-	@Override
-	public void retryLockField(int x, int y) {
-		this.requestField(x, y);
 	}
 
 	@Override

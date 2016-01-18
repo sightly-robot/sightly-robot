@@ -5,6 +5,9 @@ import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import de.unihannover.swp2015.robots2.controller.main.IFieldTimerController;
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent.UpdateType;
 import de.unihannover.swp2015.robots2.model.interfaces.IField.State;
@@ -24,6 +27,8 @@ public class FieldStateModelController {
 	private IFieldTimerController fieldTimerCallback = null;
 	private Random random;
 
+	private Logger log = LogManager.getLogger(this.getClass().getSimpleName());
+
 	public FieldStateModelController(IStageWriteable stage) {
 		this.stage = stage;
 
@@ -41,7 +46,8 @@ public class FieldStateModelController {
 	 * @param timerCallback
 	 *            The callback handler for all new timers
 	 */
-	public void setFieldTimerCallback(IFieldTimerController fieldTimerCallback) {
+	public void setFieldTimerCallback(
+			IFieldTimerController fieldTimerCallback) {
 		this.fieldTimerCallback = fieldTimerCallback;
 	}
 
@@ -62,7 +68,7 @@ public class FieldStateModelController {
 		int y = Integer.parseInt(coord[1]);
 
 		this.resizeStage(x, y);
-		
+
 		IFieldWriteable f = this.stage.getFieldWriteable(x, y);
 
 		switch (f.getState()) {
@@ -76,6 +82,8 @@ public class FieldStateModelController {
 					new FieldTimerTask(f, null), 3000, TimeUnit.MILLISECONDS);
 			f.setStateTimerFuture(newTimer);
 
+			log.debug("Field " + key + " was locked by robot " + message
+					+ " while random wait or free.");
 			f.emitEvent(UpdateType.FIELD_STATE);
 			break;
 		}
@@ -84,12 +92,14 @@ public class FieldStateModelController {
 			f.cancelStateTimer();
 			f.setState(State.RANDOM_WAIT);
 
-			int waitTime = this.random.nextInt(2900) + 100;
+			int waitTime = this.random.nextInt(2700) + 300;
 			Future<Object> newTimer = this.timer.schedule(
 					new FieldTimerTask(f, this.fieldTimerCallback), waitTime,
 					TimeUnit.MILLISECONDS);
 			f.setStateTimerFuture(newTimer);
 
+			log.debug("Field " + key + " was locked by robot " + message
+					+ " while lock wait.");
 			f.emitEvent(UpdateType.FIELD_STATE);
 			break;
 		}
@@ -116,15 +126,18 @@ public class FieldStateModelController {
 		int y = Integer.parseInt(coord[1]);
 
 		this.resizeStage(x, y);
-		
-		IFieldWriteable f = this.stage.getFieldWriteable(x,
-				y);
+
+		IFieldWriteable f = this.stage.getFieldWriteable(x, y);
 
 		if (f.getState() != State.OURS) {
+			log.debug(
+					"Field " + key + " was occupied by robot " + message + ".");
 			f.cancelStateTimer();
 			f.setState(State.OCCUPIED);
 			f.setLockedBy(message);
 			f.emitEvent(UpdateType.FIELD_STATE);
+		} else {
+
 		}
 	}
 
@@ -145,13 +158,13 @@ public class FieldStateModelController {
 		int y = Integer.parseInt(coord[1]);
 
 		this.resizeStage(x, y);
-		
-		IFieldWriteable f = this.stage.getFieldWriteable(x,
-				y);
+
+		IFieldWriteable f = this.stage.getFieldWriteable(x, y);
 
 		switch (f.getState()) {
 		case LOCKED:
 		case OCCUPIED:
+			log.debug("Field " + key + " was released via MQTT message.");
 			f.cancelStateTimer();
 			f.setState(State.FREE);
 			f.setLockedBy("");
@@ -179,10 +192,12 @@ public class FieldStateModelController {
 		f.setState(State.LOCK_WAIT);
 
 		Future<Object> newTimer = this.timer.schedule(
-				new FieldTimerTask(f, this.fieldTimerCallback), 100,
+				new FieldTimerTask(f, this.fieldTimerCallback), 300,
 				TimeUnit.MILLISECONDS);
 		f.setStateTimerFuture(newTimer);
 
+		log.debug("We lock Field " + x + "-" + y
+				+ " and now are listening for coincident locks.");
 		f.emitEvent(UpdateType.FIELD_STATE);
 	}
 
@@ -201,6 +216,7 @@ public class FieldStateModelController {
 		IFieldWriteable f = this.stage.getFieldWriteable(x, y);
 		f.setState(State.OURS);
 
+		log.debug("We occupy Field {}-{}.",x,y);
 		f.emitEvent(UpdateType.FIELD_STATE);
 
 	}
@@ -221,9 +237,11 @@ public class FieldStateModelController {
 		IFieldWriteable f = this.stage.getFieldWriteable(x, y);
 
 		f.setState(State.FREE);
+
+		log.debug("We release Field " + x + "-" + y + ".");
 		f.emitEvent(UpdateType.FIELD_STATE);
 	}
-	
+
 	/**
 	 * Resize the stage to fit the given coordinates.
 	 * 
@@ -234,6 +252,10 @@ public class FieldStateModelController {
 	 */
 	private void resizeStage(int x, int y) {
 		if (x >= this.stage.getWidth() || y >= this.stage.getHeight()) {
+			log.debug(
+					"Stage will be resized because of field state out of range. Size was "
+							+ this.stage.getWidth() + "x"
+							+ this.stage.getHeight() + ".");
 			this.stage.changeSize(Math.max(x + 1, this.stage.getWidth()),
 					Math.max(y + 1, this.stage.getHeight()));
 			this.stage.emitEvent(UpdateType.STAGE_SIZE);

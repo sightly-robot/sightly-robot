@@ -6,6 +6,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.eclipse.paho.client.mqttv3.MqttException;
 
 import de.unihannover.swp2015.robots2.ai.core.AI;
@@ -13,7 +15,6 @@ import de.unihannover.swp2015.robots2.controller.interfaces.IRobotController;
 import de.unihannover.swp2015.robots2.controller.main.RobotMainController;
 import de.unihannover.swp2015.robots2.model.externalInterfaces.IModelObserver;
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
-import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
 import de.unihannover.swp2015.robots2.robot.abstractrobot.automate.AbstractAutomate;
 import de.unihannover.swp2015.robots2.robot.interfaces.AbstractAI;
 
@@ -25,7 +26,10 @@ import de.unihannover.swp2015.robots2.robot.interfaces.AbstractAI;
  * @author Philipp Rohde
  */
 public abstract class AbstractRobot {
-
+	
+	/**LOGGER:*/
+	private static Logger LOGGER = LogManager.getLogger(AbstractRobot.class.getName());
+	
 	/** The controller of the robot. */
 	protected IRobotController robotController;
 
@@ -39,14 +43,13 @@ public abstract class AbstractRobot {
 	 * Initializes the AbstractRobot instance by initializing the robot
 	 * controller and AI.
 	 */
-	public AbstractRobot(boolean isHardware,String brokerIP) {
+	public AbstractRobot(boolean isHardware, String brokerIP) {
 
 		robotController = new RobotMainController(isHardware);
 
-		System.out.println("My ID: "+robotController.getMyself().getId());
-		
-		if(brokerIP == null)
-		{
+		LOGGER.info("My ID: " + robotController.getMyself().getId());
+
+		if (brokerIP == null) {
 			// read broker IP from properties
 			Properties properties = new Properties();
 			BufferedInputStream is;
@@ -54,7 +57,7 @@ public abstract class AbstractRobot {
 				is = new BufferedInputStream(new FileInputStream("../config.properties"));
 				properties.load(is);
 				is.close();
-	
+
 			} catch (FileNotFoundException fnfe) {
 				fnfe.printStackTrace();
 			} catch (IOException ioe) {
@@ -62,11 +65,11 @@ public abstract class AbstractRobot {
 			}
 			brokerIP = properties.getProperty("brokerIP");
 		}
-		System.out.println("Loaded IP: " + brokerIP);
-		
+		LOGGER.info("Loaded IP: " + brokerIP);
+
 		while (!robotController.getGame().isSynced()) {
 			try {
-				System.out.println("start mqtt");
+				LOGGER.info("start mqtt");
 				robotController.startMqtt("tcp://" + brokerIP);
 			} catch (MqttException me) {
 				try {
@@ -74,22 +77,24 @@ public abstract class AbstractRobot {
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-				System.out.println("try again");
+				LOGGER.trace("try again");
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
-		System.out.println("connected!");
-	
+		LOGGER.info("connected!");
+
 		robotController.getGame().observe(new IModelObserver() {
 			@Override
 			public void onModelUpdate(IEvent event) {
 				switch (event.getType()) {
 				case ROBOT_DELETE:
-					if(event.getObject() == robotController.getMyself())
-					{
+					if (event.getObject() == robotController.getMyself()) {
+						LOGGER.info("Robot DELETE");
 						System.exit(0);
 					}
+					break;
+				default:
 					break;
 				}
 			}
@@ -114,6 +119,6 @@ public abstract class AbstractRobot {
 		ai = new AI(robotController);
 		ai.setRelativeSpeed(1, 1, 1);
 
-		System.out.println("AI initialized!");
+		LOGGER.info("AI initialized!");
 	}
 }
