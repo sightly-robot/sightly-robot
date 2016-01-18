@@ -2,7 +2,9 @@ package de.unihannover.swp2015.robots2.robot.hardwarerobot.automate;
 
 import java.awt.Color;
 
-import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import de.unihannover.swp2015.robots2.robot.abstractrobot.Direction;
 import de.unihannover.swp2015.robots2.robot.abstractrobot.automate.IState;
 import de.unihannover.swp2015.robots2.robot.hardwarerobot.pi2gocontroller.LEDAndServoController;
@@ -43,7 +45,6 @@ public enum HardwareStateV2 implements IState {
 				setCarLeds(false, false);
 				break;
 			}
-			;
 
 			if (System.currentTimeMillis() - startTime > 5000) {
 				return DISABLED;
@@ -97,7 +98,6 @@ public enum HardwareStateV2 implements IState {
 				setCarLeds(false, false);
 				break;
 			}
-			;
 
 			// MOTOR:
 			boolean left = GPIO.isLineLeft();
@@ -372,6 +372,8 @@ public enum HardwareStateV2 implements IState {
 		}
 	};
 
+	/** LOGGER: */
+	private static Logger LOGGER = LogManager.getLogger(HardwareStateV2.class.getName());
 	// speed configuration
 	private static final int FASTER = 60;
 	private static final int FAST = 40;
@@ -406,6 +408,9 @@ public enum HardwareStateV2 implements IState {
 	 */
 	@Override
 	public void start() {
+		LOGGER.trace("Start State " + toString());
+		if (!isDriving())
+			nextButOneDirection = Direction.FORWARDS;
 		startTime = System.currentTimeMillis();
 	}
 
@@ -493,6 +498,6 @@ public enum HardwareStateV2 implements IState {
 	}
 
 	public void setNextButOneDirection(Direction direction) {
-		this.nextButOneDirection = direction;
+		HardwareStateV2.nextButOneDirection = direction;
 	}
 }
