@@ -1,7 +1,7 @@
 package de.unihannover.swp2015.robots2.robot.hardwarerobot.automate;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import com.pi4j.io.gpio.event.GpioPinDigitalStateChangeEvent;
+import com.pi4j.io.gpio.event.GpioPinListenerDigital;
 
 import de.unihannover.swp2015.robots2.controller.interfaces.IRobotController;
 import de.unihannover.swp2015.robots2.robot.abstractrobot.automate.AbstractAutomate;
@@ -12,10 +12,11 @@ import de.unihannover.swp2015.robots2.robot.abstractrobot.automate.AbstractAutom
  * 
  * @author Philipp Rohde
  */
-public class HardwareAutomate extends AbstractAutomate {
+public class HardwareAutomate extends AbstractAutomate implements GpioPinListenerDigital {
 
 	/** LOGGER: */
-	private static Logger LOGGER = LogManager.getLogger(HardwareAutomate.class.getName());
+	// private static Logger LOGGER =
+	// LogManager.getLogger(HardwareAutomate.class.getName());
 
 	/**
 	 * Constructs a new automate for a hardware robot.
@@ -26,5 +27,10 @@ public class HardwareAutomate extends AbstractAutomate {
 	public HardwareAutomate(IRobotController robotController) {
 		super(robotController, HardwareStateV2.WAIT, HardwareStateV2.SETUP, HardwareStateV2.DISABLED,
 				HardwareStateV2.CONNECTED);
+	}
+
+	@Override
+	public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent evt) {
+		getAutomation().notify();
 	}
 }

@@ -67,8 +67,8 @@ public class LEDAndServoController {
 	private static final double FREQUENCY = 50; // HZ
 	private static final double SERVO_CENTER_PWM = PWM_MAX / (1000 / FREQUENCY);
 	public static final double PWM_PER_DEGREE = SERVO_CENTER_PWM / 180;
-	
-	//AccentColor
+
+	// AccentColor
 	private Color accentColor = Color.MAGENTA;
 
 	/**

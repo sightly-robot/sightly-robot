@@ -1,6 +1,5 @@
 package de.unihannover.swp2015.robots2.robot.hardwarerobot;
 
-
 /**
  * The main class only creates a new {@link HardwareRobot}.
  * 
@@ -15,7 +14,6 @@ public class Main {
 	 *            the command-line arguments
 	 */
 	public static void main(String[] args) {
-		System.out.println("Found Argument: "+args[0]);
-		new HardwareRobot(args.length>0?args[0]:null);
+		new HardwareRobot(args.length > 0 ? args[0] : null);
 	}
 }

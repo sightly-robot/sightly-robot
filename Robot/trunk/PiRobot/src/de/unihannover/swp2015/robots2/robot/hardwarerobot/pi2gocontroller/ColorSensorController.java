@@ -22,11 +22,9 @@ public class ColorSensorController {
 	private static ColorSensorController instance;
 
 	private boolean DEBUG = true;
-
+	
 	private static final int TCS34725_ADDRESS = 0x29;
-
 	private static final int TCS34725_COMMAND_BIT = 0x80;
-
 	private static final int TCS34725_ENABLE = 0x00;
 	private static final int TCS34725_ENABLE_AIEN = 0x10;	// RGBC Interrupt Enable
 	private static final int TCS34725_ENABLE_WEN = 0x08;	// Wait enable - Writing 1 activates the wait timer
@@ -104,6 +102,7 @@ public class ColorSensorController {
 		}
 	}
 
+	@SuppressWarnings("unused")
 	private Gain gain;
 
 	private I2CBus bus;

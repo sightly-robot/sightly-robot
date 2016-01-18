@@ -26,10 +26,10 @@ import de.unihannover.swp2015.robots2.robot.interfaces.AbstractAI;
  * @author Philipp Rohde
  */
 public abstract class AbstractRobot {
-	
-	/**LOGGER:*/
+
+	/** LOGGER: */
 	private static Logger LOGGER = LogManager.getLogger(AbstractRobot.class.getName());
-	
+
 	/** The controller of the robot. */
 	protected IRobotController robotController;
 
@@ -50,6 +50,7 @@ public abstract class AbstractRobot {
 		LOGGER.info("My ID: " + robotController.getMyself().getId());
 
 		if (brokerIP == null) {
+			LOGGER.info("Try loading BrokerIP from Properties");
 			// read broker IP from properties
 			Properties properties = new Properties();
 			BufferedInputStream is;
@@ -67,9 +68,9 @@ public abstract class AbstractRobot {
 		}
 		LOGGER.info("Loaded IP: " + brokerIP);
 
+		LOGGER.info("Starting MQTT-Client");
 		while (!robotController.getGame().isSynced()) {
 			try {
-				LOGGER.info("start mqtt");
 				robotController.startMqtt("tcp://" + brokerIP);
 			} catch (MqttException me) {
 				try {
@@ -77,12 +78,12 @@ public abstract class AbstractRobot {
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-				LOGGER.trace("try again");
+				LOGGER.warn("Try again, connecting to Broker");
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
-		LOGGER.info("connected!");
+		LOGGER.info("MQTT-Client successfully connected!");
 
 		robotController.getGame().observe(new IModelObserver() {
 			@Override
@@ -90,7 +91,8 @@ public abstract class AbstractRobot {
 				switch (event.getType()) {
 				case ROBOT_DELETE:
 					if (event.getObject() == robotController.getMyself()) {
-						LOGGER.info("Robot DELETE");
+						LOGGER.info("ROBOT_DELETE event received");
+						LOGGER.warn("Shutt down JVM NOW!");
 						System.exit(0);
 					}
 					break;
