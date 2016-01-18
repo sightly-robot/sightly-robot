@@ -6,6 +6,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.eclipse.paho.client.mqttv3.MqttException;
 
 import de.unihannover.swp2015.robots2.ai.core.AI;
@@ -24,7 +26,10 @@ import de.unihannover.swp2015.robots2.robot.interfaces.AbstractAI;
  * @author Philipp Rohde
  */
 public abstract class AbstractRobot {
-
+	
+	/**LOGGER:*/
+	private static Logger LOGGER = LogManager.getLogger(AbstractRobot.class.getName());
+	
 	/** The controller of the robot. */
 	protected IRobotController robotController;
 
@@ -42,7 +47,7 @@ public abstract class AbstractRobot {
 
 		robotController = new RobotMainController(isHardware);
 
-		System.out.println("My ID: " + robotController.getMyself().getId());
+		LOGGER.info("My ID: " + robotController.getMyself().getId());
 
 		if (brokerIP == null) {
 			// read broker IP from properties
@@ -60,11 +65,11 @@ public abstract class AbstractRobot {
 			}
 			brokerIP = properties.getProperty("brokerIP");
 		}
-		System.out.println("Loaded IP: " + brokerIP);
+		LOGGER.info("Loaded IP: " + brokerIP);
 
 		while (!robotController.getGame().isSynced()) {
 			try {
-				System.out.println("start mqtt");
+				LOGGER.info("start mqtt");
 				robotController.startMqtt("tcp://" + brokerIP);
 			} catch (MqttException me) {
 				try {
@@ -72,12 +77,12 @@ public abstract class AbstractRobot {
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-				System.out.println("try again");
+				LOGGER.trace("try again");
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
-		System.out.println("connected!");
+		LOGGER.info("connected!");
 
 		robotController.getGame().observe(new IModelObserver() {
 			@Override
@@ -85,6 +90,7 @@ public abstract class AbstractRobot {
 				switch (event.getType()) {
 				case ROBOT_DELETE:
 					if (event.getObject() == robotController.getMyself()) {
+						LOGGER.info("Robot DELETE");
 						System.exit(0);
 					}
 					break;
@@ -113,6 +119,6 @@ public abstract class AbstractRobot {
 		ai = new AI(robotController);
 		ai.setRelativeSpeed(1, 1, 1);
 
-		System.out.println("AI initialized!");
+		LOGGER.info("AI initialized!");
 	}
 }

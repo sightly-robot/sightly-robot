@@ -2,6 +2,9 @@ package de.unihannover.swp2015.robots2.robot.abstractrobot.automate;
 
 import java.awt.Point;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import de.unihannover.swp2015.robots2.controller.interfaces.IRobotController;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
 import de.unihannover.swp2015.robots2.robot.abstractrobot.Direction;
@@ -19,6 +22,8 @@ import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
  */
 public abstract class AbstractAutomate implements AiEventObserver, Runnable {
 
+	//LOGGER:
+	private static Logger LOGGER = LogManager.getLogger(AbstractAutomate.class.getName());
 	// model
 	protected IRobotController robotController;
 	protected IRobot robot;
@@ -189,7 +194,7 @@ public abstract class AbstractAutomate implements AiEventObserver, Runnable {
 
 				// set new state
 				currentDirection = Direction.calcDirection(robot.getPosition().getOrientation(), orientation);
-				System.out.println("Current: "+robot.getPosition().getX()+" "+robot.getPosition().getY() + " Next: "+nextPosition.x+" "+nextPosition.y+" Orientation: "+orientation.name()+" Direction: "+currentDirection.name());
+				LOGGER.trace("Positioning: "+robot.getPosition().getX()+" "+robot.getPosition().getY() + " Next: "+nextPosition.x+" "+nextPosition.y+" Orientation: "+orientation.name()+" Direction: "+currentDirection.name());
 				state = state.getStateForDirection(currentDirection);
 				state.start();
 
@@ -203,6 +208,7 @@ public abstract class AbstractAutomate implements AiEventObserver, Runnable {
 				}
 				return true;
 			}
+			LOGGER.warn("NextOrientationEvents while driving are not allowed!");
 			return false;
 		}
 	}
