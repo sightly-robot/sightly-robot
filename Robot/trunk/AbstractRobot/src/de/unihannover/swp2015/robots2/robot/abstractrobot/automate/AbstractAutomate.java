@@ -6,12 +6,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.unihannover.swp2015.robots2.controller.interfaces.IRobotController;
-import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
-import de.unihannover.swp2015.robots2.robot.abstractrobot.Direction;
-import de.unihannover.swp2015.robots2.robot.interfaces.AiEventObserver;
 import de.unihannover.swp2015.robots2.model.externalInterfaces.IModelObserver;
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
+import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
 import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
+import de.unihannover.swp2015.robots2.robot.abstractrobot.Direction;
+import de.unihannover.swp2015.robots2.robot.interfaces.AiEventObserver;
 
 /**
  * The AbstractAutomate is a {@code Runnable} that automatically creates a
@@ -22,7 +22,7 @@ import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
  */
 public abstract class AbstractAutomate implements AiEventObserver, Runnable {
 
-	//LOGGER:
+	// LOGGER:
 	private static Logger LOGGER = LogManager.getLogger(AbstractAutomate.class.getName());
 	// model
 	protected IRobotController robotController;
@@ -55,12 +55,13 @@ public abstract class AbstractAutomate implements AiEventObserver, Runnable {
 	 * @param waitState
 	 *            the initial state of the automate
 	 */
-	public AbstractAutomate(IRobotController robotController,final IState waitState,final IState setupState,final IState disableState, final IState connectedState) {
+	public AbstractAutomate(IRobotController robotController, final IState waitState, final IState setupState,
+			final IState disableState, final IState connectedState) {
 		this.robotController = robotController;
 		robot = robotController.getMyself();
 
 		state = connectedState;
-		
+
 		robotController.getMyself().observe(new IModelObserver() {
 			@Override
 			public void onModelUpdate(IEvent event) {
@@ -84,7 +85,7 @@ public abstract class AbstractAutomate implements AiEventObserver, Runnable {
 				default:
 					break;
 				}
-				
+
 			}
 		});
 	}
@@ -113,6 +114,8 @@ public abstract class AbstractAutomate implements AiEventObserver, Runnable {
 					if (!state.isDriving()) {
 						// measurements
 						progressMeasurements[currentDirection.ordinal()] = System.currentTimeMillis() - lastWaitTime;
+						LOGGER.trace("ProgressMeasurements Update " + currentDirection + " = "
+								+ progressMeasurements[currentDirection.ordinal()]);
 						// update position only
 						updatePostition(nextPosition.x, nextPosition.y);
 					}
@@ -190,11 +193,12 @@ public abstract class AbstractAutomate implements AiEventObserver, Runnable {
 					nextPosition.translate(-1, 0);
 					break;
 				}
-				
 
 				// set new state
 				currentDirection = Direction.calcDirection(robot.getPosition().getOrientation(), orientation);
-				LOGGER.trace("Positioning: "+robot.getPosition().getX()+" "+robot.getPosition().getY() + " Next: "+nextPosition.x+" "+nextPosition.y+" Orientation: "+orientation.name()+" Direction: "+currentDirection.name());
+				LOGGER.trace("Positioning: " + robot.getPosition().getX() + " " + robot.getPosition().getY() + " Next: "
+						+ nextPosition.x + " " + nextPosition.y + " Orientation: " + orientation.name() + " Direction: "
+						+ currentDirection.name());
 				state = state.getStateForDirection(currentDirection);
 				state.start();
 
@@ -212,7 +216,7 @@ public abstract class AbstractAutomate implements AiEventObserver, Runnable {
 			return false;
 		}
 	}
-	
+
 	protected boolean setState(IState iState) {
 		synchronized (state) {
 			if (!state.isDriving()) {
@@ -233,7 +237,7 @@ public abstract class AbstractAutomate implements AiEventObserver, Runnable {
 	}
 
 	@Override
-	public void nextButOneOrientationEvent(Orientation orientation){
+	public void nextButOneOrientationEvent(Orientation orientation) {
 		Direction newDirection = Direction.calcDirection(robot.getPosition().getOrientation(), orientation);
 		state.setNextButOneDirection(newDirection);
 	}

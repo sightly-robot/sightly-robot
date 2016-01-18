@@ -1,6 +1,5 @@
 package de.unihannover.swp2015.robots2.robot.abstractrobot.automate;
 
-import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
 import de.unihannover.swp2015.robots2.robot.abstractrobot.Direction;
 
 /**
@@ -32,9 +31,10 @@ public interface IState {
 	 */
 	@Deprecated
 	public boolean isWait();
-	
+
 	/**
-	 * Returns whether the Pi2Go is driving or not. 
+	 * Returns whether the Pi2Go is driving or not.
+	 * 
 	 * @return {@code true} if it is in a driving State.
 	 */
 	public boolean isDriving();
