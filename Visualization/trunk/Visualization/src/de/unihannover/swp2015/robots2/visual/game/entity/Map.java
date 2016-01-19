@@ -51,7 +51,7 @@ public class Map extends Entity {
 		this.foodList = new ArrayList<>(model.getWidth() * model.getHeight());
 		
 		this.renderWalls = prefs.getBoolean(PrefKey.RENDER_WALL);
-		this.renderWalls = prefs.getBoolean(PrefKey.RENDER_RESOURCES);
+		this.renderResources = prefs.getBoolean(PrefKey.RENDER_RESOURCES);
 		
 		if (model.getHeight() != 0 && model.getWidth() != 0)
 			this.resize();
@@ -116,13 +116,16 @@ public class Map extends Entity {
 		}
 		
 		if (renderResources) {
-			for (int i = 0 ; i < fieldList.size() ; ++i) {
+			for (int i = 0 ; i < wallList.size() ; ++i) {
 				foodList.get(i).draw(batch);
+
+				System.out.println("asd");
 			}
+			System.out.println("asd");
 		}
 		
 		if (renderWalls) {
-			for (int i = 0 ; i < fieldList.size() ; ++i) {
+			for (int i = 0 ; i < wallList.size() ; ++i) {
 				wallList.get(i).draw(batch);
 			}
 		}
