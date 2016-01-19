@@ -118,10 +118,7 @@ public class Map extends Entity {
 		if (renderResources) {
 			for (int i = 0 ; i < wallList.size() ; ++i) {
 				foodList.get(i).draw(batch);
-
-				System.out.println("asd");
 			}
-			System.out.println("asd");
 		}
 		
 		if (renderWalls) {
