@@ -46,6 +46,8 @@ public abstract class AbstractAutomate implements AiEventObserver, Runnable, ISt
 	protected double[] progressMeasurements = new double[] { 1000, 1000, 1000, 1000 };
 	private Direction currentDirection = Direction.FORWARDS;
 	private long lastWaitTime;
+	
+	private IState disableState;
 
 	/**
 	 * Constructs a new AbstractAutomate.
@@ -62,6 +64,8 @@ public abstract class AbstractAutomate implements AiEventObserver, Runnable, ISt
 
 		state = connectedState;
 
+		this.disableState = disableState;
+		
 		robotController.getMyself().observe(new IModelObserver() {
 			@Override
 			public void onModelUpdate(IEvent event) {
@@ -177,7 +181,7 @@ public abstract class AbstractAutomate implements AiEventObserver, Runnable, ISt
 	@Override
 	public boolean nextOrientationEvent(Orientation orientation) {
 		synchronized (state) {
-			if (!state.isDriving()) {
+			if (!state.isDriving() && state != disableState) {
 				nextPosition.setLocation(robot.getPosition().getX(), robot.getPosition().getY());
 				switch (orientation) {
 				case NORTH:
@@ -219,20 +223,19 @@ public abstract class AbstractAutomate implements AiEventObserver, Runnable, ISt
 
 	protected boolean setState(IState iState) {
 		synchronized (state) {
-			if (!state.isDriving()) {
-				// set new state
-				state = iState;
-				state.start();
+			if (state.isDriving())
+				LOGGER.warn("State changes to "+iState+" while driving!!!");
+			// set new state
+			state = iState;
+			state.start();
 
-				// measurements
-				lastWaitTime = System.currentTimeMillis();
+			// measurements
+			lastWaitTime = System.currentTimeMillis();
 
-				synchronized (automation) {
-					automation.notify();
-				}
-				return true;
+			synchronized (automation) {
+				automation.notify();
 			}
-			return false;
+			return true;
 		}
 	}
 
@@ -245,7 +248,6 @@ public abstract class AbstractAutomate implements AiEventObserver, Runnable, ISt
 	protected Thread getAutomation() {
 		return automation;
 	}
-	
 
 	@Override
 	public void iStateErrorOccured() {
