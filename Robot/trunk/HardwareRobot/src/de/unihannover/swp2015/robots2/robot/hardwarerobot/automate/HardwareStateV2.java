@@ -7,6 +7,7 @@ import org.apache.logging.log4j.Logger;
 
 import de.unihannover.swp2015.robots2.robot.abstractrobot.Direction;
 import de.unihannover.swp2015.robots2.robot.abstractrobot.automate.IState;
+import de.unihannover.swp2015.robots2.robot.abstractrobot.automate.IStateEvent;
 import de.unihannover.swp2015.robots2.robot.hardwarerobot.pi2gocontroller.LEDAndServoController;
 import de.unihannover.swp2015.robots2.robot.hardwarerobot.pi2gocontroller.MotorController;
 import de.unihannover.swp2015.robots2.robot.hardwarerobot.pi2gocontroller.Pi2GoGPIOController;
@@ -47,6 +48,8 @@ public enum HardwareStateV2 implements IState {
 			}
 
 			if (System.currentTimeMillis() - startTime > 5000) {
+				if(iStateEvent != null)
+					iStateEvent.iStateErrorOccured();
 				return DISABLED;
 			}
 			boolean left = GPIO.isLineLeft();
@@ -402,6 +405,7 @@ public enum HardwareStateV2 implements IState {
 	private static long[] measurements = new long[] { 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100 };
 	protected static long startTime = 0;
 	protected static Direction nextButOneDirection;
+	private static IStateEvent iStateEvent;
 
 	/**
 	 * Should be called at start to reset the measurements.
@@ -499,5 +503,9 @@ public enum HardwareStateV2 implements IState {
 
 	public void setNextButOneDirection(Direction direction) {
 		HardwareStateV2.nextButOneDirection = direction;
+	}
+	
+	public void setIStateEventObserver(IStateEvent iStateEvent) {
+		HardwareStateV2.iStateEvent = iStateEvent;
 	}
 }
