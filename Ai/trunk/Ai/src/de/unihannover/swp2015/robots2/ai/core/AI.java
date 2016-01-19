@@ -92,7 +92,7 @@ public class AI extends AbstractAI implements IModelObserver {
 			}
 			break;
 		case STAGE_WALL:
-			System.out.println("WALL");
+			//System.out.println("WALL");
 			initialize();
 			break;
 		case STAGE_SIZE:
@@ -325,7 +325,7 @@ public class AI extends AbstractAI implements IModelObserver {
 				if (robot.getState().equals(IRobot.RobotState.ENABLED)) {
 					this.hasStarted = true;
 					if (getController().getGame().isRunning() && graph != null && myself.getPosition() != null) {
-						System.out.println("GAMEStart");
+						//System.out.println("GAMEStart");
 						Tuple<Point, Orientation> tuple = this.getNewNode();
 						Point point = tuple.x;
 						int x = (int) point.getX();
