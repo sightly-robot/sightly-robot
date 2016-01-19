@@ -136,8 +136,6 @@ public class FieldStateModelController {
 			f.setState(State.OCCUPIED);
 			f.setLockedBy(message);
 			f.emitEvent(UpdateType.FIELD_STATE);
-		} else {
-
 		}
 	}
 

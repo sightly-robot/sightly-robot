@@ -19,6 +19,15 @@ public class Event implements IEvent {
 	/** A pointer to the object that was updated. */
 	private final Object object;
 
+	/**
+	 * Default constructor which creates an event with the given type and the
+	 * target object.
+	 * 
+	 * @param type
+	 *            The type of the event
+	 * @param object
+	 *            The object which emits this event.
+	 */
 	public Event(UpdateType type, Object object) {
 		this.type = type;
 		this.object = object;

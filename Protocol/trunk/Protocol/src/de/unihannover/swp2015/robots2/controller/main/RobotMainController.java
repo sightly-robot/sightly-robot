@@ -192,7 +192,7 @@ public class RobotMainController extends AbstractMainController implements
 	public void onMqttSetPosition(String key, String message) {
 		if (!this.myself.getId().equals(key))
 			return;
-
+		
 		String[] positionParts = message.split(",");
 		int x = Integer.parseInt(positionParts[0]);
 		int y = Integer.parseInt(positionParts[1]);
@@ -210,7 +210,7 @@ public class RobotMainController extends AbstractMainController implements
 			this.releaseField(ourField.getX(), ourField.getY());
 		}
 		this.occupyField(x, y);
-
+		
 		// Broadcast new position and SETUPSTATE
 		this.sendMqttMessage(
 				MqttTopic.ROBOT_POSITION,

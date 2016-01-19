@@ -21,13 +21,17 @@ import de.unihannover.swp2015.robots2.model.writeableInterfaces.IAbstractModelWr
  * @author Patrick Kawczynski
  * @author Michael Thies
  */
-public abstract class AbstractModel implements IAbstractModel,
-		IAbstractModelWriteable {
+public abstract class AbstractModel
+		implements IAbstractModel, IAbstractModelWriteable {
 	/** List of observers of this model object. */
 	private final Set<IModelObserver> observers;
 	/** Lock Object to prevent change of observer list while iterating */
 	private final ReadWriteLock observerlock;
 
+	/**
+	 * Default constructor. Initialize the observer-set and the readwrite lock
+	 * for the observers.
+	 */
 	public AbstractModel() {
 		this.observers = new HashSet<IModelObserver>();
 		this.observerlock = new ReentrantReadWriteLock();
@@ -64,6 +68,6 @@ public abstract class AbstractModel implements IAbstractModel,
 		observerlock.readLock().lock();
 		for (IModelObserver o : this.observers)
 			o.onModelUpdate(event);
-		observerlock.readLock().unlock();		
+		observerlock.readLock().unlock();
 	}
 }

@@ -17,7 +17,7 @@ import de.unihannover.swp2015.robots2.model.interfaces.IPosition;
 public interface IRobot extends IAbstractModel {
 
 	/**
-	 * 
+	 * Describes the state of a robot.
 	 */
 	public enum RobotState {
 		/**
@@ -57,6 +57,12 @@ public interface IRobot extends IAbstractModel {
 
 		/** The robot is enabled and therefore ready-to-drive or driving. */
 		ENABLED("e");
+		
+		private final String mqttEncoding;
+
+		private RobotState(String mqttEncoding) {
+			this.mqttEncoding = mqttEncoding;
+		}
 
 		public static RobotState getBy(String mqttEncoding) {
 			for (RobotState state : RobotState.values()) {
@@ -66,12 +72,7 @@ public interface IRobot extends IAbstractModel {
 			return null;
 		}
 
-		private final String mqttEncoding;
-
-		private RobotState(String mqttEncoding) {
-			this.mqttEncoding = mqttEncoding;
-		}
-
+		@Override
 		public String toString() {
 			return this.mqttEncoding;
 		}
