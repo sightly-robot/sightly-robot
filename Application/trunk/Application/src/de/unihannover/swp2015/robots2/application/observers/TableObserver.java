@@ -10,8 +10,10 @@ import de.unihannover.swp2015.robots2.application.models.TableData;
 import de.unihannover.swp2015.robots2.application.models.TableElement;
 import de.unihannover.swp2015.robots2.controller.main.GuiMainController;
 import de.unihannover.swp2015.robots2.model.externalInterfaces.IModelObserver;
+import de.unihannover.swp2015.robots2.model.implementation.Robot;
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
 import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
+import de.unihannover.swp2015.robots2.model.interfaces.IRobot.RobotState;
 
 /**
  * Automatic event controlled updater for the robot list. 
@@ -51,14 +53,16 @@ public class TableObserver implements IModelObserver {
 		
 		for (Entry<String, ? extends IRobot> entry : robots.entrySet()) {
 			TableElement element = new TableElement(
-				entry.getValue().getId(),
-				entry.getValue().getName(),
-				entry.getValue().getScore(),
+				entry.getValue(),
 				options.isShowIdNotName()
 			);
 			
 			elements.add(element);
 		}
+		
+		Robot dummy = new Robot("12345678", true, false);
+		dummy.setRobotState(RobotState.CONNECTED);
+		elements.add(new TableElement(dummy, options.isShowIdNotName()));
 
 		table.setTableData(elements.getData());
 		if (elements.getData().getLength() > lastIndex)

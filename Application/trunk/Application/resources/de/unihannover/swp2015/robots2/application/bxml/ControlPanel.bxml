@@ -1,5 +1,6 @@
 <windows:ControlPanel title="Control Panel" maximized="true"
     xmlns:bxml="http://pivot.apache.org/bxml"
+	xmlns:content="org.apache.pivot.wtk.content"
     xmlns:windows="de.unihannover.swp2015.robots2.application.windows"
 	xmlns:components="de.unihannover.swp2015.robots2.application.components"
     xmlns="org.apache.pivot.wtk">
@@ -56,10 +57,16 @@
 									<!-- Table of game participants and their points -->
 									<ScrollPane horizontalScrollBarPolicy="fill_to_capacity">
 										<TableView bxml:id="participantTable" x="8" y="192" width="373" height="300"
-												   styles="{backgroundColor:'#909090'}">
+												   styles="{backgroundColor:'#909090', font:{size:14}}">
 											<columns>
-												<TableView.Column name="player" width="270" headerData="Player"/>
+												<TableView.Column name="state" width="28">
+													<cellRenderer>
+														<content:TableViewImageCellRenderer/>
+													</cellRenderer>
+												</TableView.Column>
+												<TableView.Column name="player" width="200" headerData="Player"/>
 												<TableView.Column name="points" headerData="Points"/>
+												<TableView.Column name="virtual" headerData="Virtual?"/>
 											</columns>
 										</TableView>
 										<columnHeader>
