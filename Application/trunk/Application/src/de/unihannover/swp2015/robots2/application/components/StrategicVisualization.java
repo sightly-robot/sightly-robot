@@ -31,6 +31,7 @@ import com.kitfox.svg.SVGDiagram;
 import de.unihannover.swp2015.robots2.application.dialogs.DialogFactory;
 import de.unihannover.swp2015.robots2.application.dialogs.ListDialog;
 import de.unihannover.swp2015.robots2.application.events.IVisualizationClickEvent;
+import de.unihannover.swp2015.robots2.application.models.GeneralOptions;
 import de.unihannover.swp2015.robots2.application.svg.SvgConstructor;
 import de.unihannover.swp2015.robots2.controller.main.GuiMainController;
 import de.unihannover.swp2015.robots2.model.interfaces.IGame;
@@ -49,6 +50,7 @@ public class StrategicVisualization extends Panel implements Bindable {
 	private boolean synced = true;
 	private Drawing errorDrawing;
 	private Set <IVisualizationClickEvent> clickEventHandlers;	
+	private GeneralOptions options;
 	
 	/**
 	 * Constructor loads default svg.
@@ -70,9 +72,10 @@ public class StrategicVisualization extends Panel implements Bindable {
 	 * Puts the game into the visualization.
 	 * @param game
 	 */
-	public void setGame(GuiMainController controller, IGame game) {
+	public void setGame(GuiMainController controller, IGame game, GeneralOptions options) {
 		this.game = game;
 		this.controller = controller;
+		this.options = options;
 		
 		svgConstructor = new SvgConstructor(game);
 		generateDrawing();
@@ -166,10 +169,8 @@ public class StrategicVisualization extends Panel implements Bindable {
             		} else {            			
             			// compile robot list
             			final List<IRobot> robots = new ArrayList<IRobot>();
-            			org.apache.pivot.collections.List <String> shownList = new org.apache.pivot.collections.ArrayList <String>();
             			
             			for (IRobot robot : game.getRobots().values()) {
-            				shownList.add(robot.getId());
             				robots.add(robot);
             			}
             			
@@ -191,7 +192,7 @@ public class StrategicVisualization extends Panel implements Bindable {
 								IRobot robo = game.getRobots().get(((ListDialog)dialog).getSelectedElement());
 		            			StrategicVisualization.this.controller.setRobotPosition(rx, ry, sp.getOrientation(), robo);						
 							}
-            			}, shownList);
+            			}, options, robots);
             		}
             	}
             });

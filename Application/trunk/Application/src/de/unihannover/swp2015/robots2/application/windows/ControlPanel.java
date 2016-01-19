@@ -33,6 +33,8 @@ import de.unihannover.swp2015.robots2.application.observers.TableObserver;
 import de.unihannover.swp2015.robots2.application.observers.VisualizationUpdater;
 import de.unihannover.swp2015.robots2.controller.interfaces.ProtocolException;
 import de.unihannover.swp2015.robots2.controller.main.GuiMainController;
+import de.unihannover.swp2015.robots2.model.externalInterfaces.IModelObserver;
+import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
 import de.unihannover.swp2015.robots2.model.interfaces.IGame;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition;
 import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
@@ -40,7 +42,7 @@ import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
 import org.apache.pivot.wtk.DesktopApplicationContext;
 import org.apache.pivot.wtk.Display;
 
-public class ControlPanel extends Window implements Bindable, IVisualizationClickEvent {
+public class ControlPanel extends Window implements Bindable, IVisualizationClickEvent, IModelObserver {
 	// Constants
 	final private Integer initialWidth = 800;
 	final private Integer initialHeight = 600;
@@ -192,13 +194,8 @@ public class ControlPanel extends Window implements Bindable, IVisualizationClic
 					if (sheet.getResult()) {
 						File file = fileBrowserSheet.getSelectedFile();
 						try {
-							startAutoUpdateOnce();
 							// has side effects
 							new MapLoader(controller, file.getAbsolutePath());
-							
-							startGame.setEnabled(true);
-							pauseGame.setEnabled(true);
-							stopGame.setEnabled(true);
 						} catch (JSONException e) {
 							e.printStackTrace();
 							Alert.alert(MessageType.ERROR, "The json file is not valid json!\n" + e.getMessage(), ControlPanel.this);
@@ -220,13 +217,14 @@ public class ControlPanel extends Window implements Bindable, IVisualizationClic
 	 * Won't restart it if already runs.
 	 */
 	public void startAutoUpdateOnce() {
-		visualization.setGame(controller, controller.getGame());
+		visualization.setGame(controller, controller.getGame(), configurator.getGeneralOptions());
 		
 		if (visualizationUpdater != null)
 			return;
 		
 		visualizationUpdater = new VisualizationUpdater(visualization, controller);
 		tableObserver = new TableObserver(participantTable, controller, configurator.getGeneralOptions());
+		controller.getGame().observe(this);
 		
 		ApplicationContext.scheduleRecurringCallback(new Runnable() {			
 			@Override
@@ -268,6 +266,7 @@ public class ControlPanel extends Window implements Bindable, IVisualizationClic
 		public void buttonPressed(Button button) {
 			try {
 				controller.startMqtt(/*"tcp://" + */configurator.getGeneralOptions().getRemoteUrl());
+				startAutoUpdateOnce();
 				loadMap.setEnabled(true);
 			}
 			catch (ProtocolException exc) {
@@ -336,6 +335,12 @@ public class ControlPanel extends Window implements Bindable, IVisualizationClic
 		}		
 	};
 
+	/**
+	 * Callback from StrategicVisualization. Called on left mouse click on field.
+	 * @param button A pivot button. Useful for button click information.
+	 * @param rx Model correct x position of click (field-x).
+	 * @param ry Model correct y position of click (field-y)
+	 */
 	@Override
 	public void visualizationClicked(org.apache.pivot.wtk.Mouse.Button button, int rx, int ry) {
 		IGame game = controller.getGame();
@@ -346,5 +351,20 @@ public class ControlPanel extends Window implements Bindable, IVisualizationClic
         		tableObserver.selectRobotWithId(robot.getId());
         	}
         }		
+	}
+
+	/**
+	 * Bring the UI up to date with this, if restarted.
+	 * @param event A model event caused by network.
+	 */
+	@Override
+	public void onModelUpdate(IEvent event) {
+		if (event.getType() == IEvent.UpdateType.STAGE_WALL ||
+			event.getType() == IEvent.UpdateType.STAGE_SIZE ||
+			event.getType() == IEvent.UpdateType.STAGE_GROWINGRATE) {
+			startGame.setEnabled(true);
+			pauseGame.setEnabled(true);
+			stopGame.setEnabled(true);			
+		}			
 	}
 }

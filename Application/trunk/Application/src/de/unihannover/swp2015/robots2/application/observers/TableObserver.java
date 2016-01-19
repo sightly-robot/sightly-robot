@@ -59,10 +59,6 @@ public class TableObserver implements IModelObserver {
 			
 			elements.add(element);
 		}
-		
-		Robot dummy = new Robot("12345678", true, false);
-		dummy.setRobotState(RobotState.CONNECTED);
-		elements.add(new TableElement(dummy, options.isShowIdNotName()));
 
 		table.setTableData(elements.getData());
 		if (elements.getData().getLength() > lastIndex)
@@ -78,12 +74,9 @@ public class TableObserver implements IModelObserver {
 		if (event.getType() == IEvent.UpdateType.ROBOT_ADD)
 		{
 			((IRobot)event.getObject()).observe(this);
-			updated = true;
 		}
-		if (event.getType() == IEvent.UpdateType.ROBOT_DELETE)
-			updated = true;
-		if (event.getType() == IEvent.UpdateType.ROBOT_SCORE)
-			updated = true;
+		// update on ANY robot event.
+		updated = true;
 	}	
 	
 	/** 

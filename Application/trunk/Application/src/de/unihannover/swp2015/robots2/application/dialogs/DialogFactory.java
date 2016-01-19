@@ -7,6 +7,11 @@ import org.apache.pivot.collections.List;
 import org.apache.pivot.serialization.SerializationException;
 import org.apache.pivot.wtk.DialogCloseListener;
 import org.apache.pivot.wtk.Window;
+
+import de.unihannover.swp2015.robots2.application.models.GeneralOptions;
+import de.unihannover.swp2015.robots2.application.models.ListDialogModel;
+import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
+
 import org.apache.pivot.wtk.Dialog;
 
 public class DialogFactory {
@@ -19,14 +24,15 @@ public class DialogFactory {
 	}
 	
 	public static ListDialog createListDialog(Window owner, DialogCloseListener closeListener,
-											  List <String> listElements) {
+											  GeneralOptions options,
+											  java.util.List<IRobot> robots) {
 		ListDialog ld = DialogFactory.<ListDialog> createDialog (
 			owner,
 			closeListener,
 			"/de/unihannover/swp2015/robots2/application/bxml/ListDialog.bxml"
 		);
 		
-		ld.setListElements(listElements);
+		ld.setListElements(new ListDialogModel(options, robots));
 		
 		return ld;
 	}
