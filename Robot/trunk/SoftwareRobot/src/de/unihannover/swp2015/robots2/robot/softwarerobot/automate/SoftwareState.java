@@ -5,6 +5,7 @@ import org.apache.logging.log4j.Logger;
 
 import de.unihannover.swp2015.robots2.robot.abstractrobot.Direction;
 import de.unihannover.swp2015.robots2.robot.abstractrobot.automate.IState;
+import de.unihannover.swp2015.robots2.robot.abstractrobot.automate.IStateEvent;
 
 /**
  * The states of the automate of the Pi2Go controls.
@@ -47,6 +48,9 @@ public enum SoftwareState implements IState {
 	private static Logger LOGGER = LogManager.getLogger(SoftwareState.class.getName());
 
 	private static double DURATION = 2000;
+
+	@SuppressWarnings("unused")
+	private static IStateEvent iStateEvent;
 
 	private long startTime;
 
@@ -113,5 +117,9 @@ public enum SoftwareState implements IState {
 
 	public void setNextButOneDirection(Direction direction) {
 		nextButOneDirection = direction;
+	}
+	
+	public void setIStateEventObserver(IStateEvent iStateEvent) {
+		SoftwareState.iStateEvent = iStateEvent;
 	}
 }
