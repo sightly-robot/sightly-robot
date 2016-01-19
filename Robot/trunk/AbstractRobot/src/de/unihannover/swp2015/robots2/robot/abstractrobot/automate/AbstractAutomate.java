@@ -20,7 +20,7 @@ import de.unihannover.swp2015.robots2.robot.interfaces.AiEventObserver;
  * 
  * @author Lenard Spiecker
  */
-public abstract class AbstractAutomate implements AiEventObserver, Runnable {
+public abstract class AbstractAutomate implements AiEventObserver, Runnable, IStateEvent {
 
 	// LOGGER:
 	private static Logger LOGGER = LogManager.getLogger(AbstractAutomate.class.getName());
@@ -242,7 +242,13 @@ public abstract class AbstractAutomate implements AiEventObserver, Runnable {
 		state.setNextButOneDirection(newDirection);
 	}
 
-	public Thread getAutomation() {
+	protected Thread getAutomation() {
 		return automation;
+	}
+	
+
+	@Override
+	public void iStateErrorOccured() {
+		robotController.reportRoboticsError();
 	}
 }

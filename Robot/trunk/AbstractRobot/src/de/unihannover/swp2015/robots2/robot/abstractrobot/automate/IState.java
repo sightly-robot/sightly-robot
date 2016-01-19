@@ -49,4 +49,6 @@ public interface IState {
 	public IState getStateForDirection(Direction direction);
 
 	public void setNextButOneDirection(Direction newDirection);
+	
+	public void setIStateEventObserver(IStateEvent iStateEvent);
 }
