@@ -5,8 +5,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 
-import org.eclipse.paho.client.mqttv3.MqttException;
-
 import org.apache.pivot.beans.BXML;
 import org.apache.pivot.beans.BXMLSerializer;
 import org.apache.pivot.beans.Bindable;
@@ -28,16 +26,21 @@ import org.json.JSONException;
 
 import de.unihannover.swp2015.robots2.application.MapLoader;
 import de.unihannover.swp2015.robots2.application.components.StrategicVisualization;
+import de.unihannover.swp2015.robots2.application.events.IVisualizationClickEvent;
 import de.unihannover.swp2015.robots2.application.exceptions.InvalidMapFile;
 import de.unihannover.swp2015.robots2.application.models.TableElement;
 import de.unihannover.swp2015.robots2.application.observers.TableObserver;
 import de.unihannover.swp2015.robots2.application.observers.VisualizationUpdater;
+import de.unihannover.swp2015.robots2.controller.interfaces.ProtocolException;
 import de.unihannover.swp2015.robots2.controller.main.GuiMainController;
+import de.unihannover.swp2015.robots2.model.interfaces.IGame;
+import de.unihannover.swp2015.robots2.model.interfaces.IPosition;
+import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
 
 import org.apache.pivot.wtk.DesktopApplicationContext;
 import org.apache.pivot.wtk.Display;
 
-public class ControlPanel extends Window implements Bindable {
+public class ControlPanel extends Window implements Bindable, IVisualizationClickEvent {
 	// Constants
 	final private Integer initialWidth = 800;
 	final private Integer initialHeight = 600;
@@ -79,7 +82,7 @@ public class ControlPanel extends Window implements Bindable {
 	 */
 	@Override
 	public void initialize(Map<String, Object> namespace, URL location, Resources resources) {
-		createControlPanel();
+		createConfigurator();
 		
 		loadMap.getButtonPressListeners().add(loadMapAction);
 		closeVisualization.getButtonPressListeners().add(closeApp);
@@ -91,6 +94,8 @@ public class ControlPanel extends Window implements Bindable {
 		blinkButton.getButtonPressListeners().add(blinkAction);
 		deleteRobotButton.getButtonPressListeners().add(deleteRobotAction);
 		disableRobotButton.getButtonPressListeners().add(disableRobotAction);
+		
+		visualization.addClickHandler(this);
 	}
 	
 	/**
@@ -137,9 +142,9 @@ public class ControlPanel extends Window implements Bindable {
 	};
 	
 	/**
-	 * Creates the control panel controller.
+	 * Creates the configurator controller.
 	 */
-	private void createControlPanel()
+	private void createConfigurator()
 	{
 		try {
 			BXMLSerializer bxmlSerializer = new BXMLSerializer();
@@ -221,7 +226,7 @@ public class ControlPanel extends Window implements Bindable {
 			return;
 		
 		visualizationUpdater = new VisualizationUpdater(visualization, controller);
-		tableObserver = new TableObserver(participantTable, controller);
+		tableObserver = new TableObserver(participantTable, controller, configurator.getGeneralOptions());
 		
 		ApplicationContext.scheduleRecurringCallback(new Runnable() {			
 			@Override
@@ -265,7 +270,7 @@ public class ControlPanel extends Window implements Bindable {
 				controller.startMqtt(/*"tcp://" + */configurator.getGeneralOptions().getRemoteUrl());
 				loadMap.setEnabled(true);
 			}
-			catch (MqttException exc) {
+			catch (ProtocolException exc) {
 				Alert.alert(MessageType.ERROR, exc.getMessage(), ControlPanel.this);
 			}
 		}
@@ -320,7 +325,7 @@ public class ControlPanel extends Window implements Bindable {
 												    new DesktopApplicationContext.DisplayListener() 
 	        {
 				@Override
-				public void hostWindowClosed(Display display) {		
+				public void hostWindowClosed(Display display) {
 					configurator.close();
 				}
 				@Override
@@ -330,4 +335,16 @@ public class ControlPanel extends Window implements Bindable {
 	        });        			
 		}		
 	};
+
+	@Override
+	public void visualizationClicked(org.apache.pivot.wtk.Mouse.Button button, int rx, int ry) {
+		IGame game = controller.getGame();
+		for (IRobot robot : game.getRobots().values()) {
+        	IPosition pos = robot.getPosition();
+        	if (pos.getX() == rx && pos.getY() == ry) {
+        		// robot found.
+        		tableObserver.selectRobotWithId(robot.getId());
+        	}
+        }		
+	}
 }

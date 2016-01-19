@@ -6,13 +6,16 @@ import java.io.InputStream;
 import java.lang.ClassLoader;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.pivot.collections.Map;
 import org.apache.pivot.util.Resources;
 import org.apache.pivot.wtk.Action;
 import org.apache.pivot.wtk.Alert;
 import org.apache.pivot.wtk.Component;
+import org.apache.pivot.wtk.ComponentMouseButtonListener;
 import org.apache.pivot.wtk.Dialog;
 import org.apache.pivot.wtk.DialogCloseListener;
 import org.apache.pivot.wtk.Menu;
@@ -26,11 +29,10 @@ import org.apache.pivot.beans.Bindable;
 import com.kitfox.svg.SVGDiagram;
 
 import de.unihannover.swp2015.robots2.application.dialogs.DialogFactory;
-import de.unihannover.swp2015.robots2.application.dialogs.InputDialog;
 import de.unihannover.swp2015.robots2.application.dialogs.ListDialog;
+import de.unihannover.swp2015.robots2.application.events.IVisualizationClickEvent;
 import de.unihannover.swp2015.robots2.application.svg.SvgConstructor;
 import de.unihannover.swp2015.robots2.controller.main.GuiMainController;
-import de.unihannover.swp2015.robots2.model.implementation.Robot;
 import de.unihannover.swp2015.robots2.model.interfaces.IGame;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition;
 import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
@@ -46,6 +48,7 @@ public class StrategicVisualization extends Panel implements Bindable {
 	private GuiMainController controller;
 	private boolean synced = true;
 	private Drawing errorDrawing;
+	private Set <IVisualizationClickEvent> clickEventHandlers;	
 	
 	/**
 	 * Constructor loads default svg.
@@ -53,6 +56,8 @@ public class StrategicVisualization extends Panel implements Bindable {
 	 */
 	public StrategicVisualization() throws IOException {		
 		super();
+		
+		clickEventHandlers = new HashSet<>();
 		
 		// load default svg
 		loadDefault();	
@@ -72,7 +77,46 @@ public class StrategicVisualization extends Panel implements Bindable {
 		svgConstructor = new SvgConstructor(game);
 		generateDrawing();
 		setMenuHandler(menuHandler);
+		this.getComponentMouseButtonListeners().add(clickAction);
 	}
+	
+	/**
+	 * Registers a click listener.
+	 * @param event A click event listener.
+	 */
+	public void addClickHandler(IVisualizationClickEvent event) {
+		clickEventHandlers.add(event);
+	}
+	
+	/**
+	 * Called when user clicks into the visualization
+	 */
+	private ComponentMouseButtonListener clickAction = new ComponentMouseButtonListener() {
+		@Override
+		public boolean mouseClick(Component component, org.apache.pivot.wtk.Mouse.Button button, int x, int y,
+				int count) {
+			final int rx = (int)(game.getStage().getWidth() * ((double)x / (double)StrategicVisualization.this.getWidth()));
+            final int ry = (int)(game.getStage().getHeight() * ((double)y / (double)StrategicVisualization.this.getHeight()));
+            
+            for (IVisualizationClickEvent event : clickEventHandlers) {
+            	event.visualizationClicked(button, rx, ry);
+            }
+            
+			return false;
+		}
+
+		@Override
+		public boolean mouseDown(Component component, org.apache.pivot.wtk.Mouse.Button button, int x, int y) {
+			// not needed method
+			return false;
+		}
+
+		@Override
+		public boolean mouseUp(Component component, org.apache.pivot.wtk.Mouse.Button button, int x, int y) {
+			// not needed method
+			return false;
+		}
+	};
 	
 	/**
 	 * Context menu for visualization

@@ -5,6 +5,7 @@ import java.util.Map.Entry;
 
 import org.apache.pivot.wtk.TableView;
 
+import de.unihannover.swp2015.robots2.application.models.GeneralOptions;
 import de.unihannover.swp2015.robots2.application.models.TableData;
 import de.unihannover.swp2015.robots2.application.models.TableElement;
 import de.unihannover.swp2015.robots2.controller.main.GuiMainController;
@@ -21,11 +22,14 @@ public class TableObserver implements IModelObserver {
 	private GuiMainController controller;
 	private volatile boolean updated;
 	private volatile TableData elements;
+	private GeneralOptions options;
 	
-	public TableObserver(TableView table, GuiMainController controller) {
+	public TableObserver(TableView table, GuiMainController controller, GeneralOptions options) {
 		this.table = table;
 		this.controller = controller;
 		this.updated = true;
+		this.options = options;
+		
 		elements = new TableData();
 		table.setSelectMode(TableView.SelectMode.SINGLE);
 		
@@ -49,7 +53,8 @@ public class TableObserver implements IModelObserver {
 			TableElement element = new TableElement(
 				entry.getValue().getId(),
 				entry.getValue().getName(),
-				entry.getValue().getScore()
+				entry.getValue().getScore(),
+				options.isShowIdNotName()
 			);
 			
 			elements.add(element);
@@ -85,9 +90,26 @@ public class TableObserver implements IModelObserver {
 		return elements;
 	}
 	
+	/**
+	 * Returns the selected table element.
+	 * @return TableElement.
+	 */
 	public TableElement getSelected() {
 		if (table.getSelectedIndex() == -1)
 			return null;
 		return elements.getByIndex(table.getSelectedIndex());
+	}
+	
+	/**
+	 * Selects the robot in the table with the given id.
+	 * Does nothing if Id is not found.
+	 * @param id The robot id.
+	 */
+	public void selectRobotWithId(String id) {
+		int index = elements.getIndexById(id);
+		if (index == -1)
+			return; // do nothing
+		else
+			table.setSelectedIndex(index);
 	}
 }

@@ -8,6 +8,7 @@ package de.unihannover.swp2015.robots2.application.models;
 public class TableElement {
 	private String id;
 	private String player;
+	private String name;
 	private int points;
 
 	/**
@@ -16,12 +17,12 @@ public class TableElement {
 	 * @param player The robot name, can be choosen by robot developers.
 	 * @param points The robot points.
 	 */
-	public TableElement(String id, String player, int points) {
+	public TableElement(String id, String player, int points, boolean showId) {
 		super();
 		this.id = id;
-		this.player = id;
-		// this.player = player
+		this.name = player;
 		this.points = points;
+		shallShowId(showId);
 	}
 	
 	/**
@@ -30,6 +31,17 @@ public class TableElement {
 	 */
 	public String getPlayer() {
 		return player;
+	}
+	
+	/**
+	 * Toggles in between name and id. 
+	 * @param showId Will show the id if set to true.
+	 */
+	public void shallShowId(boolean showId) {
+		if (showId)
+			this.player = id;
+		else
+			this.player = name;
 	}
 	
 	/**

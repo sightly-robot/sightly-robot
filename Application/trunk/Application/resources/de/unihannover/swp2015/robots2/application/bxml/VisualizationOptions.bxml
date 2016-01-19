@@ -72,13 +72,13 @@
 						<TablePane.Row>
 							<Border styles="{padding:6, backgroundColor:'#303030', padding:6}">
 								<BoxPane orientation="vertical" styles="{spacing:8, fill:true}">
-									<Checkbox enabled="false" state="SELECTED" buttonData="Mauern anzeigen" styles="{spacing:10, font:{size:16}, color:'#FFFFFF'}"/>
+									<Checkbox enabled="false" state="SELECTED" buttonData="Show walls" styles="{spacing:10, font:{size:16}, color:'#FFFFFF'}"/>
 									<Checkbox enabled="false" buttonData="Wege anzeigen" styles="{spacing:10, font:{size:16}, color:'#FFFFFF'}"/>
-									<Checkbox enabled="false" state="SELECTED" buttonData="Virtuelle Roboter anzeigen" styles="{spacing:10, font:{size:16}, color:'#FFFFFF'}"/>
-									<Checkbox enabled="false" state="SELECTED" buttonData="Rand anzeigen" styles="{spacing:10, font:{size:16}, color:'#FFFFFF'}"/>
-									<Checkbox enabled="false" state="SELECTED" buttonData="Ressourcen anzeigen" styles="{spacing:10, font:{size:16}, color:'#FFFFFF'}"/>
-									<Checkbox enabled="false" state="SELECTED" buttonData="Punkte anzeigen" styles="{spacing:10, font:{size:16}, color:'#FFFFFF'}"/>
-									<Checkbox enabled="false" state="SELECTED" buttonData="Textur anzeigen" styles="{spacing:10, font:{size:16}, color:'#FFFFFF'}"/>
+									<Checkbox enabled="false" state="SELECTED" buttonData="Show virtual robots" styles="{spacing:10, font:{size:16}, color:'#FFFFFF'}"/>
+									<Checkbox enabled="false" state="SELECTED" buttonData="Show border" styles="{spacing:10, font:{size:16}, color:'#FFFFFF'}"/>
+									<Checkbox enabled="false" state="SELECTED" buttonData="Show resources" styles="{spacing:10, font:{size:16}, color:'#FFFFFF'}"/>
+									<Checkbox enabled="false" state="SELECTED" buttonData="Show score" styles="{spacing:10, font:{size:16}, color:'#FFFFFF'}"/>
+									<Checkbox enabled="false" state="SELECTED" buttonData="Show texture" styles="{spacing:10, font:{size:16}, color:'#FFFFFF'}"/>
 								</BoxPane>
 							</Border>					
 							

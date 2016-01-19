@@ -41,6 +41,20 @@ public class TableData {
 	}
 	
 	/**
+	 * Returns the index in the table of the robot with the given id.
+	 * @param id The robot id.
+	 * @return The table index. Returns -1 if not found.
+	 */
+	public int getIndexById(String id) {
+		for (int i = 0; i != data.getLength(); ++i) {
+			if (data.get(i).getId().equals(id)) {
+				return i;
+			}
+		}
+		return -1;
+	}
+	
+	/**
 	 * Clears all robots from the list.
 	 */
 	public void clear() {
