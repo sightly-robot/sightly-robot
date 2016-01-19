@@ -1,5 +1,6 @@
 package de.unihannover.swp2015.robots2.controller.main;
 
+import java.awt.Color;
 import java.util.Arrays;
 import java.util.UUID;
 
@@ -7,6 +8,7 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 
 import de.unihannover.swp2015.robots2.controller.externalInterfaces.IHardwareRobot;
 import de.unihannover.swp2015.robots2.controller.interfaces.IRobotController;
+import de.unihannover.swp2015.robots2.controller.interfaces.ProtocolException;
 import de.unihannover.swp2015.robots2.controller.mqtt.MqttController;
 import de.unihannover.swp2015.robots2.controller.mqtt.MqttTopic;
 import de.unihannover.swp2015.robots2.model.implementation.Robot;
@@ -43,24 +45,30 @@ public class RobotMainController extends AbstractMainController implements
 		// Start MQTTController
 		try {
 			String clientId = "robot_" + this.myself.getId();
-			String[] subscribeTopics = { "robot/#", "map/walls", "map/food",
-					"map/food/+", "map/occupied/#", "control/state" };
+
+			MqttTopic[] extendedTopics = { MqttTopic.ROBOT_DISCOVER,
+					MqttTopic.ROBOT_NEW, MqttTopic.ROBOT_SETPOSITION,
+					MqttTopic.ROBOT_BLINK, MqttTopic.CONTROL_VIRTUALSPEED };
+			String[] subscribeTopics = this.getSubscribeTopcis(extendedTopics);
+
 			this.mqttController = new MqttController(clientId, this,
-					Arrays.asList(subscribeTopics));
+					Arrays.asList(subscribeTopics),
+					MqttTopic.EVENT_ERROR_ROBOT_CONNECTION.toString(id),
+					"disconnect", true);
 		} catch (MqttException e) {
 			log.fatal("Error constructing MqttController:", e);
 		}
 	}
 
 	@Override
-	public void startMqtt(String brokerUrl) throws MqttException {
+	public void startMqtt(String brokerUrl) throws ProtocolException {
+		super.startMqtt(brokerUrl);
 
-		this.mqttController.connect(brokerUrl);
-
-		String hardwareRobot = (this.myself.isHardwareRobot()) ? "real"
-				: "virtual";
+		String robotType = this.myself.isHardwareRobot() ? "real" : "virtual";
+		this.sendMqttMessage(MqttTopic.EVENT_ERROR_ROBOT_CONNECTION,
+				this.myself.getId(), null);
 		this.sendMqttMessage(MqttTopic.ROBOT_TYPE, this.myself.getId(),
-				hardwareRobot);
+				robotType);
 		this.sendMqttMessage(MqttTopic.ROBOT_NEW, null, this.myself.getId());
 		this.sendMqttMessage(MqttTopic.ROBOT_DISCOVER, null, "");
 	}
@@ -71,13 +79,12 @@ public class RobotMainController extends AbstractMainController implements
 		String key = mqtttopic.getKey(topic);
 
 		switch (mqtttopic) {
-		// TODO handle robot settings
 		case ROBOT_DISCOVER:
 			/* Should be deprecated when using retained messages */
-			String hardwareRobot = (this.myself.isHardwareRobot()) ? "real"
+			String robotType = this.myself.isHardwareRobot() ? "real"
 					: "virtual";
 			this.sendMqttMessage(MqttTopic.ROBOT_TYPE, this.myself.getId(),
-					hardwareRobot);
+					robotType);
 			break;
 
 		case ROBOT_NEW:
@@ -90,80 +97,23 @@ public class RobotMainController extends AbstractMainController implements
 			}
 			break;
 
-		case ROBOT_TYPE:
-			this.gameModelController.mqttAddRobot(key, message);
-			break;
-
-		case ROBOT_STATE:
-			this.robotModelController.mqttRobotState(key, message);
-			break;
-
 		case ROBOT_SETPOSITION:
-			// TODO refactor to own method
-			if (this.myself.getId().equals(key)) {
-				String[] positionParts = message.split(",");
-				int x = Integer.parseInt(positionParts[0]);
-				int y = Integer.parseInt(positionParts[1]);
-				Orientation o = Orientation.getBy(positionParts[2]);
-
-				// Don't do anything if the target field is occupied by another
-				// robot
-				IField.State state = this.game.getStage().getField(x, y)
-						.getState();
-				if (state == State.LOCKED || state == State.OCCUPIED)
-					return;
-
-				// Occupy target field and release old fields
-				for (IFieldWriteable ourField : this.stageModelController
-						.getOurFields()) {
-					this.releaseField(ourField.getX(), ourField.getY());
-				}
-				this.occupyField(x, y);
-
-				// Broadcast new position and SETUPSTATE
-				this.sendMqttMessage(MqttTopic.ROBOT_POSITION,
-						this.myself.getId(), Integer.toString(x) + ","
-								+ Integer.toString(y) + "," + o.toString());
-				this.sendMqttMessage(MqttTopic.ROBOT_STATE,
-						this.myself.getId(), RobotState.SETUPSTATE.toString());
-
-				// Change local model (position and state)
-				this.myself.setPosition(x, y, o);
-				this.myself.setRobotState(RobotState.SETUPSTATE);
-
-				// Emit model events
-				this.myself.emitEvent(UpdateType.ROBOT_POSITION);
-				this.myself.emitEvent(UpdateType.ROBOT_PROGRESS);
-				this.myself.emitEvent(UpdateType.ROBOT_STATE);
-			}
-			break;
-
-		case ROBOT_POSITION:
-			this.robotModelController.mqttRobotPosition(key, message);
+			this.onMqttSetPosition(key, message);
 			break;
 
 		case ROBOT_BLINK:
 			if (this.hardwareRobot != null) {
-				// TODO correct color handling
-				this.hardwareRobot.blink(this.myself.getColor());
+				try {
+					this.hardwareRobot.blink(parseColor(message));
+				} catch (IllegalArgumentException e) {
+					this.hardwareRobot.blink(this.myself.getColor());
+				}
 			}
 			break;
 
 		case CONTROL_VIRTUALSPEED:
 			this.gameModelController.mqttSetRobotVirtualspeed(Float
 					.valueOf(message));
-			break;
-
-		case MAP_WALLS:
-			this.stageModelController.mqttSetWalls(message);
-			break;
-
-		case MAP_FOOD:
-			this.stageModelController.mqttSetFood(message);
-			break;
-
-		case FIELD_FOOD:
-			this.stageModelController.mqttSetFieldFood(key, message);
 			break;
 
 		case FIELD_OCCUPIED_LOCK:
@@ -177,14 +127,23 @@ public class RobotMainController extends AbstractMainController implements
 			break;
 
 		case FIELD_OCCUPIED_RELEASE:
-			this.fieldStateModelController.mqttFieldRelease(key, message);
+			this.fieldStateModelController.mqttFieldRelease(key);
 			break;
 
-		case CONTROL_STATE:
-			this.gameModelController.mqttSetGameState(message);
+		case SETTINGS_ROBOT_REQUEST:
+			if (this.hardwareRobot != null)
+				this.sendMqttMessage(MqttTopic.SETTINGS_ROBOT_RESPONSE, null,
+						this.hardwareRobot.getSettings());
 			break;
+
+		case SETTINGS_ROBOT_SET:
+			if (this.hardwareRobot != null)
+				this.hardwareRobot.setSettings(message);
+			break;
+
 
 		default:
+			this.processGeneralMessage(mqtttopic, key, message);
 			break;
 		}
 
@@ -222,6 +181,55 @@ public class RobotMainController extends AbstractMainController implements
 		this.myself.emitEvent(UpdateType.ROBOT_STATE);
 	}
 
+	/**
+	 * Event handler to be called when we receive a MQTT "set position" message.
+	 * 
+	 * @param key
+	 *            The robot id extracted from the MQTT topic
+	 * @param message
+	 *            The payload of the MQTT message
+	 */
+	public void onMqttSetPosition(String key, String message) {
+		if (!this.myself.getId().equals(key))
+			return;
+		
+		String[] positionParts = message.split(",");
+		int x = Integer.parseInt(positionParts[0]);
+		int y = Integer.parseInt(positionParts[1]);
+		Orientation o = Orientation.getBy(positionParts[2]);
+
+		// Don't do anything if the target field is occupied by another
+		// robot
+		IField.State state = this.game.getStage().getField(x, y).getState();
+		if (state == State.LOCKED || state == State.OCCUPIED)
+			return;
+
+		// Occupy target field and release old fields
+		for (IFieldWriteable ourField : this.stageModelController
+				.getOurFields()) {
+			this.releaseField(ourField.getX(), ourField.getY());
+		}
+		this.occupyField(x, y);
+		
+		// Broadcast new position and SETUPSTATE
+		this.sendMqttMessage(
+				MqttTopic.ROBOT_POSITION,
+				this.myself.getId(),
+				Integer.toString(x) + "," + Integer.toString(y) + ","
+						+ o.toString());
+		this.sendMqttMessage(MqttTopic.ROBOT_STATE, this.myself.getId(),
+				RobotState.SETUPSTATE.toString());
+
+		// Change local model (position and state)
+		this.myself.setPosition(x, y, o);
+		this.myself.setRobotState(RobotState.SETUPSTATE);
+
+		// Emit model events
+		this.myself.emitEvent(UpdateType.ROBOT_POSITION);
+		this.myself.emitEvent(UpdateType.ROBOT_PROGRESS);
+		this.myself.emitEvent(UpdateType.ROBOT_STATE);
+	}
+
 	@Override
 	public void updatePosition(int x, int y, Orientation orientation) {
 		this.sendMqttMessage(MqttTopic.ROBOT_POSITION, this.myself.getId(), x
@@ -244,7 +252,7 @@ public class RobotMainController extends AbstractMainController implements
 		if (this.game.getStage().getField(x, y).getState() != State.FREE)
 			return;
 
-		this.sendMqttMessage(MqttTopic.FIELD_OCCUPIED_LOCK, (x + "-" + y),
+		this.sendMqttMessage(MqttTopic.FIELD_OCCUPIED_LOCK, x + "-" + y,
 				this.myself.getId());
 		this.fieldStateModelController.setFieldLock(x, y);
 	}
@@ -258,8 +266,7 @@ public class RobotMainController extends AbstractMainController implements
 			return;
 
 		// Send release message if has been occupied by us
-		this.sendMqttMessage(MqttTopic.FIELD_OCCUPIED_RELEASE, (x + "-" + y),
-				"");
+		this.sendMqttMessage(MqttTopic.FIELD_OCCUPIED_RELEASE, x + "-" + y, "");
 		this.fieldStateModelController.setFieldRelease(x, y);
 	}
 
@@ -311,7 +318,7 @@ public class RobotMainController extends AbstractMainController implements
 
 	@Override
 	public void occupyField(int x, int y) {
-		this.sendMqttMessage(MqttTopic.FIELD_OCCUPIED_SET, (x + "-" + y),
+		this.sendMqttMessage(MqttTopic.FIELD_OCCUPIED_SET, x + "-" + y,
 				this.myself.getId());
 		this.fieldStateModelController.setFieldOccupy(x, y);
 	}
@@ -319,5 +326,28 @@ public class RobotMainController extends AbstractMainController implements
 	@Override
 	public void registerHardwareRobot(IHardwareRobot hardwareRobot) {
 		this.hardwareRobot = hardwareRobot;
+	}
+
+	/**
+	 * Parse color as transmitted via ROBOT_BLINK message.
+	 * 
+	 * @param message
+	 *            The MQTT message containing the color
+	 * @return The parsed color
+	 * @throws IllegalArgumentException
+	 *             if the message is not a valid color encoding;
+	 */
+	private static Color parseColor(String message)
+			throws IllegalArgumentException {
+		String[] parts = message.split(",");
+		if (parts.length != 3)
+			throw new IllegalArgumentException(
+					"Number of commas or message format not valid.");
+
+		int r = Integer.parseInt(parts[0]);
+		int g = Integer.parseInt(parts[1]);
+		int b = Integer.parseInt(parts[2]);
+
+		return new Color(r, g, b);
 	}
 }

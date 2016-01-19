@@ -119,7 +119,7 @@ public class StageModelController {
 				f.setFood(food);
 				f.emitEvent(UpdateType.FIELD_FOOD);
 			} catch (NumberFormatException e) {
-
+				// Skip field if food number format is invalid
 			}
 		}
 		return new int[] { width, height };
@@ -160,6 +160,7 @@ public class StageModelController {
 			this.stage.emitEvent(UpdateType.STAGE_GROWINGRATE);
 
 		} catch (NumberFormatException e) {
+			// Skip message if field number format is invalid
 		}
 	}
 
@@ -192,6 +193,7 @@ public class StageModelController {
 				f.emitEvent(UpdateType.FIELD_FOOD);
 			}
 		} catch (NumberFormatException e) {
+			// Skip message if field number format is invalid
 		}
 	}
 
@@ -216,6 +218,7 @@ public class StageModelController {
 				if (x >= 0 && y >= 0 && o != null)
 					this.stage.addStartPosition(x, y, o);
 			} catch (NumberFormatException e) {
+				// Skip this start position if number format is invalid
 			}
 		}
 		this.stage.emitEvent(UpdateType.STAGE_STARTPOSITIONS);

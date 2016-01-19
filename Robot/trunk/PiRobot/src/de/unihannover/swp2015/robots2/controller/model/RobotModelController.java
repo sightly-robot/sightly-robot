@@ -2,6 +2,9 @@ package de.unihannover.swp2015.robots2.controller.model;
 
 import java.util.Map;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent.UpdateType;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
 import de.unihannover.swp2015.robots2.model.interfaces.IRobot.RobotState;
@@ -15,6 +18,9 @@ import de.unihannover.swp2015.robots2.model.writeableInterfaces.IRobotWriteable;
 public class RobotModelController {
 
 	private Map<String, IRobotWriteable> robots;
+
+	private static final Logger LOGGER = LogManager
+			.getLogger(RobotModelController.class.getName());
 
 	public RobotModelController(Map<String, IRobotWriteable> robots) {
 		this.robots = robots;
@@ -43,6 +49,7 @@ public class RobotModelController {
 				r.emitEvent(UpdateType.ROBOT_POSITION);
 				r.emitEvent(UpdateType.ROBOT_PROGRESS);
 			} catch (NumberFormatException e) {
+				// Skip message if invalid number format
 			}
 		}
 	}
@@ -64,6 +71,7 @@ public class RobotModelController {
 				r.setProgress(Integer.parseInt(message));
 				r.emitEvent(UpdateType.ROBOT_PROGRESS);
 			} catch (NumberFormatException e) {
+				// Skip message if invalid number format
 			}
 		}
 	}
@@ -85,6 +93,7 @@ public class RobotModelController {
 			r.setScore(Integer.parseInt(message));
 			r.emitEvent(UpdateType.ROBOT_SCORE);
 		} catch (NumberFormatException e) {
+			// Skip message if invalid number format
 		}
 	}
 
@@ -111,6 +120,7 @@ public class RobotModelController {
 		if (r.isMyself() && state != RobotState.MANUAL_DISABLED_GUI)
 			return;
 
+		LOGGER.debug("Robot {} changed state to {}.", r.getId(), state.name());
 		r.setRobotState(state);
 		r.emitEvent(UpdateType.ROBOT_STATE);
 	}
@@ -132,7 +142,10 @@ public class RobotModelController {
 		if (r == null || r.isMyself())
 			return;
 
-		r.setRobotConnectionState(message.equals(""));
+		boolean connected = "".equals(message);
+		LOGGER.debug("Robot {}'s connection state changed to {}.", r.getId(),
+				connected ? "connected" : "disconnected");
+		r.setRobotConnectionState(connected);
 		r.emitEvent(UpdateType.ROBOT_STATE);
 	}
 }

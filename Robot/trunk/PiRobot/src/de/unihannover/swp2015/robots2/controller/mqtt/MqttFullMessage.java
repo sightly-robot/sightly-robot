@@ -15,6 +15,14 @@ public class MqttFullMessage {
 	/** Contents and flags of the message */
 	private final MqttMessage message;
 
+	/**
+	 * Creates a mqtt message with the given topic and message.
+	 * 
+	 * @param topic
+	 *            the mqtt-topic. Can contains wildcards like + and #
+	 * @param message
+	 *            the content of the mqtt-message
+	 */
 	public MqttFullMessage(String topic, MqttMessage message) {
 		this.topic = topic;
 		this.message = message;

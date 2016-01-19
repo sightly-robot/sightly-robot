@@ -39,7 +39,7 @@ public interface IGame extends IAbstractModel {
 	/**
 	 * Returns the maximum speed for virtual robots.
 	 * 
-	 * @return The speed in fields per second.
+	 * @return The speed in seconds per field.
 	 */
 	public float getVRobotSpeed();
 

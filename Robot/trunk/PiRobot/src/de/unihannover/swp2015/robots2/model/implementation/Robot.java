@@ -7,7 +7,6 @@ import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
 import de.unihannover.swp2015.robots2.model.writeableInterfaces.IPositionWritable;
 import de.unihannover.swp2015.robots2.model.writeableInterfaces.IRobotWriteable;
 
-;
 
 /**
  * Basic implementation of the interface IRobotWritable.
@@ -23,8 +22,6 @@ public class Robot extends AbstractModel implements IRobot, IRobotWriteable {
 
 	/** ID of this robot. Never changes at runtime. */
 	private final String id;
-	/** Name of this robot. May be used as nice label in visualizations. */
-	private String name;
 	/**
 	 * true if this robot object represents a hardware robot in opposite to a
 	 * virtual robot.
@@ -99,18 +96,8 @@ public class Robot extends AbstractModel implements IRobot, IRobotWriteable {
 	}
 
 	@Override
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	@Override
 	public String getId() {
 		return this.id;
-	}
-
-	@Override
-	public String getName() {
-		return this.name;
 	}
 
 	@Override
@@ -165,19 +152,6 @@ public class Robot extends AbstractModel implements IRobot, IRobotWriteable {
 	}
 
 	@Override
-	@Deprecated
-	public boolean isSetupState() {
-		return (this.state == RobotState.SETUPSTATE && this.connectionState);
-	}
-
-	@Override
-	@Deprecated
-	public boolean isErrorState() {
-		return (!this.connectionState || this.state != RobotState.SETUPSTATE
-				&& this.state != RobotState.ENABLED);
-	}
-
-	@Override
 	public boolean isMyself() {
 		return this.myself;
 	}
@@ -186,6 +160,11 @@ public class Robot extends AbstractModel implements IRobot, IRobotWriteable {
 	public Color getColor() {
 		float hue = Integer.parseInt(this.id.substring(0, 2), 16) / 255f;
 		return new Color(Color.HSBtoRGB(hue, 1, 1));
+	}
+
+	@Override
+	public String getName() {
+		return RobotNames.getName(Integer.parseInt(this.id.substring(2, 6), 16));
 	}
 
 }

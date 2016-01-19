@@ -10,7 +10,7 @@ public class Robot {
 	private Orientation orientation; // enum taken from data modell
 	//private boolean myself;
 	//private boolean isVirtual;
-
+	
 	public Robot(String id) {
 		this.id = id;
 	}

@@ -39,14 +39,18 @@ public class GuiMainController extends AbstractMainController implements
 		try {
 			String clientId = "gui_"
 					+ UUID.randomUUID().toString().substring(0, 8);
-			String[] subscribeTopics = { "robot/#", "extension/2/robot/#",
-					"map/walls", "map/food", "map/food/+", "map/occupied/#",
-					"event/error/robot/#", "extension/2/settings/#",
-					"control/state", "extension/2/map/startpositions" };
+
+			MqttTopic[] extendedTopics = { MqttTopic.MAP_STARTPOSITIONS,
+					MqttTopic.SETTINGS_ROBOT_RESPONSE,
+					MqttTopic.SETTINGS_ROBOT_SET,
+					MqttTopic.SETTINGS_VISU_RESPONSE,
+					MqttTopic.SETTINGS_VISU_SET };
+			String[] subscribeTopics = this.getSubscribeTopcis(extendedTopics);
+
 			this.mqttController = new MqttController(clientId, this,
 					Arrays.asList(subscribeTopics));
 		} catch (MqttException e) {
-			log.fatal("Error constructing MqttController:",e);
+			log.fatal("Error constructing MqttController:", e);
 		}
 	}
 
@@ -60,65 +64,8 @@ public class GuiMainController extends AbstractMainController implements
 
 		switch (mqtttopic) {
 
-		case ROBOT_TYPE:
-			this.gameModelController.mqttAddRobot(key, message);
-			break;
-
-		case ROBOT_POSITION:
-			this.robotModelController.mqttRobotPosition(key, message);
-			break;
-
-		case ROBOT_STATE:
-			this.robotModelController.mqttRobotState(key, message);
-			break;
-
-		case ROBOT_PROGRESS:
-			this.robotModelController.mqttRobotProgress(key, message);
-			break;
-
-		case ROBOT_SCORE:
-			this.robotModelController.mqttScoreUpdate(key, message);
-			break;
-
-		case CONTROL_VIRTUALSPEED:
-			this.gameModelController.mqttSetRobotVirtualspeed(Float
-					.parseFloat(message));
-			break;
-
-		case CONTROL_HESITATIONTIME:
-			this.gameModelController.mqttSetRobotHesitationTime(message);
-			break;
-
-		case MAP_WALLS:
-			this.stageModelController.mqttSetWalls(message);
-			break;
-
-		case MAP_FOOD:
-			this.stageModelController.mqttSetFood(message);
-			break;
-
-		case FIELD_FOOD:
-			this.stageModelController.mqttSetFieldFood(key, message);
-			break;
-
 		case MAP_STARTPOSITIONS:
 			this.stageModelController.mqttSetStartpositions(message);
-			break;
-
-		case FIELD_OCCUPIED_SET:
-			this.fieldStateModelController.mqttFieldOccupy(key, message);
-			break;
-
-		case FIELD_OCCUPIED_RELEASE:
-			this.fieldStateModelController.mqttFieldOccupy(key, message);
-			break;
-
-		case CONTROL_STATE:
-			this.gameModelController.mqttSetGameState(message);
-			break;
-
-		case EVENT_ERROR_ROBOT_CONNECTION:
-			this.robotModelController.mqttRobotConnectionState(key, message);
 			break;
 
 		case SETTINGS_ROBOT_RESPONSE:
@@ -132,7 +79,9 @@ public class GuiMainController extends AbstractMainController implements
 			if (this.visualizationControl != null)
 				this.visualizationControl.receiveSettings(message);
 			break;
+
 		default:
+			this.processGeneralMessage(mqtttopic, key, message);
 			break;
 		}
 
@@ -185,13 +134,13 @@ public class GuiMainController extends AbstractMainController implements
 	@Override
 	public void sendFood(List<List<Integer>> food) {
 		this.sendMqttMessage(MqttTopic.MAP_INIT_FOOD, null,
-				this.food2String(food));
+				food2String(food));
 	}
 
 	@Override
 	public void sendGrowingRates(List<List<Integer>> growingRates) {
 		this.sendMqttMessage(MqttTopic.MAP_INIT_GROWINGRATE, null,
-				this.food2String(growingRates));
+				food2String(growingRates));
 	}
 
 	@Override
@@ -294,7 +243,7 @@ public class GuiMainController extends AbstractMainController implements
 	 *            List
 	 * @return String: <width>,<height>,<f>,<f>,...
 	 */
-	private String food2String(List<List<Integer>> food) {
+	private static String food2String(List<List<Integer>> food) {
 		int height = food.size();
 		if (height == 0)
 			throw new IllegalArgumentException(

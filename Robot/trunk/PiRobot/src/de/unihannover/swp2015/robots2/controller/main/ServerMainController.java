@@ -5,7 +5,6 @@ import java.util.Arrays;
 import org.eclipse.paho.client.mqttv3.MqttException;
 
 import de.unihannover.swp2015.robots2.controller.interfaces.IServerController;
-import de.unihannover.swp2015.robots2.controller.interfaces.InfoType;
 import de.unihannover.swp2015.robots2.controller.mqtt.MqttController;
 import de.unihannover.swp2015.robots2.controller.mqtt.MqttTopic;
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent.UpdateType;
@@ -27,16 +26,17 @@ public class ServerMainController extends AbstractMainController implements
 
 		try {
 			String clientId = "server";
-			String[] subscribeTopics = { "robot/#", "map/walls",
-					"extension/2/map/setfood", "extension/2/map/setgrowrate",
-					"map/occupied/#", "control/state",
-					"extension/2/robot/hesitationtime", "event/error/robot/#",
-					"extension/2/control/reset" };
+
+			MqttTopic[] extendedTopics = { MqttTopic.MAP_INIT_FOOD,
+					MqttTopic.MAP_INIT_GROWINGRATE, MqttTopic.CONTROL_RESET };
+			String[] subscribeTopics = this.getSubscribeTopcis(extendedTopics);
 
 			this.mqttController = new MqttController(clientId, this,
-					Arrays.asList(subscribeTopics), MqttTopic.EVENT_ERROR_SERVER_CONNECTION.toString(), "server disconnect", true);
+					Arrays.asList(subscribeTopics),
+					MqttTopic.EVENT_ERROR_SERVER_CONNECTION.toString(),
+					"server disconnect", true);
 		} catch (MqttException e) {
-			log.fatal("Error constructing MqttController:",e);
+			log.fatal("Error constructing MqttController:", e);
 		}
 	}
 
@@ -49,20 +49,6 @@ public class ServerMainController extends AbstractMainController implements
 		String key = mqtttopic.getKey(topic);
 
 		switch (mqtttopic) {
-		case ROBOT_TYPE:
-			this.gameModelController.mqttAddRobot(key, message);
-			if (message.equals(""))
-				this.sendMqttMessage(MqttTopic.ROBOT_SCORE, key, null);
-			break;
-
-		case ROBOT_STATE:
-			this.robotModelController.mqttRobotState(key, message);
-			break;
-
-		case ROBOT_POSITION:
-			this.robotModelController.mqttRobotPosition(key, message);
-			break;
-
 		case MAP_WALLS:
 			int[] oldSize = { this.game.getStage().getWidth(),
 					this.game.getStage().getHeight() };
@@ -71,8 +57,7 @@ public class ServerMainController extends AbstractMainController implements
 			// If received message is valid and stage has enlarged send current
 			// food state (=0) for new fields
 			if (newSize != null) {
-				this.sendInfoMessage(InfoType.INFO, "food",
-						"New walls received - sending current food.");
+				log.debug("Received new walls. Transmitting the current food for new fields.");
 				this.echoNewFood(oldSize[0], oldSize[1], newSize[0], newSize[1]);
 			}
 			break;
@@ -82,30 +67,13 @@ public class ServerMainController extends AbstractMainController implements
 
 			// If received message is valid echo received food for all fields
 			if (size != null) {
-				this.sendInfoMessage(InfoType.INFO, "food",
-						"New initial food received - echoing.");
+				log.debug("Received new initial food. Echoing to single field topics.");
 				this.echoCompleteFood(size[0], size[1]);
 			}
 			break;
 
 		case MAP_INIT_GROWINGRATE:
 			this.stageModelController.mqttSetGrowingrate(message);
-			break;
-
-		case FIELD_OCCUPIED_LOCK:
-			this.fieldStateModelController.mqttFieldLock(key, message);
-			break;
-
-		case FIELD_OCCUPIED_SET:
-			this.fieldStateModelController.mqttFieldOccupy(key, message);
-			break;
-
-		case FIELD_OCCUPIED_RELEASE:
-			this.fieldStateModelController.mqttFieldRelease(key, message);
-			break;
-
-		case CONTROL_STATE:
-			this.gameModelController.mqttSetGameState(message);
 			break;
 
 		case CONTROL_RESET:
@@ -118,29 +86,24 @@ public class ServerMainController extends AbstractMainController implements
 			}
 			break;
 
-		case CONTROL_VIRTUALSPEED:
-			this.gameModelController.mqttSetRobotVirtualspeed(Float
-					.parseFloat(message));
-			break;
-
-		case CONTROL_HESITATIONTIME:
-			this.gameModelController.mqttSetRobotHesitationTime(message);
-			break;
-
-		case EVENT_ERROR_ROBOT_CONNECTION:
-			this.robotModelController.mqttRobotConnectionState(key, message);
+		// Prevent default handling of food and score messages, cause we are the
+		// only instance to change food and scores!
+		case MAP_FOOD:
+		case FIELD_FOOD:
+		case ROBOT_SCORE:
 			break;
 
 		default:
-			break;
+			// Handle general events
+			this.processGeneralMessage(mqtttopic, key, message);
 		}
-
 	}
-	
+
 	@Override
 	public void onMqttStateChange(boolean state) {
 		super.onMqttStateChange(state);
-		this.sendMqttMessage(MqttTopic.EVENT_ERROR_SERVER_CONNECTION, null, null);
+		this.sendMqttMessage(MqttTopic.EVENT_ERROR_SERVER_CONNECTION, null,
+				null);
 	}
 
 	@Override
@@ -163,7 +126,7 @@ public class ServerMainController extends AbstractMainController implements
 		IFieldWriteable f = this.game.getStageWriteable().getFieldWriteable(x,
 				y);
 		f.setFood(value);
-		this.sendMqttMessage(MqttTopic.FIELD_FOOD, (x + "-" + y),
+		this.sendMqttMessage(MqttTopic.FIELD_FOOD, x + "-" + y,
 				Integer.toString(value));
 		f.emitEvent(UpdateType.FIELD_FOOD);
 	}
@@ -173,7 +136,7 @@ public class ServerMainController extends AbstractMainController implements
 		IFieldWriteable f = this.game.getStageWriteable().getFieldWriteable(x,
 				y);
 		int newFood = f.incrementFood(value);
-		this.sendMqttMessage(MqttTopic.FIELD_FOOD, (x + "-" + y),
+		this.sendMqttMessage(MqttTopic.FIELD_FOOD, x + "-" + y,
 				Integer.toString(newFood));
 		f.emitEvent(UpdateType.FIELD_FOOD);
 	}
@@ -193,7 +156,7 @@ public class ServerMainController extends AbstractMainController implements
 			for (int x = 0; x < Math.min(this.game.getStage().getWidth(), maxX); x++) {
 				this.sendMqttMessage(
 						MqttTopic.FIELD_FOOD,
-						(x + "-" + y),
+						x + "-" + y,
 						Integer.toString(this.game.getStage().getField(x, y)
 								.getFood()));
 			}
@@ -222,7 +185,7 @@ public class ServerMainController extends AbstractMainController implements
 		if (newHeight < oldHeight) {
 			for (int y = oldHeight - 1; y > newHeight - 1; y--) {
 				for (int x = 0; x < oldWidth; x++) {
-					this.sendMqttMessage(MqttTopic.FIELD_FOOD, (x + "-" + y),
+					this.sendMqttMessage(MqttTopic.FIELD_FOOD, x + "-" + y,
 							null);
 				}
 			}
@@ -232,7 +195,7 @@ public class ServerMainController extends AbstractMainController implements
 				for (int x = 0; x < newWidth; x++) {
 					this.sendMqttMessage(
 							MqttTopic.FIELD_FOOD,
-							(x + "-" + y),
+							x + "-" + y,
 							Integer.toString(this.game.getStage()
 									.getField(x, y).getFood()));
 				}
@@ -244,7 +207,7 @@ public class ServerMainController extends AbstractMainController implements
 			// Delete retained food for obsolete fields at the end
 			if (newWidth < oldWidth) {
 				for (int x = oldWidth - 1; x > newWidth - 1; x--) {
-					this.sendMqttMessage(MqttTopic.FIELD_FOOD, (x + "-" + y),
+					this.sendMqttMessage(MqttTopic.FIELD_FOOD, x + "-" + y,
 							null);
 				}
 				// Send food for new fields
@@ -252,7 +215,7 @@ public class ServerMainController extends AbstractMainController implements
 				for (int x = oldWidth; x < newWidth; x++) {
 					this.sendMqttMessage(
 							MqttTopic.FIELD_FOOD,
-							(x + "-" + y),
+							x + "-" + y,
 							Integer.toString(this.game.getStage()
 									.getField(x, y).getFood()));
 				}

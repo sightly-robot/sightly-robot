@@ -31,6 +31,8 @@ public class HardwareAutomate extends AbstractAutomate implements GpioPinListene
 
 	@Override
 	public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent evt) {
-		getAutomation().notify();
+		synchronized (getAutomation()) {
+			getAutomation().notify();
+		}
 	}
 }

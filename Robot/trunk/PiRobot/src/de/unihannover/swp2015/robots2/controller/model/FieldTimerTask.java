@@ -14,7 +14,7 @@ public class FieldTimerTask implements Callable<Object> {
 	private final IFieldWriteable field;
 	private final IFieldTimerController callback;
 
-	private Logger log = LogManager.getLogger(this.getClass().getSimpleName());
+	private static final Logger LOGGER = LogManager.getLogger(FieldStateModelController.class.getName());
 
 	public FieldTimerTask(IFieldWriteable field, IFieldTimerController callback) {
 		this.field = field;
@@ -25,7 +25,7 @@ public class FieldTimerTask implements Callable<Object> {
 	public Object call() {
 		switch (this.field.getState()) {
 		case LOCKED:
-			log.debug("Field " + field.getX() + "-" + field.getY()
+			LOGGER.debug("Field " + field.getX() + "-" + field.getY()
 					+ " was auto released because robot " + field.getLockedBy()
 					+ " didn't occupy.");
 			this.field.setState(State.FREE);
@@ -39,9 +39,10 @@ public class FieldTimerTask implements Callable<Object> {
 
 			break;
 		case RANDOM_WAIT:
-			log.debug(
+			LOGGER.debug(
 					"Random wait for field {}-{} finished. Changing to state FREE.",
 					field.getX(), field.getY());
+			this.field.setState(State.FREE);
 			this.field.setLockedBy("");
 			this.field.emitEvent(UpdateType.FIELD_STATE);
 

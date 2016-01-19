@@ -35,14 +35,6 @@ public interface IRobotWriteable extends IRobot, IAbstractModelWriteable {
 	public void setProgress(int progress);
 
 	/**
-	 * Change the name of the robot.
-	 * 
-	 * @param name
-	 *            The robot's new name
-	 */
-	public void setName(String name);
-
-	/**
 	 * Add a number of points to the robot's score. A negative value will
 	 * decrease the robot's score by the equivalent number of points.
 	 * 

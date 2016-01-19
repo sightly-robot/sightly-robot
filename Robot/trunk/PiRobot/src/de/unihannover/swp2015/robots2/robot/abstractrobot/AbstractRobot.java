@@ -72,15 +72,8 @@ public abstract class AbstractRobot {
 		while (!robotController.getGame().isSynced()) {
 			try {
 				robotController.startMqtt("tcp://" + brokerIP);
-			} catch (MqttException me) {
-				try {
-					Thread.sleep(1000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				LOGGER.warn("Try again, connecting to Broker");
 			} catch (Exception e) {
-				e.printStackTrace();
+				LOGGER.error("Start MQTT",e);
 			}
 		}
 		LOGGER.info("MQTT-Client successfully connected!");

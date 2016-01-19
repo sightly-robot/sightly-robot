@@ -23,37 +23,58 @@ public interface IPosition {
 	 */
 	public enum Orientation {
 		NORTH("n"), EAST("e"), SOUTH("s"), WEST("w");
-		
-		private String orientation;
-		
+
+		private String key;
+
+		/**
+		 * Private constructor which sets the given key for each orientation.
+		 * 
+		 * @param orientation
+		 *            the orientation key
+		 */
 		private Orientation(String orientation) {
-			this.orientation = orientation;
+			this.key = orientation;
 		}
-		
+
+		/**
+		 * Returns an orientation by the given string.
+		 * 
+		 * @param text
+		 *            the representing string of an orientation
+		 * @return the orientation object
+		 */
 		public static Orientation getBy(String text) {
-		    if (text.length() > 0)
-		    	return getBy(text.charAt(0));
-		    else
-		    	throw new IllegalArgumentException("Orientation may not be empty");
+			if (text.length() > 0)
+				return getBy(text.charAt(0));
+			else
+				throw new IllegalArgumentException(
+						"Orientation may not be empty");
 		}
-		
+
+		/**
+		 * Returns an orientation by the given key.
+		 * 
+		 * @param c
+		 *            the representing key of an orientation.
+		 * @return the orientation object
+		 */
 		public static Orientation getBy(char c) {
-		    if( c == 'n' ) {
-		    	return NORTH;
-		    } else if( c == 'e' ) {
-		    	return EAST;
-		    } else if( c == 's' ) {
-		    	return SOUTH;
-		    } else if( c == 'w' ) {
-		    	return WEST;
-		    } else {
-		    	return null;
-		    }
+			if (c == 'n') {
+				return NORTH;
+			} else if (c == 'e') {
+				return EAST;
+			} else if (c == 's') {
+				return SOUTH;
+			} else if (c == 'w') {
+				return WEST;
+			} else {
+				return null;
+			}
 		}
-		
+
 		@Override
 		public String toString() {
-			return this.orientation;
+			return this.key;
 		}
 	}
 

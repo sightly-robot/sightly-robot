@@ -17,7 +17,7 @@ import de.unihannover.swp2015.robots2.model.interfaces.IPosition;
 public interface IRobot extends IAbstractModel {
 
 	/**
-	 * 
+	 * Describes the state of a robot.
 	 */
 	public enum RobotState {
 		/**
@@ -57,6 +57,12 @@ public interface IRobot extends IAbstractModel {
 
 		/** The robot is enabled and therefore ready-to-drive or driving. */
 		ENABLED("e");
+		
+		private final String mqttEncoding;
+
+		private RobotState(String mqttEncoding) {
+			this.mqttEncoding = mqttEncoding;
+		}
 
 		public static RobotState getBy(String mqttEncoding) {
 			for (RobotState state : RobotState.values()) {
@@ -66,12 +72,7 @@ public interface IRobot extends IAbstractModel {
 			return null;
 		}
 
-		private final String mqttEncoding;
-
-		private RobotState(String mqttEncoding) {
-			this.mqttEncoding = mqttEncoding;
-		}
-
+		@Override
 		public String toString() {
 			return this.mqttEncoding;
 		}
@@ -120,25 +121,6 @@ public interface IRobot extends IAbstractModel {
 	 * @return the Robot's current state.
 	 */
 	public RobotState getState();
-
-	/**
-	 * Returns whether the robot is in setup state. Please use the new method
-	 * {@link #getState()} instead and check for RobotState.SETUPSTATE.
-	 * 
-	 * @return true if robot is connected and robot's state is SETUPSTATE
-	 */
-	@Deprecated
-	public boolean isSetupState();
-
-	/**
-	 * Returns whether the robot is in any disabled state. Please use the new
-	 * method {@link #getState()} instead and check for all individual disabled
-	 * states or check if not in SETUPSTATE or ENABLED.
-	 * 
-	 * @return true if robot is connected and not in SETUPSTATE or ENABLED.
-	 */
-	@Deprecated
-	public boolean isErrorState();
 
 	/**
 	 * Returns true, if the instance of the class run on the robot who's

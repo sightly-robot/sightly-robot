@@ -27,7 +27,7 @@ public class FieldStateModelController {
 	private IFieldTimerController fieldTimerCallback = null;
 	private Random random;
 
-	private Logger log = LogManager.getLogger(this.getClass().getSimpleName());
+	private static final Logger LOGGER = LogManager.getLogger(FieldStateModelController.class.getName());
 
 	public FieldStateModelController(IStageWriteable stage) {
 		this.stage = stage;
@@ -82,7 +82,7 @@ public class FieldStateModelController {
 					new FieldTimerTask(f, null), 3000, TimeUnit.MILLISECONDS);
 			f.setStateTimerFuture(newTimer);
 
-			log.debug("Field " + key + " was locked by robot " + message
+			LOGGER.debug("Field " + key + " was locked by robot " + message
 					+ " while random wait or free.");
 			f.emitEvent(UpdateType.FIELD_STATE);
 			break;
@@ -98,7 +98,7 @@ public class FieldStateModelController {
 					TimeUnit.MILLISECONDS);
 			f.setStateTimerFuture(newTimer);
 
-			log.debug("Field " + key + " was locked by robot " + message
+			LOGGER.debug("Field " + key + " was locked by robot " + message
 					+ " while lock wait.");
 			f.emitEvent(UpdateType.FIELD_STATE);
 			break;
@@ -130,14 +130,12 @@ public class FieldStateModelController {
 		IFieldWriteable f = this.stage.getFieldWriteable(x, y);
 
 		if (f.getState() != State.OURS) {
-			log.debug(
+			LOGGER.debug(
 					"Field " + key + " was occupied by robot " + message + ".");
 			f.cancelStateTimer();
 			f.setState(State.OCCUPIED);
 			f.setLockedBy(message);
 			f.emitEvent(UpdateType.FIELD_STATE);
-		} else {
-
 		}
 	}
 
@@ -152,7 +150,7 @@ public class FieldStateModelController {
 	 * @param message
 	 *            MQTT payload
 	 */
-	public void mqttFieldRelease(String key, String message) {
+	public void mqttFieldRelease(String key) {
 		String[] coord = key.split("-");
 		int x = Integer.parseInt(coord[0]);
 		int y = Integer.parseInt(coord[1]);
@@ -164,7 +162,7 @@ public class FieldStateModelController {
 		switch (f.getState()) {
 		case LOCKED:
 		case OCCUPIED:
-			log.debug("Field " + key + " was released via MQTT message.");
+			LOGGER.debug("Field " + key + " was released via MQTT message.");
 			f.cancelStateTimer();
 			f.setState(State.FREE);
 			f.setLockedBy("");
@@ -196,7 +194,7 @@ public class FieldStateModelController {
 				TimeUnit.MILLISECONDS);
 		f.setStateTimerFuture(newTimer);
 
-		log.debug("We lock Field " + x + "-" + y
+		LOGGER.debug("We lock Field " + x + "-" + y
 				+ " and now are listening for coincident locks.");
 		f.emitEvent(UpdateType.FIELD_STATE);
 	}
@@ -216,7 +214,7 @@ public class FieldStateModelController {
 		IFieldWriteable f = this.stage.getFieldWriteable(x, y);
 		f.setState(State.OURS);
 
-		log.debug("We occupy Field {}-{}.",x,y);
+		LOGGER.debug("We occupy Field {}-{}.",x,y);
 		f.emitEvent(UpdateType.FIELD_STATE);
 
 	}
@@ -238,7 +236,7 @@ public class FieldStateModelController {
 
 		f.setState(State.FREE);
 
-		log.debug("We release Field " + x + "-" + y + ".");
+		LOGGER.debug("We release Field " + x + "-" + y + ".");
 		f.emitEvent(UpdateType.FIELD_STATE);
 	}
 
@@ -252,7 +250,7 @@ public class FieldStateModelController {
 	 */
 	private void resizeStage(int x, int y) {
 		if (x >= this.stage.getWidth() || y >= this.stage.getHeight()) {
-			log.debug(
+			LOGGER.debug(
 					"Stage will be resized because of field state out of range. Size was "
 							+ this.stage.getWidth() + "x"
 							+ this.stage.getHeight() + ".");
