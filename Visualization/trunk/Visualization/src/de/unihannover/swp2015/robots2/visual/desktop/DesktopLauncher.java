@@ -4,6 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.badlogic.gdx.Application;
+import com.badlogic.gdx.Files.FileType;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
@@ -84,7 +85,10 @@ public class DesktopLauncher {
 		config.backgroundFPS = 60;
 		config.vSyncEnabled = false;
 		config.fullscreen = false;
+		config.addIcon("assets/icon/rIcon.png", FileType.Internal);
+		config.addIcon("assets/icon/rIcon_32.png", FileType.Internal);
 		new LwjglApplication(new Visualization(debug, brokerIp), config).setLogLevel(Application.LOG_NONE);
+		
 	}
 
 }
