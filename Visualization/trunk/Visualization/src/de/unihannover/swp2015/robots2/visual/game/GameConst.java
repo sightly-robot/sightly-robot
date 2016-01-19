@@ -33,7 +33,7 @@ public class GameConst {
 	public static final float BUBBLE_ALPHA = 1f;
 	
 	/** coefficient of the device-height. Solution will be used to resize the window on an aspect ratio change. */
-	public static final float HEIGHT_SCALE = 0.75f;
+	public static final float HEIGHT_SCALE = 1f;
 	
 	/** scale of the robots */
 	public static final float ROBOT_SCALE = 0.7f;

@@ -101,7 +101,7 @@ public class Robot extends Entity {
 			final IRobot robot = (IRobot) model; 	
 			
 			if (drawStartPosition) {
-				startPositionTexture.draw(batch, fieldWidth*robot.getPosition().getX(), fieldHeight*robot.getPosition().getY(), fieldWidth/2f, fieldHeight/2f, fieldWidth, fieldHeight, 1f, 1f, rotation);
+				startPositionTexture.draw(batch, fieldWidth*robot.getPosition().getX(), fieldHeight*robot.getPosition().getY(), fieldWidth, fieldHeight, fieldWidth/2f, fieldHeight/2f, 1f, 1f, rotation);
 			} 
 			else {
 				robo.draw(batch, renderX, renderY, width, height, width/2f, height/2f, 1f, 1f, rotation);

@@ -41,7 +41,7 @@ public class CommandLineHandler {
 	private static final String DEFAULT_IP = "127.0.0.1";
 	
 	/** Regex, which checks if the passed IP is valid */
-	private static final String IP_REGEX = "^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$";
+	private static final String IP_REGEX = ".*";
 	/** Description of the app; will appear as header when printing usage information */
 	private static final String HEADER = "Starts a Visualization of the robot game.";
 	/** Description of the app; will appear as footer when printing usage information */

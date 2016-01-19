@@ -15,6 +15,8 @@ import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
  */
 public class RobotList extends Widget {
 
+	private static final String FONT_NAME = "default";
+	
 	private final List<IRobot> robots;
 	private final Skin skin;
 	private float padding;
@@ -29,7 +31,11 @@ public class RobotList extends Widget {
 	
 	@Override
 	public void draw(Batch batch, float delta) {
-		
+		for (int i = 0; i < robots.size(); ++i) {
+			final IRobot robot = robots.get(i);
+			skin.getFont(FONT_NAME).draw(batch, i + ". " + robot.getName(), padding, i*distance);
+			skin.getFont(FONT_NAME).draw(batch, String.valueOf(robot.getScore()), getWidth()/2, i*distance);
+		}
 	}
 
 	/**
