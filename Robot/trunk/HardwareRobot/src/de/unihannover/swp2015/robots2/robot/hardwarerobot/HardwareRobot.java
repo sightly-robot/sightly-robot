@@ -1,6 +1,7 @@
 package de.unihannover.swp2015.robots2.robot.hardwarerobot;
 
 import java.awt.Color;
+import java.io.IOException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -51,7 +52,8 @@ public class HardwareRobot extends AbstractRobot implements IHardwareRobot {
 
 		initializeGPIOs();
 
-		blink(robotController.getMyself().getColor());
+		//blink(robotController.getMyself().getColor());
+		speak("Heeey I am "+robotController.getMyself().getName()+"! I am now online!");
 	}
 
 	@Override
@@ -103,8 +105,17 @@ public class HardwareRobot extends AbstractRobot implements IHardwareRobot {
 		if (LEDAndServoController.getInstance() instanceof BlinkLEDAndServoController) {
 			((BlinkLEDAndServoController) LEDAndServoController.getInstance()).startBlinking(color);
 			LOGGER.info("I'm blinking!");
+			speak("heeey i am here!");
 		} else {
 			LOGGER.warn("Wrong LEDAndServoController! Blink not possible!");
+		}
+	}
+	
+	public static void speak(String message)
+	{
+		try {
+			Runtime.getRuntime().exec("echo '"+message+"' | festival --tts");
+		} catch (IOException e) {
 		}
 	}
 
