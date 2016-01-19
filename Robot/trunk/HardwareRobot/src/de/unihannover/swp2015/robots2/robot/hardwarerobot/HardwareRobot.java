@@ -46,7 +46,7 @@ public class HardwareRobot extends AbstractRobot implements IHardwareRobot {
 
 		automate = new HardwareAutomate(robotController);
 		automate.start();
-		robotController.registerHardwareRobot((IHardwareRobot) automate);
+		robotController.registerHardwareRobot(this);
 		ai.setAiEventObserver(automate);
 
 		initializeGPIOs();
@@ -56,6 +56,7 @@ public class HardwareRobot extends AbstractRobot implements IHardwareRobot {
 
 	@Override
 	public void setSettings(String settings) {
+		LOGGER.trace("Setting received "+settings);
 		try {
 			String setting[] = settings.split("=");
 			switch (setting[0]) {

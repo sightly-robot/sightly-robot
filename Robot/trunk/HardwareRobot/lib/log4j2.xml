@@ -1,8 +1,13 @@
-<Loggers>
-    <Root level="info">
-        <AppenderRef ref="Console"/>
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+  <Appenders>
+    <Console name="Console" target="SYSTEM_OUT">
+      <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+    </Console>
+  </Appenders>
+  <Loggers>
+    <Root level="trace">
+      <AppenderRef ref="Console"/>
     </Root>
-    <Logger debug="de.unihannover.swp2015.robots2.server.Harvester" level="trace">
-        <AppenderRef ref="Console"/>
-    </Logger>
-</Loggers>
+  </Loggers>
+</Configuration>
