@@ -23,7 +23,7 @@ public class TableElement {
 	
 	private final String baseResourcePath = "/de/unihannover/swp2015/robots2/application/images/";	
 	private final String virtualMarker = "yes";
-	private final String notVirtualMarker = "not";
+	private final String notVirtualMarker = "no";
 
 	// source: Iconfinder.com - free - no link back licenses
 	private Image disconnectedImage;

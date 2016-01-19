@@ -168,8 +168,9 @@ public class SvgConstructor {
 	
 	/**
 	 * Draws all real robots onto the svg
+	 * @param selectedId The selected robot in the UI. this one is displayed differently.
 	 */
-	public void drawRobots() {
+	public void drawRobots(String selectedId) {
 		if (game.getStage().getWidth() == 0 || game.getStage().getHeight() == 0)
 			return;
 		
@@ -189,10 +190,16 @@ public class SvgConstructor {
 				robot.addAttribute("height", AnimationElement.AT_XML, "100");
 				
 				try {
+					String resource;
+					if (r.getId().equals(selectedId)) {
+						resource = "/de/unihannover/swp2015/robots2/application/svg/SelectedLawnmower.svg";
+					} else {
+						resource = "/de/unihannover/swp2015/robots2/application/svg/Lawnmower.svg";
+					}
 					robot.addAttribute(
 						"xlink:href", 
 						AnimationElement.AT_XML, 
-						SvgConstructor.class.getResource("/de/unihannover/swp2015/robots2/application/svg/Lawnmower.svg").toURI().toString()
+						SvgConstructor.class.getResource(resource).toURI().toString()
 					);
 				} catch (URISyntaxException e) {}
 				
@@ -259,8 +266,9 @@ public class SvgConstructor {
 	
 	/**
 	 * Draws all virtual robots onto the svg
+	 * @param selectedId The selected robot in the UI. this one is displayed differently.
 	 */
-	public void drawVirtualRobots() {	
+	public void drawVirtualRobots(String selectedId) {	
 		if (game.getStage().getWidth() == 0 || game.getStage().getHeight() == 0)
 			return;
 		
@@ -280,10 +288,16 @@ public class SvgConstructor {
 				robot.addAttribute("height", AnimationElement.AT_XML, "100");
 				
 				try {
+					String resource;
+					if (r.getId().equals(selectedId)) {
+						resource = "/de/unihannover/swp2015/robots2/application/svg/SelectedVirtual.svg";
+					} else {
+						resource = "/de/unihannover/swp2015/robots2/application/svg/Virtual.svg";
+					}
 					robot.addAttribute(
 						"xlink:href", 
 						AnimationElement.AT_XML, 
-						SvgConstructor.class.getResource("/de/unihannover/swp2015/robots2/application/svg/Virtual.svg").toURI().toString()
+						SvgConstructor.class.getResource(resource).toURI().toString()
 					);
 				} catch (URISyntaxException e) {}
 				

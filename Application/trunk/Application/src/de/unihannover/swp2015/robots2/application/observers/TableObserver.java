@@ -3,8 +3,12 @@ package de.unihannover.swp2015.robots2.application.observers;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.pivot.collections.Sequence;
+import org.apache.pivot.wtk.Span;
 import org.apache.pivot.wtk.TableView;
+import org.apache.pivot.wtk.TableViewSelectionListener;
 
+import de.unihannover.swp2015.robots2.application.components.StrategicVisualization;
 import de.unihannover.swp2015.robots2.application.models.GeneralOptions;
 import de.unihannover.swp2015.robots2.application.models.TableData;
 import de.unihannover.swp2015.robots2.application.models.TableElement;
@@ -25,16 +29,23 @@ public class TableObserver implements IModelObserver {
 	private volatile boolean updated;
 	private volatile TableData elements;
 	private GeneralOptions options;
+	private StrategicVisualization visualization;
 	
-	public TableObserver(TableView table, GuiMainController controller, GeneralOptions options) {
+	public TableObserver(TableView table, 
+						 GuiMainController controller, 
+						 GeneralOptions options,
+						 StrategicVisualization visualization) 
+	{
 		this.table = table;
 		this.controller = controller;
 		this.updated = true;
 		this.options = options;
+		this.visualization = visualization;
 		
 		elements = new TableData();
-		table.setSelectMode(TableView.SelectMode.SINGLE);
-		
+		elements.setRetainedIndex(-1);
+		table.setSelectMode(TableView.SelectMode.SINGLE);	
+		table.getTableViewSelectionListeners().add(selectionChangeListener);
 		controller.getGame().observe(this);
 	}
 	
@@ -46,8 +57,6 @@ public class TableObserver implements IModelObserver {
 			return;
 		
 		Map<String, ? extends IRobot> robots = controller.getGame().getRobots();
-		
-		int lastIndex = table.getSelectedIndex();
 		
 		elements.clear();
 		
@@ -61,10 +70,34 @@ public class TableObserver implements IModelObserver {
 		}
 
 		table.setTableData(elements.getData());
-		if (elements.getData().getLength() > lastIndex)
-			table.setSelectedIndex(lastIndex);	
+		if (elements.getData().getLength() > elements.getRetainedIndex())
+			table.setSelectedIndex(elements.getRetainedIndex());	
+		else 
+			elements.setRetainedIndex(-1);
 		updated = false;
 	}
+
+	private TableViewSelectionListener selectionChangeListener = new TableViewSelectionListener() {
+		@Override
+		public void selectedRangeAdded(TableView view, int rangeStart, int rangeEnd) {}
+
+		@Override
+		public void selectedRangeRemoved(TableView view, int rangeStart, int rangeEnd) {}
+
+		@Override
+		public void selectedRangesChanged(TableView view, Sequence<Span> previousSelectedRanges) {}
+
+		@Override
+		public void selectedRowChanged(TableView view, Object previousSelectedRow) {
+			if (elements.getData().getLength() != 0) {
+				visualization.setSelectedRobotId(getSelected().getId());
+				visualization.update();
+				visualization.repaint();
+				controller.letRobotBlink(getSelected().getId());
+				elements.setRetainedIndex(view.getSelectedIndex());
+			}
+		}		
+	};
 
 	/**
 	 * Called through emitted events.
@@ -106,7 +139,8 @@ public class TableObserver implements IModelObserver {
 		int index = elements.getIndexById(id);
 		if (index == -1)
 			return; // do nothing
-		else
+		else {
 			table.setSelectedIndex(index);
+		}
 	}
 }

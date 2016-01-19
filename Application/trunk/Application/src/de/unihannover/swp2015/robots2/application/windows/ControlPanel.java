@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.apache.pivot.beans.BXML;
 import org.apache.pivot.beans.BXMLSerializer;
@@ -21,10 +22,12 @@ import org.apache.pivot.wtk.PushButton;
 import org.apache.pivot.wtk.Sheet;
 import org.apache.pivot.wtk.SheetCloseListener;
 import org.apache.pivot.wtk.TableView;
+import org.apache.pivot.wtk.TableView.Column;
 import org.apache.pivot.wtk.Window;
 import org.json.JSONException;
 
 import de.unihannover.swp2015.robots2.application.MapLoader;
+import de.unihannover.swp2015.robots2.application.components.CustomTableCellRenderer;
 import de.unihannover.swp2015.robots2.application.components.StrategicVisualization;
 import de.unihannover.swp2015.robots2.application.events.IVisualizationClickEvent;
 import de.unihannover.swp2015.robots2.application.exceptions.InvalidMapFile;
@@ -51,11 +54,10 @@ public class ControlPanel extends Window implements Bindable, IVisualizationClic
 	@BXML private PushButton loadMap;
 	@BXML private PushButton startGame;
 	@BXML private PushButton pauseGame;
-	@BXML private PushButton stopGame;
+	@BXML private PushButton resetGame;
 	@BXML private PushButton openConfiguration;
 	@BXML private PushButton closeVisualization;
 	@BXML private PushButton connectButton;
-	@BXML private PushButton blinkButton;
 	@BXML private PushButton deleteRobotButton;
 	@BXML private PushButton disableRobotButton;
 
@@ -86,33 +88,19 @@ public class ControlPanel extends Window implements Bindable, IVisualizationClic
 	public void initialize(Map<String, Object> namespace, URL location, Resources resources) {
 		createConfigurator();
 		
+		// event handlers:
 		loadMap.getButtonPressListeners().add(loadMapAction);
 		closeVisualization.getButtonPressListeners().add(closeApp);
 		openConfiguration.getButtonPressListeners().add(openConfigurator);
 		startGame.getButtonPressListeners().add(startGameAction);
-		stopGame.getButtonPressListeners().add(stopGameAction);
+		resetGame.getButtonPressListeners().add(resetGameAction);
 		pauseGame.getButtonPressListeners().add(pauseGameAction);
 		connectButton.getButtonPressListeners().add(connectAction);
-		blinkButton.getButtonPressListeners().add(blinkAction);
 		deleteRobotButton.getButtonPressListeners().add(deleteRobotAction);
 		disableRobotButton.getButtonPressListeners().add(disableRobotAction);
-		
 		visualization.addClickHandler(this);
+		
 	}
-	
-	/**
-	 * Button for letting a robot blink.
-	 */
-	private ButtonPressListener blinkAction = new ButtonPressListener() {
-
-		@Override
-		public void buttonPressed(Button button) {
-			TableElement elem = tableObserver.getSelected();
-			if (elem != null) {
-				controller.letRobotBlink(elem.getId());
-			}
-		}		
-	};
 	
 	/**
 	 * Button to delete a robot (bye bye)
@@ -216,14 +204,18 @@ public class ControlPanel extends Window implements Bindable, IVisualizationClic
 	 * Start visualization and automatic updating.
 	 * Won't restart it if already runs.
 	 */
-	public void startAutoUpdateOnce() {
-		visualization.setGame(controller, controller.getGame(), configurator.getGeneralOptions());
-		
+	public void startAutoUpdateOnce() {		
 		if (visualizationUpdater != null)
 			return;
 		
+		visualization.setGame(controller, controller.getGame(), configurator.getGeneralOptions());
 		visualizationUpdater = new VisualizationUpdater(visualization, controller);
-		tableObserver = new TableObserver(participantTable, controller, configurator.getGeneralOptions());
+		
+		tableObserver = new TableObserver(participantTable, 
+										  controller, 
+										  configurator.getGeneralOptions(),
+										  visualization);
+		
 		controller.getGame().observe(this);
 		
 		ApplicationContext.scheduleRecurringCallback(new Runnable() {			
@@ -234,8 +226,7 @@ public class ControlPanel extends Window implements Bindable, IVisualizationClic
 				loadMap.setEnabled(synced);
 				startGame.setEnabled(synced);
 				pauseGame.setEnabled(synced);
-				stopGame.setEnabled(synced);
-				blinkButton.setEnabled(synced);
+				resetGame.setEnabled(synced);
 				deleteRobotButton.setEnabled(synced);
 				disableRobotButton.setEnabled(synced);
 
@@ -265,6 +256,7 @@ public class ControlPanel extends Window implements Bindable, IVisualizationClic
 		@Override
 		public void buttonPressed(Button button) {
 			try {
+				startAutoUpdateOnce();
 				controller.startMqtt(/*"tcp://" + */configurator.getGeneralOptions().getRemoteUrl());
 				startAutoUpdateOnce();
 				loadMap.setEnabled(true);
@@ -281,7 +273,6 @@ public class ControlPanel extends Window implements Bindable, IVisualizationClic
 	private ButtonPressListener startGameAction = new ButtonPressListener() {
 		@Override
 		public void buttonPressed(Button button) {
-			controller.resetGame();
 			controller.startGame();
 		}
 	};
@@ -299,10 +290,10 @@ public class ControlPanel extends Window implements Bindable, IVisualizationClic
 	/**
 	 * Button press action to stop the game
 	 */
-	private ButtonPressListener stopGameAction = new ButtonPressListener() {
+	private ButtonPressListener resetGameAction = new ButtonPressListener() {
 		@Override
 		public void buttonPressed(Button button) {
-			controller.stopGame();
+			controller.resetGame();
 		}
 	};
 	
@@ -342,12 +333,16 @@ public class ControlPanel extends Window implements Bindable, IVisualizationClic
 	 * @param ry Model correct y position of click (field-y)
 	 */
 	@Override
-	public void visualizationClicked(org.apache.pivot.wtk.Mouse.Button button, int rx, int ry) {
+	public void visualizationClicked(org.apache.pivot.wtk.Mouse.Button button, 
+									 int rx, 
+									 int ry) 
+	{
 		IGame game = controller.getGame();
 		for (IRobot robot : game.getRobots().values()) {
         	IPosition pos = robot.getPosition();
         	if (pos.getX() == rx && pos.getY() == ry) {
         		// robot found.
+        		
         		tableObserver.selectRobotWithId(robot.getId());
         	}
         }		
@@ -362,9 +357,10 @@ public class ControlPanel extends Window implements Bindable, IVisualizationClic
 		if (event.getType() == IEvent.UpdateType.STAGE_WALL ||
 			event.getType() == IEvent.UpdateType.STAGE_SIZE ||
 			event.getType() == IEvent.UpdateType.STAGE_GROWINGRATE) {
+			
 			startGame.setEnabled(true);
 			pauseGame.setEnabled(true);
-			stopGame.setEnabled(true);			
+			resetGame.setEnabled(true);			
 		}			
 	}
 }

@@ -32,7 +32,7 @@
 								<TablePane.Row height="24">
 									<PushButton bxml:id="startGame" enabled="false" styles="{font:{size:16}, color:'#FFFFFF', backgroundColor:'#505050'}" buttonData="Start"/>
 									<PushButton bxml:id="pauseGame" enabled="false" styles="{font:{size:16}, color:'#FFFFFF', backgroundColor:'#505050'}" buttonData="Pause"/>
-									<PushButton bxml:id="stopGame" enabled="false" styles="{font:{size:16}, color:'#FFFFFF', backgroundColor:'#505050'}" buttonData="Stop"/>
+									<PushButton bxml:id="resetGame" enabled="false" styles="{font:{size:16}, color:'#FFFFFF', backgroundColor:'#505050'}" buttonData="Reset"/>
 								</TablePane.Row>
 								
 							</TablePane>
@@ -47,7 +47,7 @@
 								
 								<TablePane.Row height="32">
 									<FillPane styles="{padding:4}">
-										<PushButton bxml:id="blinkButton" enabled="false" styles="{font:{size:16}, color:'#FFFFFF', backgroundColor:'#505050'}" buttonData="Identify"/>
+										<!-- <PushButton bxml:id="blinkButton" enabled="false" styles="{font:{size:16}, color:'#FFFFFF', backgroundColor:'#505050'}" buttonData="Identify"/> -->
 										<PushButton bxml:id="disableRobotButton" enabled="false" styles="{font:{size:16}, color:'#FFFFFF', backgroundColor:'#505050'}" buttonData="Disable Robot"/>
 										<PushButton bxml:id="deleteRobotButton" enabled="false" styles="{font:{size:16}, color:'#FFFFFF', backgroundColor:'#505050'}" buttonData="Delete Robot"/>
 									</FillPane>
@@ -57,16 +57,16 @@
 									<!-- Table of game participants and their points -->
 									<ScrollPane horizontalScrollBarPolicy="fill_to_capacity">
 										<TableView bxml:id="participantTable" x="8" y="192" width="373" height="300"
-												   styles="{backgroundColor:'#909090', font:{size:14}}">
+												   styles="{font:{size:14}, selectionColor:'#FFFFFF', selectionBackgroundColor:'#0E3AAD', inactiveSelectionBackgroundColor:'#0E3AAD', inactiveSelectionColor:'#FFFFFF', backgroundColor:'#A0A0A0', highlightBackgroundColor:'#A0A0A0', alternateRowBackgroundColor:'#B0B0B0'}">
 											<columns>
 												<TableView.Column name="state" width="28">
 													<cellRenderer>
 														<content:TableViewImageCellRenderer/>
 													</cellRenderer>
 												</TableView.Column>
-												<TableView.Column name="player" width="200" headerData="Player"/>
-												<TableView.Column name="points" headerData="Points"/>
-												<TableView.Column name="virtual" headerData="Virtual?"/>
+												<TableView.Column name="player" width="100" headerData="Player"/>
+												<TableView.Column name="points" width="50" headerData="Points"/>
+												<TableView.Column name="virtual" width="50" headerData="Virtual?"/>
 											</columns>
 										</TableView>
 										<columnHeader>

@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.apache.pivot.collections.Map;
 import org.apache.pivot.util.Resources;
@@ -49,8 +50,13 @@ public class StrategicVisualization extends Panel implements Bindable {
 	private GuiMainController controller;
 	private boolean synced = true;
 	private Drawing errorDrawing;
+	
+	/** Click Event Handler for clicking on the visualization **/
 	private Set <IVisualizationClickEvent> clickEventHandlers;	
-	private GeneralOptions options;
+	/** Reference to the options object. **/
+	private GeneralOptions options;	
+	/** Used for special highlighting **/
+	private String selectedRobotId;
 	
 	/**
 	 * Constructor loads default svg.
@@ -60,6 +66,7 @@ public class StrategicVisualization extends Panel implements Bindable {
 		super();
 		
 		clickEventHandlers = new HashSet<>();
+		selectedRobotId = ""; // no selection
 		
 		// load default svg
 		loadDefault();	
@@ -89,6 +96,14 @@ public class StrategicVisualization extends Panel implements Bindable {
 	 */
 	public void addClickHandler(IVisualizationClickEvent event) {
 		clickEventHandlers.add(event);
+	}
+	
+	/**
+	 * Resets the selected robot. Needed if selected robot is changed from the list and not the visualization. 
+	 * @param id The selected robot id.
+	 */
+	public void setSelectedRobotId(String id) {
+		selectedRobotId = id;
 	}
 	
 	/**
@@ -254,8 +269,8 @@ public class StrategicVisualization extends Panel implements Bindable {
 		if (!game.isRunning())
 			svgConstructor.drawStartPositions();
 		
-		svgConstructor.drawRobots();
-		svgConstructor.drawVirtualRobots();
+		svgConstructor.drawRobots(selectedRobotId);
+		svgConstructor.drawVirtualRobots(selectedRobotId);
 	}
 
 	/**

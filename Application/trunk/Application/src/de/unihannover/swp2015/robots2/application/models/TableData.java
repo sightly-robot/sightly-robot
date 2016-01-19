@@ -9,6 +9,7 @@ import org.apache.pivot.collections.List;
  */
 public class TableData {
 	private List <TableElement> data;
+	private int retainedIndex;
 	
 	public TableData() {
 		super();
@@ -67,5 +68,13 @@ public class TableData {
 	 */
 	public void add(TableElement elem) {
 		data.add(elem);
+	}
+
+	public int getRetainedIndex() {
+		return retainedIndex;
+	}
+
+	public void setRetainedIndex(int retainedIndex) {
+		this.retainedIndex = retainedIndex;
 	}
 }
