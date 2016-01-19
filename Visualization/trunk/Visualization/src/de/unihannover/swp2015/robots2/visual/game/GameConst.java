@@ -30,7 +30,7 @@ public class GameConst {
 	/** Font size of the name, relative to the field-size */
 	public static final float BUBBLE_NAME_POINTS_SIZE_REL = 1f/9f;
 	/** Alpha value of the bubble */
-	public static final float BUBBLE_ALPHA = 0.5f;
+	public static final float BUBBLE_ALPHA = 1f;
 	
 	/** coefficient of the device-height. Solution will be used to resize the window on an aspect ratio change. */
 	public static final float HEIGHT_SCALE = 0.75f;
@@ -48,6 +48,8 @@ public class GameConst {
 	public static final float UI_DIFF_ABS = 40f;
 	/** gap between panel and the beginning of the ranking */
 	public static final float UI_TOP_ABS = 50f;
+	/** alpha of the whole ui */
+	public static final float UI_APLHA = 0.7f;
 	
 	/** title of the ranking */
 	public static final String UI_TITLE = "RANKING";

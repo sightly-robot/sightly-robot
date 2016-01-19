@@ -18,7 +18,7 @@ import de.unihannover.swp2015.robots2.visual.util.ModelUtil;
  * An entity used for the visualization of robots
  * 
  * @version 1.0
- * @author Daphne Schössow
+ * @author Daphne SchÃ¶ssow
  */
 public class Robot extends Entity {
 	

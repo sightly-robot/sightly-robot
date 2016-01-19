@@ -197,6 +197,4 @@ public class TestApp extends JFrame implements ActionListener {
 		return false;
 	}
 	
-	
-	
 }

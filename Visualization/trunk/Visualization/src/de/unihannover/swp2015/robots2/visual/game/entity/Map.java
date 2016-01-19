@@ -18,7 +18,7 @@ import de.unihannover.swp2015.robots2.visual.game.RobotGameHandler;
  * An entity, which is used for the construction of the map and that creates all field entities
  * 
  * @version 1.0
- * @author Daphne Schössow
+ * @author Daphne Schï¿½ssow
  */
 public class Map extends Entity {
 
@@ -117,7 +117,7 @@ public class Map extends Entity {
 		
 		if (renderResources) {
 			for (int i = 0 ; i < fieldList.size() ; ++i) {
-				wallList.get(i).draw(batch);
+				foodList.get(i).draw(batch);
 			}
 		}
 		

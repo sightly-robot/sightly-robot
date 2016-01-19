@@ -38,6 +38,7 @@ public enum ResConst {
 	DEFAULT_STARTPOS("default_startpos", ResType.TEX, TextureFilter.Linear),
 	DEFAULT_WARNING("default_warning", ResType.TEX),
 	DEFAULT_CONNECTION("default_connection", ResType.TEX),
+	DEFAULT_UI_BACKGROUND("default_ui_background", ResType.TEX, TextureFilter.MipMapLinearLinear),
 
 	DEFAULT_FONT("default_font", ResType.FONT);
 	

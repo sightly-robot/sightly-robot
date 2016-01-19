@@ -158,6 +158,13 @@ default_startpos
   orig: 500, 500
   offset: 0, 0
   index: -1
+default_ui_background
+  rotate: false
+  xy: 3830, 2045
+  size: 1, 1
+  orig: 1, 1
+  offset: 0, 0
+  index: -1
 default_wall
   rotate: false
   xy: 3026, 538

@@ -49,9 +49,6 @@ public class UI implements IDrawable, IPreferencesObserver<PrefKey> {
 	/** Color of the background texture. */
 	private final Color color;
 	
-	/** Color of the background texture. */
-	private final Color startBg;
-	
 	/** True if the ranking should be displayed. */
 	private boolean display = false;
 	
@@ -70,13 +67,13 @@ public class UI implements IDrawable, IPreferencesObserver<PrefKey> {
 		this.font.setColor(Color.BLACK);
 		this.fontTitle = res.createFont(28, ResourceHandler.NECESSARY_CHARS, true);
 		this.fontTitle.setColor(Color.BLACK);
-		this.background = res.createRenderUnit(ResConst.DEFAULT_BUBBLE);
-		this.color = new Color(1, 1, 1, 0.7f);
-		this.startBg = new Color(1,1,1,0.3f);
+		this.background = res.createRenderUnit(ResConst.DEFAULT_UI_BACKGROUND);
+		this.color = new Color(1, 1, 1, GameConst.UI_APLHA);
 		this.pref.addObserver(this);
 		
 		final float viewWidth = pref.getFloat(PrefKey.VIEW_WIDTH);
 		final float viewHeight = pref.getFloat(PrefKey.VIEW_HEIGHT); 
+		
 		this.rect.setSize(viewWidth * GameConst.UI_WIDTH_REL, viewHeight * GameConst.UI_HEIGHT_REL);
 		this.rect.setPosition(viewWidth/2 - rect.width/2, viewHeight/2 - rect.height/2);
 	}
@@ -85,12 +82,11 @@ public class UI implements IDrawable, IPreferencesObserver<PrefKey> {
 	public void draw(Batch batch) {
 						
 		if (robots.isEmpty() || !display) {
-			batch.setColor(startBg);
 			background.draw(batch, rect.x, rect.y, rect.width, rect.height);
 			fontTitle.draw(batch, GameConst.UI_NO_DATA,
 					rect.x + GameConst.UI_PADDING_ABS, rect.y + GameConst.UI_TOP_ABS + GameConst.UI_PADDING_ABS);
 		}
-		else {		
+		else {
 			batch.setColor(color);
 			background.draw(batch, rect.x, rect.y, rect.width, rect.height);
 			fontTitle.draw(batch, GameConst.UI_TITLE,
