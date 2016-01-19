@@ -4,6 +4,7 @@ import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -60,6 +61,9 @@ public class Visualization extends ApplicationAdapter {
 	/** For the timing of the debug output. */
 	private LoopedTask fpsLogger;
 	
+	/** Id of the visualization, used for the communication with the GUI */
+	private UUID id;
+	
 	/**
 	 * Constructs a Visualization object.
 	 * 
@@ -71,7 +75,8 @@ public class Visualization extends ApplicationAdapter {
 		this.gameHandlerList = new ArrayList<>();
 		this.ip = brokerIp;
 		this.debug = debugFlag;
-		
+		this.id = UUID.randomUUID();
+	
 		if (debug) {
 			fpsLogger = new LoopedTask(5f, new Task() {
 				@Override
@@ -86,7 +91,7 @@ public class Visualization extends ApplicationAdapter {
 	public void create() {
 
 		prefs = new FlexPreferences<PrefKey>("prefs");
-		mqttHandler = new MqttHandler(ip, new PreferenceHandler(prefs));
+		mqttHandler = new MqttHandler(ip, new PreferenceHandler(prefs, id));
 		
 		final int appWidth = Gdx.graphics.getWidth();
 		final int appHeight = Gdx.graphics.getHeight();

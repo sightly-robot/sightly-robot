@@ -3,6 +3,7 @@ package de.unihannover.swp2015.robots2.visual.core.handler;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.UUID;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -33,13 +34,17 @@ public class PreferenceHandler implements IVisualization {
 	/** Contains local preferences */
 	private final IPreferences<PrefKey> pref;
 	
+	/** Id of the visualization */
+	private final UUID id;
+	
 	/**
 	 * Construct handler for the given preference object.
 	 * 
 	 * @param pref preference object to be handled
 	 */
-	public PreferenceHandler(IPreferences<PrefKey> pref) {
+	public PreferenceHandler(IPreferences<PrefKey> pref, UUID id) {
 		this.pref = pref;
+		this.id = id;
 	}
 
 	@Override
@@ -47,6 +52,9 @@ public class PreferenceHandler implements IVisualization {
 		InputStream stream = new ByteArrayInputStream(settings.getBytes(StandardCharsets.UTF_8));
 		JSONTokener tokenizer = new JSONTokener(stream);
 		JSONObject options = new JSONObject(tokenizer).getJSONObject(ROOT_NAME); 
+		
+		if (options.getString("id") != id.toString())
+			return; 
 		
 		PrefKey[] keys = PrefKey.values();
 		for (int i = GO_START_INDEX; i < keys.length; ++i) {
@@ -70,7 +78,8 @@ public class PreferenceHandler implements IVisualization {
 
 	@Override
 	public String getSettings() {
-		JSONObject options = new JSONObject();
+		JSONObject options = new JSONObject("options");
+		options.put("id", id.toString());
 		PrefKey[] keys = PrefKey.values();
 		for (int i = GO_START_INDEX; i < keys.length; ++i) {
 			final PrefKey key = keys[i];
