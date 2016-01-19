@@ -2,11 +2,20 @@
 <Configuration status="WARN">
   <Appenders>
     <Console name="Console" target="SYSTEM_OUT">
-      <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+      <PatternLayout pattern="%d{HH:mm:ss.SSS} %-5level %-30.30logger{3} - %msg%n"/>
     </Console>
   </Appenders>
   <Loggers>
-    <Root level="trace">
+    <Logger name="de.unihannover.swp2015.robots2.robot.hardwarerobot.automate.HardwareStateV2" level="trace" additive="false">
+    	<AppenderRef ref="Console"/>
+    </Logger>
+        <Logger name="de.unihannover.swp2015.robots2.robot.automate.HardwareAutomate" level="trace" additive="false">
+    	<AppenderRef ref="Console"/>
+    </Logger>
+        <Logger name="de.unihannover.swp2015.robots2.robot.abstractrobot.AbstractRobot" level="trace" additive="false">
+    	<AppenderRef ref="Console"/>
+    </Logger>
+    <Root level="debug" additive="false">
       <AppenderRef ref="Console"/>
     </Root>
   </Loggers>

@@ -376,7 +376,7 @@ public enum HardwareStateV2 implements IState {
 	};
 
 	/** LOGGER: */
-	private static Logger LOGGER = LogManager.getLogger(HardwareStateV2.class.getName());
+	private final static Logger LOGGER = LogManager.getLogger(HardwareStateV2.class.getName());
 	// speed configuration
 	private static final int FASTER = 60;
 	private static final int FAST = 40;
