@@ -2,6 +2,7 @@ package de.unihannover.swp2015.robots2.utils;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
 
 import org.json.JSONException;
@@ -19,6 +20,9 @@ import org.json.JSONTokener;
  * @author Tim Ebbeke
  */
 public class VisualizationOptions {
+	private String id;
+	private Optional<String> cycleTexturePack;
+	
 	private Optional<Float> abscissaOffset;
 	private Optional<Float> ordinateOffset;
 	private Optional<Float> abscissaScale;
@@ -33,40 +37,61 @@ public class VisualizationOptions {
 	private Optional<Boolean> renderRobots;
 	private Optional<Boolean> renderVirtualRobots;
 	
+	public VisualizationOptions(String id) {
+		this.id = id;
+		cycleTexturePack = Optional.empty();
+		
+		abscissaOffset = Optional.empty();
+		ordinateOffset = Optional.empty();
+		abscissaScale = Optional.empty();
+		ordinateScale = Optional.empty();
+		
+		perspectiveTransformation = Optional.empty();
+		
+		renderWalls = Optional.empty();
+		renderResources = Optional.empty();
+		renderName = Optional.empty();
+		renderScore = Optional.empty();
+		renderRobots = Optional.empty();
+		renderVirtualRobots = Optional.empty();
+	}
+	
 	/**
 	 * Serializes all set variables to a json string.
 	 * @return
 	 */
 	public String toJson() {		
 		JSONObject options = new JSONObject();
-		if (!this.abscissaOffset.isPresent())
+
+		options.put("id", id);
+		
+		if (this.abscissaOffset.isPresent())
 			options.put("abcissaOffset", this.abscissaOffset.get());
-		if (!this.ordinateOffset.isPresent())
+		if (this.ordinateOffset.isPresent())
 			options.put("ordinateOffset", this.ordinateOffset.get());
-		if (!this.abscissaScale.isPresent())
+		if (this.abscissaScale.isPresent())
 			options.put("abscissaOffset", this.abscissaScale.get());
-		if (!this.ordinateScale.isPresent())
+		if (this.ordinateScale.isPresent())
 			options.put("ordinateScale", this.ordinateScale.get());
 		
-		if (!this.perspectiveTransformation.isPresent())
+		if (this.perspectiveTransformation.isPresent())
 			options.put("perspectiveTransformation", this.perspectiveTransformation.get());
 		
-		if (!this.renderWalls.isPresent())
+		if (this.renderWalls.isPresent())
 			options.put("renderWalls", this.renderWalls.get());
-		if (!this.renderResources.isPresent())
+		if (this.renderResources.isPresent())
 			options.put("renderResources", this.renderResources.get());
-		if (!this.renderName.isPresent())
+		if (this.renderName.isPresent())
 			options.put("renderName", this.renderName.get());
-		if (!this.renderScore.isPresent())
+		if (this.renderScore.isPresent())
 			options.put("renderScore", this.renderScore.get());
-		if (!this.renderRobots.isPresent())
+		if (this.renderRobots.isPresent())
 			options.put("renderRobots", this.renderRobots.get());
-		if (!this.renderVirtualRobots.isPresent())
+		if (this.renderVirtualRobots.isPresent())
 			options.put("renderVirtualRobots", this.renderVirtualRobots.get());
 
 		JSONObject root = new JSONObject();
 		root.put("options", options);
-		
 		return root.toString();
 	}
 	
@@ -80,6 +105,10 @@ public class VisualizationOptions {
 		JSONTokener tokenizer = new JSONTokener(stream);
 		
 		JSONObject options = new JSONObject(tokenizer).getJSONObject("options"); 
+		
+		id = options.getString("id");
+		String cycleTP = options.optString("cylceTexturePack");
+		cycleTexturePack = Optional.ofNullable(cycleTP.isEmpty() ? null : cycleTP);
 		
 		// X, Y Offset & Scaling
 		float xOff = (float) options.optDouble("abscissaOffset");
@@ -112,7 +141,7 @@ public class VisualizationOptions {
 	 * 
 	 */
 	public static VisualizationOptions createFromJson(String jsonData) {
-		VisualizationOptions options = new VisualizationOptions();
+		VisualizationOptions options = new VisualizationOptions("");
 		options.fromJson(jsonData);
 		return options;
 	}
@@ -121,9 +150,10 @@ public class VisualizationOptions {
 	 * Creates a new VisualizationOptions class with default values.
 	 * @return A new VisualizationOptions class with all things set.
 	 */
-	public static VisualizationOptions createDefault() {
-		VisualizationOptions options = new VisualizationOptions();
+	public static VisualizationOptions createDefault(String id) {
+		VisualizationOptions options = new VisualizationOptions(id);
 		
+		options.cycleTexturePack = Optional.empty();
 		options.abscissaOffset = Optional.of(1.0f);
 		options.ordinateOffset = Optional.of(1.0f);
 		options.abscissaScale = Optional.of(1.0f);
@@ -147,6 +177,9 @@ public class VisualizationOptions {
 	 * @param options Another VisualizationOptions object to take values from.
 	 */
 	public void leftMerge(VisualizationOptions options) {
+		if (!this.cycleTexturePack.isPresent())
+			this.cycleTexturePack = options.cycleTexturePack;
+		
 		if (!this.abscissaOffset.isPresent())
 			this.abscissaOffset = options.abscissaOffset;
 		if (!this.ordinateOffset.isPresent())
@@ -178,6 +211,9 @@ public class VisualizationOptions {
 	 * @param options Another VisualizationOptions object to take values from.
 	 */
 	public void rightMerge(VisualizationOptions options) {
+		if (options.cycleTexturePack.isPresent())
+			this.cycleTexturePack = options.cycleTexturePack;
+		
 		if (options.abscissaOffset.isPresent())
 			this.abscissaOffset = options.abscissaOffset;
 		if (options.ordinateOffset.isPresent())
@@ -202,6 +238,14 @@ public class VisualizationOptions {
 			this.renderRobots = options.renderRobots;
 		if (options.renderVirtualRobots.isPresent())
 			this.renderVirtualRobots = options.renderVirtualRobots;
+	}
+	
+	public Optional<String> getCycleTexturePack() {
+		return cycleTexturePack;
+	}
+	
+	public void setCycleTexturePack(String tp) {
+		this.cycleTexturePack = Optional.<String>of(tp);
 	}
 
 	public Optional<Float> getAbscissaOffset() {
