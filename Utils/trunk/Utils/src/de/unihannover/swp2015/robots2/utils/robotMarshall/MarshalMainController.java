@@ -34,8 +34,6 @@ public class MarshalMainController extends AbstractMainController {
 
 		String id = UUID.randomUUID().toString().substring(0, 8);
 
-		this.infoComponent = "robot/" + id;
-
 		// Start MQTTController
 		try {
 			String[] subscribeTopics = { "robot/#", "map/walls",
