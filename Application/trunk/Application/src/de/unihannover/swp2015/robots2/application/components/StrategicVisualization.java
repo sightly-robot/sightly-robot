@@ -150,70 +150,23 @@ public class StrategicVisualization extends Panel implements Bindable {
             
             final int rx = (int)(game.getStage().getWidth() * ((double)x / (double)StrategicVisualization.this.getWidth()));
             final int ry = (int)(game.getStage().getHeight() * ((double)y / (double)StrategicVisualization.this.getHeight()));
-			
-            // Get Coordinate
-            Menu.Item getCoord = new Menu.Item("Get Coordinate");
-            getCoord.setAction(new Action() {
-                @Override
-                public void perform(Component source) {
-                	System.out.print(rx);
-                	System.out.print(":");
-                	System.out.println(ry);
-                }
-            }); 
+            
+            ContextMenuActionProvider contextMenu = new ContextMenuActionProvider(rx, 
+            																	  ry, 
+            																	  options, 
+            																	  game, 
+            																	  controller, 
+            																	  StrategicVisualization.this);
             
             // Place Robot
             Menu.Item placeRobot = new Menu.Item("Place Robot Here");
-            placeRobot.setAction(new Action() {
-            	@Override
-            	public void perform(Component source) {        			
-            		List <IPosition> startPositions = game.getStage().getStartPositions();
-            		// does not allow if the selected position is no start position!
-            		Boolean found = false;
-            		IPosition startPos = null;
-            		for (IPosition pos : startPositions) {
-            			found = (pos.getX() == rx && pos.getY() == ry);
-            			if (found) {
-            				startPos = pos;
-            				break;
-            			}
-            		}
-            		
-            		if (!found) {
-						Alert.alert(MessageType.ERROR, "Cannot place robot on field, that is not a start position", StrategicVisualization.this.getWindow());
-            		} else {            			
-            			// compile robot list
-            			final List<IRobot> robots = new ArrayList<IRobot>();
-            			
-            			for (IRobot robot : game.getRobots().values()) {
-            				robots.add(robot);
-            			}
-            			
-            			//Robot robot = new Robot("223344", true, false);
-            			//shownList.add(robot.getId());
-            			
-            			final IPosition sp = startPos;
-            			DialogFactory.createListDialog(StrategicVisualization.this.getWindow(), new DialogCloseListener() {
-							@Override
-							public void dialogClosed(Dialog dialog, boolean modal) {								
-								ListDialog listDialog = (ListDialog)dialog;
-								
-								// do nothing if there is no selection
-								if (listDialog.getSelectedIndex() == -1)
-									return;
-								
-								controller.getGame().getRobots().get(robots.get(listDialog.getSelectedIndex()));
-		            			//Robot robo = new Robot(((InputDialog)dialog).getText(), false, false);
-								IRobot robo = game.getRobots().get(((ListDialog)dialog).getSelectedElement());
-		            			StrategicVisualization.this.controller.setRobotPosition(rx, ry, sp.getOrientation(), robo);						
-							}
-            			}, options, robots);
-            		}
-            	}
-            });
-            
-            menuSection.add(getCoord);
+            placeRobot.setAction(contextMenu.placeRobotHereAction);            
             menuSection.add(placeRobot);
+            
+            // Free Field
+            Menu.Item freeField = new Menu.Item("Free Field");
+            freeField.setAction(contextMenu.freeFieldAction);
+            menuSection.add(freeField);
 			return false;
 		}
 	};

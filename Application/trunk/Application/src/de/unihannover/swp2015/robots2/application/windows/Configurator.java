@@ -25,7 +25,6 @@ public class Configurator extends Window implements Bindable
 	// BXML bindings
 	@BXML private TabPane tabs;
 	@BXML private TextArea ipTextArea;
-	@BXML private Checkbox showIdsNotNames;
 	@BXML private Checkbox debugMode;
 	
 	// Models
@@ -40,7 +39,6 @@ public class Configurator extends Window implements Bindable
 		setGeneralOptions(generalOptions); // set to defaults
 		
 		ipTextArea.getTextAreaContentListeners().add(ipChangeAction);
-		showIdsNotNames.getButtonStateListeners().add(showIdNotNameChangeAction);
 		debugMode.getButtonStateListeners().add(debugModeChangeAction);
 	}
 
@@ -59,11 +57,6 @@ public class Configurator extends Window implements Bindable
 	public void setGeneralOptions(GeneralOptions generalOptions) {
 		this.generalOptions = generalOptions;
 		ipTextArea.setText(generalOptions.getRemoteUrl());
-		
-		if (generalOptions.isShowIdNotName())
-			showIdsNotNames.setState(State.SELECTED);
-		else
-			showIdsNotNames.setState(State.UNSELECTED);
 		
 		if (generalOptions.isInDebugMode())
 			debugMode.setState(State.SELECTED);
@@ -85,16 +78,6 @@ public class Configurator extends Window implements Bindable
 		public void textChanged(TextArea self) {
 			generalOptions.setRemoteUrl(self.getText());
 		}		
-	};
-
-	/**
-	 * Listener for showIdsNotNames checkbox.
-	 */
-	private ButtonStateListener showIdNotNameChangeAction = new ButtonStateListener() {
-		@Override
-		public void stateChanged(Button arg0, State state) {
-			generalOptions.setShowIdNotName(state.equals(State.SELECTED));
-		}
 	};
 
 
