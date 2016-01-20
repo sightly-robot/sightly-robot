@@ -48,7 +48,7 @@ public class RobotMainController extends AbstractMainController implements
 
 			MqttTopic[] extendedTopics = { MqttTopic.ROBOT_DISCOVER,
 					MqttTopic.ROBOT_NEW, MqttTopic.ROBOT_SETPOSITION,
-					MqttTopic.ROBOT_BLINK, MqttTopic.CONTROL_VIRTUALSPEED };
+					MqttTopic.CONTROL_VIRTUALSPEED };
 			String[] subscribeTopics = this.getSubscribeTopcis(extendedTopics);
 
 			this.mqttController = new MqttController(clientId, this,
@@ -102,13 +102,14 @@ public class RobotMainController extends AbstractMainController implements
 			break;
 
 		case ROBOT_BLINK:
-			if (this.hardwareRobot != null) {
+			if (this.hardwareRobot != null || key.equals(this.myself.getId())) {
 				try {
 					this.hardwareRobot.blink(parseColor(message));
 				} catch (IllegalArgumentException e) {
 					this.hardwareRobot.blink(this.myself.getColor());
 				}
 			}
+			this.robotModelController.mqttBlink(key);
 			break;
 
 		case CONTROL_VIRTUALSPEED:
@@ -140,7 +141,6 @@ public class RobotMainController extends AbstractMainController implements
 			if (this.hardwareRobot != null)
 				this.hardwareRobot.setSettings(message);
 			break;
-
 
 		default:
 			this.processGeneralMessage(mqtttopic, key, message);
@@ -192,7 +192,7 @@ public class RobotMainController extends AbstractMainController implements
 	public void onMqttSetPosition(String key, String message) {
 		if (!this.myself.getId().equals(key))
 			return;
-		
+
 		String[] positionParts = message.split(",");
 		int x = Integer.parseInt(positionParts[0]);
 		int y = Integer.parseInt(positionParts[1]);
@@ -210,7 +210,7 @@ public class RobotMainController extends AbstractMainController implements
 			this.releaseField(ourField.getX(), ourField.getY());
 		}
 		this.occupyField(x, y);
-		
+
 		// Broadcast new position and SETUPSTATE
 		this.sendMqttMessage(
 				MqttTopic.ROBOT_POSITION,

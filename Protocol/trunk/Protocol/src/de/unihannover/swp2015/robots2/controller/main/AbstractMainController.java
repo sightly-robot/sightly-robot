@@ -69,7 +69,8 @@ public abstract class AbstractMainController implements IController,
 	protected String[] getSubscribeTopcis(MqttTopic[] extendedTopics) {
 		MqttTopic[] generalTopics = { MqttTopic.CONTROL_STATE,
 				MqttTopic.ROBOT_TYPE, MqttTopic.ROBOT_STATE,
-				MqttTopic.ROBOT_SCORE, MqttTopic.EVENT_ERROR_ROBOT_CONNECTION,
+				MqttTopic.ROBOT_SCORE, MqttTopic.ROBOT_BLINK,
+				MqttTopic.EVENT_ERROR_ROBOT_CONNECTION,
 				MqttTopic.ROBOT_POSITION, MqttTopic.MAP_WALLS,
 				MqttTopic.MAP_FOOD, MqttTopic.FIELD_FOOD,
 				MqttTopic.FIELD_OCCUPIED_LOCK, MqttTopic.FIELD_OCCUPIED_SET,
@@ -122,6 +123,10 @@ public abstract class AbstractMainController implements IController,
 
 		case ROBOT_SCORE:
 			this.robotModelController.mqttScoreUpdate(key, message);
+			break;
+			
+		case ROBOT_BLINK:
+			this.robotModelController.mqttBlink(key);
 			break;
 
 		case EVENT_ERROR_ROBOT_CONNECTION:
