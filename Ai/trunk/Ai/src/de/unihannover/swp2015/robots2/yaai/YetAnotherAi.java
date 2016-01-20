@@ -198,10 +198,9 @@ public class YetAnotherAi extends AbstractAI implements IModelObserver {
 			break;
 
 		case FREE:
-			// Yay, the field got free. Request it!
-			this.iRobotController.requestField(this.nextField.getX(),
-					this.nextField.getY());
-			this.state = AiState.WATING_FOR_OURS;
+			// Yay, the field got free. Request it (again)!
+			this.requestNewField(this.nextField);
+			break;
 
 		default:
 			break;
