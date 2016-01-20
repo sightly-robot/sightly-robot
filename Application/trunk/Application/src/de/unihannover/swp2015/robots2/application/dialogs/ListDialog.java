@@ -33,6 +33,9 @@ public class ListDialog extends Dialog implements Bindable {
 		okButton.getButtonPressListeners().add(closeAction);
 	}
 	
+	/**
+	 * Close Button handler. Closes the window.
+	 */
 	private ButtonPressListener closeAction = new ButtonPressListener() {
 		@Override
 		public void buttonPressed(Button button) {
@@ -40,15 +43,27 @@ public class ListDialog extends Dialog implements Bindable {
 		}
 	};
 	
+	/**
+	 * Sets a model for the ListDialog.
+	 * @param elements A list of ListDialog elements.
+	 */
 	public void setListElements(ListDialogModel elements) {
 		this.elements = elements; 
 		list.setListData(elements.getPrintables());
 	}
 	
+	/**
+	 * Retrieves the selection index of the item.
+	 * @return Selection index of the list dialog.
+	 */
 	public int getSelectedIndex() {
 		return list.getSelectedIndex();
 	}
 	
+	/**
+	 * Retrieves the selected item of the dialog.
+	 * @return Selected item.
+	 */
 	public String getSelectedElement() {
 		return elements.getRobotIds().get(getSelectedIndex());
 	}

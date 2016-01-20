@@ -45,10 +45,18 @@
 						<TablePane.Column width="1*"/>
 					</columns>
 					
+					<!--
 					<TablePane.Row height="32">
-						<!-- Fill Pane fixes alignment and Checkbox width -->
 						<FillPane styles="{backgroundColor:'#303030', color:'#303030', padding:5}">
-							<Checkbox enabled="true" state="UNSELECTED" buttonData="Show ID instead of name in list" styles="{spacing:10, font:{size:16}, color:'#FFFFFF'}"/>
+							<Checkbox bxml:id="showIdsNotNames" enabled="true" state="UNSELECTED" buttonData="Show ID instead of name in list" styles="{spacing:10, font:{size:16}, color:'#FFFFFF'}"/>
+						</FillPane>
+					</TablePane.Row>
+					-->
+					
+					<TablePane.Row height="32">
+						<!-- Fill Pane fixes alignment-->
+						<FillPane styles="{backgroundColor:'#303030', color:'#303030', padding:5}">
+							<Checkbox bxml:id="debugMode" enabled="true" state="UNSELECTED" buttonData="Show Lock states of fields" styles="{spacing:10, font:{size:16}, color:'#FFFFFF'}"/>
 						</FillPane>
 					</TablePane.Row>
 				</TablePane>

@@ -11,6 +11,7 @@
 			<g id="grid"/>
 			<g id="walls"/>
 			<g id="startPositions"/>
+			<g id="locks"/>
 			<g id="virtualRobots"/>
 			<g id="robots"/>
 		</g>

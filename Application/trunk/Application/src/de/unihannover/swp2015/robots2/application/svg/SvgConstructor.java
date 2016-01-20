@@ -21,7 +21,9 @@ import com.kitfox.svg.SVGUniverse;
 import com.kitfox.svg.animation.AnimationElement;
 
 import de.unihannover.swp2015.robots2.application.util.ResourceLoader;
+import de.unihannover.swp2015.robots2.model.implementation.Position;
 import de.unihannover.swp2015.robots2.model.interfaces.IField;
+import de.unihannover.swp2015.robots2.model.interfaces.IField.State;
 import de.unihannover.swp2015.robots2.model.interfaces.IGame;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
@@ -209,6 +211,68 @@ public class SvgConstructor {
 				
 				Group robos = (Group)diagram.getElement("robots");
 				robos.loaderAddChild(null, robot);
+			}
+			
+			diagram.updateTime(0.);
+		} catch (SVGException e) {
+			// ignore
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Draws colored crosses where robots have locked fields.
+	 */
+	public void drawLockedFields() {
+		if (game.getStage().getWidth() == 0 || game.getStage().getHeight() == 0)
+			return;
+		
+		Map<String, ? extends IRobot> robots = game.getRobots();
+
+		double fieldWidth = svgWidth / game.getStage().getWidth();
+		double fieldHeight = svgHeight / game.getStage().getHeight();
+		
+		try {			
+			for (int y = 0; y < game.getStage().getHeight(); y++) {
+				for (int x = 0; x < game.getStage().getWidth(); ++x) {
+					IField field = game.getStage().getField(x, y);
+					
+					if (field.getState() == State.LOCKED ||
+						field.getState() == State.LOCK_WAIT ||
+						field.getState() == State.RANDOM_WAIT ||
+						field.getState() == State.OCCUPIED) 
+					{	
+
+						ImageSVG robot = new ImageSVG();			
+						
+						robot.addAttribute("width", AnimationElement.AT_XML, "100");
+						robot.addAttribute("height", AnimationElement.AT_XML, "100");
+						
+						try {
+							String resource;
+							if (field.getState() == State.LOCKED)
+								resource = "/de/unihannover/swp2015/robots2/application/svg/Lock.svg";
+							else if (field.getState() == State.LOCK_WAIT) 
+								resource = "/de/unihannover/swp2015/robots2/application/svg/Wait.svg";
+							else if (field.getState() == State.OCCUPIED)
+								resource = "/de/unihannover/swp2015/robots2/application/svg/Occupied.svg";
+							else 
+								resource = "/de/unihannover/swp2015/robots2/application/svg/RandomWait.svg";
+							robot.addAttribute(
+								"xlink:href", 
+								AnimationElement.AT_XML, 
+								SvgConstructor.class.getResource(resource).toURI().toString()
+							);
+						} catch (URISyntaxException e) {}
+						
+						robot.addAttribute("transform", AnimationElement.AT_XML, 
+							TransformationStringBuilder.getObjectTransformation(new Position(x, y, Orientation.NORTH), Orientation.NORTH, fieldWidth, fieldHeight)
+						);
+						
+						Group locks = (Group)diagram.getElement("locks");
+						locks.loaderAddChild(null, robot);				
+					}
+				}
 			}
 			
 			diagram.updateTime(0.);

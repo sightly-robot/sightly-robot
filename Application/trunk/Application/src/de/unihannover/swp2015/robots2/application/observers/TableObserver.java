@@ -143,4 +143,12 @@ public class TableObserver implements IModelObserver {
 			table.setSelectedIndex(index);
 		}
 	}
+
+	/**
+	 * Sets the new options.
+	 * @param generalOptions A new generalOptions object.
+	 */
+	public void setOptions(GeneralOptions generalOptions) {
+		options = generalOptions;		
+	}
 }

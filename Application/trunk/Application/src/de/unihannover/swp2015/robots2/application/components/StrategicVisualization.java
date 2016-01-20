@@ -271,6 +271,9 @@ public class StrategicVisualization extends Panel implements Bindable {
 		
 		svgConstructor.drawRobots(selectedRobotId);
 		svgConstructor.drawVirtualRobots(selectedRobotId);
+		
+		if (options.isInDebugMode())
+			svgConstructor.drawLockedFields();
 	}
 
 	/**
@@ -302,5 +305,13 @@ public class StrategicVisualization extends Panel implements Bindable {
 	 */
 	@Override
 	public void initialize(Map<String, Object> arg0, URL arg1, Resources arg2) {	
+	}
+
+	/**
+	 * Sets the new options.
+	 * @param generalOptions A new generalOptions object.
+	 */
+	public void setOptions(GeneralOptions generalOptions) {
+		this.options = generalOptions;		
 	}
 }

@@ -4,12 +4,14 @@ public class GeneralOptions {
 	private String remoteUrl;
 	private int remotePort;
 	private boolean showIdNotName; 
+	private boolean inDebugMode;
 	
 	public GeneralOptions() {
 		super();
 		this.remoteUrl = "tcp://127.0.0.1";
 		this.remotePort = 1883;
 		this.showIdNotName = false;
+		this.inDebugMode = true;
 	}
 	
 	public String getRemoteUrl() {
@@ -29,5 +31,11 @@ public class GeneralOptions {
 	}
 	public void setShowIdNotName(boolean showIdNotName) {
 		this.showIdNotName = showIdNotName;
+	}
+	public boolean isInDebugMode() {
+		return inDebugMode;
+	}
+	public void setInDebugMode(boolean inDebugMode) {
+		this.inDebugMode = inDebugMode;
 	}
 }

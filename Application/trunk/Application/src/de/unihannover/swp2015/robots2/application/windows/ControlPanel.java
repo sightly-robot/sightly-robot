@@ -317,6 +317,8 @@ public class ControlPanel extends Window implements Bindable, IVisualizationClic
 				@Override
 				public void hostWindowClosed(Display display) {
 					configurator.close();
+					visualization.setOptions(configurator.getGeneralOptions());
+					tableObserver.setOptions(configurator.getGeneralOptions());
 				}
 				@Override
 				public void hostWindowOpened(Display display) {
