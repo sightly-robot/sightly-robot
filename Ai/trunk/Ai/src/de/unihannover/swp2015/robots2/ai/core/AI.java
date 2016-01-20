@@ -24,7 +24,7 @@ public class AI extends AbstractAI implements IModelObserver {
 
 	private static Logger logger = LogManager.getLogger(AI.class.getName());
 
-	private boolean hasStarted = false;
+	private boolean hasStarted = false; //TODO in constructor
 	private IField nextField;
 	private Orientation nextOrientation;
 	private AIGraph graph; // volatile
@@ -317,6 +317,9 @@ public class AI extends AbstractAI implements IModelObserver {
 			this.nextField = game.getStage().getField(x, y);
 			this.nextOrientation = tuple.y;
 		}
+		if(!game.isRunning() && this.nextField != null) {
+			iRobotController.releaseField(this.nextField.getX(), this.nextField.getY());
+		}
 	}
 
 	private void handleRobotStateEvent(IEvent event) {
@@ -324,7 +327,7 @@ public class AI extends AbstractAI implements IModelObserver {
 		IRobot robot = (IRobot) event.getObject();
 		if (robot.isMyself()) {
 			if (this.hasStarted == false) {
-				if (robot.getState()== RobotState.ENABLED) {
+				if (robot.getState() == RobotState.ENABLED) {
 					this.hasStarted = true;
 					if (getController().getGame().isRunning() && graph != null && myself.getPosition() != null) {
 						//System.out.println("GAMEStart");
@@ -341,6 +344,12 @@ public class AI extends AbstractAI implements IModelObserver {
 				}
 			}
 			logger.trace("Game has not started!");
+			if(robot.getState() != RobotState.ENABLED) {
+				this.hasStarted = false;
+				if(this.nextField != null) {
+					iRobotController.releaseField(this.nextField.getX(), this.nextField.getY());
+				}
+			}
 		}
 	}
 

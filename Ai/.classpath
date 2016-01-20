@@ -3,7 +3,6 @@
 	<classpathentry kind="src" path="trunk/Ai/src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Protocol"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/Robot"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="src" path="/AiInterface"/>
 	<classpathentry kind="lib" path="/Protocol/lib/log4j-api-2.5.jar">
