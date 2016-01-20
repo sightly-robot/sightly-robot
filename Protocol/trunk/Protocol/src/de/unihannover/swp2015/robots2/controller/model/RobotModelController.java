@@ -152,6 +152,8 @@ public class RobotModelController {
 	/**
 	 * Handle a robot blink message.
 	 * 
+	 * This method emits a ROBOT_BLINK event from the robot.
+	 * 
 	 * @param key
 	 *            Robot id extracted from MQTT topic
 	 */

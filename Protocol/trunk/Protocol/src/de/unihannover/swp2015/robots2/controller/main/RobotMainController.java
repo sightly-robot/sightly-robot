@@ -102,7 +102,7 @@ public class RobotMainController extends AbstractMainController implements
 			break;
 
 		case ROBOT_BLINK:
-			if (this.hardwareRobot != null || key.equals(this.myself.getId())) {
+			if (this.hardwareRobot != null && key.equals(this.myself.getId())) {
 				try {
 					this.hardwareRobot.blink(parseColor(message));
 				} catch (IllegalArgumentException e) {

@@ -38,10 +38,9 @@ public class MqttReceiver implements Runnable {
 							StandardCharsets.UTF_8));
 				} catch (Exception e) {
 					LOGGER.error(
-							"Uncaught Exception while prossessing the following MQTT message: {}\n{}\n{}\n",
+							"Uncaught Exception while prossessing the following MQTT message:\nTopic: {}\nMessage: {}",
 							message.getTopic(), new String(message.getMessage()
-									.getPayload(), StandardCharsets.UTF_8));
-					LOGGER.error(e);
+									.getPayload(), StandardCharsets.UTF_8),e);
 				}
 			} catch (InterruptedException e) {
 				LOGGER.info("MQTT receive worker aborted by interrupt exception.",e);
