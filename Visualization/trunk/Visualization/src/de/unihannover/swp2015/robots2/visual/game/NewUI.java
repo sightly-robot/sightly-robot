@@ -83,13 +83,15 @@ public class NewUI implements IRenderable, IUpdateable, Disposable, IResizable {
 
 	@Override
 	public void onResize(Viewport view) {
-		panel.setSize(view.getWorldWidth()/2, view.getWorldHeight()/2);
+		panel.setWidth(view.getWorldWidth()/2);
+		panel.setHeight(panel.getWidth()*GameConst.UI_ASPECT_RATIO);
 		panel.setPosition(view.getWorldWidth()/2-panel.getWidth()/2, view.getWorldHeight()/2-panel.getHeight()/2);
 		panel.invalidate();
 		panel.align(Align.bottomLeft);
-		panel.pad(panel.getWidth()/10);
+		panel.pad(panel.getWidth() * GameConst.UI_PADDING_REL);
 		
-		ranking.setScale(view.getWorldWidth()/1900, view.getWorldWidth()/1900);
+		ranking.setScale(view.getWorldWidth() * GameConst.UI_RANKING_FONT_SCALE, 
+				view.getWorldWidth() * GameConst.UI_RANKING_FONT_SCALE);
 		title.setPosition(panel.getX(), panel.getY() - title.getHeight());
 	}
 

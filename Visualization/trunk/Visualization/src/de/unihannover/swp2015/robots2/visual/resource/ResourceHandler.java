@@ -126,16 +126,16 @@ public class ResourceHandler implements IResourceHandler {
 	private void createFonts() {
 		fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("assets/font/Roboto-Regular.ttf"));
 		fontMap.put(ResConst.DEFAULT_FONT, new HashMap<Integer, BitmapFont>());
-		fontMap.get(ResConst.DEFAULT_FONT).put(15, createFont(15, NECESSARY_CHARS, true, 1, Color.BLACK));
+		fontMap.get(ResConst.DEFAULT_FONT).put(15, createFont(15, NECESSARY_CHARS, true, 1, Color.BLACK, Color.WHITE));
 	}
 
 	@Override
 	public BitmapFont createFont(int size, String loadChars, boolean flip) {
-		return createFont(size, loadChars, flip, 0, Color.WHITE);
+		return createFont(size, loadChars, flip, 0, Color.WHITE, Color.WHITE);
 	}
 
 	@Override
-	public BitmapFont createFont(int size, String loadChars, boolean flip, int borderWidth, Color borderColor) {
+	public BitmapFont createFont(int size, String loadChars, boolean flip, int borderWidth, Color borderColor, Color fontColor) {
 		if (fontMap.get(ResConst.DEFAULT_FONT).containsKey(size)) {
 			return fontMap.get(ResConst.DEFAULT_FONT).get(size);
 		}
@@ -146,6 +146,7 @@ public class ResourceHandler implements IResourceHandler {
 		para.flip = flip;
 		para.borderColor = borderColor;
 		para.borderWidth = borderWidth;
+		para.color = fontColor;
 		final BitmapFont font = fontGenerator.generateFont(para);
 		fontMap.get(ResConst.DEFAULT_FONT).put(size, font);
 		return fontGenerator.generateFont(para);
@@ -243,7 +244,7 @@ public class ResourceHandler implements IResourceHandler {
 	@Override
 	public Skin createSkin() {
 		final Skin skin = new Skin();
-		skin.add("default-font", createFont(50, NECESSARY_CHARS, true, 1, Color.BLACK));
+		skin.add("default-font", createFont(50, NECESSARY_CHARS, true, 10, Color.BLACK, Color.WHITE));
 		skin.getFont("default-font").getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		skin.addRegions(texAtlas);
 		skin.load(Gdx.files.internal("assets" + File.separator + "theme" + File.separator + 

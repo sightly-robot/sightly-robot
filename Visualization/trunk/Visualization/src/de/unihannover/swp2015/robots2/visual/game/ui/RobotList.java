@@ -3,12 +3,13 @@ package de.unihannover.swp2015.robots2.visual.game.ui;
 import java.util.List;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.GlyphLayout;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 
 import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
+import de.unihannover.swp2015.robots2.visual.util.ColorUtil;
 
 /**
  * Displays a list of items based on a java {@link List}.
@@ -48,11 +49,13 @@ public class RobotList extends Widget {
 		
 		if (getParent() == null)
 			return;
-		skin.getFont(FONT).getData().setScale(getScaleX(), getScaleY());
+		BitmapFont font = skin.getFont(FONT);
+		font.getData().setScale(getScaleX(), getScaleY());
 		for (int i = 0; i < robots.size(); ++i) {
 			final IRobot robot = robots.get(i);
-			skin.getFont(FONT).draw(batch, i + ". " + robot.getName(), getX(), getY() + i*distance);
-			skin.getFont(FONT).draw(batch, String.valueOf(robot.getScore()), getX() + getParent().getWidth()/2, getY() + i*distance );
+			font.setColor(ColorUtil.fromAwtColor(robot.getColor()));
+			font.draw(batch, (i+1) + ". " + robot.getName(), getX(), getY() + i*distance);
+			font.draw(batch, String.valueOf(robot.getScore()), getX() + getParent().getWidth()/2, getY() + i*distance );
 		}
 		skin.getFont(FONT).getData().setScale(1, 1);
 	}

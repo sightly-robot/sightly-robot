@@ -99,7 +99,7 @@ public interface IResourceHandler extends Disposable {
 	 * @param color of the stroke 
 	 * @return font
 	 */
-	public BitmapFont createFont(int size, String loadChars, boolean flip, int borderWidth, Color borderColor);
+	public BitmapFont createFont(int size, String loadChars, boolean flip, int borderWidth, Color borderColor, Color fontColor);
 	
 	/**
 	 * Creates a new skin object with resources managed by this handler.

@@ -1,7 +1,5 @@
 package de.unihannover.swp2015.robots2.visual;
 
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -55,9 +53,6 @@ public class Visualization extends ApplicationAdapter {
 	/** Settings received via MQTT */
 	private IPreferences<PrefKey> prefs;
 	
-	/** Information about the system */
-	private GraphicsDevice device;
-	
 	/** For the timing of the debug output. */
 	private LoopedTask fpsLogger;
 	
@@ -71,20 +66,17 @@ public class Visualization extends ApplicationAdapter {
 	 * instead.
 	 */
 	public Visualization(final boolean debugFlag, final String brokerIp) {
-		this.device = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 		this.gameHandlerList = new ArrayList<>();
 		this.ip = brokerIp;
 		this.debug = debugFlag;
 		this.id = UUID.randomUUID();
-	
-		if (debug) {
-			fpsLogger = new LoopedTask(5f, new Task() {
-				@Override
-				public void work() {
-					log.info("Current fps: " + Gdx.graphics.getFramesPerSecond());
-				}
-			});
-		}
+		
+		this.fpsLogger = new LoopedTask(5f, new Task() {
+			@Override
+			public void work() {
+				log.info("Current FPS: " + Gdx.graphics.getFramesPerSecond());
+			}
+		});
 	}
 
 	@Override
@@ -103,8 +95,9 @@ public class Visualization extends ApplicationAdapter {
 
 		prefs.putFloat(PrefKey.VIEW_WIDTH, appWidth);
 		prefs.putFloat(PrefKey.VIEW_HEIGHT, appHeight);
-		prefs.putFloat(PrefKey.DEVICE_WIDTH, device.getDisplayMode().getWidth());
-		prefs.putFloat(PrefKey.DEVICE_HEIGHT, device.getDisplayMode().getHeight());
+		
+		prefs.putFloat(PrefKey.DEVICE_WIDTH,  appWidth);
+		prefs.putFloat(PrefKey.DEVICE_HEIGHT, appHeight);
 		
 		final IResourceHandler resHandler = new ResourceHandler(ResConst.ATLAS_PATH.getName());
 		gameHandlerList.add(new RobotGameHandler(mqttHandler.getGame(), fitViewport, resHandler, prefs));
@@ -139,9 +132,7 @@ public class Visualization extends ApplicationAdapter {
 			gameHandlerList.get(i).render();
 		}
 
-		if (debug) {
-			fpsLogger.update();
-		}
+		fpsLogger.update();
 	}
 	
 	@Override

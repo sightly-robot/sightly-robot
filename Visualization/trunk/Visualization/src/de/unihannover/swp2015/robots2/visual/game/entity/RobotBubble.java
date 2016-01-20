@@ -88,8 +88,8 @@ public class RobotBubble extends Entity {
 	
 		final IRobot model = (IRobot) parent.getModel();
 		
-		this.fontSmall = resHandler.createFont((int) (fieldWidth * GameConst.BUBBLE_NAME_FONT_SIZE_REL), ResourceHandler.NECESSARY_CHARS, true, 1, Color.BLACK);
-		this.fontBig = resHandler.createFont((int) (fieldWidth * GameConst.BUBBLE_NAME_POINTS_SIZE_REL), ResourceHandler.NECESSARY_CHARS, true, 1, Color.BLACK);
+		this.fontSmall = resHandler.createFont((int) (fieldWidth * GameConst.BUBBLE_NAME_FONT_SIZE_REL), ResourceHandler.NECESSARY_CHARS, true, 1, Color.BLACK, Color.WHITE);
+		this.fontBig = resHandler.createFont((int) (fieldWidth * GameConst.BUBBLE_NAME_POINTS_SIZE_REL), ResourceHandler.NECESSARY_CHARS, true, 1, Color.BLACK, Color.WHITE);
 		this.connection = resHandler.createRenderUnit(ResConst.DEFAULT_CONNECTION);
 		this.warning = resHandler.createRenderUnit(ResConst.DEFAULT_WARNING);
 		this.tex = resHandler.createRenderUnit(ResConst.DEFAULT_BUBBLE);
@@ -162,8 +162,8 @@ public class RobotBubble extends Entity {
 	 * @param value new size of the fields.
 	 */
 	private void updateFonts(float value) {
-		fontSmall = resHandler.createFont((int) (value * GameConst.BUBBLE_NAME_FONT_SIZE_REL), ResourceHandler.NECESSARY_CHARS, true, 1, Color.BLACK);
-		fontBig = resHandler.createFont((int) (value * GameConst.BUBBLE_NAME_POINTS_SIZE_REL), ResourceHandler.NECESSARY_CHARS, true, 1, Color.BLACK);
+		fontSmall = resHandler.createFont((int) (value * GameConst.BUBBLE_NAME_FONT_SIZE_REL), ResourceHandler.NECESSARY_CHARS, true, 1, Color.BLACK, Color.WHITE);
+		fontBig = resHandler.createFont((int) (value * GameConst.BUBBLE_NAME_POINTS_SIZE_REL), ResourceHandler.NECESSARY_CHARS, true, 1, Color.BLACK, Color.WHITE);
 	}
 
 	@Override

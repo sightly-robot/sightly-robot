@@ -1,5 +1,7 @@
 package de.unihannover.swp2015.robots2.visual.desktop;
 
+import java.awt.GraphicsEnvironment;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -77,10 +79,10 @@ public class DesktopLauncher {
 			TexturePacker.process(packSettings, "assets/tex/earth_theme_src", ResConst.ATLAS_PATH.getName()+ "/earth", ResConst.ATLAS_NAME.getName());
 			TexturePacker.process(packSettings, "assets/tex/home_theme_src", ResConst.ATLAS_PATH.getName()+ "/home", ResConst.ATLAS_NAME.getName());
 		}
-				
+		final java.awt.DisplayMode dm = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDisplayMode();
 		final LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		config.width = 800;
-		config.height = 600;
+		config.width = dm.getWidth();
+		config.height = dm.getHeight();
 		config.foregroundFPS = 120;
 		config.backgroundFPS = 60;
 		config.vSyncEnabled = false;

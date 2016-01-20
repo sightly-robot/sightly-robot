@@ -44,14 +44,14 @@ public class GameConst {
 	public static final float UI_WIDTH_REL = 0.6f;
 	/** relative height of the UI */
 	public static final float UI_HEIGHT_REL = 0.6f;
-	/** padding of the main frame of the UI */
-	public static final float UI_PADDING_ABS = 20f;
-	/** gap between list elements */
-	public static final float UI_DIFF_ABS = 40f;
-	/** gap between panel and the beginning of the ranking */
-	public static final float UI_TOP_ABS = 50f;
-	/** alpha of the whole ui */
+	/** padding of the main frame of the UI relative to the panel width */
+	public static final float UI_PADDING_REL = 1/10f;
+	/** alpha of the whole UI */
 	public static final float UI_APLHA = 0.7f;
+	/** Aspect ratio of the UI main panel */
+	public static final float UI_ASPECT_RATIO = 3f/4f;
+	/** UI ranking scale */
+	public static final float UI_RANKING_FONT_SCALE = 1/1900f;
 	
 	/** title of the ranking */
 	public static final String UI_TITLE = "RANKING";
