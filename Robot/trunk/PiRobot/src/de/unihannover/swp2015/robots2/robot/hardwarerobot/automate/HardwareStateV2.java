@@ -138,9 +138,19 @@ public enum HardwareStateV2 implements IState {
 
 		@Override
 		public IState execute() {
-			double i = 0.85 + ((System.currentTimeMillis() - startTime) % 4000 - 2000) / 14000.0;
-			LEDS.setAllLEDs(new Color((int) (LEDS.getAccentColor().getRed() * i),
-					(int) (LEDS.getAccentColor().getGreen() * i), (int) (LEDS.getAccentColor().getBlue() * i)));
+			double x = (System.currentTimeMillis()-HardwareStateV2.startTime)%4000;
+			double y1 = Math.max(0,1 - Math.pow((x-600)/600, 2));
+			double y2 = Math.max(0,1 - Math.pow((x-1600)/600, 2));
+			double y3 = Math.max(0,1 - Math.pow((x-2600)/600, 2));
+			double y4 = Math.max(0,1 - Math.pow((x-3600)/600, 2) - Math.pow((x+400)/600, 2));
+			LEDS.setLED(LEDS_FRONT,new Color((int) (LEDS.getAccentColor().getRed() * y1),
+					(int) (LEDS.getAccentColor().getGreen() * y1), (int) (LEDS.getAccentColor().getBlue() * y1)));
+			LEDS.setLED(LEDS_RIGHT,new Color((int) (LEDS.getAccentColor().getRed() * y2),
+					(int) (LEDS.getAccentColor().getGreen() * y2), (int) (LEDS.getAccentColor().getBlue() * y2)));
+			LEDS.setLED(LEDS_REAR,new Color((int) (LEDS.getAccentColor().getRed() * y3),
+					(int) (LEDS.getAccentColor().getGreen() * y3), (int) (LEDS.getAccentColor().getBlue() * y3)));
+			LEDS.setLED(LEDS_LEFT,new Color((int) (LEDS.getAccentColor().getRed() * y4),
+					(int) (LEDS.getAccentColor().getGreen() * y4), (int) (LEDS.getAccentColor().getBlue() * y4)));
 			return this;
 		}
 	},
@@ -157,7 +167,17 @@ public enum HardwareStateV2 implements IState {
 
 		@Override
 		public IState execute() {
-			LEDS.setAllLEDs((System.currentTimeMillis() - startTime) % 500 < 250 ? LEDS.getAccentColor() : Color.WHITE);
+			double x = (System.currentTimeMillis()-HardwareStateV2.startTime)%4000;
+			double y1 = Math.max(0,1 - Math.pow((x-3000)/300, 2));
+			double y2 = Math.max(0,1 - Math.pow((x-3600)/300, 2));
+			LEDS.setLED(LEDS_LEFT,new Color((int) (LEDS.getAccentColor().getRed() * y1),
+					(int) (LEDS.getAccentColor().getGreen() * y1), (int) (LEDS.getAccentColor().getBlue() * y1)));
+			LEDS.setLED(LEDS_RIGHT,new Color((int) (LEDS.getAccentColor().getRed() * y1),
+					(int) (LEDS.getAccentColor().getGreen() * y1), (int) (LEDS.getAccentColor().getBlue() * y1)));
+			LEDS.setLED(LEDS_FRONT,new Color((int) (LEDS.getAccentColor().getRed() * y2),
+					(int) (LEDS.getAccentColor().getGreen() * y2), (int) (LEDS.getAccentColor().getBlue() * y2)));
+			LEDS.setLED(LEDS_REAR,new Color((int) (LEDS.getAccentColor().getRed() * y2),
+					(int) (LEDS.getAccentColor().getGreen() * y2), (int) (LEDS.getAccentColor().getBlue() * y2)));
 			return this;
 		}
 	},
@@ -168,13 +188,13 @@ public enum HardwareStateV2 implements IState {
 		@Override
 		public void start() {
 			super.start();
-			setCarLeds(false, false);
 			MOTORS.go(STOP);
 			this.execute();
 		}
 
 		@Override
 		public IState execute() {
+			setCarLeds(false, false);
 			return this;
 		}
 	},
@@ -191,7 +211,9 @@ public enum HardwareStateV2 implements IState {
 
 		@Override
 		public IState execute() {
-			double i = 0.25 + ((System.currentTimeMillis() - startTime) % 4000 - 2000) / 14000.0;
+			double x = (System.currentTimeMillis()-HardwareStateV2.startTime)%8000;
+			double i = Math.max(0,1 - Math.pow((x-6000)/700, 2));
+			
 			LEDS.setAllLEDs(new Color((int) (LEDS.getAccentColor().getRed() * i),
 					(int) (LEDS.getAccentColor().getGreen() * i), (int) (LEDS.getAccentColor().getBlue() * i)));
 			return this;
@@ -376,13 +398,13 @@ public enum HardwareStateV2 implements IState {
 	};
 
 	/** LOGGER: */
-	private final static Logger LOGGER = LogManager.getLogger(HardwareStateV2.class.getName());
+	private static Logger LOGGER = LogManager.getLogger(HardwareStateV2.class.getName());
 	// speed configuration
 	private static final int FASTER = 60;
 	private static final int FAST = 40;
-	private static final int NORMAL = 30;
-	private static final int TURN = 20;
-	private static final int SLOW = 15;
+	private static final int NORMAL = 35;
+	private static final int TURN = 30;
+	private static final int SLOW = 20;
 	private static final int STOP = 0;
 
 	// Pi2GO controller
@@ -400,6 +422,7 @@ public enum HardwareStateV2 implements IState {
 	private static final Color COLOR_BREAK = Color.RED;
 	private static final Color COLOR_REAR = Color.RED.darker().darker();
 	private static final Color COLOR_FRONT = Color.WHITE;
+	private static final Color COLOR_FRONT_DARKER = Color.WHITE.darker().darker();
 	private static final Color COLOR_BLINK = Color.ORANGE;
 
 	private static long[] measurements = new long[] { 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100 };
@@ -465,7 +488,7 @@ public enum HardwareStateV2 implements IState {
 	 * Sets the Car Led style.
 	 */
 	protected void setCarLeds(boolean right, boolean left) {
-		LEDS.setLED(LEDS_FRONT, COLOR_FRONT);
+		LEDS.setLED(LEDS_FRONT, this == HardwareStateV2.WAIT?COLOR_FRONT_DARKER:COLOR_FRONT);
 		LEDS.setLED(LEDS_REAR, this == DRIVE_ON_CELL ? COLOR_BREAK : COLOR_REAR);
 		if (right) {
 			LEDS.setLED(LEDS_RIGHT, COLOR_BLINK);

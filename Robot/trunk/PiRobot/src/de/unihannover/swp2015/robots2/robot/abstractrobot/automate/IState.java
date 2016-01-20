@@ -29,7 +29,6 @@ public interface IState {
 	 * @return {@code true} if the current state is the wait state,
 	 *         {@code false} otherwise
 	 */
-	@Deprecated
 	public boolean isWait();
 
 	/**

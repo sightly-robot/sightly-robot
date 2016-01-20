@@ -17,6 +17,7 @@ import de.unihannover.swp2015.robots2.robot.hardwarerobot.pi2gocontroller.BlinkL
 import de.unihannover.swp2015.robots2.robot.hardwarerobot.pi2gocontroller.LEDAndServoController;
 import de.unihannover.swp2015.robots2.robot.hardwarerobot.pi2gocontroller.MotorController;
 import de.unihannover.swp2015.robots2.robot.hardwarerobot.pi2gocontroller.Pi2GoGPIOController;
+import de.unihannover.swp2015.robots2.robot.hardwarerobot.pi2gocontroller.SoundController;
 import de.unihannover.swp2015.robots2.robot.interfaces.AiEventObserver;
 
 /**
@@ -41,7 +42,6 @@ public class HardwareRobot extends AbstractRobot implements IHardwareRobot {
 		;
 		Pi2GoGPIOController.getInstance();
 		MotorController.getInstance();
-		// SoundController.getInstance();
 		// ColorSensorController.getInstance();
 		// CompassController.getInstance();
 
@@ -51,9 +51,8 @@ public class HardwareRobot extends AbstractRobot implements IHardwareRobot {
 		ai.setAiEventObserver(automate);
 
 		initializeGPIOs();
-
-		//blink(robotController.getMyself().getColor());
-		speak("Heeey I am "+robotController.getMyself().getName()+"! I am now online!");
+		
+		SoundController.getInstance().initAutoSound(robotController);
 	}
 
 	@Override
@@ -104,18 +103,10 @@ public class HardwareRobot extends AbstractRobot implements IHardwareRobot {
 	public void blink(Color color) {
 		if (LEDAndServoController.getInstance() instanceof BlinkLEDAndServoController) {
 			((BlinkLEDAndServoController) LEDAndServoController.getInstance()).startBlinking(color);
-			LOGGER.info("I'm blinking!");
-			speak("heeey i am here!");
+			LOGGER.info("I am blinking!");
+			SoundController.getInstance().speak("I am blinking now!");
 		} else {
 			LOGGER.warn("Wrong LEDAndServoController! Blink not possible!");
-		}
-	}
-	
-	public static void speak(String message)
-	{
-		try {
-			Runtime.getRuntime().exec("echo '"+message+"' | festival --tts");
-		} catch (IOException e) {
 		}
 	}
 
@@ -147,5 +138,13 @@ public class HardwareRobot extends AbstractRobot implements IHardwareRobot {
 		});
 		Pi2GoGPIOController.getInstance().getLineLeft().addListener(((HardwareAutomate) automate));
 		Pi2GoGPIOController.getInstance().getLineRight().addListener(((HardwareAutomate) automate));
+	}
+	
+	@Override
+	protected void finalize() throws Throwable {
+		BlinkLEDAndServoController.getInstance().shutdown();
+		Pi2GoGPIOController.getInstance().shutdown();
+		MotorController.getInstance().shutdown();
+		super.finalize();
 	}
 }

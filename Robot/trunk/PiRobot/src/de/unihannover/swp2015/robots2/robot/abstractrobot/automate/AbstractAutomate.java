@@ -47,7 +47,7 @@ public abstract class AbstractAutomate implements AiEventObserver, Runnable, ISt
 	private Direction currentDirection = Direction.FORWARDS;
 	private long lastWaitTime;
 	
-	private IState disableState;
+	private IState DISABLE_STATE;
 
 	/**
 	 * Constructs a new AbstractAutomate.
@@ -64,7 +64,7 @@ public abstract class AbstractAutomate implements AiEventObserver, Runnable, ISt
 
 		state = connectedState;
 
-		this.disableState = disableState;
+		this.DISABLE_STATE = disableState;
 		
 		robotController.getMyself().observe(new IModelObserver() {
 			@Override
@@ -72,11 +72,11 @@ public abstract class AbstractAutomate implements AiEventObserver, Runnable, ISt
 				switch (event.getType()) {
 				case ROBOT_STATE:
 					switch (AbstractAutomate.this.robotController.getMyself().getState()) {
-					case SETUPSTATE:
-						setState(setupState);
-						break;
 					case CONNECTED:
 						setState(connectedState);
+						break;
+					case SETUPSTATE:
+						setState(setupState);
 						break;
 					case ENABLED:
 						setState(waitState);
@@ -181,7 +181,7 @@ public abstract class AbstractAutomate implements AiEventObserver, Runnable, ISt
 	@Override
 	public boolean nextOrientationEvent(Orientation orientation) {
 		synchronized (state) {
-			if (!state.isDriving() && state != disableState) {
+			if (state.isWait()) {
 				nextPosition.setLocation(robot.getPosition().getX(), robot.getPosition().getY());
 				switch (orientation) {
 				case NORTH:
@@ -223,7 +223,7 @@ public abstract class AbstractAutomate implements AiEventObserver, Runnable, ISt
 
 	protected boolean setState(IState iState) {
 		synchronized (state) {
-			if (!state.isDriving())
+			if (state.isDriving())
 				LOGGER.warn("State changes to "+iState+" while driving!!!");
 			// set new state
 			state = iState;

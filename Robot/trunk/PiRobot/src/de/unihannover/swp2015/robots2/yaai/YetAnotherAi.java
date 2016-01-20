@@ -245,6 +245,7 @@ public class YetAnotherAi extends AbstractAI implements IModelObserver {
 		// Wait if game not started
 		if (!this.isReadyToDrive()) {
 			this.state = AiState.WAITING_FOR_GAME;
+			this.iRobotController.releaseField(this.nextField.getX(),this.nextField.getY());
 			LOGGER.debug("but we should wait until game and robot state allow us to.");
 			return;
 		}
