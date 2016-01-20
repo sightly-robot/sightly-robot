@@ -17,6 +17,7 @@ import de.unihannover.swp2015.robots2.model.interfaces.IGame;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
 import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
+import de.unihannover.swp2015.robots2.model.interfaces.IRobot.RobotState;
 import de.unihannover.swp2015.robots2.robot.interfaces.AbstractAI;
 
 public class AI extends AbstractAI implements IModelObserver {
@@ -137,7 +138,8 @@ public class AI extends AbstractAI implements IModelObserver {
 			Node node = myself.getPosition();
 
 			// TODO nullpointerexception possible?
-			if (game.isRunning() && this.nextField == field && this.nextOrientation != null) {
+			if (iRobotController.getMyself().getState() == RobotState.ENABLED && game.isRunning() 
+					&& this.nextField == field && this.nextOrientation != null) {
 				switch (field.getState()) {
 				case OURS:
 					logger.debug("Sending new orientation to robot: {}", this.nextOrientation);
@@ -220,7 +222,7 @@ public class AI extends AbstractAI implements IModelObserver {
 						 */
 						boolean requested = false;
 						while (!requested) {
-							if (this.game.isRunning()) {
+							if (this.game.isRunning() && iRobotController.getMyself().getState() == RobotState.ENABLED ) {
 								Tuple<Point, Orientation> tuple = this.getNewNode();
 								Point point = tuple.x;
 								int x = (int) point.getX();
@@ -304,7 +306,7 @@ public class AI extends AbstractAI implements IModelObserver {
 		// TODO check hasStarted state!!
 		IGame game = (IGame) event.getObject();
 		if (game.isRunning() && graph != null && myself.getPosition() != null
-				&& iRobotController.getMyself().getState().equals(IRobot.RobotState.ENABLED)) {
+				&& iRobotController.getMyself().getState()== RobotState.ENABLED) {
 			Tuple<Point, Orientation> tuple = this.getNewNode();
 			Point point = tuple.x;
 			int x = (int) point.getX();
@@ -322,7 +324,7 @@ public class AI extends AbstractAI implements IModelObserver {
 		IRobot robot = (IRobot) event.getObject();
 		if (robot.isMyself()) {
 			if (this.hasStarted == false) {
-				if (robot.getState().equals(IRobot.RobotState.ENABLED)) {
+				if (robot.getState()== RobotState.ENABLED) {
 					this.hasStarted = true;
 					if (getController().getGame().isRunning() && graph != null && myself.getPosition() != null) {
 						//System.out.println("GAMEStart");
