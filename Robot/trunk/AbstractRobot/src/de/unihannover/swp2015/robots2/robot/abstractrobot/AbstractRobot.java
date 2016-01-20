@@ -17,6 +17,7 @@ import de.unihannover.swp2015.robots2.model.externalInterfaces.IModelObserver;
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
 import de.unihannover.swp2015.robots2.robot.abstractrobot.automate.AbstractAutomate;
 import de.unihannover.swp2015.robots2.robot.interfaces.AbstractAI;
+import de.unihannover.swp2015.robots2.yaai.YetAnotherAi;
 
 /**
  * The AbstractRobot is the base class for all hardware (real) and software
@@ -111,7 +112,7 @@ public abstract class AbstractRobot {
 		// robotController.getGame().getStage().observe(mo);
 
 		// TODO Init AbstractAI
-		ai = new AI(robotController);
+		ai = new YetAnotherAi(robotController);
 		ai.setRelativeSpeed(1, 1, 1);
 
 		LOGGER.info("AI initialized!");
