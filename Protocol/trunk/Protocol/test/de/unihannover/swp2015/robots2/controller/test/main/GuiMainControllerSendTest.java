@@ -189,14 +189,13 @@ public class GuiMainControllerSendTest {
 	 */
 	@Test
 	public void testGameParameters() throws Exception {
-		this.guiController.sendGameParameters(2.57f, 5000);
+		this.guiController.sendVRobotSpeed(2.57f, 5.025f);
 		Thread.sleep(100);
 
-		assertEquals(2.57f, Float.parseFloat(this.receiveHandler
-				.getValue("robot/virtualspeed")), 0.005);
-
-		assertEquals(5000, Integer.parseInt(this.receiveHandler
-				.getValue("extension/2/robot/hesitationtime")));
+		String[] parts = this.receiveHandler.getValue("robot/virtualspeed").split(",");
+		assertEquals(2, parts.length);
+		assertEquals(2.57f, Float.parseFloat(parts[0]), 0.005);
+		assertEquals(5.025, Float.parseFloat(parts[1]),0.005);
 
 		// Check for any other mqtt topics
 		assertEquals(2, this.receiveHandler.getKeysSorted().length);
@@ -251,8 +250,9 @@ public class GuiMainControllerSendTest {
 		// No clean up needed, as controller should automatically clean up
 		// but we will check if there are clean up message from the controller:
 		assertEquals("", receiveHandler.getValue("robot/position/1a2b3c4d"));
-		assertEquals("", receiveHandler.getValue("extension/2/robot/state/1a2b3c4d"));
-		
+		assertEquals("",
+				receiveHandler.getValue("extension/2/robot/state/1a2b3c4d"));
+
 	}
 
 	/**

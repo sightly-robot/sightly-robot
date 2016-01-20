@@ -281,37 +281,4 @@ public class ServerMainControllerReceiveTest {
 		// Cleanup
 		this.sender.sendMessage("robot/virtualspeed", null, true);
 	}
-
-	/**
-	 * Test receiving of hesitation time
-	 */
-	@Test
-	public void testHesitationtime() throws Exception {
-		class TestStageModelObserver implements IModelObserver {
-			public int hesitationTime;
-
-			@Override
-			public void onModelUpdate(IEvent event) {
-				if (event.getType() == UpdateType.GAME_PARAMETER) {
-					IGame game = (IGame) event.getObject();
-					this.hesitationTime = game.getHesitationTime();
-				}
-			}
-		}
-
-		TestStageModelObserver observer = new TestStageModelObserver();
-		this.serverController.getGame().observe(observer);
-
-		int hesitationTime = 323;
-
-		// Test
-		this.sender.sendMessage("extension/2/robot/hesitationtime",
-				String.valueOf(hesitationTime), true);
-		Thread.sleep(100);
-
-		assertEquals(hesitationTime, observer.hesitationTime);
-
-		// Cleanup
-		this.sender.sendMessage("extension/2/robot/hesitationtime", null, true);
-	}
 }

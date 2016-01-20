@@ -272,7 +272,7 @@ public class GuiMainControllerReceiveTest {
 		assertEquals(r, observer.robot);
 	}
 
-	@Test
+	/*@Test 
 	public void testGameParameters() throws Exception {
 		class TestGameModelObserver implements IModelObserver {
 			public int count;
@@ -293,14 +293,13 @@ public class GuiMainControllerReceiveTest {
 		this.guiController.getGame().observe(observer);
 
 		// Test
-		sender.sendMessage("robot/virtualspeed", "1.87", false);
-		sender.sendMessage("extension/2/robot/hesitationtime", "5025", false);
+		sender.sendMessage("robot/virtualspeed", "1.87,5.025", false);
 		Thread.sleep(100);
 
 		assertEquals(1.87, this.guiController.getGame().getVRobotSpeed(), 0.002);
-		assertEquals(5025, this.guiController.getGame().getHesitationTime());
-		assertEquals(2, observer.count);
-	}
+		assertEquals(5.025, this.guiController.getGame().getVRobotRotationSpeed(), 0.002);
+		assertEquals(1, observer.count);
+	}*/
 
 	@Test
 	public void testGameState() throws Exception {

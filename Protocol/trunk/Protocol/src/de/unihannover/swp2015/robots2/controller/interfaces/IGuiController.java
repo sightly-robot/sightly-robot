@@ -84,13 +84,28 @@ public interface IGuiController extends IController {
 	/**
 	 * Send game parameters to the MQTT network.
 	 * 
+	 * The hesitation time is not used anymore.
+	 * Please use {@link #sendVRobotSpeed(float, float)} instead, which sends the new rotation speed instead of hesitation time.
+	 * 
+	 * @deprecated
 	 * @param robotSpeed
 	 *            maximum movement speed of virtual robots in seconds per field
 	 * @param hesitationTime
-	 *            (deprecated) will be replaced soon by float rotationSpeed
+	 *            (deprecated and not used)
 	 */
+	@Deprecated
 	public void sendGameParameters(float robotSpeed, int hesitationTime);
 
+	/**
+	 * Send game maximum speeds for virtual robots to the MQTT network.
+	 * 
+	 * @param robotSpeed
+	 *            maximum movement speed of virtual robots in seconds per field
+	 * @param robotRotationSpeed
+	 *            maximum rotation speed of virtual robots in seconds per 360°
+	 */
+	public void sendVRobotSpeed(float robotSpeed, float robotRotationSpeed);
+	
 	/**
 	 * Set the position of a robot.
 	 * 

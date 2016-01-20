@@ -40,7 +40,6 @@ public class RobotMainController extends AbstractMainController implements
 		this.game.addRobot(this.myself);
 
 		this.fieldStateModelController.setFieldTimerCallback(this);
-		this.infoComponent = "robot/" + id;
 
 		// Start MQTTController
 		try {
@@ -113,8 +112,7 @@ public class RobotMainController extends AbstractMainController implements
 			break;
 
 		case CONTROL_VIRTUALSPEED:
-			this.gameModelController.mqttSetRobotVirtualspeed(Float
-					.valueOf(message));
+			this.gameModelController.mqttSetRobotVirtualspeed(message);
 			break;
 
 		case FIELD_OCCUPIED_LOCK:

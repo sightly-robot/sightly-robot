@@ -44,14 +44,14 @@ public class GameTest {
 	}
 	
 	@Test
-	public void testHesitationTime() {
+	public void testVRobotRotationSpeed() {
 		Game game = new Game();
 		
-		game.setHesitationTime(1);
-		assertEquals(1, game.getHesitationTime());
+		game.setVRobotRotationSpeed(1f);
+		assertEquals(1f, game.getVRobotRotationSpeed(), 0.001);
 		
-		game.setHesitationTime(4);
-		assertEquals(4, game.getHesitationTime());
+		game.setVRobotRotationSpeed(0.4f);
+		assertEquals(0.4f, game.getVRobotRotationSpeed(), 0.001);
 	}
 
 }

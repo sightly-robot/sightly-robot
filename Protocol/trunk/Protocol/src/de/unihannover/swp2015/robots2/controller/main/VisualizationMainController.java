@@ -25,8 +25,6 @@ public class VisualizationMainController extends AbstractMainController
 	public VisualizationMainController() {
 		super();
 
-		this.infoComponent = "visualization";
-
 		try {
 			String clientId = "visu_"
 					+ UUID.randomUUID().toString().substring(0, 8);

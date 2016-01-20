@@ -30,8 +30,6 @@ public abstract class AbstractMainController implements IController,
 	protected final RobotModelController robotModelController;
 	protected final GameModelController gameModelController;
 
-	protected String infoComponent = "general";
-
 	protected Logger log = LogManager
 			.getLogger(this.getClass().getSimpleName());
 
