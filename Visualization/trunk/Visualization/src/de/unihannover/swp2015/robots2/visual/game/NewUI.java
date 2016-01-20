@@ -9,8 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Widget;
-import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -25,14 +24,14 @@ public class NewUI implements IRenderable, IUpdateable, Disposable, IResizable {
 	private final Stage stage;
 	private final RobotList ranking;
 	private final Container<RobotList> panel;
-	private final Label title;
+	private Label title;
 	
 	private boolean visible;
 	
 	public NewUI(List<IRobot> robots, Viewport view, Batch batch, Skin skin) {
 		this.stage = new Stage(view, batch);
 		this.ranking = new RobotList(skin, robots);
-		this.title = new Label("Supertitel", skin);
+		this.title = new Label("Ranking", skin);
 		this.panel = new Container<>(ranking);
 		this.setupStage(robots, skin);
 		this.onResize(view);
@@ -41,14 +40,21 @@ public class NewUI implements IRenderable, IUpdateable, Disposable, IResizable {
 	}
 	
 	private void setupStage(List<IRobot> robots, Skin skin) {
-		panel.setPosition(200,200);
 		panel.setColor(GameConst.UI_COLOR);
 		panel.setBackground(skin.getDrawable("default-rect"));
+		panel.align(Align.topLeft);
 		stage.addActor(panel);
+		stage.addActor(title);
 	}
 	
 	public void onAddingRobot() {
 		panel.invalidate();
+	}
+	
+	public void changeSkin(Skin skin) {
+		ranking.setSkin(skin);
+		title = new Label("Ranking", skin);
+		onResize(stage.getViewport());
 	}
 	
 	public void setVisible(boolean visible) {
@@ -80,8 +86,11 @@ public class NewUI implements IRenderable, IUpdateable, Disposable, IResizable {
 		panel.setSize(view.getWorldWidth()/2, view.getWorldHeight()/2);
 		panel.setPosition(view.getWorldWidth()/2-panel.getWidth()/2, view.getWorldHeight()/2-panel.getHeight()/2);
 		panel.invalidate();
-		//ranking.setPadding(view.getWorldWidth()/30);
-		ranking.onResize(view);
+		panel.align(Align.bottomLeft);
+		panel.pad(panel.getWidth()/10);
+		
+		ranking.setScale(view.getWorldWidth()/1900, view.getWorldWidth()/1900);
+		title.setPosition(panel.getX(), panel.getY() - title.getHeight());
 	}
 
 }

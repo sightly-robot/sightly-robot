@@ -8,6 +8,7 @@ import java.util.Map;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
@@ -242,7 +243,8 @@ public class ResourceHandler implements IResourceHandler {
 	@Override
 	public Skin createSkin() {
 		final Skin skin = new Skin();
-		skin.add("default-font", createFont(50, NECESSARY_CHARS, true));
+		skin.add("default-font", createFont(50, NECESSARY_CHARS, true, 1, Color.BLACK));
+		skin.getFont("default-font").getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		skin.addRegions(texAtlas);
 		skin.load(Gdx.files.internal("assets" + File.separator + "theme" + File.separator + 
 				this.texPack + File.separator + "skin.json"));

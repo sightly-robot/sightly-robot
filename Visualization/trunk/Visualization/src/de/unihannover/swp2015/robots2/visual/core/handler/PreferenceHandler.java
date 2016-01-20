@@ -94,7 +94,7 @@ public class PreferenceHandler implements IVisualization {
 		
 		JSONObject root = new JSONObject();
 		root.put("options", options);
-		return root.toString();
+		return options.toString();
 	}
 	
 }
