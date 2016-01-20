@@ -60,7 +60,7 @@ public class Graph implements IModelObserver {
 	/**
 	 * Add or remove Nodes from this Graph to fit to new stage sizes.
 	 */
-	private void resizeGraph() {
+	private synchronized void resizeGraph() {
 		int height = this.stage.getHeight();
 		int width = this.stage.getWidth();
 
@@ -100,7 +100,7 @@ public class Graph implements IModelObserver {
 	/**
 	 * Rebuild all edges if walls of Stage changed.
 	 */
-	private void rebuildEdges() {
+	private synchronized void rebuildEdges() {
 		if (this.width != this.stage.getWidth()
 				|| this.height != this.stage.getHeight())
 			return;

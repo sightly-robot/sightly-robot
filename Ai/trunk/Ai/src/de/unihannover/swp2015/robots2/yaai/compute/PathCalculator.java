@@ -8,12 +8,14 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.unihannover.swp2015.robots2.controller.interfaces.IRobotController;
+import de.unihannover.swp2015.robots2.model.interfaces.IField.State;
 import de.unihannover.swp2015.robots2.yaai.YetAnotherAi;
 import de.unihannover.swp2015.robots2.yaai.model.Graph;
 import de.unihannover.swp2015.robots2.yaai.model.Node;
 
 /**
- * Path calculator to be used with {@link YetAnotherAi} and its {@link CalculationWorker}.
+ * Path calculator to be used with {@link YetAnotherAi} and its
+ * {@link CalculationWorker}.
  * 
  * Provides a method to calculate the best of all paths of a fixed length
  * beginning a one field.
@@ -26,7 +28,8 @@ public class PathCalculator {
 
 	private final int PATH_LENGTH = 10;
 
-	private static final Logger LOGGER = LogManager.getLogger(CalculationWorker.class.getName());
+	private static final Logger LOGGER = LogManager
+			.getLogger(CalculationWorker.class.getName());
 	private Random random = new Random();
 
 	/**
@@ -70,7 +73,11 @@ public class PathCalculator {
 		Node nextNode = currentNode.getEdges().get(
 				random.nextInt(currentNode.getEdges().size()));
 		for (Node n : currentNode.getEdges()) {
-			double score = this.searchBestPath(n, 1, visitedNodes);
+			int currentOccupiedCost = (n.getField().getState() == State.OCCUPIED || n
+					.getField().getState() == State.LOCKED) ? 1 : 0;
+
+			double score = this.searchBestPath(n, 1 + currentOccupiedCost,
+					visitedNodes);
 			if (score > bestScore) {
 				bestScore = score;
 				nextNode = n;

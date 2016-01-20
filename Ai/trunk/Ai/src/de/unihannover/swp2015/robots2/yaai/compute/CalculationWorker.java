@@ -67,14 +67,15 @@ public class CalculationWorker implements Runnable {
 								this.startPosition.getX(),
 								this.startPosition.getY());
 
-						// Execute! (if startPosition is valid)
-
-						// Weight calculation
-						this.weightCalculator.calculate(startNode);
-
-						// Next field calculation
-						Node n = this.pathCalculator.calculate(startNode);
-						this.nextField = n.getField();
+						// Prevent concurrent modification of the graph.
+						synchronized (this.graph) {
+							// Weight calculation
+							this.weightCalculator.calculate(startNode);
+	
+							// Next field calculation
+							Node n = this.pathCalculator.calculate(startNode);
+							this.nextField = n.getField();
+						}
 
 						LOGGER.trace(
 								"New next field computed by Ai Worker: {}-{}",
