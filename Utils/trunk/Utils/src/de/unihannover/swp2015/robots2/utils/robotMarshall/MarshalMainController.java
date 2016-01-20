@@ -11,6 +11,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.paho.client.mqttv3.MqttException;
 
+import de.unihannover.swp2015.robots2.controller.interfaces.ProtocolException;
 import de.unihannover.swp2015.robots2.controller.main.AbstractMainController;
 import de.unihannover.swp2015.robots2.controller.mqtt.MqttController;
 import de.unihannover.swp2015.robots2.controller.mqtt.MqttTopic;
@@ -43,12 +44,6 @@ public class MarshalMainController extends AbstractMainController {
 					Arrays.asList(subscribeTopics));
 		} catch (MqttException e) {
 		}
-	}
-
-	@Override
-	public void startMqtt(String brokerUrl) throws MqttException {
-
-		this.mqttController.connect(brokerUrl);
 	}
 
 	@Override
@@ -105,7 +100,7 @@ public class MarshalMainController extends AbstractMainController {
 			return;
 		}
 
-		this.fieldStateModelController.mqttFieldRelease(key, message);
+		this.fieldStateModelController.mqttFieldRelease(key);
 	}
 
 	private void checkFieldAndLock(String key, String message) {
