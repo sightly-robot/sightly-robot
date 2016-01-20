@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -37,15 +38,15 @@ public class RobotGameHandler extends GameHandler {
 	
 	/** SpriteBatch for rendering textures. */
 	protected SpriteBatch batch;
-
-	/** UI, which will be displayed if {@link IGame#isRunning()} == false */
-	protected UI ui;
 			
 	/** Overview of robots for ranking */
 	private final List<IRobot> robots;
 	
 	/** Manages several post-processors. */
 	private final PostProcessHandler pp;
+	
+	/** UI, which will be displayed if {@link IGame#isRunning()} == false */
+	private NewUI ui;
 
 	/**
 	 * Construct a new RobotGameHandler and connects this handler (means it will directly observe the model) to the given model <code>game</code>
@@ -78,7 +79,7 @@ public class RobotGameHandler extends GameHandler {
 		entityList.add(new Map(stage, this));
 		Entity.sortEntities(entityList);
 		
-		ui = new UI(robots, this);
+		ui = new NewUI(robots, view, batch, resHandler.createSkin());
 	}
 	
 	/**
@@ -101,6 +102,7 @@ public class RobotGameHandler extends GameHandler {
 		for (int i = 0; i < entityList.size(); ++i) {
 			entityList.get(i).update();
 		}
+		ui.update();
 	}
 			
 	@Override
@@ -130,8 +132,9 @@ public class RobotGameHandler extends GameHandler {
 				
 				batch.begin();
 				batch.draw(pp.getBufferTexture(), 0, 0);
-				ui.draw(batch);
 				batch.end();
+
+				ui.render();
 				
 				pp.renderFxaa();
 			}
@@ -142,10 +145,10 @@ public class RobotGameHandler extends GameHandler {
 				for (int i = 0; i < entityList.size(); ++i) {
 					entityList.get(i).draw(batch);
 				}
-
-				ui.draw(batch);
 				batch.end();
 
+				ui.render();
+				
 				pp.renderFxaa();
 			}
 		}
@@ -169,7 +172,7 @@ public class RobotGameHandler extends GameHandler {
 			
 		case GAME_STATE:
 			pp.setBloomEnabled(!game.isRunning());
-			ui.setDisplay(true);
+			ui.setVisible(true);
 			break;
 			
 		case ROBOT_ADD:
@@ -179,6 +182,7 @@ public class RobotGameHandler extends GameHandler {
 				roboEntity.setZIndex(1);
 				Entity.addEntitySorted(roboEntity, entityList);
 				SortUtil.addRobotSorted(robot, robots);
+				ui.onAddingRobot();
 			}
 			break;
 			
@@ -203,6 +207,7 @@ public class RobotGameHandler extends GameHandler {
 		
 		batch.dispose();
 		pp.dispose();
+		ui.dispose();
 	}
 	
 	@Override
@@ -221,6 +226,7 @@ public class RobotGameHandler extends GameHandler {
 			view.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
 			batch.setProjectionMatrix(view.getCamera().combined);
 			pp.onViewUpdate(view);
+			ui.onResize(view);
 			break;
 			
 		case VIEW_HEIGHT:
@@ -228,6 +234,7 @@ public class RobotGameHandler extends GameHandler {
 			view.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
 			batch.setProjectionMatrix(view.getCamera().combined);
 			pp.onViewUpdate(view);			
+			ui.onResize(view);
 			break;
 			
 		case X_OFFSET:

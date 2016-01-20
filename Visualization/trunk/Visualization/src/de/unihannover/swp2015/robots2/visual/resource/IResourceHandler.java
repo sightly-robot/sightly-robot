@@ -3,6 +3,7 @@ package de.unihannover.swp2015.robots2.visual.resource;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Disposable;
 
 import de.unihannover.swp2015.robots2.visual.resource.texture.RenderUnit;
@@ -99,5 +100,12 @@ public interface IResourceHandler extends Disposable {
 	 * @return font
 	 */
 	public BitmapFont createFont(int size, String loadChars, boolean flip, int borderWidth, Color borderColor);
+	
+	/**
+	 * Creates a new skin object with resources managed by this handler.
+	 * 
+	 * @return {@link Skin}
+	 */
+	public Skin createSkin();
 	
 }

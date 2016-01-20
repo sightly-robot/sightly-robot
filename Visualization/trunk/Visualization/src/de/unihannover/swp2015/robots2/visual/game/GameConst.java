@@ -1,5 +1,7 @@
 package de.unihannover.swp2015.robots2.visual.game;
 
+import com.badlogic.gdx.graphics.Color;
+
 /**
  * Contains all constants, which will be used to display the game.
  * 
@@ -16,11 +18,11 @@ public class GameConst {
 	/** X position of the icon relative to the bubble width */
 	public static final float BUBBLE_ICON_X_REL = 1f/1.6f;
 	/** Y position of the font for the name relative to the height of the bubble */
-	public static final float BUBBLE_FONT_NAME_Y_REL = 1f/8f;
+	public static final float BUBBLE_FONT_NAME_Y_REL = 1f/7f;
 	/** Y position of the font for the points relative to the height of the bubble */
-	public static final float BUBBLE_FONT_POINTS_Y_REL = 1f/3f;
+	public static final float BUBBLE_FONT_POINTS_Y_REL = 4f/11f;
 	/** Left padding of the bubble relative to the bubble width */
-	public static final float BUBBLE_PADDING_LEFT_REL = 1f/8f;
+	public static final float BUBBLE_PADDING_LEFT_REL = 1f/7f;
 	/** Y offset of the bubble relative to the field-size */
 	public static final float BUBBLE_Y_OFFSET_REL = 0.1f;
 	/** Height of the bubble relative to the field-size */
@@ -55,6 +57,8 @@ public class GameConst {
 	public static final String UI_TITLE = "RANKING";
 	/** string, which should be displayed if the game has never been started */
 	public static final String UI_NO_DATA = "PLEASE START A GAME";
+	
+	public static final Color UI_COLOR = new Color(0.8f,0.8f,0.8f,0.8f);
 	
 	private GameConst() {
 		// pure static class

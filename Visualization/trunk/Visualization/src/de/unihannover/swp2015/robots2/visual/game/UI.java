@@ -67,7 +67,7 @@ public class UI implements IDrawable, IPreferencesObserver<PrefKey> {
 		this.font.setColor(Color.BLACK);
 		this.fontTitle = res.createFont(28, ResourceHandler.NECESSARY_CHARS, true);
 		this.fontTitle.setColor(Color.BLACK);
-		this.background = res.createRenderUnit(ResConst.DEFAULT_UI_BACKGROUND);
+		this.background = res.createRenderUnit(ResConst.DEFAULT_RECT);
 		this.color = new Color(1, 1, 1, GameConst.UI_APLHA);
 		this.pref.addObserver(this);
 		
