@@ -74,6 +74,7 @@ public class PreferenceHandler implements IVisualization {
 				continue;
 			}
 		}
+		System.out.println(options.toString());
 	}
 
 	@Override
@@ -89,12 +90,12 @@ public class PreferenceHandler implements IVisualization {
 			}
 			else if (defaultValue instanceof Float) {
 				options.put(key.getKey(), pref.getFloat(key));
-			} 
+			}
 		}
-		
 		JSONObject root = new JSONObject();
 		root.put("options", options);
-		return options.toString();
+		System.out.println(root.toString());
+		return root.toString();
 	}
 	
 }
