@@ -217,6 +217,7 @@ public class ControlPanel extends Window implements Bindable, IVisualizationClic
 										  visualization);
 		
 		controller.getGame().observe(this);
+        configurator.setController(controller);
 		
 		ApplicationContext.scheduleRecurringCallback(new Runnable() {			
 			@Override
@@ -318,7 +319,8 @@ public class ControlPanel extends Window implements Bindable, IVisualizationClic
 				public void hostWindowClosed(Display display) {
 					configurator.close();
 					visualization.setOptions(configurator.getGeneralOptions());
-					tableObserver.setOptions(configurator.getGeneralOptions());
+					if (tableObserver != null)
+						tableObserver.setOptions(configurator.getGeneralOptions());
 				}
 				@Override
 				public void hostWindowOpened(Display display) {

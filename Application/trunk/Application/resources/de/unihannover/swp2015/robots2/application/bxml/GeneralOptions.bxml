@@ -22,7 +22,7 @@
 							<Label text="Address" styles="{font:{size:16}, color:'#FFFFFF'}"/>
 						</Border>
 						<Border styles="{color:10}">
-							<TextArea bxml:id="ipTextArea" text="tcp://127.0.0.1" maximumLength="15" styles="{font:{size:16}, color:'#000000', acceptsEnter:false}"/>
+							<TextArea bxml:id="ipTextArea" text="tcp://127.0.0.1" styles="{font:{size:16}, color:'#000000', acceptsEnter:false}"/>
 						</Border>
 					</TablePane.Row>
 					
@@ -55,7 +55,7 @@
 					
 					<TablePane.Row height="32">
 						<!-- Fill Pane fixes alignment-->
-						<FillPane styles="{backgroundColor:'#303030', color:'#303030', padding:5}">
+						<FillPane styles="{backgroundColor:'#303030', padding:5}">
 							<Checkbox bxml:id="debugMode" enabled="true" state="UNSELECTED" buttonData="Show Lock states of fields" styles="{spacing:10, font:{size:16}, color:'#FFFFFF'}"/>
 						</FillPane>
 					</TablePane.Row>
