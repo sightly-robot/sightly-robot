@@ -5,10 +5,14 @@ import java.applet.AudioClip;
 import java.io.IOException;
 import java.net.URL;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import de.unihannover.swp2015.robots2.controller.interfaces.IRobotController;
 import de.unihannover.swp2015.robots2.model.externalInterfaces.IModelObserver;
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
 import de.unihannover.swp2015.robots2.robot.abstractrobot.automate.AbstractAutomate;
+import de.unihannover.swp2015.robots2.robot.hardwarerobot.automate.HardwareStateV2;
 
 /**
  * Controller for hard-coded sound effects.<br>
@@ -21,6 +25,9 @@ public class SoundController implements IModelObserver {
 
 	/** The Singleton instance of the SoundController. */
 	private static SoundController instance;
+	
+	/** LOGGER: */
+	private static Logger LOGGER = LogManager.getLogger(SoundController.class.getName());
 
 	private AudioClip gameMusic;
 	private AudioClip startSound;
@@ -36,7 +43,7 @@ public class SoundController implements IModelObserver {
 			gameMusic = Applet.newAudioClip(new URL("file:/home/pi/pacman.wav"));
 			startSound = Applet.newAudioClip(new URL("file:/home/pi/simson.wav"));
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Sounds could not be initialized",e);
 		}
 	}
 
@@ -67,6 +74,7 @@ public class SoundController implements IModelObserver {
 		try {
 			Runtime.getRuntime().exec("echo '" + message + "' | festival --tts");
 		} catch (IOException e) {
+			LOGGER.error("Speak "+message+" not worked",e);
 		}
 	}
 
@@ -77,7 +85,7 @@ public class SoundController implements IModelObserver {
 		try {
 			startSound.play();
 		} catch (Exception e) {
-			// only catch
+			LOGGER.error("StartSound not working",e);
 		}
 	}
 
@@ -88,7 +96,7 @@ public class SoundController implements IModelObserver {
 		try {
 			gameMusic.play();
 		} catch (Exception e) {
-			// only catch
+			LOGGER.error("GameMusic not working",e);
 		}
 	}
 
