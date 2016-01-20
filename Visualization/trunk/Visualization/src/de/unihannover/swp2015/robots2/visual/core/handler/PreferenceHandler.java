@@ -78,7 +78,7 @@ public class PreferenceHandler implements IVisualization {
 
 	@Override
 	public String getSettings() {
-		JSONObject options = new JSONObject("options");
+		JSONObject options = new JSONObject();
 		options.put("id", id.toString());
 		PrefKey[] keys = PrefKey.values();
 		for (int i = GO_START_INDEX; i < keys.length; ++i) {
@@ -91,7 +91,10 @@ public class PreferenceHandler implements IVisualization {
 				options.put(key.getKey(), pref.getFloat(key));
 			} 
 		}
-		return options.toString();
+		
+		JSONObject root = new JSONObject();
+		root.put("options", options);
+		return root.toString();
 	}
 	
 }
