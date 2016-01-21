@@ -29,18 +29,21 @@ import org.json.JSONException;
 import de.unihannover.swp2015.robots2.application.MapLoader;
 import de.unihannover.swp2015.robots2.application.components.CustomTableCellRenderer;
 import de.unihannover.swp2015.robots2.application.components.StrategicVisualization;
+import de.unihannover.swp2015.robots2.application.controllers.TableController;
+import de.unihannover.swp2015.robots2.application.dialogs.ListDialog;
 import de.unihannover.swp2015.robots2.application.events.IVisualizationClickEvent;
 import de.unihannover.swp2015.robots2.application.exceptions.InvalidMapFile;
 import de.unihannover.swp2015.robots2.application.models.TableElement;
-import de.unihannover.swp2015.robots2.application.observers.TableObserver;
 import de.unihannover.swp2015.robots2.application.observers.VisualizationUpdater;
 import de.unihannover.swp2015.robots2.controller.interfaces.ProtocolException;
 import de.unihannover.swp2015.robots2.controller.main.GuiMainController;
 import de.unihannover.swp2015.robots2.model.externalInterfaces.IModelObserver;
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
+import de.unihannover.swp2015.robots2.model.interfaces.IField;
 import de.unihannover.swp2015.robots2.model.interfaces.IGame;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition;
 import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
+import sun.org.mozilla.javascript.internal.ast.Assignment;
 
 import org.apache.pivot.wtk.DesktopApplicationContext;
 import org.apache.pivot.wtk.Display;
@@ -60,6 +63,7 @@ public class ControlPanel extends Window implements Bindable, IVisualizationClic
 	@BXML private PushButton connectButton;
 	@BXML private PushButton deleteRobotButton;
 	@BXML private PushButton disableRobotButton;
+	@BXML private PushButton placeButton;
 
 	// Participants table
 	@BXML private TableView participantTable; 
@@ -69,13 +73,16 @@ public class ControlPanel extends Window implements Bindable, IVisualizationClic
 	
 	// Oberservers
 	private VisualizationUpdater visualizationUpdater;
-	private TableObserver tableObserver;
+	private TableController tableController;
 	
 	// Other Controllers
 	private GuiMainController controller;
 	
 	// Windows
 	private Configurator configurator;
+	
+	// flags:
+	private boolean placementMode;
 	
 	/**
 	 * initialize is called by pivot after creating the object.
@@ -98,33 +105,47 @@ public class ControlPanel extends Window implements Bindable, IVisualizationClic
 		connectButton.getButtonPressListeners().add(connectAction);
 		deleteRobotButton.getButtonPressListeners().add(deleteRobotAction);
 		disableRobotButton.getButtonPressListeners().add(disableRobotAction);
+		placeButton.getButtonPressListeners().add(placeAction);
 		visualization.addClickHandler(this);
 		
 	}
 	
 	/**
-	 * Button to delete a robot (bye bye)
+	 * Button action to delete a robot (bye bye)
 	 */
 	private ButtonPressListener deleteRobotAction = new ButtonPressListener() {
 		
 		@Override
 		public void buttonPressed(Button button) {
-			TableElement elem = tableObserver.getSelected();
+			TableElement elem = tableController.getSelected();
 			if (elem != null) {
 				controller.deleteRobot(elem.getId());
+			}
+		}
+	};
+	
+	/**
+	 * Button action for placeing a robot.
+	 */
+	private ButtonPressListener placeAction = new ButtonPressListener() {
+		@Override
+		public void buttonPressed(Button arg0) {
+			togglePlacementMode();
+			if (tableController.getSelected() == null) {
+				Alert.alert("Please select a robot to place now and click on an arrow.", ControlPanel.this);
 			}
 		}
 	};
 
 	
 	/**
-	 * Button to disable a robot (maybe disqualification) 
+	 * Button action to disable a robot (maybe disqualification) 
 	 */
 	private ButtonPressListener disableRobotAction = new ButtonPressListener() {
 		
 		@Override
 		public void buttonPressed(Button button) {
-			TableElement elem = tableObserver.getSelected();
+			TableElement elem = tableController.getSelected();
 			if (elem != null) {
 				controller.disableRobot(elem.getId());
 			}
@@ -211,7 +232,7 @@ public class ControlPanel extends Window implements Bindable, IVisualizationClic
 		visualization.setGame(controller, controller.getGame(), configurator.getGeneralOptions());
 		visualizationUpdater = new VisualizationUpdater(visualization, controller);
 		
-		tableObserver = new TableObserver(participantTable, 
+		tableController = new TableController(participantTable, 
 										  controller, 
 										  configurator.getGeneralOptions(),
 										  visualization);
@@ -230,12 +251,12 @@ public class ControlPanel extends Window implements Bindable, IVisualizationClic
 				resetGame.setEnabled(synced);
 				deleteRobotButton.setEnabled(synced);
 				disableRobotButton.setEnabled(synced);
-
 				connectButton.setEnabled(synced);
+				placeButton.setEnabled(synced);
 				
 				visualization.setConnectionState(synced);
 				visualizationUpdater.update();
-				tableObserver.update();
+				tableController.update();
 			}
 		}, 100);
 	}
@@ -319,8 +340,8 @@ public class ControlPanel extends Window implements Bindable, IVisualizationClic
 				public void hostWindowClosed(Display display) {
 					configurator.close();
 					visualization.setOptions(configurator.getGeneralOptions());
-					if (tableObserver != null)
-						tableObserver.setOptions(configurator.getGeneralOptions());
+					if (tableController != null)
+						tableController.setOptions(configurator.getGeneralOptions());
 				}
 				@Override
 				public void hostWindowOpened(Display display) {
@@ -342,14 +363,40 @@ public class ControlPanel extends Window implements Bindable, IVisualizationClic
 									 int ry) 
 	{
 		IGame game = controller.getGame();
+		
+		// Was a robot clicked?
 		for (IRobot robot : game.getRobots().values()) {
         	IPosition pos = robot.getPosition();
         	if (pos.getX() == rx && pos.getY() == ry) {
         		// robot found.
-        		
-        		tableObserver.selectRobotWithId(robot.getId());
+        		tableController.selectRobotWithId(robot.getId());
         	}
         }		
+		
+		// Was a start position clicked & are we in placementMode?
+		if (placementMode) {
+			for (IPosition startPosition : game.getStage().getStartPositions()) {
+				if (startPosition.getX() == rx && startPosition.getY() == ry) {
+					// checkings are for gui
+					if (tableController.getSelected() != null) {
+						tableController.placeSelectedRobotAt(startPosition);
+						togglePlacementMode();
+					}
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Shows/Hides StartPositions and changes button caption.
+	 */
+	private void togglePlacementMode() {
+		placementMode = !placementMode;
+		visualization.setStartPositionsVisible(placementMode);
+		if (placementMode)
+			placeButton.setButtonData("Abort Placement");
+		else
+			placeButton.setButtonData("Assign Position");		
 	}
 
 	/**

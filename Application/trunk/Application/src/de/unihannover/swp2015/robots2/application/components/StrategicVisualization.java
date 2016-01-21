@@ -44,17 +44,33 @@ import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
  * @author Tim
  */
 public class StrategicVisualization extends Panel implements Bindable {
+	/** The drawing displaying the game **/
 	private Drawing drawing; // svg drawing
+	
+	/** The SVG creator class **/ 
 	private SvgConstructor svgConstructor;
+	
+	/** The internal game state **/
 	private IGame game;
+	
+	/** THE controller **/
 	private GuiMainController controller;
-	private boolean synced = true;
+	
+	/** A SVG for displaying a connection loss **/
 	private Drawing errorDrawing;
+
+	/** Are we connected and in sync with the broker? **/
+	private boolean synced = true;
+	
+	/** Show arrows on field for placeing a robot? **/
+	private boolean showStartPositions;	
 	
 	/** Click Event Handler for clicking on the visualization **/
-	private Set <IVisualizationClickEvent> clickEventHandlers;	
+	private Set <IVisualizationClickEvent> clickEventHandlers;
+	
 	/** Reference to the options object. **/
-	private GeneralOptions options;	
+	private GeneralOptions options;
+	
 	/** Used for special highlighting **/
 	private String selectedRobotId;
 	
@@ -104,6 +120,16 @@ public class StrategicVisualization extends Panel implements Bindable {
 	 */
 	public void setSelectedRobotId(String id) {
 		selectedRobotId = id;
+	}
+	
+	/**
+	 * Show or hide the start positions.
+	 * @param visible Shall show start positions
+	 */
+	public void setStartPositionsVisible(boolean visible) {
+		showStartPositions = visible;
+		update();
+		repaint();
 	}
 	
 	/**
@@ -219,7 +245,7 @@ public class StrategicVisualization extends Panel implements Bindable {
 		svgConstructor.drawGrid();
 		svgConstructor.drawWalls();
 		
-		if (!game.isRunning())
+		if (showStartPositions)
 			svgConstructor.drawStartPositions();
 		
 		svgConstructor.drawRobots(selectedRobotId);

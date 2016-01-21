@@ -1,4 +1,4 @@
-package de.unihannover.swp2015.robots2.application.observers;
+package de.unihannover.swp2015.robots2.application.controllers;
 
 import java.util.Map;
 import java.util.Map.Entry;
@@ -12,6 +12,7 @@ import org.apache.pivot.wtk.TableView;
 import org.apache.pivot.wtk.TableViewSelectionListener;
 
 import de.unihannover.swp2015.robots2.application.components.StrategicVisualization;
+import de.unihannover.swp2015.robots2.application.dialogs.ListDialog;
 import de.unihannover.swp2015.robots2.application.models.GeneralOptions;
 import de.unihannover.swp2015.robots2.application.models.TableData;
 import de.unihannover.swp2015.robots2.application.models.TableElement;
@@ -19,6 +20,7 @@ import de.unihannover.swp2015.robots2.controller.main.GuiMainController;
 import de.unihannover.swp2015.robots2.model.externalInterfaces.IModelObserver;
 import de.unihannover.swp2015.robots2.model.implementation.Robot;
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
+import de.unihannover.swp2015.robots2.model.interfaces.IPosition;
 import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
 import de.unihannover.swp2015.robots2.model.interfaces.IRobot.RobotState;
 
@@ -26,7 +28,7 @@ import de.unihannover.swp2015.robots2.model.interfaces.IRobot.RobotState;
  * Automatic event controlled updater for the robot list. 
  * @author Tim Ebbeke
  */
-public class TableObserver implements IModelObserver {
+public class TableController implements IModelObserver {
 	private TableView table;
 	private GuiMainController controller;
 	private volatile boolean updated;
@@ -34,7 +36,7 @@ public class TableObserver implements IModelObserver {
 	private GeneralOptions options;
 	private StrategicVisualization visualization;
 	
-	public TableObserver(TableView table, 
+	public TableController(TableView table, 
 						 GuiMainController controller, 
 						 GeneralOptions options,
 						 StrategicVisualization visualization) 
@@ -174,6 +176,18 @@ public class TableObserver implements IModelObserver {
 		else {
 			table.setSelectedIndex(index);
 			controller.letRobotBlink(getSelected().getId());
+		}
+	}
+	
+	/**
+	 * Places the selected robot at the given position.
+	 * @param position A position in the stage.
+	 */
+	public void placeSelectedRobotAt(IPosition position) {
+		TableElement elem = getSelected();
+		if (elem != null) {
+			IRobot robo = controller.getGame().getRobots().get(elem.getId());
+			controller.setRobotPosition(position.getX(), position.getY(), position.getOrientation(), robo);
 		}
 	}
 
