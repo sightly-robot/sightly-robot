@@ -15,7 +15,7 @@
 			<AppenderRef ref="Console" />
 		</Logger>
 		<Logger debug="de.unihannover.swp2015.robots2.ai.graph.AIGraph"
-	level="trace">
+			level="debug">
 			<AppenderRef ref="Console" />
 		</Logger>
 	</Loggers>

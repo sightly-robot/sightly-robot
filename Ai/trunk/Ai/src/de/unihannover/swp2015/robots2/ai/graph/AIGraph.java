@@ -33,8 +33,9 @@ public class AIGraph extends Thread implements Runnable {
 	 * Should be set by the AI class!
 	 */
 	private Robot myself;
-	private Node myNextNode; //position this robot will be on next
-	private Orientation nextOrientation; //next Orientation, robot should drive in
+	private Node myNextNode; // position this robot will be on next
+	private Orientation nextOrientation; // next Orientation, robot should drive
+											// in
 	/*
 	 * To identify other robots String is ID of the robot TODO implement
 	 */
@@ -422,16 +423,18 @@ public class AIGraph extends Thread implements Runnable {
 	public HashMap<String, Robot> getRobots() {
 		return robots;
 	}
-	
+
 	public void calculateNextOrientation(int x, int y) {
 		this.myNextNode = this.nodes[x][y];
+		logger.debug("My next node is ({},{})", x, y);
 		try {
 			this.nextOrientation = getOrientationFromPath(getBFSPath(findBestNodeBFS(5)));
+			logger.debug("Next calculated orientation is {}", this.nextOrientation.name());
 		} catch (Exception e) {
 			logger.error("calculateNextOrientation: no valid orientation was found!", e);
 		}
 	}
-	
+
 	public Orientation getNextOrientation() {
 		return this.nextOrientation;
 	}
