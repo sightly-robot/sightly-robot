@@ -50,7 +50,7 @@ public class DesktopLauncher {
 			return;
 		}
 
-		startApp(clh.getFlag(FlagKey.DEBUG), clh.getOption(OptionKey.IP));
+		startApp(clh.getFlag(FlagKey.DEBUG), clh.getOption(OptionKey.IP), clh.getOption(OptionKey.PROTOCOL));
 	}
 
 	/**
@@ -61,7 +61,7 @@ public class DesktopLauncher {
 	 * @param brokerIp
 	 *            ip of the MQTT broker
 	 */
-	private static void startApp(final boolean debug, final String brokerIp) {
+	private static void startApp(final boolean debug, final String brokerIp, final String protocol) {
 
 		ShaderLoader.BasePath = SHADER_PATH;
 
@@ -98,7 +98,7 @@ public class DesktopLauncher {
 		config.addIcon("assets/icon/rIcon.png", FileType.Internal);
 		config.addIcon("assets/icon/rIcon_32.png", FileType.Internal);
 		config.addIcon("assets/icon/rIcon_128.png", FileType.Internal);
-		new LwjglApplication(new Visualization(debug, brokerIp), config).setLogLevel(Application.LOG_NONE);
+		new LwjglApplication(new Visualization(debug, brokerIp, protocol), config).setLogLevel(Application.LOG_NONE);
 	}
 
 }

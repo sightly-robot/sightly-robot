@@ -13,6 +13,8 @@ import org.apache.commons.cli.ParseException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import de.unihannover.swp2015.robots2.visual.core.handler.MqttHandler.MqttProtocol;
+
 /**
  * Handles arguments passed through the console. Uses Apache-commons-CLI to
  * parse and store options received via command line.
@@ -42,7 +44,14 @@ public class CommandLineHandler {
 	private static final String DEFAULT_IP = "127.0.0.1";
 	/** Regex, which checks if the passed IP is valid */
 	private static final String IP_REGEX = ".*";
-
+	
+	/** Short console argument to pass the protocol*/
+	private static final String PROTO_SHORT = "p";
+	/** Long console argument to pass the protocol*/
+	private static final String PROTO_LONG = "protocol";
+	/** Default value of the protocol*/
+	private static final String DEFAULT_PROTO = "tcp";
+	
 	/**
 	 * Description of the app; will appear as header when printing usage
 	 * information
@@ -103,9 +112,21 @@ public class CommandLineHandler {
 				brokerIp = DEFAULT_IP;
 				log.warn("Given broker ip doesn't have the correct format. {} will be used instead", brokerIp);
 			}
-			options.put(OptionKey.IP, brokerIp);
+			options.put(OptionKey.IP, brokerIp.replace("tcp://", "").replace("ssl://", ""));
 
 			log.info("Broker ip: {}", brokerIp);
+			
+			String proto = cl.getOptionValue(PROTO_SHORT, DEFAULT_PROTO);
+			MqttProtocol[] protoValues = MqttProtocol.values();
+			boolean protoValid = false;
+			for (MqttProtocol protocol : protoValues) {
+				if (protocol.toString().equals(proto)) {
+					protoValid = true;
+					break;
+				}
+			}
+			options.put(OptionKey.PROTOCOL, (protoValid) ? proto : DEFAULT_PROTO);
+			log.info("Chosen protocol: {}", proto);
 		} catch (ParseException e) {
 			log.error("A syntax error occured:");
 			log.error(e);
@@ -125,8 +146,10 @@ public class CommandLineHandler {
 				.desc("Indicates if you want to enable the debug features, also affects the log level.").build();
 		Option ip = Option.builder(IP_SHORT).required(false).longOpt(IP_LONG).type(String.class).hasArg()
 				.desc("The broker ip you want to use. Only works without debug flag").build();
-
-		return new Options().addOption(help).addOption(debug).addOption(ip);
+		Option proto = Option.builder(PROTO_SHORT).required(false).longOpt(PROTO_LONG).type(String.class).hasArg()
+				.desc("The transfer protocol of the mqtt connection.").build();
+		
+		return new Options().addOption(help).addOption(debug).addOption(ip).addOption(proto);
 	}
 
 	/**
@@ -163,7 +186,7 @@ public class CommandLineHandler {
 	 *
 	 */
 	public enum OptionKey {
-		IP
+		IP, PROTOCOL
 	}
 
 }

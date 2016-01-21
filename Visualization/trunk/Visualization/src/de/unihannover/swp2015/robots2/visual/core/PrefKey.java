@@ -52,6 +52,9 @@ public enum PrefKey implements IPreferencesKey {
 		return key;
 	}
 
+	/**
+	 * @return default value of the key
+	 */
 	public Object getDefault() {
 		return defaultValue;
 	}

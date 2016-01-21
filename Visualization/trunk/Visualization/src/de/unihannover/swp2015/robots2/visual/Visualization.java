@@ -18,6 +18,7 @@ import de.unihannover.swp2015.robots2.visual.core.PrefKey;
 import de.unihannover.swp2015.robots2.visual.core.handler.IGameHandler;
 import de.unihannover.swp2015.robots2.visual.core.handler.MqttHandler;
 import de.unihannover.swp2015.robots2.visual.core.handler.PreferenceHandler;
+import de.unihannover.swp2015.robots2.visual.core.handler.MqttHandler.MqttProtocol;
 import de.unihannover.swp2015.robots2.visual.game.RobotGameHandler;
 import de.unihannover.swp2015.robots2.visual.resource.IResourceHandler;
 import de.unihannover.swp2015.robots2.visual.resource.ResConst;
@@ -40,6 +41,8 @@ public class Visualization extends ApplicationAdapter {
 
 	/** Broker-IP */
 	private final String ip;
+	/** Transfer-protocol */
+	private final String protocol;
 
 	/**
 	 * Indicates whether this build is a debug build. Have to be set before the
@@ -68,9 +71,10 @@ public class Visualization extends ApplicationAdapter {
 	 * Important: Don't do OpenGL related things here! Use {@link #create()}
 	 * instead.
 	 */
-	public Visualization(final boolean debugFlag, final String brokerIp) {
+	public Visualization(final boolean debugFlag, final String brokerIp, String protocol) {
 		this.gameHandlerList = new ArrayList<>();
 		this.ip = brokerIp;
+		this.protocol = protocol;
 		this.debug = debugFlag;
 		this.id = UUID.randomUUID();
 
@@ -86,7 +90,7 @@ public class Visualization extends ApplicationAdapter {
 	public void create() {
 
 		prefs = new FlexPreferences<PrefKey>("prefs");
-		mqttHandler = new MqttHandler(ip, new PreferenceHandler(prefs, id));
+		mqttHandler = new MqttHandler(MqttProtocol.searchMatching(protocol), ip, new PreferenceHandler(prefs, id));
 
 		final int appWidth = Gdx.graphics.getWidth();
 		final int appHeight = Gdx.graphics.getHeight();

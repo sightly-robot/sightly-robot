@@ -42,17 +42,30 @@ public class MqttHandler implements Runnable {
 	private Object ipLock = new Object();
 	/** True if the was changed recently */
 	private boolean ipChanged = false;
+	/** Transport-protocol of the MQTT connection */
+	private MqttProtocol protocol; 
 
+	/**
+	 * Constructs a new MqttHandler with {@link MqttProtocol#TCP} as protocol.
+	 * 
+	 * @param ip IP of the broker
+	 * @param preferenceHandler handler for incoming/outgoing preferences
+	 */
+	public MqttHandler(String ip, IVisualization preferenceHandler) {
+		this(MqttProtocol.TCP, ip, preferenceHandler);
+	}
+	
 	/**
 	 * Constructs a new MqttHandler.
 	 * 
 	 * @param ip
 	 *            IP of the broker
 	 */
-	public MqttHandler(String ip, IVisualization preferenceHandler) {
+	public MqttHandler(MqttProtocol protocol, String ip, IVisualization preferenceHandler) {
 		this.visController = new VisualizationMainController();
 		this.visController.registerVisualization(preferenceHandler);
 		this.ip = ip;
+		this.protocol = protocol;
 	}
 
 	/**
@@ -98,7 +111,7 @@ public class MqttHandler implements Runnable {
 
 			try {
 				log.info("Trying to connect to: {}", ip);
-				visController.startMqtt("tcp://" + ip);
+				visController.startMqtt(protocol + "://" + ip);
 				attempts = 0;
 				log.info("Connection established");
 			} catch (ProtocolException e) {
@@ -125,6 +138,42 @@ public class MqttHandler implements Runnable {
 					log.error("ipLock.wait(...) has been interrupted!", e);
 				}
 			}
+		}
+	}
+	
+	/**
+	 * Identifies all available protocol prefixes for the IP.
+	 * 
+	 * @author Rico Schrage
+	 */
+	public enum MqttProtocol {
+		SSL("ssl"), 
+		TCP("tcp");
+		
+		/** Prefix of the IP, which also identifies the protocol */
+		private String protocolPrefix;
+		
+		/**
+		 * Constructs protocol constant.
+		 * @param id
+		 */
+		private MqttProtocol(String id) {
+			this.protocolPrefix = id;
+		}
+		
+		@Override
+		public String toString() {
+			return protocolPrefix;
+		}
+		
+		public static MqttProtocol searchMatching(String proto) {
+			MqttProtocol[] values = MqttProtocol.values();
+			for (MqttProtocol value : values) {
+				if (value.toString().equals(proto)) {
+					return value;
+				}
+			}
+			return null;
 		}
 	}
 
