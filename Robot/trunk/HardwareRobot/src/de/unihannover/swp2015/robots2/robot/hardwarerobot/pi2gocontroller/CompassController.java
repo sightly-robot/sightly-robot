@@ -40,7 +40,7 @@ import com.pi4j.io.i2c.I2CFactory;
  * The CompassController is basically part of the Pi4J project which is licensed
  * under the Apache License Version 2.0 and was edited to use the Singleton
  * pattern.<br>
- * It is not instantiable because it uses the Singleton pattern. Use the
+ * It is not instanceable because it uses the Singleton pattern. Use the
  * instance instead.<br>
  *
  * @author Lenard Spiecker
@@ -398,16 +398,12 @@ public class CompassController implements MultiAxisGyro {
 			String sy = toString(hmc5883l.Y.getRawValue(), 7);
 			String sz = toString(hmc5883l.Z.getRawValue(), 7);
 
-			System.out.print(sm + sx + sy + sz);
-			for (int i = 0; i < 24; i++) {
-				System.out.print((char) 8);
-			}
+			System.out.println(sm + sx + sy + sz);
 
 			Thread.sleep(100);
 
 			measurement++;
 		}
-		System.out.println();
 	}
 
 	/**
