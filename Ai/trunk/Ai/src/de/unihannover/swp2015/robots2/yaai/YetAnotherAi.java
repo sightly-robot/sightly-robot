@@ -96,8 +96,20 @@ public class YetAnotherAi extends AbstractAI implements IModelObserver {
 	 * initiate driving there.
 	 */
 	public void onNewFieldComputed() {
-		if (this.worker.getNextField() != this.nextField)
+		if (this.worker.getNextField() != this.nextField) {
 			this.requestNewField(this.worker.getNextField());
+
+			// If currently driving let robot know about next direction
+			if (this.state == AiState.DRIVING) {
+				try {
+					Orientation o = calcOrientation(this.nextField, this.worker.getNextField());
+					this.fireNextButOneOrientationEvent(o);
+				} catch (IllegalArgumentException e) {
+					// Do nothing. No dramatical situation if robot can't
+					// indicate direction
+				}
+			}
+		}
 	}
 
 	/**
@@ -249,31 +261,18 @@ public class YetAnotherAi extends AbstractAI implements IModelObserver {
 			return;
 		}
 
-		// Calculate orientation
-		int dx = this.nextField.getX() - this.currentField.getX();
-		int dy = this.nextField.getY() - this.currentField.getY();
-		Orientation o = null;
-		if (dx == 1) {
-			o = Orientation.EAST;
-		} else if (dx == -1) {
-			o = Orientation.WEST;
-		} else if (dy == 1) {
-			o = Orientation.SOUTH;
-		} else if (dy == -1) {
-			o = Orientation.NORTH;
-		} else {
-			LOGGER.debug(
-					"The field is not a neighbor of current field {}-{}. Aborting drive.",
-					this.currentField.getX(), this.currentField.getY());
-			return;
-		}
-		LOGGER.debug("Direction is {} from our current field {}-{}. And ... go!",
-				o.name(),this.currentField.getX(),this.currentField.getY());
+		try {
+			Orientation o = calcOrientation(this.currentField, this.nextField);
+			LOGGER.debug("Direction is {} from our current field {}-{}. And ... go!", o.name());
 
-		// Fire orientation
-		this.fireNextOrientationEvent(o);
-		this.state = AiState.DRIVING;
-		this.worker.setCurrentPosition(this.nextField);
+			// Fire orientation
+			this.fireNextOrientationEvent(o);
+			this.state = AiState.DRIVING;
+			this.worker.setCurrentPosition(this.nextField);
+		} catch (IllegalArgumentException e) {
+			LOGGER.debug("The field is not a neighbor of current field {}-{}. Aborting drive.",
+					this.currentField.getX(), this.currentField.getY());
+		}
 	}
 
 	/**
@@ -315,4 +314,32 @@ public class YetAnotherAi extends AbstractAI implements IModelObserver {
 				&& this.iRobotController.getGame().isRunning();
 	}
 
+	/**
+	 * Calculate the driving orientation to get from one field to next.
+	 * 
+	 * @param start
+	 *            The field to start from
+	 * @param destination
+	 *            The field to go to
+	 * @return The orientation of the destination field as seen from start field
+	 * @throws IllegalArgumentException
+	 *             if the two fields are not neighbouring
+	 */
+	private static Orientation calcOrientation(IField start, IField destination) throws IllegalArgumentException {
+		int dx = destination.getX() - start.getX();
+		int dy = destination.getY() - start.getY();
+		Orientation o = null;
+		if (dx == 1) {
+			o = Orientation.EAST;
+		} else if (dx == -1) {
+			o = Orientation.WEST;
+		} else if (dy == 1) {
+			o = Orientation.SOUTH;
+		} else if (dy == -1) {
+			o = Orientation.NORTH;
+		} else {
+			throw new IllegalArgumentException("Fields are not neighbouring.");
+		}
+		return o;
+	}
 }
