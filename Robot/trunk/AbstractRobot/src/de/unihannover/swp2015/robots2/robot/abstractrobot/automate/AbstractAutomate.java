@@ -216,7 +216,8 @@ public abstract class AbstractAutomate implements AiEventObserver, Runnable, ISt
 				}
 				return true;
 			}
-			LOGGER.warn("NextOrientationEvents while driving are not allowed!");
+			LOGGER.warn("NextOrientationEvents only while robot enabled and not driving!");
+			nextButOneOrientationEvent(orientation);
 			return false;
 		}
 	}
