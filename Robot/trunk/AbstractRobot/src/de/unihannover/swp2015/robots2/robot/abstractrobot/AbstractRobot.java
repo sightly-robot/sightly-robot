@@ -8,9 +8,7 @@ import java.util.Properties;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.eclipse.paho.client.mqttv3.MqttException;
 
-import de.unihannover.swp2015.robots2.ai.core.AI;
 import de.unihannover.swp2015.robots2.controller.interfaces.IRobotController;
 import de.unihannover.swp2015.robots2.controller.main.RobotMainController;
 import de.unihannover.swp2015.robots2.model.externalInterfaces.IModelObserver;
@@ -61,9 +59,9 @@ public abstract class AbstractRobot {
 				is.close();
 
 			} catch (FileNotFoundException fnfe) {
-				fnfe.printStackTrace();
+				LOGGER.error("config file not found", fnfe);
 			} catch (IOException ioe) {
-				ioe.printStackTrace();
+				LOGGER.error("IOException during loading config file", ioe);
 			}
 			brokerIP = properties.getProperty("brokerIP");
 		}
@@ -95,11 +93,6 @@ public abstract class AbstractRobot {
 				}
 			}
 		});
-		/*
-		 * while(!robotController.startMqtt("tcp://192.168.1.66")) { try {
-		 * Thread.sleep(1000); } catch (InterruptedException e) {
-		 * e.printStackTrace(); } }
-		 */
 
 		// IModelObserver mo = new IModelObserver() {
 		// @Override

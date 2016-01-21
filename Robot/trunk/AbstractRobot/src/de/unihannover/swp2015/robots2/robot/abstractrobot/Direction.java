@@ -23,56 +23,109 @@ public enum Direction {
 	 * @return the moving direction to get to the next position
 	 */
 	public static Direction calcDirection(Orientation robotOrientation, Orientation orientation) {
+		Direction result = FORWARDS;
 		switch (orientation) {
 		case NORTH:
-			switch (robotOrientation) {
-			case EAST:
-				return LEFT;
-			case SOUTH:
-				return BACKWARDS;
-			case WEST:
-				return RIGHT;
-			case NORTH:
-				return FORWARDS;
-			}
+			result = calcDirectionNorth(robotOrientation);
 			break;
 		case EAST:
-			switch (robotOrientation) {
-			case NORTH:
-				return RIGHT;
-			case WEST:
-				return BACKWARDS;
-			case SOUTH:
-				return LEFT;
-			case EAST:
-				return FORWARDS;
-			}
+			result = calcDirectionEast(robotOrientation);
 			break;
 		case SOUTH:
-			switch (robotOrientation) {
-			case EAST:
-				return RIGHT;
-			case NORTH:
-				return BACKWARDS;
-			case WEST:
-				return LEFT;
-			case SOUTH:
-				return FORWARDS;
-			}
+			result = calcDirectionSouth(robotOrientation);
 			break;
 		case WEST:
-			switch (robotOrientation) {
-			case SOUTH:
-				return RIGHT;
-			case EAST:
-				return BACKWARDS;
-			case NORTH:
-				return LEFT;
-			case WEST:
-				return FORWARDS;
-			}
+			result = calcDirectionWest(robotOrientation);
 			break;
 		}
-		return FORWARDS;
+		return result;
+	}
+	
+	/**
+	 * Calculates the moving direction of a robot for driving north.
+	 * 
+	 * @param robotOrientation
+	 *            the robot's orientation
+	 * @return the moving direction to get to the next position
+	 */
+	private static Direction calcDirectionNorth(Orientation robotOrientation) {
+		switch (robotOrientation) {
+		case EAST:
+			return LEFT;
+		case SOUTH:
+			return BACKWARDS;
+		case WEST:
+			return RIGHT;
+		case NORTH:
+			return FORWARDS;
+		default:
+			throw new IllegalArgumentException("unknown orientation: " + robotOrientation.name());
+		}		
+	}
+
+	/**
+	 * Calculates the moving direction of a robot for driving east.
+	 * 
+	 * @param robotOrientation
+	 *            the robot's orientation
+	 * @return the moving direction to get to the next position
+	 */
+	private static Direction calcDirectionEast(Orientation robotOrientation) {
+		switch (robotOrientation) {
+		case NORTH:
+			return RIGHT;
+		case WEST:
+			return BACKWARDS;
+		case SOUTH:
+			return LEFT;
+		case EAST:
+			return FORWARDS;
+		default:
+			throw new IllegalArgumentException("unknown orientation: " + robotOrientation.name());
+		}
+	}
+	
+	/**
+	 * Calculates the moving direction of a robot for driving south.
+	 * 
+	 * @param robotOrientation
+	 *            the robot's orientation
+	 * @return the moving direction to get to the next position
+	 */
+	private static Direction calcDirectionSouth(Orientation robotOrientation) {
+		switch (robotOrientation) {
+		case EAST:
+			return RIGHT;
+		case NORTH:
+			return BACKWARDS;
+		case WEST:
+			return LEFT;
+		case SOUTH:
+			return FORWARDS;
+		default:
+			throw new IllegalArgumentException("unknown orientation: " + robotOrientation.name());
+		}
+	}
+	
+	/**
+	 * Calculates the moving direction of a robot for driving west.
+	 * 
+	 * @param robotOrientation
+	 *            the robot's orientation
+	 * @return the moving direction to get to the next position
+	 */
+	private static Direction calcDirectionWest(Orientation robotOrientation) {
+		switch (robotOrientation) {
+		case SOUTH:
+			return RIGHT;
+		case EAST:
+			return BACKWARDS;
+		case NORTH:
+			return LEFT;
+		case WEST:
+			return FORWARDS;
+		default:
+			throw new IllegalArgumentException("unknown orientation: " + robotOrientation.name());
+		}
 	}
 }
