@@ -1,9 +1,9 @@
 package de.unihannover.swp2015.robots2.visual.game.entity;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
-import de.unihannover.swp2015.robots2.model.interfaces.IEvent.UpdateType;
 import de.unihannover.swp2015.robots2.model.interfaces.IField;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
 import de.unihannover.swp2015.robots2.model.interfaces.IStage;
@@ -12,7 +12,9 @@ import de.unihannover.swp2015.robots2.visual.core.entity.Entity;
 import de.unihannover.swp2015.robots2.visual.game.RobotGameHandler;
 import de.unihannover.swp2015.robots2.visual.resource.ResConst;
 import de.unihannover.swp2015.robots2.visual.resource.texture.RenderUnit;
+import de.unihannover.swp2015.robots2.visual.util.ColorUtil;
 import de.unihannover.swp2015.robots2.visual.util.StageUtil;
+import de.unihannover.swp2015.robots2.model.interfaces.IField.State;
 
 /**
  * An entity used for the visualization of the underground and walls
@@ -21,7 +23,7 @@ import de.unihannover.swp2015.robots2.visual.util.StageUtil;
  * @author Daphne Sch�ssow
  */
 public class Field extends Entity {
-
+	
 	/**
 	 * Lookup table for the ground texture, which depends on the placement of
 	 * walls.
@@ -48,6 +50,12 @@ public class Field extends Entity {
 
 	/** height of the field */
 	private float fieldHeight;
+	
+	/** True if the fields should render their lock state */
+	private boolean renderLock;
+	
+	/** Color of the robot, which has locked this field */
+	private Color robotColor;
 
 	/**
 	 * Contains all orientation in a specific order (I do not use Enum.values()
@@ -72,8 +80,9 @@ public class Field extends Entity {
 
 		this.parent = parentStage;
 		this.fieldUnit = resHandler.createRenderUnit(ResConst.DEFAULT_FIELD);
-		this.fieldWidth = prefs.getFloat(PrefKey.FIELD_WIDTH_KEY, 50);
-		this.fieldHeight = prefs.getFloat(PrefKey.FIELD_HEIGHT_KEY, 50);
+		this.fieldWidth = prefs.getFloat(PrefKey.FIELD_WIDTH_KEY);
+		this.fieldHeight = prefs.getFloat(PrefKey.FIELD_HEIGHT_KEY);
+		this.renderLock = prefs.getBoolean(PrefKey.RENDER_LOCK);
 
 		this.renderX = model.getX() * fieldWidth;
 		this.renderY = model.getY() * fieldHeight;
@@ -107,8 +116,12 @@ public class Field extends Entity {
 	public void draw(final Batch batch) {
 		super.draw(batch);
 
+		if (renderLock && robotColor != null) {
+			batch.setColor(robotColor);
+		}
+		
 		// the following switch corrects the drawn bounds of the field when
-		// rotation is 90� or -90�
+		// rotation is 90° or -90°
 		// it's just relevant if fieldWidth != fieldHeight
 		switch ((int) rotation) {
 
@@ -127,14 +140,37 @@ public class Field extends Entity {
 					rotation);
 			break;
 		}
+		
+		if (renderLock) {
+			batch.setColor(Color.WHITE);
+		}
 	}
 
 	@Override
 	public void onManagedModelUpdate(IEvent event) {
 		final IField field = (IField) model;
-
-		if (event.getType() == UpdateType.STAGE_WALL) {
+		final RobotGameHandler robotHandler = (RobotGameHandler) gameHandler;
+		switch (event.getType()) {
+		
+		case STAGE_WALL:
 			determineFieldTexture(field);
+			break;
+			
+		case FIELD_STATE:
+			if (field.getState() == State.LOCKED) {
+				robotColor = ColorUtil.fromAwtColor(robotHandler.getRobot(field.getLockedBy()).getColor());
+				robotColor.r = Math.min(robotColor.r+0.5f, 1);
+				robotColor.g = Math.min(robotColor.g+0.5f, 1);
+				robotColor.b = Math.min(robotColor.b+0.5f, 1);
+				System.out.println(robotColor.r + " " + robotColor.b + " " + robotColor.g);
+			}
+			else if (field.getState() == State.FREE) {
+				robotColor = null;
+			}
+			break;
+			
+		default:
+			break;
 		}
 	}
 
@@ -149,6 +185,9 @@ public class Field extends Entity {
 		case FIELD_HEIGHT_KEY:
 			fieldHeight = (float) value;
 			break;
+			
+		case RENDER_LOCK:
+			renderLock = (boolean) value;
 
 		default:
 			break;

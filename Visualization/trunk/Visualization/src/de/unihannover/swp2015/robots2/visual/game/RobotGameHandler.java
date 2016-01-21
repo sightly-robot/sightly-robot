@@ -100,6 +100,16 @@ public class RobotGameHandler extends GameHandler {
 		}
 		return -1;
 	}
+	
+	/**
+	 * Returns robot by id
+	 * 
+	 * @param id id of the robot
+	 * @return robot
+	 */
+	public IRobot getRobot(String id) {
+		return game.getRobots().get(id);
+	}
 
 	@Override
 	public void update() {
