@@ -24,7 +24,7 @@ public class AI extends AbstractAI implements IModelObserver {
 
 	private static Logger logger = LogManager.getLogger(AI.class.getName());
 
-	private boolean hasStarted = false; //TODO in constructor
+	private boolean hasStarted = false; // TODO in constructor
 	private IField nextField;
 	private Orientation nextOrientation;
 	private AIGraph graph; // volatile
@@ -72,11 +72,11 @@ public class AI extends AbstractAI implements IModelObserver {
 				logger.debug("Positioning myself");
 				IPosition myPos = iRobotController.getMyself().getPosition();
 				this.graph.setRobotPosition(myself, myPos);
-				if(myPos.getX() != -1 && myPos.getY() != -1) {
+				if (myPos.getX() != -1 && myPos.getY() != -1) {
 					this.graph.calculateNextOrientation(myPos.getX(), myPos.getY());
 				}
 			} catch (InvalidStageException e) {
-				e.printStackTrace();
+				logger.error("AI couldn't be initialized, because the stage was invalid", e);
 			}
 		}
 	}
@@ -86,7 +86,7 @@ public class AI extends AbstractAI implements IModelObserver {
 	 */
 	@Override
 	public void onModelUpdate(IEvent event) {
-		logger.trace("Received event: {}", event);
+		logger.trace("Received event: {}", event.getType());
 		switch (event.getType()) {
 
 		case FIELD_FOOD:
@@ -97,7 +97,7 @@ public class AI extends AbstractAI implements IModelObserver {
 			}
 			break;
 		case STAGE_WALL:
-			//System.out.println("WALL");
+			// System.out.println("WALL");
 			initialize();
 			break;
 		case STAGE_SIZE:
@@ -142,7 +142,7 @@ public class AI extends AbstractAI implements IModelObserver {
 			Node node = myself.getPosition();
 
 			// TODO nullpointerexception possible?
-			if (iRobotController.getMyself().getState() == RobotState.ENABLED && game.isRunning() 
+			if (iRobotController.getMyself().getState() == RobotState.ENABLED && game.isRunning()
 					&& this.nextField == field && this.nextOrientation != null) {
 				switch (field.getState()) {
 				case OURS:
@@ -228,7 +228,8 @@ public class AI extends AbstractAI implements IModelObserver {
 						 */
 						boolean requested = false;
 						while (!requested) {
-							if (this.game.isRunning() && iRobotController.getMyself().getState() == RobotState.ENABLED ) {
+							if (this.game.isRunning()
+									&& iRobotController.getMyself().getState() == RobotState.ENABLED) {
 								Tuple<Point, Orientation> tuple = this.getNewNode();
 								Point point = tuple.x;
 								int x = (int) point.getX();
@@ -312,7 +313,7 @@ public class AI extends AbstractAI implements IModelObserver {
 		// TODO check hasStarted state!!
 		IGame game = (IGame) event.getObject();
 		if (game.isRunning() && graph != null && myself.getPosition() != null
-				&& iRobotController.getMyself().getState()== RobotState.ENABLED) {
+				&& iRobotController.getMyself().getState() == RobotState.ENABLED) {
 			Tuple<Point, Orientation> tuple = this.getNewNode();
 			Point point = tuple.x;
 			int x = (int) point.getX();
@@ -323,7 +324,7 @@ public class AI extends AbstractAI implements IModelObserver {
 			this.nextField = game.getStage().getField(x, y);
 			this.nextOrientation = tuple.y;
 		}
-		if(!game.isRunning() && this.nextField != null) {
+		if (!game.isRunning() && this.nextField != null) {
 			iRobotController.releaseField(this.nextField.getX(), this.nextField.getY());
 		}
 	}
@@ -336,7 +337,7 @@ public class AI extends AbstractAI implements IModelObserver {
 				if (robot.getState() == RobotState.ENABLED) {
 					this.hasStarted = true;
 					if (getController().getGame().isRunning() && graph != null && myself.getPosition() != null) {
-						//System.out.println("GAMEStart");
+						// System.out.println("GAMEStart");
 						Tuple<Point, Orientation> tuple = this.getNewNode();
 						Point point = tuple.x;
 						int x = (int) point.getX();
@@ -350,9 +351,9 @@ public class AI extends AbstractAI implements IModelObserver {
 				}
 			}
 			logger.trace("Game has not started!");
-			if(robot.getState() != RobotState.ENABLED) {
+			if (robot.getState() != RobotState.ENABLED) {
 				this.hasStarted = false;
-				if(this.nextField != null) {
+				if (this.nextField != null) {
 					iRobotController.releaseField(this.nextField.getX(), this.nextField.getY());
 				}
 			}
