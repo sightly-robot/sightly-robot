@@ -72,7 +72,7 @@ public abstract class AbstractRobot {
 			try {
 				robotController.startMqtt("tcp://" + brokerIP);
 			} catch (Exception e) {
-				LOGGER.error("Start MQTT",e);
+				LOGGER.error("Start MQTT", e);
 			}
 		}
 		LOGGER.info("MQTT-Client successfully connected!");

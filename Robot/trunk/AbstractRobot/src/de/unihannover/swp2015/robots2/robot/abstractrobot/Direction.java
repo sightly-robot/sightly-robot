@@ -40,7 +40,7 @@ public enum Direction {
 		}
 		return result;
 	}
-	
+
 	/**
 	 * Calculates the moving direction of a robot for driving north.
 	 * 
@@ -60,7 +60,7 @@ public enum Direction {
 			return FORWARDS;
 		default:
 			throw new IllegalArgumentException("unknown orientation: " + robotOrientation.name());
-		}		
+		}
 	}
 
 	/**
@@ -84,7 +84,7 @@ public enum Direction {
 			throw new IllegalArgumentException("unknown orientation: " + robotOrientation.name());
 		}
 	}
-	
+
 	/**
 	 * Calculates the moving direction of a robot for driving south.
 	 * 
@@ -106,7 +106,7 @@ public enum Direction {
 			throw new IllegalArgumentException("unknown orientation: " + robotOrientation.name());
 		}
 	}
-	
+
 	/**
 	 * Calculates the moving direction of a robot for driving west.
 	 * 
