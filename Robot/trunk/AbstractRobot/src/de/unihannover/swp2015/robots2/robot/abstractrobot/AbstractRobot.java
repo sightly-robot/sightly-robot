@@ -9,6 +9,7 @@ import java.util.Properties;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import de.unihannover.swp2015.robots2.ai.core.AI;
 import de.unihannover.swp2015.robots2.controller.interfaces.IRobotController;
 import de.unihannover.swp2015.robots2.controller.main.RobotMainController;
 import de.unihannover.swp2015.robots2.model.externalInterfaces.IModelObserver;
@@ -42,7 +43,7 @@ public abstract class AbstractRobot {
 	 * Initializes the AbstractRobot instance by initializing the robot
 	 * controller and AI.
 	 */
-	public AbstractRobot(boolean isHardware, String brokerIP) {
+	public AbstractRobot(boolean isHardware, String brokerIP, boolean useYetAnotherAi) {
 
 		robotController = new RobotMainController(isHardware);
 
@@ -105,7 +106,10 @@ public abstract class AbstractRobot {
 		// robotController.getGame().getStage().observe(mo);
 
 		// TODO Init AbstractAI
-		ai = new YetAnotherAi(robotController);
+		if(useYetAnotherAi)
+			ai = new YetAnotherAi(robotController);
+		else
+			ai = new AI(robotController);
 		ai.setRelativeSpeed(1, 1, 1);
 
 		LOGGER.info("AI initialized!");
