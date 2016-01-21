@@ -1,4 +1,4 @@
-<windows:ControlPanel title="Control Panel" maximized="true"
+<windows:ControlPanel title="Control Panel" maximized="true" icon="/de/unihannover/swp2015/robots2/application/icon/rIcon_alternate.png"
     xmlns:bxml="http://pivot.apache.org/bxml"
 	xmlns:content="org.apache.pivot.wtk.content"
     xmlns:windows="de.unihannover.swp2015.robots2.application.windows"
