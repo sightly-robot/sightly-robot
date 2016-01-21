@@ -35,8 +35,8 @@ public class HardwareRobot extends AbstractRobot implements IHardwareRobot {
 	/**
 	 * Initializes the sensor controllers, automate and AI.
 	 */
-	public HardwareRobot(String brokerIP) {
-		super(true, brokerIP);
+	public HardwareRobot(String brokerIP,boolean useYetAnotherAi) {
+		super(true, brokerIP,useYetAnotherAi);
 		// PreInitialize Controller Instances:
 		BlinkLEDAndServoController.getInstance().setAccentColor(robotController.getMyself().getColor());
 		;
