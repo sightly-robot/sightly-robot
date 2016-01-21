@@ -37,7 +37,7 @@ import de.unihannover.swp2015.robots2.visual.util.pref.FlexPreferences;
 public class Visualization extends ApplicationAdapter {
 
 	/** Logger (log4j) */
-	private static final Logger log = LogManager.getLogger();
+	private static final Logger LOGGER = LogManager.getLogger();
 
 	/** Broker-IP */
 	private final String ip;
@@ -81,7 +81,7 @@ public class Visualization extends ApplicationAdapter {
 		this.fpsLogger = new LoopedTask(5f, new Task() {
 			@Override
 			public void work() {
-				log.info("Current FPS: " + Gdx.graphics.getFramesPerSecond());
+				LOGGER.info("Current FPS: " + Gdx.graphics.getFramesPerSecond());
 			}
 		});
 	}
@@ -89,6 +89,8 @@ public class Visualization extends ApplicationAdapter {
 	@Override
 	public void create() {
 
+		LOGGER.debug("Id of the visualization: {}", id);
+		
 		prefs = new FlexPreferences<PrefKey>("prefs");
 		mqttHandler = new MqttHandler(MqttProtocol.searchMatching(protocol), ip, new PreferenceHandler(prefs, id));
 
@@ -105,6 +107,8 @@ public class Visualization extends ApplicationAdapter {
 
 		prefs.putFloat(PrefKey.DEVICE_WIDTH, appWidth);
 		prefs.putFloat(PrefKey.DEVICE_HEIGHT, appHeight);
+		
+		LOGGER.debug("Native resolution is set to: {}x{}", appWidth, appHeight);
 
 		final IResourceHandler resHandler = new ResourceHandler(ResConst.ATLAS_PATH.getName());
 		gameHandlerList.add(new RobotGameHandler(mqttHandler.getGame(), fitViewport, resHandler, prefs));

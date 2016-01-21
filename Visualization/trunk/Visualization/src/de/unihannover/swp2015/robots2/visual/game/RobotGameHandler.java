@@ -28,7 +28,7 @@ import de.unihannover.swp2015.robots2.visual.util.pref.IPreferences;
  * @author Rico Schrage
  */
 public class RobotGameHandler extends GameHandler {
-
+	
 	/** List of entities managed by this game handler. */
 	protected final List<IEntity> entityList;
 
@@ -179,8 +179,6 @@ public class RobotGameHandler extends GameHandler {
 	public void onManagedModelUpdate(IEvent event) {
 
 		switch (event.getType()) {
-		case GAME_PARAMETER:
-			break;
 
 		case GAME_STATE:
 			pp.setBloomEnabled(!game.isRunning());

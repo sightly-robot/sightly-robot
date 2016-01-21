@@ -19,7 +19,7 @@ import de.unihannover.swp2015.robots2.model.interfaces.IGame;
 public class MqttHandler implements Runnable {
 
 	/** Logger (log4j) */
-	private static final Logger log = LogManager.getLogger();
+	private static final Logger LOGGER = LogManager.getLogger();
 
 	/** Defines how often the app tries to reconnect */
 	private static final int MAX_ATTEMPTS = 5;
@@ -80,6 +80,7 @@ public class MqttHandler implements Runnable {
 			this.ip = ip;
 			this.ipLock.notifyAll();
 			this.ipChanged = true;
+			LOGGER.info("Broker IP has been changed to: {}", ip);
 		}
 	}
 
@@ -110,19 +111,19 @@ public class MqttHandler implements Runnable {
 		synchronized (ipLock) {
 
 			try {
-				log.info("Trying to connect to: {}", ip);
+				LOGGER.info("Trying to connect to: {}", ip);
 				visController.startMqtt(protocol + "://" + ip);
 				attempts = 0;
-				log.info("Connection established");
+				LOGGER.info("Connection established");
 			} catch (ProtocolException e) {
-				log.warn("Connection could'nt be established.", e);
+				LOGGER.warn("Connection could'nt be established.", e);
 
 				attempts++;
 				if (attempts >= MAX_ATTEMPTS) {
 					return;
 				}
 
-				log.info("Trying again in {} seconds.", ATTEMPT_INTERVAL / 1000);
+				LOGGER.info("Trying again in {} seconds.", ATTEMPT_INTERVAL / 1000);
 
 				try {
 					long timePassed = 0;
@@ -135,7 +136,7 @@ public class MqttHandler implements Runnable {
 
 					connect();
 				} catch (InterruptedException e1) {
-					log.error("ipLock.wait(...) has been interrupted!", e);
+					LOGGER.error("ipLock.wait(...) has been interrupted!", e);
 				}
 			}
 		}
@@ -166,6 +167,12 @@ public class MqttHandler implements Runnable {
 			return protocolPrefix;
 		}
 		
+		/**
+		 * Returns a MqttProtocol, which contains the given string.
+		 * 
+		 * @param proto Identifier of the protocol
+		 * @return matching enum
+		 */
 		public static MqttProtocol searchMatching(String proto) {
 			MqttProtocol[] values = MqttProtocol.values();
 			for (MqttProtocol value : values) {

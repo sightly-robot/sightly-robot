@@ -28,7 +28,7 @@ import de.unihannover.swp2015.robots2.visual.util.pref.IPreferences;
  */
 public class RobotEngine extends Component {
 
-	private static final Logger log = LogManager.getLogger();
+	private static final Logger LOGGER = LogManager.getLogger();
 
 	/**
 	 * Interval time used for the first calculation of the robot speed (in
@@ -106,7 +106,7 @@ public class RobotEngine extends Component {
 	private void calcInterval() {
 		float realInterval = (System.nanoTime() - lastEvent) / 1000000000f;
 		if (realInterval > 0.2 || realInterval < 0.05) {
-			log.debug("Progress-event: time out of row {} (s)", realInterval);
+			LOGGER.debug("Progress-event: time out of row {} (s)", realInterval);
 		}
 
 		if (!firstEvent) {

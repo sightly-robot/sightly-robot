@@ -24,7 +24,7 @@ import de.unihannover.swp2015.robots2.visual.util.pref.IPreferences;
 public class PreferenceHandler implements IVisualization {
 
 	/** Logger (log4j) */
-	private static final Logger log = LogManager.getLogger();
+	private static final Logger LOGGER = LogManager.getLogger();
 
 	/** First index of the keys sent by the GUI */
 	private static final int GO_START_INDEX = 6;
@@ -55,8 +55,9 @@ public class PreferenceHandler implements IVisualization {
 		JSONTokener tokenizer = new JSONTokener(stream);
 		JSONObject options = new JSONObject(tokenizer).getJSONObject(ROOT_NAME);
 
-		if (options.getString("id").equals(id.toString()))
+		if (!options.has("id") || !options.getString("id").equals(id.toString())) {
 			return;
+		}
 
 		PrefKey[] keys = PrefKey.values();
 		for (int i = GO_START_INDEX; i < keys.length; ++i) {
@@ -65,30 +66,36 @@ public class PreferenceHandler implements IVisualization {
 				final Object value = options.get(key.getKey());
 				if (value instanceof Boolean) {
 					pref.putBoolean(key, (boolean) value);
-				} else if (value instanceof Double) {
+				} 
+				else if (value instanceof Double) {
 					final Float floatValue = (float) value;
 					pref.putFloat(key, Float.isNaN(floatValue) ? 0 : floatValue);
 				}
+				LOGGER.debug("Received option: {}, value: {}", key.getKey(), value);
 			} catch (JSONException e) {
-				log.trace(e);
-				continue;
+				LOGGER.trace(e);
 			}
 		}
-		System.out.println(options.toString());
 	}
 
 	@Override
 	public String getSettings() {
 		JSONObject options = new JSONObject();
 		options.put("id", id.toString());
+		
 		PrefKey[] keys = PrefKey.values();
 		for (int i = GO_START_INDEX; i < keys.length; ++i) {
 			final PrefKey key = keys[i];
 			final Object defaultValue = key.getDefault();
 			if (key.getDefault() instanceof Boolean) {
-				options.put(key.getKey(), pref.getBoolean(key));
-			} else if (defaultValue instanceof Float) {
-				options.put(key.getKey(), pref.getFloat(key));
+				boolean value = pref.getBoolean(key);
+				options.put(key.getKey(), value);
+				LOGGER.debug("Send option: {}, value: {}", key.getKey(), value);
+			} 
+			else if (defaultValue instanceof Float) {
+				float value = pref.getFloat(key);
+				options.put(key.getKey(), value);
+				LOGGER.debug("Send option: {}, value: {}", key.getKey(), value);
 			}
 		}
 		JSONObject root = new JSONObject();
