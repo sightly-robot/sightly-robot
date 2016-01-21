@@ -150,10 +150,12 @@ public class LEDAndServoController {
 	 * Sets single PWM channel.
 	 * 
 	 * @param channel
+	 *            the PWM channel to set
 	 * @param on
+	 *            the value to set for high
 	 * @param off
+	 *            the value to set for low
 	 */
-	// TODO JavaDoc
 	protected void setPWM(int channel, int on, int off) {
 		try {
 			device.write(__LED0_ON_L + 4 * channel, (byte) (on & 0xFF));
@@ -168,10 +170,10 @@ public class LEDAndServoController {
 	 * Control a LED on a Servo connection.
 	 * 
 	 * @param servo
+	 *            the Servo channel to set
 	 * @param pwm
 	 *            pwm <= 4095
 	 */
-	// TODO JavaDoc
 	public void setServoOutputAsLED(int servo, int pwm) {
 		setPWM(servo + 12, 0, pwm);
 	}
