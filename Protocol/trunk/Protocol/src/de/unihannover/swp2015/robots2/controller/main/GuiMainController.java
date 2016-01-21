@@ -156,11 +156,18 @@ public class GuiMainController extends AbstractMainController implements
 	}
 
 	@Override
+	@Deprecated
 	public void setRobotPosition(int x, int y, Orientation orientation,
 			IRobot robot) {
+		this.setRobotPosition(x, y, orientation, robot.getId());
+	}
+
+	@Override
+	public void setRobotPosition(int x, int y, Orientation orientation,
+			String robot) {
 		String message = Integer.toString(x) + "," + Integer.toString(y) + ","
 				+ orientation.toString();
-		this.sendMqttMessage(MqttTopic.ROBOT_SETPOSITION, robot.getId(),
+		this.sendMqttMessage(MqttTopic.ROBOT_SETPOSITION, robot,
 				message);
 	}
 
