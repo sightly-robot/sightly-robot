@@ -90,10 +90,6 @@ public class RobotBubble extends Entity {
 
 		final IRobot model = (IRobot) parent.getModel();
 
-		this.fontSmall = resHandler.createFont((int) (fieldWidth * GameConst.BUBBLE_NAME_FONT_SIZE_REL),
-				ResourceHandler.NECESSARY_CHARS, true, 1, Color.BLACK, Color.WHITE);
-		this.fontBig = resHandler.createFont((int) (fieldWidth * GameConst.BUBBLE_NAME_POINTS_SIZE_REL),
-				ResourceHandler.NECESSARY_CHARS, true, 1, Color.BLACK, Color.WHITE);
 		this.connection = resHandler.createRenderUnit(ResConst.DEFAULT_CONNECTION);
 		this.warning = resHandler.createRenderUnit(ResConst.DEFAULT_WARNING);
 		this.tex = resHandler.createRenderUnit(ResConst.DEFAULT_BUBBLE);
@@ -106,6 +102,7 @@ public class RobotBubble extends Entity {
 
 		this.updateWidth(model);
 		this.updateHeight(model);
+		this.updateFonts(fieldWidth);
 	}
 
 	/**
@@ -116,7 +113,7 @@ public class RobotBubble extends Entity {
 	 */
 	private void updateWidth(final IRobot robot) {
 		this.x = robot.getPosition().getX() * fieldWidth - parent.getPositionX();
-		this.width = fieldWidth * 0.75f;
+		this.width = fieldWidth * GameConst.BUBBLE_WIDTH_REL;
 	}
 
 	/**

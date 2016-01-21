@@ -42,13 +42,15 @@ public class GameConst {
 	public static final float BUBBLE_Y_OFFSET_REL = 0.1f;
 
 	/** Height of the bubble relative to the field-size */
-	public static final float BUBBLE_HEIGHT_REL = 0.5f;
+	public static final float BUBBLE_HEIGHT_REL = 0.55f;
+	/** Height of the bubble relative to the field-size */
+	public static final float BUBBLE_WIDTH_REL = 0.8f;
 
 	/** Font size of the name, relative to the field-size */
 	public static final float BUBBLE_NAME_FONT_SIZE_REL = 1f / 12f;
 
 	/** Font size of the name, relative to the field-size */
-	public static final float BUBBLE_NAME_POINTS_SIZE_REL = 1f / 9f;
+	public static final float BUBBLE_NAME_POINTS_SIZE_REL = 1f / 7f;
 
 	/** Alpha value of the bubble */
 	public static final float BUBBLE_ALPHA = 1f;
