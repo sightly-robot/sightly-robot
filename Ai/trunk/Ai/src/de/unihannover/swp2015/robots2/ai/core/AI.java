@@ -70,7 +70,11 @@ public class AI extends AbstractAI implements IModelObserver {
 			try {
 				this.graph = new AIGraph(this.game.getStage(), myself);
 				logger.debug("Positioning myself");
-				this.graph.setRobotPosition(myself, iRobotController.getMyself().getPosition());
+				IPosition myPos = iRobotController.getMyself().getPosition();
+				this.graph.setRobotPosition(myself, myPos);
+				if(myPos.getX() != -1 && myPos.getY() != -1) {
+					this.graph.calculateNextOrientation(myPos.getX(), myPos.getY());
+				}
 			} catch (InvalidStageException e) {
 				e.printStackTrace();
 			}
@@ -144,6 +148,7 @@ public class AI extends AbstractAI implements IModelObserver {
 				case OURS:
 					logger.debug("Sending new orientation to robot: {}", this.nextOrientation);
 					fireNextOrientationEvent(this.nextOrientation); // or
+					this.graph.calculateNextOrientation(this.nextField.getX(), this.nextField.getY());
 					break;
 				case FREE:
 					int xCoord = this.nextField.getX();
@@ -198,6 +203,7 @@ public class AI extends AbstractAI implements IModelObserver {
 				if (myself.getPosition() == null) {
 					this.graph.setRobotPosition(myself, pos);
 					logger.debug("Set position for the first time for myself");
+					this.graph.calculateNextOrientation(pos.getX(), pos.getY());
 					return;
 				}
 				/*
@@ -398,21 +404,6 @@ public class AI extends AbstractAI implements IModelObserver {
 	 */
 	public Orientation findNextOrientation() throws NoValidOrientationException {
 		logger.trace("Calling findNextOrientation");
-		try {
-			return this.graph.getOrientationFromPath(this.graph.getBFSPath(this.graph.findBestNodeBFS(5)));
-		} catch (Exception e) {
-			logger.error("findNextOrientation: no valid orientation was found!", e);
-		}
-		return null;
-	}
-
-	/**
-	 * Returns currently planned next Orientation to drive in.
-	 * 
-	 * @return nextOrientation, the next Orientation, we plan to drive in
-	 */
-	public Orientation getNextOrientation() {
-		logger.trace("Calling getNextOrientation");
-		return this.nextOrientation;
+		return this.graph.getNextOrientation();
 	}
 }
