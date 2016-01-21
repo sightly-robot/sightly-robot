@@ -208,7 +208,7 @@ public class AIGraph extends Thread implements Runnable {
 	public Orientation getRandomOrientation() throws NoValidOrientationException {
 		logger.trace("Calling getRandomOrientation");
 		List<Orientation> available = new ArrayList<Orientation>();
-		Node myPos = this.myself.getPosition();
+		Node myPos = this.myNextNode;
 		int x = myPos.getX();
 		int y = myPos.getY();
 
@@ -244,7 +244,7 @@ public class AIGraph extends Thread implements Runnable {
 		Map<Node, Node> pred = new HashMap<Node, Node>();
 		Set<Node> visited = new HashSet<Node>();
 		Queue<Node> q = new LinkedList<Node>();
-		Node curr = myself.getPosition();
+		Node curr = this.myNextNode;
 		q.add(curr);
 		visited.add(curr);
 
@@ -266,7 +266,7 @@ public class AIGraph extends Thread implements Runnable {
 		LinkedList<Node> path = new LinkedList<Node>();
 		Node tmp = target;
 		path.addFirst(target);
-		while (tmp != myself.getPosition()) {
+		while (tmp != this.myNextNode) {
 			path.addFirst(pred.get(tmp));
 			tmp = pred.get(tmp);
 		}
@@ -284,9 +284,20 @@ public class AIGraph extends Thread implements Runnable {
 	public Orientation getOrientationFromPath(List<Node> path) throws Exception {
 		logger.trace("Calling getOrientationFromPath");
 
-		for (Edge edge : myself.getPosition().getNeighbors()) {
+		for (Edge edge : this.myNextNode.getNeighbors()) {
 			if (edge.getTarget() == path.get(1)) {
-				return edge.getDirection();
+				if(edge.getTarget().getRobot() == null) {
+					return edge.getDirection();
+				} else {
+					while(true) {
+						logger.debug("in while true");
+						for(Edge tmpEdge : myNextNode.getNeighbors()) {
+							if(tmpEdge.getTarget().getRobot() == null && tmpEdge.getDirection() == getRandomOrientation()) {
+								return tmpEdge.getDirection();
+							}
+						}
+					}
+				}
 			}
 		}
 		logger.error("getOrientationFromPath: No neighbors for current node found!");
@@ -304,8 +315,8 @@ public class AIGraph extends Thread implements Runnable {
 	public Node findBestNode(int range) { // TODO better way to determine best
 											// node via bfs
 		logger.trace("Calling findBestNode");
-		int x = myself.getPosition().getX();
-		int y = myself.getPosition().getY();
+		int x = this.myNextNode.getX();
+		int y = this.myNextNode.getY();
 		// Set<Node> set = new HashSet<Node>();
 		Node curr;
 		if (x != Math.max(x - range, 0) || y != Math.max(y - range, 0)) {
@@ -351,12 +362,12 @@ public class AIGraph extends Thread implements Runnable {
 		logger.trace("Calling findBestNodeBFS");
 		Set<Node> visited = new HashSet<Node>();
 		Queue<Tuple<Node, Integer>> q = new LinkedList<Tuple<Node, Integer>>();
-		Tuple<Node, Integer> curr = new Tuple(myself.getPosition(), 0);
+		Tuple<Node, Integer> curr = new Tuple(this.myNextNode, 0);
 		q.add(curr);
 		visited.add(curr.x);
 
 		// initialize with random neighbor
-		List<Edge> myNeighbors = myself.getPosition().getNeighbors();
+		List<Edge> myNeighbors = this.myNextNode.getNeighbors();
 		Node best = myNeighbors.get((int) (Math.random() * myNeighbors.size())).getTarget();
 
 		while (curr.y <= range) { // TODO check for empty queue
@@ -428,7 +439,9 @@ public class AIGraph extends Thread implements Runnable {
 		this.myNextNode = this.nodes[x][y];
 		logger.debug("My next node is ({},{})", x, y);
 		try {
-			this.nextOrientation = getOrientationFromPath(getBFSPath(findBestNodeBFS(5)));
+			Node bestNode = findBestNodeBFS(5);
+			logger.debug("Next target: ({},{})", bestNode.getX(), bestNode.getY());
+			this.nextOrientation = getOrientationFromPath(getBFSPath(bestNode));
 			logger.debug("Next calculated orientation is {}", this.nextOrientation.name());
 		} catch (Exception e) {
 			logger.error("calculateNextOrientation: no valid orientation was found!", e);

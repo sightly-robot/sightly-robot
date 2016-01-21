@@ -87,4 +87,8 @@ public class Node {
 		}
 		return true;
 	}
+	
+	public Robot getRobot() {
+		return this.robot;
+	}
 }

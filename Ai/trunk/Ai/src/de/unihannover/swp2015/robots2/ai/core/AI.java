@@ -13,6 +13,7 @@ import de.unihannover.swp2015.robots2.controller.interfaces.IRobotController;
 import de.unihannover.swp2015.robots2.model.externalInterfaces.IModelObserver;
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
 import de.unihannover.swp2015.robots2.model.interfaces.IField;
+import de.unihannover.swp2015.robots2.model.interfaces.IField.State;
 import de.unihannover.swp2015.robots2.model.interfaces.IGame;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
@@ -139,16 +140,27 @@ public class AI extends AbstractAI implements IModelObserver {
 		logger.trace("Calling handleFieldStateEvent");
 		if (graph != null) {
 			IField field = (IField) event.getObject();
-			Node node = myself.getPosition();
-
+			//Node node = myself.getPosition();
+			IPosition myPos = iRobotController.getMyself().getPosition();
+			if(!this.game.isRunning() && field.getX() != myPos.getX() && field.getY() != myPos.getY()) {
+				logger.debug("Field State: Field ({},{}) OURS when game is not running.", field.getX(), field.getY());
+				this.iRobotController.releaseField(field.getX(), field.getY());
+			}
+			
+			if(field.getState() == State.OURS && (field.getX() != nextField.getX() || field.getY() != nextField.getY())) {
+				logger.debug("Releasing field ({},{}), because it should not be ours.", field.getX(), field.getY());
+				this.iRobotController.releaseField(field.getX(), field.getY());
+			}
+			
 			// TODO nullpointerexception possible?
 			if (iRobotController.getMyself().getState() == RobotState.ENABLED && game.isRunning()
 					&& this.nextField == field && this.nextOrientation != null) {
 				switch (field.getState()) {
 				case OURS:
 					logger.debug("Sending new orientation to robot: {}", this.nextOrientation);
-					fireNextOrientationEvent(this.nextOrientation); // or
-					this.graph.calculateNextOrientation(this.nextField.getX(), this.nextField.getY());
+					if(fireNextOrientationEvent(this.nextOrientation)) {
+						this.graph.calculateNextOrientation(this.nextField.getX(), this.nextField.getY());
+					} // or
 					break;
 				case FREE:
 					int xCoord = this.nextField.getX();
@@ -312,6 +324,9 @@ public class AI extends AbstractAI implements IModelObserver {
 		logger.trace("Calling handleGameStateEvent");
 		// TODO check hasStarted state!!
 		IGame game = (IGame) event.getObject();
+		if(!game.isRunning()) {
+			logger.debug("Game paused.");
+		}
 		if (game.isRunning() && graph != null && myself.getPosition() != null
 				&& iRobotController.getMyself().getState() == RobotState.ENABLED) {
 			Tuple<Point, Orientation> tuple = this.getNewNode();
@@ -325,6 +340,7 @@ public class AI extends AbstractAI implements IModelObserver {
 			this.nextOrientation = tuple.y;
 		}
 		if (!game.isRunning() && this.nextField != null) {
+			logger.debug("Releasing field ({}--{}), because game is not running anymore.", this.nextField.getX(), this.nextField.getY());
 			iRobotController.releaseField(this.nextField.getX(), this.nextField.getY());
 		}
 	}
@@ -332,6 +348,7 @@ public class AI extends AbstractAI implements IModelObserver {
 	private void handleRobotStateEvent(IEvent event) {
 		logger.trace("Calling handleRobotStateEvent");
 		IRobot robot = (IRobot) event.getObject();
+		logger.debug("RobotStateEvent: {}", robot.getState());
 		if (robot.isMyself()) {
 			if (this.hasStarted == false) {
 				if (robot.getState() == RobotState.ENABLED) {
@@ -350,11 +367,17 @@ public class AI extends AbstractAI implements IModelObserver {
 					}
 				}
 			}
-			logger.trace("Game has not started!");
+			//logger.trace("Game has not started!");
+			logger.debug("state is not enabled");
 			if (robot.getState() != RobotState.ENABLED) {
 				this.hasStarted = false;
 				if (this.nextField != null) {
 					iRobotController.releaseField(this.nextField.getX(), this.nextField.getY());
+				}
+				
+				if(robot.getState() == RobotState.SETUPSTATE) {
+					iRobotController.setRobotReady();
+					//this.hasStarted = true;
 				}
 			}
 		}
@@ -384,7 +407,7 @@ public class AI extends AbstractAI implements IModelObserver {
 			default:
 				break;
 			}
-			logger.debug("New node is ({},{})", x, y);
+			//logger.debug("New node is ({},{})", x, y);
 			return new Tuple<>(new Point(x, y), orientation);
 		} catch (NoValidOrientationException e) {
 			logger.error("getNewNode: no valid orientation was found!", e);
