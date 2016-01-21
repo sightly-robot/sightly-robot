@@ -3,16 +3,14 @@ package de.unihannover.swp2015.robots2.application.dialogs;
 import java.io.IOException;
 
 import org.apache.pivot.beans.BXMLSerializer;
-import org.apache.pivot.collections.List;
 import org.apache.pivot.serialization.SerializationException;
+import org.apache.pivot.wtk.Dialog;
 import org.apache.pivot.wtk.DialogCloseListener;
 import org.apache.pivot.wtk.Window;
 
 import de.unihannover.swp2015.robots2.application.models.GeneralOptions;
 import de.unihannover.swp2015.robots2.application.models.ListDialogModel;
 import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
-
-import org.apache.pivot.wtk.Dialog;
 
 public class DialogFactory {
 	public static InputDialog createInputDialog(Window owner, DialogCloseListener closeListener) {

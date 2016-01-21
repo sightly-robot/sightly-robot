@@ -97,6 +97,15 @@ public class VisualizationRegister {
 	}
 	
 	/**
+	 * 
+	 */
+	public void cycleTexturepackForSelected() {
+		VisualizationOptions cycler = new VisualizationOptions(getSelected().getId());
+		cycler.setCycleTexturePack("next");
+		controller.setVisualizationSettings(cycler.toJson());
+	}
+	
+	/**
 	 * Takes the partial option definition and merges it into the complete options state
 	 * working on the selected visualization.
 	 * @param options A partial options change that is to be inserted into the local state storage.

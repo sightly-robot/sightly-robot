@@ -3,41 +3,28 @@ package de.unihannover.swp2015.robots2.application.components;
 import java.awt.Graphics2D;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.ClassLoader;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicReference;
 
+import org.apache.pivot.beans.Bindable;
 import org.apache.pivot.collections.Map;
 import org.apache.pivot.util.Resources;
-import org.apache.pivot.wtk.Action;
-import org.apache.pivot.wtk.Alert;
 import org.apache.pivot.wtk.Component;
 import org.apache.pivot.wtk.ComponentMouseButtonListener;
-import org.apache.pivot.wtk.Dialog;
-import org.apache.pivot.wtk.DialogCloseListener;
 import org.apache.pivot.wtk.Menu;
 import org.apache.pivot.wtk.MenuHandler;
-import org.apache.pivot.wtk.MessageType;
 import org.apache.pivot.wtk.Panel;
 import org.apache.pivot.wtk.media.Drawing;
 import org.apache.pivot.wtk.media.SVGDiagramSerializer;
-import org.apache.pivot.beans.Bindable;
 
 import com.kitfox.svg.SVGDiagram;
 
-import de.unihannover.swp2015.robots2.application.dialogs.DialogFactory;
-import de.unihannover.swp2015.robots2.application.dialogs.ListDialog;
 import de.unihannover.swp2015.robots2.application.events.IVisualizationClickEvent;
 import de.unihannover.swp2015.robots2.application.models.GeneralOptions;
 import de.unihannover.swp2015.robots2.application.svg.SvgConstructor;
 import de.unihannover.swp2015.robots2.controller.main.GuiMainController;
 import de.unihannover.swp2015.robots2.model.interfaces.IGame;
-import de.unihannover.swp2015.robots2.model.interfaces.IPosition;
-import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
 
 /**
  * An apache pivot component for displaying a game. 

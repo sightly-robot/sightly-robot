@@ -1,7 +1,5 @@
 package de.unihannover.swp2015.robots2.application.events;
 
-import java.util.concurrent.atomic.AtomicReference;
-
 public interface IVisualizationClickEvent {
 	/**
 	 * Called when the user clicks on the visualization somewhere.

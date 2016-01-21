@@ -1,7 +1,5 @@
 package de.unihannover.swp2015.robots2.application.models;
 
-import java.net.URL;
-
 import org.apache.pivot.util.concurrent.TaskExecutionException;
 import org.apache.pivot.wtk.media.Image;
 

@@ -3,7 +3,6 @@ package de.unihannover.swp2015.robots2.application.components;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
-import org.apache.pivot.collections.Dictionary;
 import org.apache.pivot.wtk.TableView;
 import org.apache.pivot.wtk.content.TableViewCellRenderer;
 

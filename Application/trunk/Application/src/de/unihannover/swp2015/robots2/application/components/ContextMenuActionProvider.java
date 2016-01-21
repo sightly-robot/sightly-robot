@@ -14,7 +14,6 @@ import de.unihannover.swp2015.robots2.application.dialogs.DialogFactory;
 import de.unihannover.swp2015.robots2.application.dialogs.ListDialog;
 import de.unihannover.swp2015.robots2.application.models.GeneralOptions;
 import de.unihannover.swp2015.robots2.controller.main.GuiMainController;
-import de.unihannover.swp2015.robots2.model.interfaces.IField;
 import de.unihannover.swp2015.robots2.model.interfaces.IGame;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition;
 import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
@@ -83,9 +82,7 @@ public class ContextMenuActionProvider {
 						if (listDialog.getSelectedIndex() == -1)
 							return;
 						
-						controller.getGame().getRobots().get(robots.get(listDialog.getSelectedIndex()));
-						IRobot robo = game.getRobots().get(((ListDialog)dialog).getSelectedElement());
-            			controller.setRobotPosition(rx, ry, sp.getOrientation(), robo);						
+            			controller.setRobotPosition(rx, ry, sp.getOrientation(), ((ListDialog)dialog).getSelectedElement());						
 					}
     			}, options, robots);
     		}

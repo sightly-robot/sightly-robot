@@ -1,18 +1,22 @@
 package de.unihannover.swp2015.robots2.application.windows;
 
-import java.awt.Color;
 import java.net.URL;
+import java.util.Locale;
 
 import org.apache.pivot.beans.BXML;
 import org.apache.pivot.beans.Bindable;
 import org.apache.pivot.collections.Map;
 import org.apache.pivot.collections.Sequence;
 import org.apache.pivot.util.Resources;
+import org.apache.pivot.util.Vote;
 import org.apache.pivot.wtk.ApplicationContext;
 import org.apache.pivot.wtk.Button;
+import org.apache.pivot.wtk.Button.State;
 import org.apache.pivot.wtk.ButtonPressListener;
 import org.apache.pivot.wtk.ButtonStateListener;
 import org.apache.pivot.wtk.Checkbox;
+import org.apache.pivot.wtk.Component;
+import org.apache.pivot.wtk.ComponentMouseButtonListener;
 import org.apache.pivot.wtk.Label;
 import org.apache.pivot.wtk.ListButton;
 import org.apache.pivot.wtk.ListButtonSelectionListener;
@@ -24,17 +28,17 @@ import org.apache.pivot.wtk.TextArea;
 import org.apache.pivot.wtk.TextArea.Paragraph;
 import org.apache.pivot.wtk.TextAreaContentListener;
 import org.apache.pivot.wtk.TextInput;
+import org.apache.pivot.wtk.TextInputContentListener;
 import org.apache.pivot.wtk.Window;
-import org.apache.pivot.wtk.Button.State;
+import org.apache.pivot.wtk.validation.DoubleRangeValidator;
+import org.apache.pivot.wtk.validation.IntRangeValidator;
+import org.apache.pivot.wtk.validation.IntValidator;
 
 import de.unihannover.swp2015.robots2.application.models.GeneralOptions;
-import de.unihannover.swp2015.robots2.application.models.TableElement;
 import de.unihannover.swp2015.robots2.application.models.VisualizationRegister;
 import de.unihannover.swp2015.robots2.application.util.CheckboxStateConverter;
 import de.unihannover.swp2015.robots2.controller.externalInterfaces.IVisualizationControl;
 import de.unihannover.swp2015.robots2.controller.main.GuiMainController;
-import de.unihannover.swp2015.robots2.model.externalInterfaces.IModelObserver;
-import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
 import de.unihannover.swp2015.robots2.utils.VisualizationOptions;
 
 /**
@@ -85,9 +89,9 @@ public class Configurator extends Window implements Bindable, IVisualizationCont
 	@BXML private Checkbox showReals;
 	@BXML private Checkbox showResources;
 	@BXML private Checkbox showScore;
-	@BXML private Checkbox showName;
+	@BXML private Checkbox showLockStates;
 	
-	@BXML private PushButton applyButton;
+	@BXML private PushButton nextTexturepack;
 	
 	private volatile boolean throttleBlock;
 	
@@ -110,6 +114,87 @@ public class Configurator extends Window implements Bindable, IVisualizationCont
 		updateButton.getButtonPressListeners().add(updateVisualizationListAction);
 		visualizationList.getListButtonSelectionListeners().add(visualizationChangeAction);
 		
+		reinstateSliderListeners();
+
+		xOffset.getComponentMouseButtonListeners().add(finalChangeCommitAction);
+		yOffset.getComponentMouseButtonListeners().add(finalChangeCommitAction);
+		xScale.getComponentMouseButtonListeners().add(finalChangeCommitAction);
+		yScale.getComponentMouseButtonListeners().add(finalChangeCommitAction);
+		transformation.getComponentMouseButtonListeners().add(finalChangeCommitAction);
+		
+		// Validation:
+		xOffsetValue.setValidator(new IntRangeValidator(Locale.US, xOffset.getStart(), xOffset.getEnd()));
+		yOffsetValue.setValidator(new IntRangeValidator(Locale.US, yOffset.getStart(), yOffset.getEnd()));
+		xScaleValue.setValidator(new DoubleRangeValidator(Locale.US, 0., 1.));
+		yScaleValue.setValidator(new DoubleRangeValidator(Locale.US, 0., 1.));
+		transformationValue.setValidator(new DoubleRangeValidator(Locale.US, -1., 1.));
+		
+		xOffsetValue.getTextInputContentListeners().add(TextInputValueListener);
+		yOffsetValue.getTextInputContentListeners().add(TextInputValueListener);
+		xScaleValue.getTextInputContentListeners().add(TextInputValueListener);
+		yScaleValue.getTextInputContentListeners().add(TextInputValueListener);
+		transformationValue.getTextInputContentListeners().add(TextInputValueListener);
+
+		// must use press listener or computational changes are also sent back to the visualization.
+		// which is not desirable.
+		showLockStates.getButtonPressListeners().add(showFlagChanged);
+		showReals.getButtonPressListeners().add(showFlagChanged);
+		showVirtuals.getButtonPressListeners().add(showFlagChanged);
+		showWalls.getButtonPressListeners().add(showFlagChanged);
+		showScore.getButtonPressListeners().add(showFlagChanged);
+		showResources.getButtonPressListeners().add(showFlagChanged);
+		
+		nextTexturepack.getButtonPressListeners().add(nextTexturepackAction);
+	}
+	
+	/**
+	 * Utilitarian function. Gets scale of slider (which only can have integer values, which
+	 * then have to be divided to become the proper double value).
+	 * @return
+	 */
+	private float getTransformationSliderResolution() {
+		return Math.abs((float)transformation.getStart()) + (float)transformation.getEnd();
+	}
+	
+	/**
+	 * xOffsetValueChanged, says it all.
+	 */
+	private TextInputContentListener.Adapter TextInputValueListener = new TextInputContentListener.Adapter() {
+		@Override
+		public void textInserted(TextInput textInput, int index, int count) {
+			decomissionSliderListeners();
+			float value = Float.parseFloat(textInput.getText());
+			
+			if (textInput == xOffsetValue)
+				xOffset.setValue((int)(value));
+			if (textInput == yOffsetValue)
+				yOffset.setValue((int)(value));
+			if (textInput == xScaleValue)
+				xScale.setValue((int)(value * xScale.getEnd()));
+			if (textInput == yScaleValue)
+				yScale.setValue((int)(value * yScale.getEnd()));
+			if (textInput == transformationValue)
+				transformation.setValue((int)(value * getTransformationSliderResolution()));
+			
+			reinstateSliderListeners();
+		}
+	};
+	
+	/**
+	 * Disables slider listeners.
+	 */
+	private void decomissionSliderListeners() {
+		xOffset.getSliderValueListeners().remove(xOffsetChanged);
+		yOffset.getSliderValueListeners().remove(yOffsetChanged);
+		xScale.getSliderValueListeners().remove(xScaleChanged);
+		yScale.getSliderValueListeners().remove(yScaleChanged);
+		transformation.getSliderValueListeners().remove(transformationChanged);
+	}
+	
+	/**
+	 * Enables slider listeners.
+	 */
+	private void reinstateSliderListeners() {
 		xOffset.getSliderValueListeners().add(xOffsetChanged);
 		yOffset.getSliderValueListeners().add(yOffsetChanged);
 		xScale.getSliderValueListeners().add(xScaleChanged);
@@ -126,6 +211,24 @@ public class Configurator extends Window implements Bindable, IVisualizationCont
 			issueThrottleReset();
 		}
 	}
+
+	/**
+	 * Action gets evoked whenever one of the checkboxes change state by user 
+	 * interaction.
+	 */
+	private ButtonPressListener showFlagChanged = new ButtonPressListener() {
+		@Override
+		public void buttonPressed(Button arg0) {
+			VisualizationOptions temp = new VisualizationOptions(visualizations.getSelected().getId());
+			temp.setRenderLockState(CheckboxStateConverter.isChecked(showLockStates));
+			temp.setRenderRobots(CheckboxStateConverter.isChecked(showReals));
+			temp.setRenderVirtualRobots(CheckboxStateConverter.isChecked(showVirtuals));
+			temp.setRenderResources(CheckboxStateConverter.isChecked(showResources));
+			temp.setRenderScore(CheckboxStateConverter.isChecked(showScore));
+			temp.setRenderWalls(CheckboxStateConverter.isChecked(showWalls));
+			visualizations.performMergeOnSelected(temp);
+		}		
+	};
 	
 	/**
 	 * Resets the throttling flag, so updates can be performed again.
@@ -134,7 +237,17 @@ public class Configurator extends Window implements Bindable, IVisualizationCont
 		ApplicationContext.scheduleCallback(new Runnable() {
 			@Override
 			public void run() {
-				throttleBlock = false;				
+				throttleBlock = false;
+				
+				// final commit
+				ApplicationContext.scheduleCallback(new Runnable() {
+					@Override
+					public void run() {
+						if (throttleBlock)
+							return;
+						finalChangeCommit();
+					}					
+				}, 150);
 			}
 		}, throttleDelay);
 	}
@@ -178,14 +291,14 @@ public class Configurator extends Window implements Bindable, IVisualizationCont
 	 */
 	private SliderValueListener xScaleChanged = new SliderValueListener() {
 		@Override
-		public void valueChanged(Slider arg0, int value) {
+		public void valueChanged(Slider slider, int value) {
 			if (throttleBlock)
 				return;
 			throttle();
 			
-			xScaleValue.setText(new Integer(value).toString());
+			xScaleValue.setText(new Float(value / (float)xScale.getEnd()).toString());
 			VisualizationOptions temp = new VisualizationOptions(visualizations.getSelected().getId());
-			temp.setAbscissaScale((float)value / 10000.f);
+			temp.setAbscissaScale((float)value / (float)xScale.getEnd());
 			visualizations.performMergeOnSelected(temp);
 		}		
 	};
@@ -200,9 +313,9 @@ public class Configurator extends Window implements Bindable, IVisualizationCont
 				return;
 			throttle();
 			
-			yScaleValue.setText(new Integer(value).toString());
+			yScaleValue.setText(new Float(value / (float)yScale.getEnd()).toString());
 			VisualizationOptions temp = new VisualizationOptions(visualizations.getSelected().getId());
-			temp.setOrdinateScale((float)value / 10000.f);
+			temp.setOrdinateScale((float)value / (float)yScale.getEnd());
 			visualizations.performMergeOnSelected(temp);
 		}		
 	};
@@ -217,12 +330,68 @@ public class Configurator extends Window implements Bindable, IVisualizationCont
 				return;
 			throttle();
 			
-			transformationValue.setText(new Integer(value).toString());
+			transformationValue.setText(new Float(value / getTransformationSliderResolution()).toString());
 			VisualizationOptions temp = new VisualizationOptions(visualizations.getSelected().getId());
-			temp.setPerspectiveTransformation((float)value / 10000.f);
+			temp.setPerspectiveTransformation((float)value / getTransformationSliderResolution());
 			visualizations.performMergeOnSelected(temp);
 		}		
 	};
+
+	/**
+	 * This is used to bypass the throttler and commit the last change made when releasing a slider.
+	 */
+	private ComponentMouseButtonListener finalChangeCommitAction = new ComponentMouseButtonListener() {
+
+		@Override
+		public boolean mouseClick(Component slider, org.apache.pivot.wtk.Mouse.Button button, int x, int y,
+				int count) {
+			// not used
+			return false;
+		}
+
+		@Override
+		public boolean mouseDown(Component slider, org.apache.pivot.wtk.Mouse.Button button, int x, int y) {
+			// not used
+			return false;
+		}
+
+		@Override
+		public boolean mouseUp(Component slider, org.apache.pivot.wtk.Mouse.Button button, int x, int y) {
+			finalChangeCommit();
+			return false;
+		}
+		
+	};
+	
+	/**
+	 * Sends the last changes to the visualization. (Needed because of throttling)
+	 * And also applies the slider values to the text boxes.
+	 * @param sendToVisualization Do not send to client
+	 */
+	private void finalChangeCommit(boolean sendToVisualization) {
+		VisualizationOptions temp = new VisualizationOptions(visualizations.getSelected().getId());
+		temp.setAbscissaOffset(xOffset.getValue());
+		temp.setOrdinateOffset(yOffset.getValue());
+		temp.setAbscissaScale(xScale.getValue() / (float)xScale.getEnd());
+		temp.setOrdinateScale(yScale.getValue() / (float)yScale.getEnd());
+		temp.setPerspectiveTransformation(transformation.getValue() / getTransformationSliderResolution());
+		
+		visualizations.performMergeOnSelected(temp);
+
+		xOffsetValue.setText(new Integer(xOffset.getValue()).toString());
+		yOffsetValue.setText(new Integer(yOffset.getValue()).toString());
+		xScaleValue.setText(new Float(xScale.getValue() / (float)xScale.getEnd()).toString());
+		yScaleValue.setText(new Float(yScale.getValue() / (float)yScale.getEnd()).toString());
+		transformationValue.setText(new Float(transformation.getValue() / getTransformationSliderResolution()).toString());
+	}
+	
+	/**
+	 * Sends the last changes to the visualization. (Needed because of throttling).
+	 * And also applies the slider values to the text boxes.
+	 */
+	private void finalChangeCommit() {
+		finalChangeCommit(true);
+	}
 
 	/**
 	 * Button to update the visualization list.
@@ -257,20 +426,26 @@ public class Configurator extends Window implements Bindable, IVisualizationCont
 	 * Loads the selected visualization.
 	 */
 	private void loadSelectedVisualization() {
-		VisualizationOptions visu = visualizations.getSelected();
+		decomissionSliderListeners();
 		
+		VisualizationOptions visu = visualizations.getSelected();
+		visu.leftMerge(VisualizationOptions.createDefault(""));
+
 		xOffset.setValue(visu.getAbscissaOffset().get().intValue());
 		yOffset.setValue(visu.getOrdinateOffset().get().intValue());
-		xScale.setValue(new Float(visu.getAbscissaScale().get() * 10000.).intValue());
-		yScale.setValue(new Float(visu.getOrdinateScale().get() * 10000.).intValue());
-		transformation.setValue(new Float(visu.getPerspectiveTransformation().get() * 1000.).intValue());
+		xScale.setValue(new Float(visu.getAbscissaScale().get() * xScale.getEnd()).intValue());
+		yScale.setValue(new Float(visu.getOrdinateScale().get() * yScale.getEnd()).intValue());
+		transformation.setValue(new Float(visu.getPerspectiveTransformation().get() * getTransformationSliderResolution()).intValue());
 		
 		CheckboxStateConverter.setChecked(showWalls, visu.doesRenderWalls().get());
 		CheckboxStateConverter.setChecked(showVirtuals, visu.doesRenderVirtualRobots().get());
 		CheckboxStateConverter.setChecked(showReals, visu.doesRenderRobots().get());
 		CheckboxStateConverter.setChecked(showResources, visu.doesRenderResources().get());
 		CheckboxStateConverter.setChecked(showScore, visu.doesRenderScore().get());
-		CheckboxStateConverter.setChecked(showName, visu.doesRenderName().get());
+		CheckboxStateConverter.setChecked(showLockStates, visu.doesRenderLockStates().get());
+		
+		finalChangeCommit(false);
+		reinstateSliderListeners();
 	}
 	
 	/** 
@@ -302,9 +477,9 @@ public class Configurator extends Window implements Bindable, IVisualizationCont
 		showReals.setEnabled(true);
 		showResources.setEnabled(true);
 		showScore.setEnabled(true);
-		showName.setEnabled(true);
+		showLockStates.setEnabled(true);
 		
-		//applyButton.setEnabled(true);
+		nextTexturepack.setEnabled(true);
 	}
 
 	/**
@@ -384,4 +559,12 @@ public class Configurator extends Window implements Bindable, IVisualizationCont
 			}
 		});
 	}
+
+
+	private ButtonPressListener nextTexturepackAction = new ButtonPressListener() {
+		@Override
+		public void buttonPressed(Button arg0) {
+			visualizations.cycleTexturepackForSelected();
+		}
+	};
 }

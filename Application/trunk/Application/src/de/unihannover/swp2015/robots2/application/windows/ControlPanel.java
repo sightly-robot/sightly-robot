@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
-import java.util.concurrent.atomic.AtomicReference;
 
 import org.apache.pivot.beans.BXML;
 import org.apache.pivot.beans.BXMLSerializer;
@@ -16,21 +15,20 @@ import org.apache.pivot.wtk.Alert;
 import org.apache.pivot.wtk.ApplicationContext;
 import org.apache.pivot.wtk.Button;
 import org.apache.pivot.wtk.ButtonPressListener;
+import org.apache.pivot.wtk.DesktopApplicationContext;
+import org.apache.pivot.wtk.Display;
 import org.apache.pivot.wtk.FileBrowserSheet;
 import org.apache.pivot.wtk.MessageType;
 import org.apache.pivot.wtk.PushButton;
 import org.apache.pivot.wtk.Sheet;
 import org.apache.pivot.wtk.SheetCloseListener;
 import org.apache.pivot.wtk.TableView;
-import org.apache.pivot.wtk.TableView.Column;
 import org.apache.pivot.wtk.Window;
 import org.json.JSONException;
 
 import de.unihannover.swp2015.robots2.application.MapLoader;
-import de.unihannover.swp2015.robots2.application.components.CustomTableCellRenderer;
 import de.unihannover.swp2015.robots2.application.components.StrategicVisualization;
 import de.unihannover.swp2015.robots2.application.controllers.TableController;
-import de.unihannover.swp2015.robots2.application.dialogs.ListDialog;
 import de.unihannover.swp2015.robots2.application.events.IVisualizationClickEvent;
 import de.unihannover.swp2015.robots2.application.exceptions.InvalidMapFile;
 import de.unihannover.swp2015.robots2.application.models.TableElement;
@@ -39,14 +37,9 @@ import de.unihannover.swp2015.robots2.controller.interfaces.ProtocolException;
 import de.unihannover.swp2015.robots2.controller.main.GuiMainController;
 import de.unihannover.swp2015.robots2.model.externalInterfaces.IModelObserver;
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
-import de.unihannover.swp2015.robots2.model.interfaces.IField;
 import de.unihannover.swp2015.robots2.model.interfaces.IGame;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition;
 import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
-import sun.org.mozilla.javascript.internal.ast.Assignment;
-
-import org.apache.pivot.wtk.DesktopApplicationContext;
-import org.apache.pivot.wtk.Display;
 
 public class ControlPanel extends Window implements Bindable, IVisualizationClickEvent, IModelObserver {
 	// Constants

@@ -10,4 +10,11 @@ public class CheckboxStateConverter {
 		else
 			box.setState(State.UNSELECTED);
 	}
+	
+	public static boolean isChecked(Checkbox box) {
+		if (box.getState().equals(State.SELECTED))
+			return true;
+		else
+			return false; // MIXED = false
+	}
 }

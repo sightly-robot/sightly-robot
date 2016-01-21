@@ -226,8 +226,6 @@ public class SvgConstructor {
 	public void drawLockedFields() {
 		if (game.getStage().getWidth() == 0 || game.getStage().getHeight() == 0)
 			return;
-		
-		Map<String, ? extends IRobot> robots = game.getRobots();
 
 		double fieldWidth = svgWidth / game.getStage().getWidth();
 		double fieldHeight = svgHeight / game.getStage().getHeight();
