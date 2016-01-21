@@ -30,8 +30,8 @@ public class SoftwareRobot extends AbstractRobot {
 	 * 
 	 * @param brokerIP
 	 */
-	public SoftwareRobot(String brokerIP) {
-		super(false, brokerIP);
+	public SoftwareRobot(String brokerIP,boolean useYetAnotherAi) {
+		super(false, brokerIP,useYetAnotherAi);
 
 		robotController.getMyself().observe(new IModelObserver() {
 

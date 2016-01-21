@@ -15,39 +15,39 @@ import de.unihannover.swp2015.robots2.robot.abstractrobot.automate.IStateEvent;
 public enum SoftwareState implements IState {
 
 	/** WAIT STATE while waiting */
-	WAIT {
-		@Override
-		public IState execute() {
-			return this;
-		}
-	},
+	WAIT,
 	/** CONNECTED STATE while connecting */
-	CONNECTED {
-		@Override
-		public IState execute() {
-			return this;
-		}
-	},
+	CONNECTED,
 	/** SETUP STATE while setup */
-	SETUP {
-		@Override
-		public IState execute() {
-			return this;
-		}
-	},
+	SETUP,
 	/** DISABLED STATE while disabling */
-	DISABLED {
+	DISABLED, FOREWARD {
 		@Override
 		public IState execute() {
-			return this;
+			return timedExecute();
 		}
 	},
-	FOREWARD, RIGHT, BACKWARD, LEFT;
+	RIGHT {
+		@Override
+		public IState execute() {
+			return timedExecute();
+		}
+	},
+	BACKWARD {
+		@Override
+		public IState execute() {
+			return timedExecute();
+		}
+	},
+	LEFT {
+		@Override
+		public IState execute() {
+			return timedExecute();
+		}
+	};
 
 	/** LOGGER: */
 	private static Logger LOGGER = LogManager.getLogger(SoftwareState.class.getName());
-
-	private static double DURATION = 2000;
 
 	@SuppressWarnings("unused")
 	private static IStateEvent iStateEvent;
@@ -56,6 +56,8 @@ public enum SoftwareState implements IState {
 
 	@SuppressWarnings("unused")
 	private Direction nextButOneDirection;
+
+	private float duration;
 
 	private SoftwareState() {
 		// Nothing to do here
@@ -69,7 +71,11 @@ public enum SoftwareState implements IState {
 
 	@Override
 	public IState execute() {
-		return (System.currentTimeMillis() - getStartTime()) >= DURATION ? SoftwareState.WAIT : this;
+		return this;
+	}
+
+	public IState timedExecute() {
+		return (System.currentTimeMillis() - getStartTime()) >= getDuration() ? SoftwareState.WAIT : this;
 	}
 
 	/**
@@ -111,15 +117,28 @@ public enum SoftwareState implements IState {
 	 * 
 	 * @param secondsPerField
 	 */
-	public static void setVSpeed(float secondsPerField) {
-		DURATION = secondsPerField * 1000;
+	public static void setVSpeed(float secondsPerField, float secondsPer360) {
+		float moveDuration = secondsPerField * 1000f;
+		float rotationDuration = secondsPer360 * 1000f / 4.0f;
+		LEFT.setDuration(moveDuration + rotationDuration);
+		RIGHT.setDuration(moveDuration + rotationDuration);
+		FOREWARD.setDuration(moveDuration);
+		BACKWARD.setDuration(moveDuration + rotationDuration * 2);
 	}
 
 	public void setNextButOneDirection(Direction direction) {
 		nextButOneDirection = direction;
 	}
-	
+
 	public void setIStateEventObserver(IStateEvent iStateEvent) {
 		SoftwareState.iStateEvent = iStateEvent;
+	}
+
+	public float getDuration() {
+		return duration;
+	}
+
+	public void setDuration(float duration) {
+		this.duration = duration;
 	}
 }

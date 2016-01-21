@@ -6,6 +6,7 @@ import org.apache.logging.log4j.Logger;
 import de.unihannover.swp2015.robots2.controller.interfaces.IRobotController;
 import de.unihannover.swp2015.robots2.model.externalInterfaces.IModelObserver;
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
+import de.unihannover.swp2015.robots2.robot.abstractrobot.Direction;
 import de.unihannover.swp2015.robots2.robot.abstractrobot.automate.AbstractAutomate;
 
 /**
@@ -35,17 +36,23 @@ public class SoftwareAutomate extends AbstractAutomate {
 				switch (event.getType()) {
 				case GAME_PARAMETER:
 					LOGGER.info("VSpeed changed!");
-					SoftwareState.setVSpeed(SoftwareAutomate.this.robotController.getGame().getVRobotSpeed());
-					for (int i = 0; i < progressMeasurements.length; i++) {
-						progressMeasurements[i] = SoftwareAutomate.this.robotController.getGame().getVRobotSpeed()
-								* 1000;
-					}
+					updateVSpeed();
 					break;
 				default:
 					break;
 				}
 			}
 		});
+		updateVSpeed();
+	}
+
+	private void updateVSpeed() {
+		SoftwareState.setVSpeed(SoftwareAutomate.this.robotController.getGame().getVRobotSpeed(),
+				SoftwareAutomate.this.robotController.getGame().getVRobotRotationSpeed());
+		progressMeasurements[Direction.FORWARDS.ordinal()] = SoftwareState.FOREWARD.getDuration();
+		progressMeasurements[Direction.BACKWARDS.ordinal()] = SoftwareState.BACKWARD.getDuration();
+		progressMeasurements[Direction.LEFT.ordinal()] = SoftwareState.LEFT.getDuration();
+		progressMeasurements[Direction.RIGHT.ordinal()] = SoftwareState.RIGHT.getDuration();
 	}
 
 }
