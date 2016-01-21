@@ -13,8 +13,9 @@ import com.badlogic.gdx.graphics.Texture.TextureFilter;
  */
 public enum ResConst {
 
-	ATLAS_PATH("assets" + File.separator + "theme" + File.separator, ResType.PATH), ATLAS_NAME("theme",
-			ResType.PATH), DEFAULT_THEME("default", ResType.PATH),
+	ATLAS_PATH("assets" + File.separator + "theme" + File.separator, ResType.PATH), 
+	ATLAS_NAME("theme", ResType.PATH), 
+	DEFAULT_THEME("default", ResType.PATH),
 
 	DEFAULT_WALL("default_wall", ResType.TEX), 
 	DEFAULT_ONEWAY("default_oneway", ResType.TEX, TextureFilter.Linear), 
