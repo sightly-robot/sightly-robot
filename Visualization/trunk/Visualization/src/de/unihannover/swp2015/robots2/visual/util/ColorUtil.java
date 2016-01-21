@@ -12,15 +12,17 @@ public class ColorUtil {
 	private ColorUtil() {
 		// utility class
 	}
-	
+
 	/**
 	 * Converts an awt-color object to a badlogic-color object.
 	 * 
-	 * @param color color object, which should gets converted.
+	 * @param color
+	 *            color object, which should gets converted.
 	 * @return converted badlogic color object
 	 */
 	public static Color fromAwtColor(final java.awt.Color color) {
-		return new Color(color.getRed()/255f, color.getGreen()/255f, color.getBlue()/255f, color.getAlpha()/255f);
+		return new Color(color.getRed() / 255f, color.getGreen() / 255f, color.getBlue() / 255f,
+				color.getAlpha() / 255f);
 	}
-	
+
 }

@@ -28,74 +28,79 @@ import de.unihannover.swp2015.robots2.visual.util.pref.IPreferences;
  * @author Rico Schrage
  */
 public class RobotGameHandler extends GameHandler {
-		
-	/** List of entities managed by this game handler.*/
+
+	/** List of entities managed by this game handler. */
 	protected final List<IEntity> entityList;
-	
+
 	/** Viewport of the game. */
 	protected Viewport view;
-	
+
 	/** SpriteBatch for rendering textures. */
 	protected SpriteBatch batch;
-			
+
 	/** Overview of robots for ranking */
 	private final List<IRobot> robots;
-	
+
 	/** Manages several post-processors. */
 	private final PostProcessHandler pp;
-	
+
 	/** UI, which will be displayed if {@link IGame#isRunning()} == false */
-	private NewUI ui;
+	private UI ui;
 
 	/**
-	 * Construct a new RobotGameHandler and connects this handler (means it will directly observe the model) to the given model <code>game</code>
+	 * Construct a new RobotGameHandler and connects this handler (means it will
+	 * directly observe the model) to the given model <code>game</code>
 	 * 
-	 * @param game root of the model
-	 * @param resourceHandler {@link IResourceHandler}
+	 * @param game
+	 *            root of the model
+	 * @param resourceHandler
+	 *            {@link IResourceHandler}
 	 */
-	public RobotGameHandler(IGame robotGame, Viewport viewport, IResourceHandler resourceHandler, IPreferences<PrefKey> prefs) {
+	public RobotGameHandler(IGame robotGame, Viewport viewport, IResourceHandler resourceHandler,
+			IPreferences<PrefKey> prefs) {
 		super(robotGame, resourceHandler, prefs);
-		
+
 		this.robots = new ArrayList<>();
 		this.entityList = new ArrayList<>();
 		this.view = viewport;
 		this.batch = new SpriteBatch();
 		this.batch.setProjectionMatrix(view.getCamera().combined);
-		this.pp = new PostProcessHandler((int)view.getWorldWidth(), (int)view.getWorldHeight());
-		
+		this.pp = new PostProcessHandler((int) view.getWorldWidth(), (int) view.getWorldHeight());
+
 		this.init();
 	}
-	
+
 	/**
 	 * Will create all entities based on the game object.
 	 */
 	private void init() {
 		final IStage stage = game.getStage();
-		
+
 		prefs.putFloat(PrefKey.FIELD_WIDTH_KEY, view.getWorldWidth() / stage.getWidth());
 		prefs.putFloat(PrefKey.FIELD_HEIGHT_KEY, view.getWorldWidth() / stage.getHeight());
-		
+
 		entityList.add(new Map(stage, this));
 		Entity.sortEntities(entityList);
-		
-		ui = new NewUI(robots, view, batch, resHandler.createSkin());
+
+		ui = new UI(robots, view, batch, resHandler);
 	}
-	
+
 	/**
 	 * Returns the current ranking of the given robot
 	 * 
-	 * @param robot you want the ranking for
+	 * @param robot
+	 *            you want the ranking for
 	 */
 	public int getRanking(final IRobot robo) {
 		SortUtil.sortRobots(robots);
-		
+
 		for (int i = 0; i < robots.size(); ++i) {
 			if (robots.get(i) == robo)
-				return i+1;
+				return i + 1;
 		}
 		return -1;
 	}
-	
+
 	@Override
 	public void update() {
 		for (int i = 0; i < entityList.size(); ++i) {
@@ -103,7 +108,7 @@ public class RobotGameHandler extends GameHandler {
 		}
 		ui.update();
 	}
-			
+
 	@Override
 	public void render() {
 
@@ -117,29 +122,28 @@ public class RobotGameHandler extends GameHandler {
 		if (!game.isRunning()) {
 
 			if (pp.isBloomEnabled()) {
-				//approx. 50% slower than the other branch.
+				// approx. 50% slower than the other branch.
 				pp.captureBloom();
-				
+
 				batch.begin();
 				for (int i = 0; i < entityList.size(); ++i) {
 					entityList.get(i).draw(batch);
 				}
 				batch.end();
-				
+
 				pp.renderBloomToInternalBuffer();
 				pp.captureFxaa();
-				
+
 				batch.begin();
 				batch.draw(pp.getBufferTexture(), 0, 0);
 				batch.end();
 
 				ui.render();
-				
+
 				pp.renderFxaa();
-			}
-			else {
+			} else {
 				pp.captureFxaa();
-				
+
 				batch.begin();
 				for (int i = 0; i < entityList.size(); ++i) {
 					entityList.get(i).draw(batch);
@@ -147,11 +151,10 @@ public class RobotGameHandler extends GameHandler {
 				batch.end();
 
 				ui.render();
-				
+
 				pp.renderFxaa();
 			}
-		}
-		else {
+		} else {
 			pp.captureFxaa();
 			batch.begin();
 			for (int i = 0; i < entityList.size(); ++i) {
@@ -165,15 +168,15 @@ public class RobotGameHandler extends GameHandler {
 	@Override
 	public void onManagedModelUpdate(IEvent event) {
 
-		switch(event.getType()) {
+		switch (event.getType()) {
 		case GAME_PARAMETER:
 			break;
-			
+
 		case GAME_STATE:
 			pp.setBloomEnabled(!game.isRunning());
 			ui.setVisible(true);
 			break;
-			
+
 		case ROBOT_ADD:
 			if (event.getObject() instanceof IRobot) {
 				final IRobot robot = (IRobot) event.getObject();
@@ -181,45 +184,46 @@ public class RobotGameHandler extends GameHandler {
 				roboEntity.setZIndex(1);
 				Entity.addEntitySorted(roboEntity, entityList);
 				SortUtil.addRobotSorted(robot, robots);
-				ui.onAddingRobot();
+				ui.onRobotChange();
 			}
 			break;
-			
+
 		case ROBOT_DELETE:
 			robots.remove(event.getObject());
-			for (int i = entityList.size()-1; i >= 0 ; i--) {
+			ui.onRobotChange();
+			for (int i = entityList.size() - 1; i >= 0; i--) {
 				if (entityList.get(i).getModel() == event.getObject()) {
 					entityList.remove(i).clearReferences();
 				}
 			}
 			break;
-			
+
 		default:
 			break;
-		
+
 		}
 	}
 
 	@Override
 	public void dispose() {
 		super.dispose();
-		
+
 		batch.dispose();
 		pp.dispose();
 		ui.dispose();
 	}
-	
+
 	@Override
 	public void resize(int width, int height) {
 		view.update(width, height);
-		
+
 		pp.onResize(view);
 	}
-	
+
 	@Override
 	public void onUpdatePreferences(PrefKey updatedKey, Object value) {
 		switch (updatedKey) {
-		
+
 		case VIEW_WIDTH:
 			view.setWorldWidth((float) value);
 			view.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
@@ -227,25 +231,25 @@ public class RobotGameHandler extends GameHandler {
 			pp.onViewUpdate(view);
 			ui.onResize(view);
 			break;
-			
+
 		case VIEW_HEIGHT:
 			view.setWorldHeight((float) value);
 			view.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
 			batch.setProjectionMatrix(view.getCamera().combined);
-			pp.onViewUpdate(view);			
+			pp.onViewUpdate(view);
 			ui.onResize(view);
 			break;
-			
+
 		case X_OFFSET:
 		case X_SCALE:
 		case Y_OFFSET:
 		case Y_SCALE:
-			//TODO implement
+			// TODO implement
 			break;
-			
+
 		default:
 			break;
-		
+
 		}
 	}
 

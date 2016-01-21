@@ -8,21 +8,21 @@ package de.unihannover.swp2015.robots2.visual.util.math.function;
 public class LinearEaseFunction implements IEaseFunction {
 
 	private static LinearEaseFunction instance = new LinearEaseFunction();
-	
+
 	private LinearEaseFunction() {
 		// nothing to do
 	}
-	
+
 	/**
 	 * @return the static instance of the function.
 	 */
 	public static LinearEaseFunction getInstance() {
 		return instance;
 	}
-	
+
 	@Override
 	public float getPercentage(float currentDuration, float duration) {
-		return currentDuration/duration;
+		return currentDuration / duration;
 	}
 
 }

@@ -13,10 +13,10 @@ public interface IPreferencesKey {
 	 * @return String key
 	 */
 	public String getKey();
-	
+
 	/**
 	 * @return default value of the key
 	 */
 	public Object getDefault();
-	
+
 }

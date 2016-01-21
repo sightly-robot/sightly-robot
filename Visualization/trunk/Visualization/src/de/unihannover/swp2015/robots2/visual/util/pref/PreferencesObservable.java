@@ -8,13 +8,15 @@ import java.util.List;
  * 
  * @author Rico Schrage
  *
- * @param <T> class, which has been used by the preference object to map to the values.
+ * @param <T>
+ *            class, which has been used by the preference object to map to the
+ *            values.
  */
 public class PreferencesObservable<T extends IPreferencesKey> implements IPreferencesObservable<T> {
 
 	/** Contains all observers. */
 	private final List<IPreferencesObserver<T>> observerList = new ArrayList<>();
-	
+
 	@Override
 	public void notifyObserver(final T changedKey, final Object value) {
 		for (int i = 0; i < observerList.size(); ++i) {
@@ -26,10 +28,10 @@ public class PreferencesObservable<T extends IPreferencesKey> implements IPrefer
 	public void addObserver(final IPreferencesObserver<T> obs) {
 		observerList.add(obs);
 	}
-	
+
 	@Override
 	public void removeObserver(final IPreferencesObserver<T> obs) {
 		observerList.remove(obs);
 	}
-	
+
 }

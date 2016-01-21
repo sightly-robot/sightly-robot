@@ -6,7 +6,7 @@ package de.unihannover.swp2015.robots2.visual.util;
  * @author Rico Schrage
  */
 public interface Task {
-	
+
 	/**
 	 * Whatever you want to do.
 	 */

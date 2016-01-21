@@ -34,31 +34,34 @@ import de.unihannover.swp2015.robots2.visual.util.pref.FlexPreferences;
  * @author Rico Schrage
  */
 public class Visualization extends ApplicationAdapter {
-	
+
 	/** Logger (log4j) */
 	private static final Logger log = LogManager.getLogger();
-	
+
 	/** Broker-IP */
 	private final String ip;
-	
-	/** Indicates whether this build is a debug build. Have to be set before the application will be created. */
+
+	/**
+	 * Indicates whether this build is a debug build. Have to be set before the
+	 * application will be created.
+	 */
 	public final boolean debug;
-	
+
 	/** List of all {@link IGameHandler}. */
 	private final List<IGameHandler> gameHandlerList;
 
 	/** MqttHandler, handles connection fails. */
 	private MqttHandler mqttHandler;
-	
+
 	/** Settings received via MQTT */
 	private IPreferences<PrefKey> prefs;
-	
+
 	/** For the timing of the debug output. */
 	private LoopedTask fpsLogger;
-	
+
 	/** Id of the visualization, used for the communication with the GUI */
 	private UUID id;
-	
+
 	/**
 	 * Constructs a Visualization object.
 	 * 
@@ -70,7 +73,7 @@ public class Visualization extends ApplicationAdapter {
 		this.ip = brokerIp;
 		this.debug = debugFlag;
 		this.id = UUID.randomUUID();
-		
+
 		this.fpsLogger = new LoopedTask(5f, new Task() {
 			@Override
 			public void work() {
@@ -84,10 +87,10 @@ public class Visualization extends ApplicationAdapter {
 
 		prefs = new FlexPreferences<PrefKey>("prefs");
 		mqttHandler = new MqttHandler(ip, new PreferenceHandler(prefs, id));
-		
+
 		final int appWidth = Gdx.graphics.getWidth();
 		final int appHeight = Gdx.graphics.getHeight();
-		
+
 		final OrthographicCamera cam = new OrthographicCamera();
 		cam.setToOrtho(true);
 		final Viewport fitViewport = new FitViewport(appWidth, appHeight, cam);
@@ -95,17 +98,16 @@ public class Visualization extends ApplicationAdapter {
 
 		prefs.putFloat(PrefKey.VIEW_WIDTH, appWidth);
 		prefs.putFloat(PrefKey.VIEW_HEIGHT, appHeight);
-		
-		prefs.putFloat(PrefKey.DEVICE_WIDTH,  appWidth);
+
+		prefs.putFloat(PrefKey.DEVICE_WIDTH, appWidth);
 		prefs.putFloat(PrefKey.DEVICE_HEIGHT, appHeight);
-		
+
 		final IResourceHandler resHandler = new ResourceHandler(ResConst.ATLAS_PATH.getName());
 		gameHandlerList.add(new RobotGameHandler(mqttHandler.getGame(), fitViewport, resHandler, prefs));
-		
+
 		if (debug) {
 			new TestApp(mqttHandler.getGame());
-		}
-		else {
+		} else {
 			final Thread mqttThread = new Thread(mqttHandler, "MQTT");
 			mqttThread.start();
 		}
@@ -120,21 +122,21 @@ public class Visualization extends ApplicationAdapter {
 
 	@Override
 	public void render() {
-		
+
 		Gdx.gl.glClearColor(0f, 0f, 0f, 0f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		for (int i = 0; i < gameHandlerList.size(); ++i) {
 			gameHandlerList.get(i).update();
 		}
-				
+
 		for (int i = 0; i < gameHandlerList.size(); ++i) {
 			gameHandlerList.get(i).render();
 		}
 
 		fpsLogger.update();
 	}
-	
+
 	@Override
 	public void resize(final int width, final int height) {
 		for (int i = 0; i < gameHandlerList.size(); ++i) {

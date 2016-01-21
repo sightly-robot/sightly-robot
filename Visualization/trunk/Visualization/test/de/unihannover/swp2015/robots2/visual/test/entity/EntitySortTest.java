@@ -26,20 +26,30 @@ public class EntitySortTest {
 
 	public static class TestEntity extends Entity {
 
-		public TestEntity(IGameHandler gameHandler) {super(new Field(0,0), gameHandler);}
-		public void draw(Batch b) {}
-		public void onModelUpdate(IEvent event) {}
-		public void onUpdatePreferences(PrefKey updatedKey, Object value) {}
-		public void onManagedModelUpdate(IEvent event) {}
+		public TestEntity(IGameHandler gameHandler) {
+			super(new Field(0, 0), gameHandler);
+		}
 
-	}	
+		public void draw(Batch b) {
+		}
+
+		public void onModelUpdate(IEvent event) {
+		}
+
+		public void onUpdatePreferences(PrefKey updatedKey, Object value) {
+		}
+
+		public void onManagedModelUpdate(IEvent event) {
+		}
+
+	}
 
 	@SuppressWarnings("unchecked")
 	@Test
 	public void testSortEntities() {
 		final IGameHandler mockGameHandler = mock(IGameHandler.class);
 		when(mockGameHandler.getPreferences()).thenReturn(mock(IPreferences.class));
-		
+
 		final IEntity entity = new TestEntity(mockGameHandler);
 		entity.setZIndex(5);
 
@@ -62,7 +72,7 @@ public class EntitySortTest {
 		list.add(entity_four);
 		list.add(entity_five);
 
-		final List<IEntity> expected = Arrays.asList( entity_two, entity_four, entity, entity_five,entity_three);
+		final List<IEntity> expected = Arrays.asList(entity_two, entity_four, entity, entity_five, entity_three);
 
 		Entity.sortEntities(list);
 
@@ -75,7 +85,7 @@ public class EntitySortTest {
 	public void testInsertionSortEntities() {
 		final IGameHandler mockGameHandler = mock(IGameHandler.class);
 		when(mockGameHandler.getPreferences()).thenReturn(mock(IPreferences.class));
-		
+
 		final IEntity entity = new TestEntity(mockGameHandler);
 		entity.setZIndex(5);
 
@@ -104,22 +114,22 @@ public class EntitySortTest {
 		assertTrue("Expect that 'list' and 'expected' are equal \n 'list' = " + list + "\n 'expected = " + expected,
 				list.equals(expected));
 	}
-	
+
 	@Test
 	public void testInsertionSortRobot() {
-		final Robot roboOne = new Robot("asd",true, true);
+		final Robot roboOne = new Robot("asd", true, true);
 		roboOne.setScore(0);
 
-		final Robot roboTwo = new Robot("assd",true, true);
+		final Robot roboTwo = new Robot("assd", true, true);
 		roboTwo.setScore(1);
-		
-		final Robot roboThree = new Robot("asssd",true, true);
+
+		final Robot roboThree = new Robot("asssd", true, true);
 		roboThree.setScore(42);
-		
-		final Robot roboFour = new Robot("asssssd",true, true);
+
+		final Robot roboFour = new Robot("asssssd", true, true);
 		roboFour.setScore(500);
-		
-		final Robot roboFive = new Robot("asssssssd",true, true);
+
+		final Robot roboFive = new Robot("asssssssd", true, true);
 		roboFive.setScore(4);
 
 		final List<IRobot> list = new ArrayList<>(5);
@@ -134,23 +144,23 @@ public class EntitySortTest {
 
 		assertTrue("Expect that 'list' and 'expected' are equal \n 'list' = " + list + "\n 'expected = " + expected,
 				list.equals(expected));
-	}	
-	
+	}
+
 	@Test
 	public void testSortRobot() {
-		final Robot roboOne = new Robot("asd",true, true);
+		final Robot roboOne = new Robot("asd", true, true);
 		roboOne.setScore(0);
 
-		final Robot roboTwo = new Robot("assd",true, true);
+		final Robot roboTwo = new Robot("assd", true, true);
 		roboTwo.setScore(1);
-		
-		final Robot roboThree = new Robot("asssd",true, true);
+
+		final Robot roboThree = new Robot("asssd", true, true);
 		roboThree.setScore(42);
-		
-		final Robot roboFour = new Robot("asssssd",true, true);
+
+		final Robot roboFour = new Robot("asssssd", true, true);
 		roboFour.setScore(500);
-		
-		final Robot roboFive = new Robot("asssssssd",true, true);
+
+		final Robot roboFive = new Robot("asssssssd", true, true);
 		roboFive.setScore(4);
 
 		final List<IRobot> list = new ArrayList<>(5);
@@ -162,7 +172,7 @@ public class EntitySortTest {
 		list.add(roboFive);
 
 		SortUtil.sortRobots(list);
-		
+
 		final List<Robot> expected = Arrays.asList(roboFour, roboThree, roboFive, roboTwo, roboOne);
 
 		assertTrue("Expect that 'list' and 'expected' are equal \n 'list' = " + list + "\n 'expected = " + expected,

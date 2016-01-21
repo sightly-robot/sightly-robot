@@ -20,66 +20,74 @@ import de.unihannover.swp2015.robots2.visual.desktop.CommandLineHandler.OptionKe
 import de.unihannover.swp2015.robots2.visual.resource.ResConst;
 
 /**
- * Starter class for desktop systems. Accepts three different arguments, use -h | --help for usage information.
+ * Starter class for desktop systems. Accepts three different arguments, use -h
+ * | --help for usage information.
  * 
  * @author Rico Schrage
  */
 public class DesktopLauncher {
-	
+
 	/** Logger (log4j) */
 	private static final Logger log = LogManager.getLogger();
 	/** Path to the shaders of the PP-library */
 	private static final String SHADER_PATH = "resources/shaders/";
-	
+
 	private DesktopLauncher() {
-		//pure static class
+		// pure static class
 	}
-	
+
 	/**
-	 * Main entry point. 
+	 * Main entry point.
 	 * 
 	 * @param args
 	 */
 	public static void main(String[] args) {
 		final CommandLineHandler clh = new CommandLineHandler();
-		
-		// if this is true the help flag has been detected, so the user 
+
+		// if this is true the help flag has been detected, so the user
 		// did not intend to start the application.
 		if (clh.parse(args)) {
 			return;
 		}
-		
+
 		startApp(clh.getFlag(FlagKey.DEBUG), clh.getOption(OptionKey.IP));
 	}
-	
+
 	/**
 	 * Starts the application with the parsed arguments.
 	 * 
-	 * @param debug debug flag
-	 * @param brokerIp ip of the MQTT broker
+	 * @param debug
+	 *            debug flag
+	 * @param brokerIp
+	 *            ip of the MQTT broker
 	 */
 	private static void startApp(final boolean debug, final String brokerIp) {
-	
+
 		ShaderLoader.BasePath = SHADER_PATH;
-		
+
 		if (debug) {
 			// packs all textures of the default theme in a texture atlas
 			// name of the theme "default"
 			log.info("TexturePacker has been started:");
 			final Settings packSettings = new Settings();
-			packSettings.maxWidth = 1024*4;
-			packSettings.maxHeight = 1024*4;
+			packSettings.maxWidth = 1024 * 4;
+			packSettings.maxHeight = 1024 * 4;
 			packSettings.pot = true;
 			packSettings.duplicatePadding = true;
 			packSettings.paddingX = 4;
 			packSettings.paddingY = 4;
 			packSettings.filterMag = TextureFilter.MipMapNearestNearest;
 			packSettings.filterMin = TextureFilter.MipMapNearestNearest;
-			TexturePacker.process(packSettings, "assets/tex/default_theme_src", ResConst.ATLAS_PATH.getName()+ "/default", ResConst.ATLAS_NAME.getName());
-			TexturePacker.process(packSettings, "assets/tex/earth_theme_src", ResConst.ATLAS_PATH.getName()+ "/earth", ResConst.ATLAS_NAME.getName());
-			TexturePacker.process(packSettings, "assets/tex/home_theme_src", ResConst.ATLAS_PATH.getName()+ "/home", ResConst.ATLAS_NAME.getName());
+			TexturePacker.process(packSettings, "assets/tex/default_theme_src",
+					ResConst.ATLAS_PATH.getName() + "/default", ResConst.ATLAS_NAME.getName());
+			TexturePacker.process(packSettings, "assets/tex/earth_theme_src", ResConst.ATLAS_PATH.getName() + "/earth",
+					ResConst.ATLAS_NAME.getName());
+			TexturePacker.process(packSettings, "assets/tex/home_theme_src", ResConst.ATLAS_PATH.getName() + "/home",
+					ResConst.ATLAS_NAME.getName());
 		}
-		final java.awt.DisplayMode dm = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDisplayMode();
+
+		final java.awt.DisplayMode dm = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice()
+				.getDisplayMode();
 		final LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.width = dm.getWidth();
 		config.height = dm.getHeight();
@@ -89,8 +97,8 @@ public class DesktopLauncher {
 		config.fullscreen = false;
 		config.addIcon("assets/icon/rIcon.png", FileType.Internal);
 		config.addIcon("assets/icon/rIcon_32.png", FileType.Internal);
+		config.addIcon("assets/icon/rIcon_128.png", FileType.Internal);
 		new LwjglApplication(new Visualization(debug, brokerIp), config).setLogLevel(Application.LOG_NONE);
-		
 	}
 
 }

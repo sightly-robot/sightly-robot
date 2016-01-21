@@ -16,6 +16,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 
 import de.unihannover.swp2015.robots2.visual.resource.ResConst.ResType;
@@ -45,6 +47,9 @@ public class ResourceHandler implements IResourceHandler {
 
 	/** Current texture pack. */
 	private String texPack = ResConst.DEFAULT_THEME.getName();
+
+	/** Current skin for the UI */
+	private Skin uiSkin;
 
 	/**
 	 * Map key->textureRegion. <br>
@@ -80,6 +85,12 @@ public class ResourceHandler implements IResourceHandler {
 	private final Map<ResConst, RenderUnit> renderUnitMap;
 
 	/**
+	 * ResConst -> TextureRegionDrawable This map will store drawables for
+	 * scene2d elements.
+	 */
+	private final Map<ResConst, TextureRegionDrawable> textureRegionDrawableMap;
+
+	/**
 	 * Constructs ResourceHandler
 	 */
 	public ResourceHandler(final String pathToThemes) {
@@ -87,6 +98,7 @@ public class ResourceHandler implements IResourceHandler {
 		this.frameSetMap = new EnumMap<>(ResConst.class);
 		this.renderUnitMap = new EnumMap<>(ResConst.class);
 		this.fontMap = new EnumMap<>(ResConst.class);
+		this.textureRegionDrawableMap = new EnumMap<>(ResConst.class);
 		this.themePath = pathToThemes;
 
 		this.createRegions();
@@ -114,6 +126,20 @@ public class ResourceHandler implements IResourceHandler {
 				}
 			}
 		}
+
+		if (uiSkin == null) {
+			return;
+		}
+
+		uiSkin.addRegions(texAtlas);
+		for (final ResConst res : resConsts) {
+			if (res.getType() == ResType.TEX) {
+				final TextureRegionDrawable drawable = textureRegionDrawableMap.get(res);
+				if (drawable != null) {
+					drawable.setRegion(uiSkin.getRegion(res.toString()));
+				}
+			}
+		}
 	}
 
 	private String getPathToTheme() {
@@ -135,7 +161,8 @@ public class ResourceHandler implements IResourceHandler {
 	}
 
 	@Override
-	public BitmapFont createFont(int size, String loadChars, boolean flip, int borderWidth, Color borderColor, Color fontColor) {
+	public BitmapFont createFont(int size, String loadChars, boolean flip, int borderWidth, Color borderColor,
+			Color fontColor) {
 		if (fontMap.get(ResConst.DEFAULT_FONT).containsKey(size)) {
 			return fontMap.get(ResConst.DEFAULT_FONT).get(size);
 		}
@@ -208,14 +235,15 @@ public class ResourceHandler implements IResourceHandler {
 	@Override
 	public TextureRegion getRegion(final ResConst key) {
 		final TextureRegion region = texMap.get(key);
-		if (region == null)
+		if (region == null) {
 			return texMap.get(PLACEHOLDER);
+		}
 		return region;
 	}
 
 	@Override
 	public TextureRegion[] getRegion(final ResConst... keys) {
-		TextureRegion[] regionArray = new TextureRegion[keys.length];
+		final TextureRegion[] regionArray = new TextureRegion[keys.length];
 		for (int i = 0; i < keys.length; ++i) {
 			regionArray[i] = texMap.get(keys[i]);
 		}
@@ -234,7 +262,7 @@ public class ResourceHandler implements IResourceHandler {
 
 	@Override
 	public BitmapFont[] getFont(int size, ResConst... keys) {
-		BitmapFont[] regionArray = new BitmapFont[keys.length];
+		final BitmapFont[] regionArray = new BitmapFont[keys.length];
 		for (int i = 0; i < keys.length; ++i) {
 			regionArray[i] = fontMap.get(keys[i]).get(size);
 		}
@@ -243,14 +271,43 @@ public class ResourceHandler implements IResourceHandler {
 
 	@Override
 	public Skin createSkin() {
-		final Skin skin = new Skin();
-		skin.add("default-font", createFont(50, NECESSARY_CHARS, true, 10, Color.BLACK, Color.WHITE));
-		skin.getFont("default-font").getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
-		skin.addRegions(texAtlas);
-		skin.load(Gdx.files.internal("assets" + File.separator + "theme" + File.separator + 
-				this.texPack + File.separator + "skin.json"));
-		
-		return skin;
+		if (uiSkin != null) {
+			return uiSkin;
+		}
+
+		uiSkin = new Skin();
+		uiSkin.add(ResConst.SKIN_DEFAULT_FONT.toString(),
+				createFont(50, NECESSARY_CHARS, true, 10, Color.BLACK, Color.WHITE));
+		uiSkin.add(ResConst.SKIN_TITLE_FONT.toString(),
+				createFont(50, NECESSARY_CHARS, true, 10, Color.BLACK, Color.WHITE));
+		uiSkin.add(ResConst.SKIN_RANKING_FONT.toString(),
+				createFont(50, NECESSARY_CHARS, true, 10, Color.BLACK, Color.WHITE));
+		uiSkin.getFont(ResConst.SKIN_DEFAULT_FONT.toString()).getRegion().getTexture().setFilter(TextureFilter.Linear,
+				TextureFilter.Linear);
+		uiSkin.getFont(ResConst.SKIN_TITLE_FONT.toString()).getRegion().getTexture().setFilter(TextureFilter.Linear,
+				TextureFilter.Linear);
+		uiSkin.getFont(ResConst.SKIN_RANKING_FONT.toString()).getRegion().getTexture().setFilter(TextureFilter.Linear,
+				TextureFilter.Linear);
+		uiSkin.addRegions(texAtlas);
+		uiSkin.load(Gdx.files
+				.internal(ResConst.ATLAS_PATH.toString() + ResConst.DEFAULT_THEME + File.separator + "skin.json"));
+		return uiSkin;
+	}
+
+	@Override
+	public Drawable createDrawableFromSkin(ResConst key) {
+		if (textureRegionDrawableMap.containsKey(key)) {
+			return textureRegionDrawableMap.get(key);
+		}
+		if (uiSkin == null) {
+			return null;
+		}
+		final TextureRegion region = uiSkin.getRegion(key.toString());
+		if (region != null) {
+			Drawable drawable = new TextureRegionDrawable(region);
+			return drawable;
+		}
+		return null;
 	}
 
 }

@@ -4,7 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 
 /**
- * Convenience class, just initializes a {@link ShaderProgram} with the gap-vertex and gap-fragment shader.
+ * Convenience class, just initializes a {@link ShaderProgram} with the
+ * gap-vertex and gap-fragment shader.
  * 
  * @author Rico Schrage
  */

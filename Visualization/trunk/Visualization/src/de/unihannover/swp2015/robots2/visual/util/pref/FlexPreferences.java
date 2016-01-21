@@ -9,7 +9,8 @@ import com.badlogic.gdx.Preferences;
 /**
  * It's an observable implementation of {@link IPreferences}.
  * 
- * @param <T> type of the key, which will be used for the preference object.
+ * @param <T>
+ *            type of the key, which will be used for the preference object.
  * @see {@link IPreferences}
  * @author Rico Schrage
  */
@@ -41,7 +42,9 @@ public class FlexPreferences<T extends IPreferencesKey> extends PreferencesObser
 	protected final Map<T, Float> floatMap;
 
 	/**
-	 * Constructs a {@link FlexPreferences}, <code>name</code> will be used as filename to store persistent data.
+	 * Constructs a {@link FlexPreferences}, <code>name</code> will be used as
+	 * filename to store persistent data.
+	 * 
 	 * @see {@link com.badlogic.gdx.Preferences}
 	 * @param name
 	 */
@@ -53,11 +56,11 @@ public class FlexPreferences<T extends IPreferencesKey> extends PreferencesObser
 
 		this.persistentDataHandler = Gdx.app.getPreferences(name);
 	}
-	
+
 	private static IllegalArgumentException createPersistentException() {
 		return new IllegalArgumentException("The key already exists for storing data in a persistent way!");
 	}
-	
+
 	@Override
 	public boolean getBoolean(T key) {
 		return getBoolean(key, (boolean) key.getDefault());
@@ -81,7 +84,7 @@ public class FlexPreferences<T extends IPreferencesKey> extends PreferencesObser
 	public float getFloat(T key) {
 		return getFloat(key, (float) key.getDefault());
 	}
-	
+
 	@Override
 	public float getFloat(T key, float def) {
 		final Float result = floatMap.get(key);
@@ -100,7 +103,7 @@ public class FlexPreferences<T extends IPreferencesKey> extends PreferencesObser
 	public int getInt(T key) {
 		return getInt(key, (int) key.getDefault());
 	}
-	
+
 	@Override
 	public int getInt(T key, int def) {
 		final Integer result = integerMap.get(key);
@@ -119,7 +122,7 @@ public class FlexPreferences<T extends IPreferencesKey> extends PreferencesObser
 	public String getString(T key) {
 		return getString(key, (String) key.getDefault());
 	}
-	
+
 	@Override
 	public String getString(T key, String def) {
 		final String result = stringMap.get(key);
@@ -143,11 +146,10 @@ public class FlexPreferences<T extends IPreferencesKey> extends PreferencesObser
 	public void putBoolean(T key, boolean value, boolean persistent) {
 		if (persistent) {
 			persistentDataHandler.putBoolean(key.getKey(), value);
-		}
-		else if (persistentDataHandler.contains(key.getKey())) {
+		} else if (persistentDataHandler.contains(key.getKey())) {
 			throw createPersistentException();
 		}
-		
+
 		booleanMap.put(key, value);
 		notifyObserver(key, value);
 	}
@@ -161,13 +163,12 @@ public class FlexPreferences<T extends IPreferencesKey> extends PreferencesObser
 	public void putFloat(T key, float value, boolean persistent) {
 		if (persistent) {
 			persistentDataHandler.putFloat(key.getKey(), value);
-		}
-		else if (persistentDataHandler.contains(key.getKey())) {
+		} else if (persistentDataHandler.contains(key.getKey())) {
 			throw createPersistentException();
 		}
-		
+
 		floatMap.put(key, value);
-		notifyObserver(key, value);	
+		notifyObserver(key, value);
 	}
 
 	@Override
@@ -179,11 +180,10 @@ public class FlexPreferences<T extends IPreferencesKey> extends PreferencesObser
 	public void putInt(T key, int value, boolean persistent) {
 		if (persistent) {
 			persistentDataHandler.putInteger(key.getKey(), value);
-		}
-		else if (persistentDataHandler.contains(key.getKey())) {
+		} else if (persistentDataHandler.contains(key.getKey())) {
 			throw createPersistentException();
 		}
-		
+
 		integerMap.put(key, value);
 		notifyObserver(key, value);
 	}
@@ -197,11 +197,10 @@ public class FlexPreferences<T extends IPreferencesKey> extends PreferencesObser
 	public void putString(T key, String value, boolean persistent) {
 		if (persistent) {
 			persistentDataHandler.putString(key.getKey(), value);
-		}
-		else if (persistentDataHandler.contains(key.getKey())) {
+		} else if (persistentDataHandler.contains(key.getKey())) {
 			throw createPersistentException();
 		}
-		
+
 		stringMap.put(key, value);
 		notifyObserver(key, value);
 	}

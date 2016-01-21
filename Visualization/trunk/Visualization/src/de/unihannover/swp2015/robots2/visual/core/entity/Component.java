@@ -13,7 +13,7 @@ public abstract class Component implements IComponent, IPreferencesObserver<Pref
 
 	/** Registered entity */
 	protected IEntity entity;
-	
+
 	/**
 	 * Construct a component with the given {@link IPreferences}
 	 * 
@@ -22,7 +22,7 @@ public abstract class Component implements IComponent, IPreferencesObserver<Pref
 	public Component(IPreferences<PrefKey> pref) {
 		pref.addObserver(this);
 	}
-	
+
 	@Override
 	public void onRegister(IEntity entity) {
 		this.entity = entity;

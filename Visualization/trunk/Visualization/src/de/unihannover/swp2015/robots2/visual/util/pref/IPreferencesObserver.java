@@ -5,15 +5,18 @@ package de.unihannover.swp2015.robots2.visual.util.pref;
  * 
  * @author Rico Schrage
  *
- * @param <T> type of the key, which will be used for the preference object.
+ * @param <T>
+ *            type of the key, which will be used for the preference object.
  */
 public interface IPreferencesObserver<T extends IPreferencesKey> {
-	
+
 	/**
 	 * Will be called when a value has changed
 	 * 
-	 * @param updatedKey key, whose value has changed
-	 * @param value new value
+	 * @param updatedKey
+	 *            key, whose value has changed
+	 * @param value
+	 *            new value
 	 */
 	void onUpdatePreferences(final T updatedKey, final Object value);
 

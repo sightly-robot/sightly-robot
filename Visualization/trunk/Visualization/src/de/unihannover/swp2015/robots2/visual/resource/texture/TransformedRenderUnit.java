@@ -3,7 +3,8 @@ package de.unihannover.swp2015.robots2.visual.resource.texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 
 /**
- * Decorator for instances of {@link RenderUnit}. Add the possibility to set transformations.
+ * Decorator for instances of {@link RenderUnit}. Add the possibility to set
+ * transformations.
  * 
  * @author Rico Schrage
  */
@@ -19,24 +20,30 @@ public class TransformedRenderUnit {
 	private float originY;
 	private float scaleX;
 	private float scaleY;
-	
+
 	/**
 	 * Constructs a transformed RenderUnit with the given transformations.
 	 * 
-	 * @param renderUnit unit, which describes what have to be rendered
+	 * @param renderUnit
+	 *            unit, which describes what have to be rendered
 	 */
 	public TransformedRenderUnit(RenderUnit renderUnit) {
 		this(renderUnit, 0, 0, 0, 0);
 	}
-	
+
 	/**
 	 * Constructs a transformed RenderUnit with the given transformations.
 	 * 
-	 * @param renderUnit unit, which describes what have to be rendered
-	 * @param x x position
-	 * @param y y position
-	 * @param width width 
-	 * @param height height 
+	 * @param renderUnit
+	 *            unit, which describes what have to be rendered
+	 * @param x
+	 *            x position
+	 * @param y
+	 *            y position
+	 * @param width
+	 *            width
+	 * @param height
+	 *            height
 	 */
 	public TransformedRenderUnit(RenderUnit renderUnit, float x, float y, float width, float height) {
 		this(renderUnit, x, y, width, height, 0, 0, 0);
@@ -45,34 +52,54 @@ public class TransformedRenderUnit {
 	/**
 	 * Constructs a transformed RenderUnit with the given transformations.
 	 * 
-	 * @param renderUnit unit, which describes what have to be rendered
-	 * @param x x position
-	 * @param y y position
-	 * @param width width 
-	 * @param height height 
-	 * @param originX X-coordinate you want to rotate around
-	 * @param originY Y-coordinate you want to rotate around
-	 * @param rotation rotation in degrees
+	 * @param renderUnit
+	 *            unit, which describes what have to be rendered
+	 * @param x
+	 *            x position
+	 * @param y
+	 *            y position
+	 * @param width
+	 *            width
+	 * @param height
+	 *            height
+	 * @param originX
+	 *            X-coordinate you want to rotate around
+	 * @param originY
+	 *            Y-coordinate you want to rotate around
+	 * @param rotation
+	 *            rotation in degrees
 	 */
-	public TransformedRenderUnit(RenderUnit renderUnit, float x, float y, float width, float height, float originX, float originY, float rotation) {
+	public TransformedRenderUnit(RenderUnit renderUnit, float x, float y, float width, float height, float originX,
+			float originY, float rotation) {
 		this(renderUnit, x, y, width, height, originX, originY, rotation, 1, 1);
 	}
-	
+
 	/**
 	 * Constructs a transformed RenderUnit with the given transformations.
 	 * 
-	 * @param renderUnit unit, which describes what have to be rendered
-	 * @param x x position
-	 * @param y y position
-	 * @param width width 
-	 * @param height height 
-	 * @param originX X-coordinate you want to rotate around
-	 * @param originY Y-coordinate you want to rotate around
-	 * @param rotation rotation in degrees
-	 * @param scaleX scale x direction
-	 * @param scaleY scale y direction
+	 * @param renderUnit
+	 *            unit, which describes what have to be rendered
+	 * @param x
+	 *            x position
+	 * @param y
+	 *            y position
+	 * @param width
+	 *            width
+	 * @param height
+	 *            height
+	 * @param originX
+	 *            X-coordinate you want to rotate around
+	 * @param originY
+	 *            Y-coordinate you want to rotate around
+	 * @param rotation
+	 *            rotation in degrees
+	 * @param scaleX
+	 *            scale x direction
+	 * @param scaleY
+	 *            scale y direction
 	 */
-	public TransformedRenderUnit(RenderUnit renderUnit, float x, float y, float width, float height, float originX, float originY, float rotation, float scaleX, float scaleY) {
+	public TransformedRenderUnit(RenderUnit renderUnit, float x, float y, float width, float height, float originX,
+			float originY, float rotation, float scaleX, float scaleY) {
 		this.renderUnit = renderUnit;
 		this.x = x;
 		this.y = y;
@@ -84,11 +111,12 @@ public class TransformedRenderUnit {
 		this.scaleX = scaleX;
 		this.scaleY = scaleY;
 	}
-	
+
 	/**
 	 * Draw the renderUnit with the stored transformations.
 	 * 
-	 * @param batch {@link Batch}
+	 * @param batch
+	 *            {@link Batch}
 	 */
 	public void draw(Batch batch) {
 		renderUnit.draw(batch, x, y, width, height, originX, originY, scaleX, scaleY, rotation);
@@ -102,7 +130,8 @@ public class TransformedRenderUnit {
 	}
 
 	/**
-	 * @param x the x to set
+	 * @param x
+	 *            the x to set
 	 */
 	public void setX(float x) {
 		this.x = x;
@@ -116,7 +145,8 @@ public class TransformedRenderUnit {
 	}
 
 	/**
-	 * @param y the y to set
+	 * @param y
+	 *            the y to set
 	 */
 	public void setY(float y) {
 		this.y = y;
@@ -130,7 +160,8 @@ public class TransformedRenderUnit {
 	}
 
 	/**
-	 * @param width the width to set
+	 * @param width
+	 *            the width to set
 	 */
 	public void setWidth(float width) {
 		this.width = width;
@@ -144,7 +175,8 @@ public class TransformedRenderUnit {
 	}
 
 	/**
-	 * @param height the height to set
+	 * @param height
+	 *            the height to set
 	 */
 	public void setHeight(float height) {
 		this.height = height;
@@ -158,7 +190,8 @@ public class TransformedRenderUnit {
 	}
 
 	/**
-	 * @param rotation the rotation to set
+	 * @param rotation
+	 *            the rotation to set
 	 */
 	public void setRotation(float rotation) {
 		this.rotation = rotation;
@@ -172,7 +205,8 @@ public class TransformedRenderUnit {
 	}
 
 	/**
-	 * @param originX the originX to set
+	 * @param originX
+	 *            the originX to set
 	 */
 	public void setOriginX(float originX) {
 		this.originX = originX;
@@ -186,7 +220,8 @@ public class TransformedRenderUnit {
 	}
 
 	/**
-	 * @param originY the originY to set
+	 * @param originY
+	 *            the originY to set
 	 */
 	public void setOriginY(float originY) {
 		this.originY = originY;
@@ -200,7 +235,8 @@ public class TransformedRenderUnit {
 	}
 
 	/**
-	 * @param scaleX the scaleX to set
+	 * @param scaleX
+	 *            the scaleX to set
 	 */
 	public void setScaleX(float scaleX) {
 		this.scaleX = scaleX;
@@ -214,7 +250,8 @@ public class TransformedRenderUnit {
 	}
 
 	/**
-	 * @param scaleY the scaleY to set
+	 * @param scaleY
+	 *            the scaleY to set
 	 */
 	public void setScaleY(float scaleY) {
 		this.scaleY = scaleY;
@@ -228,7 +265,8 @@ public class TransformedRenderUnit {
 	}
 
 	/**
-	 * @param renderUnit the renderUnit to set
+	 * @param renderUnit
+	 *            the renderUnit to set
 	 */
 	public void setRenderUnit(RenderUnit renderUnit) {
 		this.renderUnit = renderUnit;

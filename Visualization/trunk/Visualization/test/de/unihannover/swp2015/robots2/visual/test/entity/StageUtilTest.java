@@ -21,13 +21,13 @@ public class StageUtilTest {
 		f3.setWall(Orientation.SOUTH, true);
 		final Field f4 = new Field(0, 5);
 		f4.setWall(Orientation.WEST, true);
-		
+
 		assertTrue(StageUtil.checkDriveDirection(f1, Orientation.WEST, 6, 6));
 		assertFalse(StageUtil.checkDriveDirection(f2, Orientation.WEST, 6, 6));
 		assertFalse(StageUtil.checkDriveDirection(f3, Orientation.WEST, 6, 6));
 		assertTrue(StageUtil.checkDriveDirection(f4, Orientation.WEST, 6, 6));
-	}	
-	
+	}
+
 	@Test
 	public void checkDriveDirectionPNTest() {
 		final Stage stage = new Stage();
@@ -44,7 +44,7 @@ public class StageUtilTest {
 		f5.setWall(Orientation.WEST, true);
 		final Field f6 = (Field) stage.getField(0, 1);
 		f6.setWall(Orientation.WEST, true);
-		
+
 		assertTrue(StageUtil.checkDriveDirectionOrNeighbors(f1, stage, Orientation.WEST));
 		assertFalse(StageUtil.checkDriveDirectionOrNeighbors(f2, stage, Orientation.WEST));
 		assertFalse(StageUtil.checkDriveDirectionOrNeighbors(f3, stage, Orientation.WEST));
@@ -64,20 +64,20 @@ public class StageUtilTest {
 
 	@Test
 	public void convertToIntTest() {
-		boolean[] b0 = {true, false, true, false};
-		boolean[] b1 = {false, false, true, false};
-		boolean[] b2 =  {true, true, true, false};
-		boolean[] b3 = {true, false, false, true};
-		
+		boolean[] b0 = { true, false, true, false };
+		boolean[] b1 = { false, false, true, false };
+		boolean[] b2 = { true, true, true, false };
+		boolean[] b3 = { true, false, false, true };
+
 		assertEquals(StageUtil.convertToInt(b0, 10), 101);
 		assertEquals(StageUtil.convertToInt(b1, 10), 100);
 		assertEquals(StageUtil.convertToInt(b2, 10), 111);
 		assertEquals(StageUtil.convertToInt(b3, 10), 1001);
-		
+
 		assertEquals(StageUtil.convertToInt(b0, 2), 5);
 		assertEquals(StageUtil.convertToInt(b1, 2), 4);
 		assertEquals(StageUtil.convertToInt(b2, 2), 7);
 		assertEquals(StageUtil.convertToInt(b3, 2), 9);
 	}
-	
+
 }

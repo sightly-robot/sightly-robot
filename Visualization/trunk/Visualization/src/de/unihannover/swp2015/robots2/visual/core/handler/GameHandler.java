@@ -9,27 +9,31 @@ import de.unihannover.swp2015.robots2.visual.resource.IResourceHandler;
 import de.unihannover.swp2015.robots2.visual.util.pref.IPreferences;
 
 /**
- * Provides implementation of the trivial method in {@link IGameHandler} and implements {@link #onModelUpdate(IEvent)} to make 
- * {@link #onManagedModelUpdate(IEvent)} run in render thread.
+ * Provides implementation of the trivial methods in {@link IGameHandler} and
+ * implements {@link #onModelUpdate(IEvent)} to make
+ * {@link #onManagedModelUpdate(IEvent)} run in the render thread.
  * 
  * @author Rico Schrage
  */
 public abstract class GameHandler implements IGameHandler {
-	
+
 	/** Contains multiple sets of resources for the game. */
 	protected IResourceHandler resHandler;
-	
+
 	/** Settings received via MQTT plus internal non-persistent settings. */
 	protected IPreferences<PrefKey> prefs;
-	
+
 	/** Root of the game. */
 	protected IGame game;
-	
+
 	/**
 	 * Constructs GameHandler.
 	 * 
-	 * @param resHandler handler, which managed <b>all</b> resources the gameHandler will use
-	 * @param prefs hold and manages preferences
+	 * @param resHandler
+	 *            handler, which managed <b>all</b> resources the gameHandler
+	 *            will use
+	 * @param prefs
+	 *            hold and manages preferences
 	 */
 	public GameHandler(final IGame game, final IResourceHandler resHandler, final IPreferences<PrefKey> prefs) {
 		this.resHandler = resHandler;
@@ -38,7 +42,7 @@ public abstract class GameHandler implements IGameHandler {
 		this.prefs = prefs;
 		this.prefs.addObserver(this);
 	}
-	
+
 	@Override
 	public void onModelUpdate(final IEvent event) {
 		Gdx.app.postRunnable(new Runnable() {
@@ -48,7 +52,7 @@ public abstract class GameHandler implements IGameHandler {
 			}
 		});
 	}
-	
+
 	@Override
 	public void setResourceHandler(IResourceHandler resourceHandler) {
 		resHandler = resourceHandler;
@@ -63,7 +67,7 @@ public abstract class GameHandler implements IGameHandler {
 	public IPreferences<PrefKey> getPreferences() {
 		return prefs;
 	}
-	
+
 	@Override
 	public void dispose() {
 		resHandler.dispose();

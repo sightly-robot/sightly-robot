@@ -6,73 +6,75 @@ import java.util.List;
 import com.badlogic.gdx.Gdx;
 
 /**
- * Base class for most of the entity-modifier. Contains a standard implementation of {@link IUpdateable#update()}.
+ * Base class for most of the entity-modifier. Contains a standard
+ * implementation of {@link IUpdateable#update()}.
  * 
  * @author Rico Schrage
  */
 public abstract class EntityModifier implements IEntityModifier {
 
 	/** Estimated duration. */
-    protected final float duration;
-    
-    /** Remaining duration. */
-    protected float currentDuration;
+	protected final float duration;
 
-    /** Target, which the modifier will affect. */
-    protected final IEntity target;
+	/** Remaining duration. */
+	protected float currentDuration;
 
-    /** True if currentDuration <= 0. */
-    protected boolean hasFinished = false;
+	/** Target, which the modifier will affect. */
+	protected final IEntity target;
 
-    /** List of {@link IFinishListener}. */
-    protected List<IFinishListener> finishListenerList;
+	/** True if currentDuration <= 0. */
+	protected boolean hasFinished = false;
 
-    /**
-     * Constructs an EntityModifier using given target and duration.
-     * 
-     * @param target target
-     * @param duration estimated duration
-     */
-    public EntityModifier(final IEntity target, final float duration) {
-    	this.duration = duration;
-    	this.currentDuration = duration;
-    	this.target = target;
-    	this.finishListenerList = new ArrayList<>();
-    }
+	/** List of {@link IFinishListener}. */
+	protected List<IFinishListener> finishListenerList;
 
-    @Override
-    public void update() {
-        currentDuration -= Gdx.graphics.getDeltaTime();
-        if (currentDuration > 0) {
-            tick();
-        }
-        else if(!hasFinished) {
-            currentDuration = 0;
-            tick();
-            hasFinished = true;
-        }
-    }
+	/**
+	 * Constructs an EntityModifier using given target and duration.
+	 * 
+	 * @param target
+	 *            target
+	 * @param duration
+	 *            estimated duration
+	 */
+	public EntityModifier(final IEntity target, final float duration) {
+		this.duration = duration;
+		this.currentDuration = duration;
+		this.target = target;
+		this.finishListenerList = new ArrayList<>();
+	}
 
-    @Override
-    public void addFinishListener(IFinishListener finishListener) {
-        finishListenerList.add(finishListener);
-    }
+	@Override
+	public void update() {
+		currentDuration -= Gdx.graphics.getDeltaTime();
+		if (currentDuration > 0) {
+			tick();
+		} else if (!hasFinished) {
+			currentDuration = 0;
+			tick();
+			hasFinished = true;
+		}
+	}
 
-    @Override
-    public boolean hasFinished() {
-        return hasFinished;
-    }
+	@Override
+	public void addFinishListener(IFinishListener finishListener) {
+		finishListenerList.add(finishListener);
+	}
 
-    @Override
-    public void onFinish() {
-        for (int i = 0 ; i < finishListenerList.size(); ++i) {
-            finishListenerList.get(i).onFinish();
-        }
-    }
+	@Override
+	public boolean hasFinished() {
+		return hasFinished;
+	}
 
-    @Override
-    public void kill() {
-        hasFinished = true;
-    }
+	@Override
+	public void onFinish() {
+		for (int i = 0; i < finishListenerList.size(); ++i) {
+			finishListenerList.get(i).onFinish();
+		}
+	}
+
+	@Override
+	public void kill() {
+		hasFinished = true;
+	}
 
 }

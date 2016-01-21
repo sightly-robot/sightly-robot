@@ -9,20 +9,22 @@ import com.badlogic.gdx.Gdx;
  *
  */
 public class LoopedTask {
-	
+
 	/** Task, which will be executed */
 	private final Task task;
 	/** Interval between the executions */
 	private final float interval;
-	
+
 	/** Time, which passed after last execution */
 	private float progress;
-	
+
 	/**
 	 * Construct a looped task with the given interval.
 	 * 
-	 * @param fullInterval interval between executions
-	 * @param job task, which should get excuted
+	 * @param fullInterval
+	 *            interval between executions
+	 * @param job
+	 *            task, which should get excuted
 	 */
 	public LoopedTask(float fullInterval, Task job) {
 		this.interval = fullInterval;
@@ -37,5 +39,5 @@ public class LoopedTask {
 			progress = interval;
 		}
 	}
-	
+
 }

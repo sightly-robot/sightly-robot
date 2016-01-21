@@ -38,6 +38,10 @@
         "default": {
             "font": "default-font",
             "fontColor": "white"
+        },
+        "title": {
+            "font": "title-font",
+            "fontColor": "white"  
         }
-    },
+    }
 }
