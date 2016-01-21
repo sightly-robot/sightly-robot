@@ -4,6 +4,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.pivot.collections.Sequence;
+import org.apache.pivot.wtk.Component;
+import org.apache.pivot.wtk.ComponentMouseButtonListener;
+import org.apache.pivot.wtk.Mouse.Button;
 import org.apache.pivot.wtk.Span;
 import org.apache.pivot.wtk.TableView;
 import org.apache.pivot.wtk.TableViewSelectionListener;
@@ -46,6 +49,10 @@ public class TableObserver implements IModelObserver {
 		elements.setRetainedIndex(-1);
 		table.setSelectMode(TableView.SelectMode.SINGLE);	
 		table.getTableViewSelectionListeners().add(selectionChangeListener);
+		
+		// this is a compromise. Unfortunately the selection event also gets fired
+		// by computationally selected rows. This causes infinity blink events.
+		table.getComponentMouseButtonListeners().add(tableClickListener);
 		controller.getGame().observe(this);
 	}
 	
@@ -93,10 +100,35 @@ public class TableObserver implements IModelObserver {
 				visualization.setSelectedRobotId(getSelected().getId());
 				visualization.update();
 				visualization.repaint();
-				controller.letRobotBlink(getSelected().getId());
 				elements.setRetainedIndex(view.getSelectedIndex());
 			}
 		}		
+	};
+	
+
+	private ComponentMouseButtonListener tableClickListener = new ComponentMouseButtonListener() {
+
+		@Override
+		public boolean mouseClick(Component table, Button button, int x, int y, int count) {
+			if (button.equals(Button.LEFT) ) {
+				TableElement elem = getSelected();
+				if (elem != null) {
+					controller.letRobotBlink(elem.getId());
+				}
+			}
+			return false;
+		}
+
+		@Override
+		public boolean mouseDown(Component table, Button button, int x, int y) {
+			return false; /* not used */ 
+		}
+
+		@Override
+		public boolean mouseUp(Component table, Button button, int x, int y) {
+			return false; /* not used */ 
+		}
+		
 	};
 
 	/**
@@ -141,6 +173,7 @@ public class TableObserver implements IModelObserver {
 			return; // do nothing
 		else {
 			table.setSelectedIndex(index);
+			controller.letRobotBlink(getSelected().getId());
 		}
 	}
 
