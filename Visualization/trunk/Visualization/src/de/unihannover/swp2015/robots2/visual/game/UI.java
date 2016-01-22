@@ -57,7 +57,7 @@ public class UI implements IRenderable, IUpdateable, Disposable, IResizable {
 		this.ranking = new RobotList(res.createSkin(), robots);
 		this.title = new Label("Ranking", res.createSkin(), ResConst.SKIN_TITLE_FONT.toString(), Color.WHITE);
 		this.panel = new Container<>(ranking);
-		this.setupStage(robots, res);
+		this.setupStage(res);
 		this.onResize(view);
 
 		Gdx.input.setInputProcessor(stage);
@@ -66,12 +66,10 @@ public class UI implements IRenderable, IUpdateable, Disposable, IResizable {
 	/**
 	 * Sets initial values.
 	 * 
-	 * @param robots
-	 *            model
 	 * @param res
 	 *            resources
 	 */
-	private void setupStage(List<IRobot> robots, IResourceHandler res) {
+	private void setupStage(IResourceHandler res) {
 		panel.setColor(GameConst.UI_COLOR);
 		panel.setBackground(res.createDrawableFromSkin(ResConst.DEFAULT_RECT));
 		panel.align(Align.bottomLeft);

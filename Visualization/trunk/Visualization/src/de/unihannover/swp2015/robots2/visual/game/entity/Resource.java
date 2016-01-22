@@ -14,7 +14,7 @@ import de.unihannover.swp2015.robots2.visual.resource.texture.RenderUnit;
  * An entity used for the visualization of resources/food
  * 
  * @version 1.0
- * @author Daphne Sch�ssow
+ * @author Daphne Schössow
  */
 public class Resource extends Entity {
 

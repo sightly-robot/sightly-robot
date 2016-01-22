@@ -125,7 +125,7 @@ public class CommandLineHandler {
 					break;
 				}
 			}
-			options.put(OptionKey.PROTOCOL, (protoValid) ? proto : DEFAULT_PROTO);
+			options.put(OptionKey.PROTOCOL, protoValid ? proto : DEFAULT_PROTO);
 			log.info("Chosen protocol: {}", proto);
 		} catch (ParseException e) {
 			log.error("A syntax error occured:");

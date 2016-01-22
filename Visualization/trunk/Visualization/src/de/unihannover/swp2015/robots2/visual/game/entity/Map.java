@@ -19,7 +19,7 @@ import de.unihannover.swp2015.robots2.visual.game.RobotGameHandler;
  * field entities
  * 
  * @version 1.0
- * @author Daphne Sch�ssow
+ * @author Daphne Schössow
  */
 public class Map extends Entity {
 

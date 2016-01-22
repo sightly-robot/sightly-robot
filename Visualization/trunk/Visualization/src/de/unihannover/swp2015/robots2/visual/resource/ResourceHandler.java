@@ -307,8 +307,7 @@ public class ResourceHandler implements IResourceHandler {
 		}
 		final TextureRegion region = uiSkin.getRegion(key.toString());
 		if (region != null) {
-			Drawable drawable = new TextureRegionDrawable(region);
-			return drawable;
+			return new TextureRegionDrawable(region);
 		}
 		return null;
 	}
@@ -330,6 +329,9 @@ public class ResourceHandler implements IResourceHandler {
 		return result;
 	}
 	
+	/**
+	 * @return index of the default theme (reffered to the list created when calling {@link #themeKeys()})
+	 */
 	public static int getDefaultThemeIndex() {
 		FileHandle themeDir = Gdx.files.internal(ResConst.ATLAS_PATH.toString());
 		FileHandle[] themes = themeDir.list();

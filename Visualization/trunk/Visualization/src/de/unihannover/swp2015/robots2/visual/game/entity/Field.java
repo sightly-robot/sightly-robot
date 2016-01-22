@@ -20,7 +20,7 @@ import de.unihannover.swp2015.robots2.model.interfaces.IField.State;
  * An entity used for the visualization of the underground and walls
  * 
  * @version 1.0
- * @author Daphne Sch�ssow
+ * @author Daphne Schössow
  */
 public class Field extends Entity {
 	
@@ -112,6 +112,23 @@ public class Field extends Entity {
 		rotation = FIELD_ROTATION_LOOKUP[result];
 	}
 
+	/**
+	 * Updates the visualization of the field-lock.
+	 * 
+	 * @param field model
+	 */
+	private void updateLockState(IField field, RobotGameHandler robotHandler) {
+		if (field.getState() == State.LOCKED) {
+			robotColor = ColorUtil.fromAwtColor(robotHandler.getRobot(field.getLockedBy()).getColor());
+			robotColor.r = Math.min(robotColor.r+0.3f, 1);
+			robotColor.g = Math.min(robotColor.g+0.3f, 1);
+			robotColor.b = Math.min(robotColor.b+0.3f, 1);
+		}
+		else if (field.getState() == State.FREE) {
+			robotColor = null;
+		}
+	}
+	
 	@Override
 	public void draw(final Batch batch) {
 		super.draw(batch);
@@ -157,16 +174,7 @@ public class Field extends Entity {
 			break;
 			
 		case FIELD_STATE:
-			if (field.getState() == State.LOCKED) {
-				robotColor = ColorUtil.fromAwtColor(robotHandler.getRobot(field.getLockedBy()).getColor());
-				robotColor.r = Math.min(robotColor.r+0.5f, 1);
-				robotColor.g = Math.min(robotColor.g+0.5f, 1);
-				robotColor.b = Math.min(robotColor.b+0.5f, 1);
-				System.out.println(robotColor.r + " " + robotColor.b + " " + robotColor.g);
-			}
-			else if (field.getState() == State.FREE) {
-				robotColor = null;
-			}
+			updateLockState(field, robotHandler);
 			break;
 			
 		default:
@@ -188,7 +196,8 @@ public class Field extends Entity {
 			
 		case RENDER_LOCK:
 			renderLock = (boolean) value;
-
+			break;
+			
 		default:
 			break;
 		}
