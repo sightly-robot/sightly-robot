@@ -21,14 +21,14 @@ public enum PrefKey implements IPreferencesKey {
 	Y_OFFSET("ordinateOffset", 0f), 
 	X_SCALE("abscissaScale", 1f), 
 	Y_SCALE("ordinateScale", 1f),
+	CYCLE_TEXTURE_PACK("cycleTexturePack", "next"),
 	RENDER_WALL("renderWalls", true),
 	RENDER_RESOURCES("renderResources", true), 
-	RENDER_NAME("renderName", true), 
-	RENDER_SCORE("renderScore", true), 
-	RENDER_ROBOTS("renderRobots", true),
-	RENDER_VIRTUAL_ROBOTS("renderVirtualRobots", true),
 	RENDER_LOCK("renderLockState", false),
-	CYCLE_TEXTURE_PACK("cycleTexturePack", "next");
+	RENDER_VIRTUAL_BUBBLE("renderBubble", true), 
+	RENDER_HARDWARE_BUBBLE("renderVirtualBubble", true), 
+	RENDER_ROBOTS("renderRobots", true),
+	RENDER_VIRTUAL_ROBOTS("renderVirtualRobots", true);
 	
 	/** Key for the hashMap */
 	private final String key;
