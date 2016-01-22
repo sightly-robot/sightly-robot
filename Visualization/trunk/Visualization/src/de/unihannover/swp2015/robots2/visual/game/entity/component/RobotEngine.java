@@ -49,7 +49,7 @@ public class RobotEngine extends Component {
 	private float interval;
 	/** Time of the last progress event */
 	private long lastEvent;
-	/** True, if the component already handled an event */
+	/** True, if the component already handled a progress event */
 	private boolean firstEvent;
 
 	/** Width of a field */
@@ -91,7 +91,9 @@ public class RobotEngine extends Component {
 			break;
 
 		case ROBOT_POSITION:
-			updateRobot((IRobot) event.getObject(), 0);
+			if (!firstEvent) {
+				updateRobot((IRobot) event.getObject(), 0);
+			}
 			break;
 
 		default:
