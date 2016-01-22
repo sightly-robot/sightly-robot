@@ -8,7 +8,6 @@ import java.util.Properties;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.eclipse.paho.client.mqttv3.MqttException;
 
 import de.unihannover.swp2015.robots2.ai.core.AI;
 import de.unihannover.swp2015.robots2.controller.interfaces.IRobotController;
@@ -44,13 +43,13 @@ public abstract class AbstractRobot {
 	 * Initializes the AbstractRobot instance by initializing the robot
 	 * controller and AI.
 	 */
-	public AbstractRobot(boolean isHardware, String brokerIP) {
+	public AbstractRobot(boolean isHardware, String brokerURL, boolean useYetAnotherAi) {
 
 		robotController = new RobotMainController(isHardware);
 
 		LOGGER.info("My ID: " + robotController.getMyself().getId());
 
-		if (brokerIP == null) {
+		if (brokerURL == null) {
 			LOGGER.info("Try loading BrokerIP from Properties");
 			// read broker IP from properties
 			Properties properties = new Properties();
@@ -61,20 +60,20 @@ public abstract class AbstractRobot {
 				is.close();
 
 			} catch (FileNotFoundException fnfe) {
-				fnfe.printStackTrace();
+				LOGGER.error("config file not found", fnfe);
 			} catch (IOException ioe) {
-				ioe.printStackTrace();
+				LOGGER.error("IOException during loading config file", ioe);
 			}
-			brokerIP = properties.getProperty("brokerIP");
+			brokerURL = properties.getProperty("brokerIP");
 		}
-		LOGGER.info("Loaded IP: " + brokerIP);
+		LOGGER.info("Loaded IP: " + brokerURL);
 
 		LOGGER.info("Starting MQTT-Client");
 		while (!robotController.getGame().isSynced()) {
 			try {
-				robotController.startMqtt("tcp://" + brokerIP);
+				robotController.startMqtt(brokerURL);
 			} catch (Exception e) {
-				LOGGER.error("Start MQTT",e);
+				LOGGER.error("Start MQTT", e);
 			}
 		}
 		LOGGER.info("MQTT-Client successfully connected!");
@@ -95,11 +94,6 @@ public abstract class AbstractRobot {
 				}
 			}
 		});
-		/*
-		 * while(!robotController.startMqtt("tcp://192.168.1.66")) { try {
-		 * Thread.sleep(1000); } catch (InterruptedException e) {
-		 * e.printStackTrace(); } }
-		 */
 
 		// IModelObserver mo = new IModelObserver() {
 		// @Override
@@ -112,7 +106,10 @@ public abstract class AbstractRobot {
 		// robotController.getGame().getStage().observe(mo);
 
 		// TODO Init AbstractAI
-		ai = new YetAnotherAi(robotController);
+		if(useYetAnotherAi)
+			ai = new YetAnotherAi(robotController);
+		else
+			ai = new AI(robotController);
 		ai.setRelativeSpeed(1, 1, 1);
 
 		LOGGER.info("AI initialized!");

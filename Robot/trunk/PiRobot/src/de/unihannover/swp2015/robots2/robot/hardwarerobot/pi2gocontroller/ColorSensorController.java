@@ -163,9 +163,9 @@ public class ColorSensorController {
 	 * Writes a register and an 8 bit value over I2C.
 	 * 
 	 * @param reg
-	 *            TODO
+	 *            the register to write to
 	 * @param value
-	 *            TODO
+	 *            the value to write
 	 * @throws IOException
 	 *             thrown if the device is not writable
 	 */
@@ -178,7 +178,7 @@ public class ColorSensorController {
 	 * Reads an 8 bit value over I2C.
 	 * 
 	 * @param reg
-	 *            TODO
+	 *            the register to read from
 	 * @return the read value
 	 * @throws IOException
 	 *             thrown if the device is not available
@@ -192,7 +192,7 @@ public class ColorSensorController {
 	 * Reads an 16 bit value over I2C.
 	 * 
 	 * @param reg
-	 *            TODO
+	 *            the register to read from
 	 * @return the read value
 	 * @throws IOException
 	 *             thrown if the device is not available
@@ -279,7 +279,7 @@ public class ColorSensorController {
 	 * Reads the raw values of the red, green, blue and clear channel.
 	 * 
 	 * @param rgbc
-	 *            TODO
+	 *            array of the integer values of the color channels
 	 * @throws InterruptedException
 	 *             thrown if sleep was interrupted
 	 * @throws IOException
@@ -378,7 +378,7 @@ public class ColorSensorController {
 	 * Turn the LED ON or OFF!
 	 * 
 	 * @param i
-	 *            TODO
+	 *            whether to set an interrupt or not
 	 * @throws IOException
 	 *             thrown if the device is not writable
 	 */

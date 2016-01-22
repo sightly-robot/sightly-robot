@@ -72,10 +72,8 @@ public class SoundController implements IModelObserver {
 
 	public void speak(String message) {
 		try {
-			int exit = Runtime.getRuntime().exec("echo '" + message + "' | festival --tts").exitValue();
-			if(exit != 0)
-				throw new Exception();
-		} catch (Exception e) {
+			Runtime.getRuntime().exec("echo '" + message + "' | festival --tts");
+		} catch (IOException e) {
 			LOGGER.error("Speak "+message+" not worked",e);
 		}
 	}
