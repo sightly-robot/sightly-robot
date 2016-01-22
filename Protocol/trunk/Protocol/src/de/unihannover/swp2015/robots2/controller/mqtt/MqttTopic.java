@@ -57,8 +57,6 @@ public enum MqttTopic {
 	CONTROL_VIRTUALSPEED("robot/virtualspeed", true),
 	
 	CONTROL_RESET("extension/2/control/reset", false),
-	
-	CONTROL_HESITATIONTIME("extension/2/robot/hesitationtime", true),
 
 	EVENT_ERROR_SERVER_CONNECTION("event/error/server/connection", true),
 

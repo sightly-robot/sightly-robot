@@ -26,13 +26,15 @@ public class ServerMainController extends AbstractMainController implements
 			String clientId = "server";
 
 			MqttTopic[] extendedTopics = { MqttTopic.MAP_INIT_FOOD,
-					MqttTopic.MAP_INIT_GROWINGRATE, MqttTopic.CONTROL_RESET };
+					MqttTopic.MAP_INIT_GROWINGRATE };
 			String[] subscribeTopics = this.getSubscribeTopcis(extendedTopics);
 
+			// According to protocol standard we should indicate a connection
+			// loss with last will message to EVENT_ERROR_SERVER_CONNECTION. But
+			// actually our server is not this important, so we won't.
+
 			this.mqttController = new MqttController(clientId, this,
-					Arrays.asList(subscribeTopics),
-					MqttTopic.EVENT_ERROR_SERVER_CONNECTION.toString(),
-					"server disconnect", true);
+					Arrays.asList(subscribeTopics));
 		} catch (MqttException e) {
 			log.fatal("Error constructing MqttController:", e);
 		}
@@ -96,13 +98,6 @@ public class ServerMainController extends AbstractMainController implements
 			// Handle general events
 			this.processGeneralMessage(mqtttopic, key, message);
 		}
-	}
-
-	@Override
-	public void onMqttStateChange(boolean state) {
-		super.onMqttStateChange(state);
-		this.sendMqttMessage(MqttTopic.EVENT_ERROR_SERVER_CONNECTION, null,
-				null);
 	}
 
 	@Override

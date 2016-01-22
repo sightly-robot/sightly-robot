@@ -140,6 +140,13 @@ public class RobotMainController extends AbstractMainController implements
 				this.hardwareRobot.setSettings(message);
 			break;
 
+		case EVENT_ERROR_SERVER_CONNECTION:
+			// To be compilant with protocol standard we stop when broker
+			// indicates connection loss of the server by disabling ourselves.
+			if (!"".equals(message))
+				this.disableMyself();
+			break;
+
 		default:
 			this.processGeneralMessage(mqtttopic, key, message);
 			break;
