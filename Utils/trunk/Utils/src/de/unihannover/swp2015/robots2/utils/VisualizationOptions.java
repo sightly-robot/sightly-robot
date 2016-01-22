@@ -32,7 +32,7 @@ public class VisualizationOptions {
 	
 	private Optional<Boolean> renderWalls;
 	private Optional<Boolean> renderResources;
-	private Optional<Boolean> renderName;
+	private Optional<Boolean> renderLockStates;
 	private Optional<Boolean> renderScore;
 	private Optional<Boolean> renderRobots;
 	private Optional<Boolean> renderVirtualRobots;
@@ -50,7 +50,7 @@ public class VisualizationOptions {
 		
 		renderWalls = Optional.empty();
 		renderResources = Optional.empty();
-		renderName = Optional.empty();
+		renderLockStates = Optional.empty();
 		renderScore = Optional.empty();
 		renderRobots = Optional.empty();
 		renderVirtualRobots = Optional.empty();
@@ -70,7 +70,7 @@ public class VisualizationOptions {
 		if (this.ordinateOffset.isPresent())
 			options.put("ordinateOffset", this.ordinateOffset.get());
 		if (this.abscissaScale.isPresent())
-			options.put("abscissaOffset", this.abscissaScale.get());
+			options.put("abscissaScale", this.abscissaScale.get());
 		if (this.ordinateScale.isPresent())
 			options.put("ordinateScale", this.ordinateScale.get());
 		
@@ -81,14 +81,17 @@ public class VisualizationOptions {
 			options.put("renderWalls", this.renderWalls.get());
 		if (this.renderResources.isPresent())
 			options.put("renderResources", this.renderResources.get());
-		if (this.renderName.isPresent())
-			options.put("renderName", this.renderName.get());
+		if (this.renderLockStates.isPresent())
+			options.put("renderLockState", this.renderLockStates.get());
 		if (this.renderScore.isPresent())
 			options.put("renderScore", this.renderScore.get());
 		if (this.renderRobots.isPresent())
 			options.put("renderRobots", this.renderRobots.get());
 		if (this.renderVirtualRobots.isPresent())
 			options.put("renderVirtualRobots", this.renderVirtualRobots.get());
+		
+		if (this.cycleTexturePack.isPresent())
+			options.put("cycleTexturePack", this.cycleTexturePack.get());
 
 		JSONObject root = new JSONObject();
 		root.put("options", options);
@@ -128,7 +131,7 @@ public class VisualizationOptions {
 		// Boolean flags
 		try { renderWalls = Optional.of(options.getBoolean("renderWalls")); } catch (JSONException exc) { renderWalls = Optional.empty(); }
 		try { renderResources = Optional.of(options.getBoolean("renderResources")); } catch (JSONException exc) { renderResources = Optional.empty(); }
-		try { renderName = Optional.of(options.getBoolean("renderName")); } catch (JSONException exc) { renderName = Optional.empty(); }
+		try { renderLockStates = Optional.of(options.getBoolean("renderLockState")); } catch (JSONException exc) { renderLockStates = Optional.empty(); }
 		try { renderScore = Optional.of(options.getBoolean("renderScore")); } catch (JSONException exc) { renderScore = Optional.empty(); }
 		try { renderRobots = Optional.of(options.getBoolean("renderRobots")); } catch (JSONException exc) { renderRobots = Optional.empty(); }
 		try { renderVirtualRobots = Optional.of(options.getBoolean("renderVirtualRobots")); } catch (JSONException exc) { renderVirtualRobots = Optional.empty(); }
@@ -163,7 +166,7 @@ public class VisualizationOptions {
 		
 		options.renderWalls = Optional.of(true);
 		options.renderResources = Optional.of(true);
-		options.renderName = Optional.of(true);
+		options.renderLockStates = Optional.of(true);
 		options.renderScore = Optional.of(true);
 		options.renderRobots = Optional.of(false);
 		options.renderVirtualRobots = Optional.of(true);
@@ -185,7 +188,7 @@ public class VisualizationOptions {
 		if (!this.ordinateOffset.isPresent())
 			this.ordinateOffset = options.ordinateOffset;
 		if (!this.abscissaScale.isPresent())
-			this.abscissaOffset = options.abscissaScale;
+			this.abscissaScale = options.abscissaScale;
 		if (!this.ordinateScale.isPresent())
 			this.ordinateScale = options.ordinateScale;
 		
@@ -196,8 +199,8 @@ public class VisualizationOptions {
 			this.renderWalls = options.renderWalls;
 		if (!this.renderResources.isPresent())
 			this.renderResources = options.renderResources;
-		if (!this.renderName.isPresent())
-			this.renderName = options.renderName;
+		if (!this.renderLockStates.isPresent())
+			this.renderLockStates = options.renderLockStates;
 		if (!this.renderScore.isPresent())
 			this.renderScore = options.renderScore;
 		if (!this.renderRobots.isPresent())
@@ -230,8 +233,8 @@ public class VisualizationOptions {
 			this.renderWalls = options.renderWalls;
 		if (options.renderResources.isPresent())
 			this.renderResources = options.renderResources;
-		if (options.renderName.isPresent())
-			this.renderName = options.renderName;
+		if (options.renderLockStates.isPresent())
+			this.renderLockStates = options.renderLockStates;
 		if (options.renderScore.isPresent())
 			this.renderScore = options.renderScore;
 		if (options.renderRobots.isPresent())
@@ -312,12 +315,12 @@ public class VisualizationOptions {
 		this.renderResources = Optional.<Boolean>of(renderResources);
 	}
 
-	public Optional<Boolean> doesRenderName() {
-		return renderName;
+	public Optional<Boolean> doesRenderLockStates() {
+		return renderLockStates;
 	}
 
-	public void setRenderName(boolean renderName) {
-		this.renderName = Optional.<Boolean>of(renderName);
+	public void setRenderLockState(boolean renderLockState) {
+		this.renderLockStates = Optional.<Boolean>of(renderLockState);
 	}
 
 	public Optional<Boolean> doesRenderScore() {
