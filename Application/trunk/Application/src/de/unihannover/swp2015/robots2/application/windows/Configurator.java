@@ -165,20 +165,50 @@ public class Configurator extends Window implements Bindable, IVisualizationCont
 			decomissionSliderListeners();
 			float value = Float.parseFloat(textInput.getText());
 			
-			if (textInput == xOffsetValue)
+			if (textInput == xOffsetValue) {
 				xOffset.setValue((int)(value));
-			if (textInput == yOffsetValue)
+				applySliderChange(xOffset);
+			}
+			else if (textInput == yOffsetValue) {
 				yOffset.setValue((int)(value));
-			if (textInput == xScaleValue)
+				applySliderChange(yOffset);
+			}
+			else if (textInput == xScaleValue) {
 				xScale.setValue((int)(value * xScale.getEnd()));
-			if (textInput == yScaleValue)
+				applySliderChange(xScale);
+			}
+			else if (textInput == yScaleValue) {
 				yScale.setValue((int)(value * yScale.getEnd()));
-			if (textInput == transformationValue)
+				applySliderChange(yScale);	
+			}
+			else if (textInput == transformationValue) {
 				transformation.setValue((int)(value * getTransformationSliderResolution()));
+				applySliderChange(transformation);
+			}
 			
 			reinstateSliderListeners();
 		}
 	};
+	
+	/**
+	 * Applies the changes to the models for the given slider.
+	 * @param slider
+	 */
+	private void applySliderChange(Slider slider) {
+		VisualizationOptions temp = new VisualizationOptions(visualizations.getSelected().getId());
+		if (slider == xOffset) {
+			temp.setAbscissaOffset((float)xOffset.getValue());			
+		} else if (slider == yOffset) {
+			temp.setOrdinateOffset((float)yOffset.getValue());			
+		} else if (slider == xScale) {
+			temp.setAbscissaScale((float)xScale.getValue() / (float)xScale.getEnd());			
+		} else if (slider == yScale) {
+			temp.setOrdinateScale((float)yScale.getValue() / (float)yScale.getEnd());			
+		} else if (slider == transformation) {
+			temp.setPerspectiveTransformation((float)transformation.getValue() / getTransformationSliderResolution());			
+		}
+		visualizations.performMergeOnSelected(temp);
+	}
 	
 	/**
 	 * Disables slider listeners.
@@ -262,10 +292,8 @@ public class Configurator extends Window implements Bindable, IVisualizationCont
 				return;
 			throttle();
 			
+			applySliderChange(xOffset);
 			xOffsetValue.setText(new Integer(value).toString());
-			VisualizationOptions temp = new VisualizationOptions(visualizations.getSelected().getId());
-			temp.setAbscissaOffset((float)value);
-			visualizations.performMergeOnSelected(temp);
 		}		
 	};
 	
@@ -279,10 +307,8 @@ public class Configurator extends Window implements Bindable, IVisualizationCont
 				return;
 			throttle();
 			
+			applySliderChange(yOffset);
 			yOffsetValue.setText(new Integer(value).toString());
-			VisualizationOptions temp = new VisualizationOptions(visualizations.getSelected().getId());
-			temp.setOrdinateOffset((float)value);
-			visualizations.performMergeOnSelected(temp);
 		}		
 	};
 	
@@ -296,10 +322,8 @@ public class Configurator extends Window implements Bindable, IVisualizationCont
 				return;
 			throttle();
 			
+			applySliderChange(xScale);
 			xScaleValue.setText(new Float(value / (float)xScale.getEnd()).toString());
-			VisualizationOptions temp = new VisualizationOptions(visualizations.getSelected().getId());
-			temp.setAbscissaScale((float)value / (float)xScale.getEnd());
-			visualizations.performMergeOnSelected(temp);
 		}		
 	};
 	
@@ -312,11 +336,9 @@ public class Configurator extends Window implements Bindable, IVisualizationCont
 			if (throttleBlock)
 				return;
 			throttle();
-			
+
+			applySliderChange(yScale);
 			yScaleValue.setText(new Float(value / (float)yScale.getEnd()).toString());
-			VisualizationOptions temp = new VisualizationOptions(visualizations.getSelected().getId());
-			temp.setOrdinateScale((float)value / (float)yScale.getEnd());
-			visualizations.performMergeOnSelected(temp);
 		}		
 	};
 
@@ -331,9 +353,6 @@ public class Configurator extends Window implements Bindable, IVisualizationCont
 			throttle();
 			
 			transformationValue.setText(new Float(value / getTransformationSliderResolution()).toString());
-			VisualizationOptions temp = new VisualizationOptions(visualizations.getSelected().getId());
-			temp.setPerspectiveTransformation((float)value / getTransformationSliderResolution());
-			visualizations.performMergeOnSelected(temp);
 		}		
 	};
 

@@ -114,6 +114,7 @@ public class VisualizationRegister {
 		VisualizationOptions temp = getSelected();
 		temp.rightMerge(options);
 		setVisualization(selected, temp);
+		System.out.println(options.toJson());
 		controller.setVisualizationSettings(options.toJson());
 	}
 }
