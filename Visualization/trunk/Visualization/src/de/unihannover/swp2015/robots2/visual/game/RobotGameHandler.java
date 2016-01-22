@@ -267,7 +267,6 @@ public class RobotGameHandler extends GameHandler {
 			break;
 			
 		case GAME_STATE:
-			System.out.println("game is running : "+ game.isRunning());
 			pp.setBloomEnabled(!game.isRunning());
 			ui.setVisible(true);
 			break;
