@@ -28,10 +28,10 @@ public class SoftwareRobot extends AbstractRobot {
 	 * Creates a {@link SoftwareAutomate} Instance and Handles SETUP_STATE
 	 * Events.
 	 * 
-	 * @param brokerIP
+	 * @param brokerURL
 	 */
-	public SoftwareRobot(String brokerIP,boolean useYetAnotherAi) {
-		super(false, brokerIP,useYetAnotherAi);
+	public SoftwareRobot(String brokerURL,boolean useYetAnotherAi) {
+		super(false, brokerURL,useYetAnotherAi);
 
 		robotController.getMyself().observe(new IModelObserver() {
 
