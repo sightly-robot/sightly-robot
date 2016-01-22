@@ -66,7 +66,7 @@ public class VisualizationOptions {
 		options.put("id", id);
 		
 		if (this.abscissaOffset.isPresent())
-			options.put("abcissaOffset", this.abscissaOffset.get());
+			options.put("abscissaOffset", this.abscissaOffset.get());
 		if (this.ordinateOffset.isPresent())
 			options.put("ordinateOffset", this.ordinateOffset.get());
 		if (this.abscissaScale.isPresent())
