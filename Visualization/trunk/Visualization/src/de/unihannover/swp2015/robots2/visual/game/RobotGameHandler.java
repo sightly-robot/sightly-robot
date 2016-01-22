@@ -306,7 +306,6 @@ public class RobotGameHandler extends GameHandler {
 		view.update(width, height);
 
 		pp.onResize(view);
-		System.out.println(batch.getProjectionMatrix().getScaleX());
 	}
 
 	@Override
