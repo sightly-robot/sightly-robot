@@ -331,7 +331,7 @@ public class ResourceHandler implements IResourceHandler {
 	/**
 	 * @return index of the default theme (reffered to the list created when calling {@link #themeKeys()})
 	 */
-	public static int getDefaultThemeIndex(List<String> themes) {		
+	public static int getDefaultThemeIndex(List<String> themes) {
 		for (int i = 0; i < themes.size(); ++i) {
 			if (themes.get(i).trim().equals(ResConst.DEFAULT_THEME.toString()))
 				return i;
