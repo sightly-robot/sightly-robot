@@ -111,6 +111,10 @@ public abstract class AbstractMainController implements IController,
 			this.gameModelController.mqttSetGameState(message);
 			break;
 
+		case CONTROL_RESET:
+			this.game.emitEvent(UpdateType.GAME_RESET);
+			break;
+		
 		case ROBOT_TYPE:
 			this.gameModelController.mqttAddRobot(key, message);
 			break;

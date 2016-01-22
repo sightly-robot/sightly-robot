@@ -82,6 +82,7 @@ public class ServerMainController extends AbstractMainController implements
 						Integer.toString(r.getScore()));
 				r.emitEvent(UpdateType.ROBOT_SCORE);
 			}
+			this.game.emitEvent(UpdateType.GAME_RESET);
 			break;
 
 		// Prevent default handling of food and score messages, cause we are the
