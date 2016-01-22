@@ -56,6 +56,7 @@ public class YetAnotherAi extends AbstractAI implements IModelObserver {
 	@Override
 	public void setRelativeSpeed(double forwards, double sidewards,
 			double backwards) {
+		// Not used by current path calculation implementation
 	}
 
 	@Override
@@ -123,14 +124,8 @@ public class YetAnotherAi extends AbstractAI implements IModelObserver {
 	 *            The field we want to go to next.
 	 */
 	private void requestNewField(IField field) {
-		switch (this.state) {
-		case STANDING:
-		case WAITING_FOR_GAME:
-		case WAITING_FOR_FREE:
-			break;
-
-		default:
-			// Skip if already busy
+		// Skip if already busy
+		if (this.state == AiState.DRIVING || this.state == AiState.WATING_FOR_OURS) {
 			LOGGER.trace(
 					"New target field {}-{} was refused because we are busy.",
 					field.getX(), field.getY());
