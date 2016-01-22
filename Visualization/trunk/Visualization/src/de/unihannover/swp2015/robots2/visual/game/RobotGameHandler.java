@@ -79,7 +79,7 @@ public class RobotGameHandler extends GameHandler {
 		this.batch.setProjectionMatrix(view.getCamera().combined);
 		this.pp = new PostProcessHandler((int) view.getWorldWidth(), (int) view.getWorldHeight());
 		this.themes = ResourceHandler.themeKeys();
-		this.currentTheme = ResourceHandler.getDefaultThemeIndex();
+		this.currentTheme = ResourceHandler.getDefaultThemeIndex(themes);
 		this.batchScaleX = batch.getProjectionMatrix().getScaleX();
 		this.batchScaleY = batch.getProjectionMatrix().getScaleY();
 		

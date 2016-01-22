@@ -14,6 +14,7 @@ import com.badlogic.gdx.graphics.Texture.TextureFilter;
 public enum ResConst {
 
 	ATLAS_PATH("assets" + File.separator + "theme" + File.separator, ResType.PATH), 
+	THEME_LIST(ATLAS_PATH + "themes.txt", ResType.PATH),
 	ATLAS_NAME("theme", ResType.PATH), 
 	DEFAULT_THEME("default", ResType.PATH),
 

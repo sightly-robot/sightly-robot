@@ -316,15 +316,14 @@ public class ResourceHandler implements IResourceHandler {
 	 * @return all keys of the available themes.
 	 */
 	public static List<String> themeKeys() {
-		FileHandle themeDir = Gdx.files.internal(ResConst.ATLAS_PATH.toString());
-		FileHandle[] themes = themeDir.list();
+		FileHandle themeList = Gdx.files.internal(ResConst.THEME_LIST.toString());
+		String[] themes = themeList.readString().split("\n");
 
 		List<String> result = new ArrayList<>(themes.length);
 		
-		for (final FileHandle handle : themes) {
-			if (handle.isDirectory()) {
-				result.add(handle.nameWithoutExtension());
-			}
+		for (final String theme : themes) {
+			if (!theme.isEmpty())
+				result.add(theme);
 		}
 		return result;
 	}
@@ -332,19 +331,10 @@ public class ResourceHandler implements IResourceHandler {
 	/**
 	 * @return index of the default theme (reffered to the list created when calling {@link #themeKeys()})
 	 */
-	public static int getDefaultThemeIndex() {
-		FileHandle themeDir = Gdx.files.internal(ResConst.ATLAS_PATH.toString());
-		FileHandle[] themes = themeDir.list();
-		
-		for (int i = 0; i < themes.length; ++i) {
-			FileHandle handle = themes[i];
-			if (!handle.isDirectory()) {
-				i--;
-				continue;
-			}
-			else if (handle.nameWithoutExtension().equals(ResConst.DEFAULT_THEME.toString())) {
+	public static int getDefaultThemeIndex(List<String> themes) {		
+		for (int i = 0; i < themes.size(); ++i) {
+			if (themes.get(i).trim().equals(ResConst.DEFAULT_THEME.toString()))
 				return i;
-			}
 		}
 		throw new IllegalStateException("Default theme is missing!");
 	}
