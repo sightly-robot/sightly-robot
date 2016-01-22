@@ -32,5 +32,6 @@
 	<classpathentry kind="lib" path="libs/lwjgl-platform-2.9.2-natives-windows.jar"/>
 	<classpathentry kind="lib" path="libs"/>
 	<classpathentry kind="lib" path="libs/mockito-all-1.10.19.jar" sourcepath="libs/src/mockito-all-1.10.19-sources.jar"/>
+	<classpathentry kind="lib" path="internal"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
