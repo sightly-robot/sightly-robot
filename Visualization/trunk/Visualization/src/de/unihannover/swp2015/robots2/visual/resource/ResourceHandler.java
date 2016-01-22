@@ -1,11 +1,14 @@
 package de.unihannover.swp2015.robots2.visual.resource;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
@@ -308,6 +311,40 @@ public class ResourceHandler implements IResourceHandler {
 			return drawable;
 		}
 		return null;
+	}
+	
+	/**
+	 * @return all keys of the available themes.
+	 */
+	public static List<String> themeKeys() {
+		FileHandle themeDir = Gdx.files.internal(ResConst.ATLAS_PATH.toString());
+		FileHandle[] themes = themeDir.list();
+
+		List<String> result = new ArrayList<>(themes.length);
+		
+		for (final FileHandle handle : themes) {
+			if (handle.isDirectory()) {
+				result.add(handle.nameWithoutExtension());
+			}
+		}
+		return result;
+	}
+	
+	public static int getDefaultThemeIndex() {
+		FileHandle themeDir = Gdx.files.internal(ResConst.ATLAS_PATH.toString());
+		FileHandle[] themes = themeDir.list();
+		
+		for (int i = 0; i < themes.length; ++i) {
+			FileHandle handle = themes[i];
+			if (!handle.isDirectory()) {
+				i--;
+				continue;
+			}
+			else if (handle.nameWithoutExtension().equals(ResConst.DEFAULT_THEME.toString())) {
+				return i;
+			}
+		}
+		throw new IllegalStateException("Default theme is missing!");
 	}
 
 }

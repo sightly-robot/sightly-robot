@@ -11,8 +11,6 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
 
 import de.unihannover.swp2015.robots2.visual.core.PrefKey;
 import de.unihannover.swp2015.robots2.visual.core.handler.IGameHandler;
@@ -25,6 +23,7 @@ import de.unihannover.swp2015.robots2.visual.resource.ResConst;
 import de.unihannover.swp2015.robots2.visual.resource.ResourceHandler;
 import de.unihannover.swp2015.robots2.visual.util.pref.IPreferences;
 import de.unihannover.swp2015.robots2.visual.util.test.TestApp;
+import de.unihannover.swp2015.robots2.visual.util.FlexibleFitViewport;
 import de.unihannover.swp2015.robots2.visual.util.LoopedTask;
 import de.unihannover.swp2015.robots2.visual.util.Task;
 import de.unihannover.swp2015.robots2.visual.util.pref.FlexPreferences;
@@ -99,7 +98,7 @@ public class Visualization extends ApplicationAdapter {
 
 		final OrthographicCamera cam = new OrthographicCamera();
 		cam.setToOrtho(true);
-		final Viewport fitViewport = new FitViewport(appWidth, appHeight, cam);
+		final FlexibleFitViewport fitViewport = new FlexibleFitViewport(appWidth, appHeight, cam);
 		fitViewport.update(appWidth, appHeight, true);
 
 		prefs.putFloat(PrefKey.VIEW_WIDTH, appWidth);

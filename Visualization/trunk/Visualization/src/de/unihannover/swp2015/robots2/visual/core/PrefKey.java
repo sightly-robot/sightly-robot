@@ -27,7 +27,8 @@ public enum PrefKey implements IPreferencesKey {
 	RENDER_SCORE("renderScore", true), 
 	RENDER_ROBOTS("renderRobots", true),
 	RENDER_VIRTUAL_ROBOTS("renderVirtualRobots", true),
-	RENDER_LOCK("renderLockState", false);
+	RENDER_LOCK("renderLockState", false),
+	CYCLE_TEXTURE_PACK("cycleTexturePack", "next");
 	
 	/** Key for the hashMap */
 	private final String key;

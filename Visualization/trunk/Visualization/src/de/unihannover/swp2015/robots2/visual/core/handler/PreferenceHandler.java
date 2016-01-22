@@ -11,6 +11,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
+import com.badlogic.gdx.Gdx;
+
 import de.unihannover.swp2015.robots2.controller.externalInterfaces.IVisualization;
 import de.unihannover.swp2015.robots2.visual.core.PrefKey;
 import de.unihannover.swp2015.robots2.visual.util.pref.IPreferences;
@@ -50,7 +52,15 @@ public class PreferenceHandler implements IVisualization {
 	}
 
 	@Override
-	public void setSettings(String settings) {
+	public void setSettings(final String settings) {
+		Gdx.app.postRunnable(new Runnable() {
+			public void run() {
+				setManagedSettings(settings);
+			}
+		});
+	}
+	
+	public void setManagedSettings(String settings) {
 		InputStream stream = new ByteArrayInputStream(settings.getBytes(StandardCharsets.UTF_8));
 		JSONTokener tokenizer = new JSONTokener(stream);
 		JSONObject options = new JSONObject(tokenizer).getJSONObject(ROOT_NAME);
@@ -68,8 +78,16 @@ public class PreferenceHandler implements IVisualization {
 					pref.putBoolean(key, (boolean) value);
 				} 
 				else if (value instanceof Double) {
-					final Float floatValue = (float) value;
-					pref.putFloat(key, Float.isNaN(floatValue) ? 0 : floatValue);
+					final double doubleValue = (double) value;
+					pref.putFloat(key, Double.isNaN(doubleValue) ? 0f : (float) doubleValue);
+				}
+				else if (value instanceof Integer) {
+					final int intValue = (int) value;
+					pref.putFloat(key, intValue);
+				}
+				else if (value instanceof String) {
+					final String stringValue = (String) value;
+					pref.putString(key, stringValue);
 				}
 				LOGGER.debug("Received option: {}, value: {}", key.getKey(), value);
 			} catch (JSONException e) {

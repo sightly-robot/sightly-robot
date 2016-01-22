@@ -4,9 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.utils.viewport.Viewport;
+import com.badlogic.gdx.math.Matrix4;
 
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
 import de.unihannover.swp2015.robots2.model.interfaces.IGame;
@@ -19,6 +18,8 @@ import de.unihannover.swp2015.robots2.visual.core.handler.GameHandler;
 import de.unihannover.swp2015.robots2.visual.game.entity.Map;
 import de.unihannover.swp2015.robots2.visual.game.entity.Robot;
 import de.unihannover.swp2015.robots2.visual.resource.IResourceHandler;
+import de.unihannover.swp2015.robots2.visual.resource.ResourceHandler;
+import de.unihannover.swp2015.robots2.visual.util.FlexibleFitViewport;
 import de.unihannover.swp2015.robots2.visual.util.SortUtil;
 import de.unihannover.swp2015.robots2.visual.util.pref.IPreferences;
 
@@ -33,7 +34,7 @@ public class RobotGameHandler extends GameHandler {
 	protected final List<IEntity> entityList;
 
 	/** Viewport of the game. */
-	protected Viewport view;
+	protected FlexibleFitViewport view;
 
 	/** SpriteBatch for rendering textures. */
 	protected SpriteBatch batch;
@@ -46,7 +47,13 @@ public class RobotGameHandler extends GameHandler {
 
 	/** UI, which will be displayed if {@link IGame#isRunning()} == false */
 	private UI ui;
-
+	
+	/** List of all available themes */
+	private List<String> themes;
+	
+	/** Current theme */
+	private int currentTheme;
+	
 	/**
 	 * Construct a new RobotGameHandler and connects this handler (means it will
 	 * directly observe the model) to the given model <code>game</code>
@@ -56,7 +63,7 @@ public class RobotGameHandler extends GameHandler {
 	 * @param resourceHandler
 	 *            {@link IResourceHandler}
 	 */
-	public RobotGameHandler(IGame robotGame, Viewport viewport, IResourceHandler resourceHandler,
+	public RobotGameHandler(IGame robotGame, FlexibleFitViewport viewport, IResourceHandler resourceHandler,
 			IPreferences<PrefKey> prefs) {
 		super(robotGame, resourceHandler, prefs);
 
@@ -66,7 +73,9 @@ public class RobotGameHandler extends GameHandler {
 		this.batch = new SpriteBatch();
 		this.batch.setProjectionMatrix(view.getCamera().combined);
 		this.pp = new PostProcessHandler((int) view.getWorldWidth(), (int) view.getWorldHeight());
-
+		this.themes = ResourceHandler.themeKeys();
+		this.currentTheme = ResourceHandler.getDefaultThemeIndex();
+		
 		this.init();
 	}
 
@@ -79,10 +88,77 @@ public class RobotGameHandler extends GameHandler {
 		prefs.putFloat(PrefKey.FIELD_WIDTH_KEY, view.getWorldWidth() / stage.getWidth());
 		prefs.putFloat(PrefKey.FIELD_HEIGHT_KEY, view.getWorldWidth() / stage.getHeight());
 
+		view.setOffsetX((int) prefs.getFloat(PrefKey.X_OFFSET));
+		view.setOffsetY((int) prefs.getFloat(PrefKey.Y_OFFSET));
+		
 		entityList.add(new Map(stage, this));
 		Entity.sortEntities(entityList);
 
 		ui = new UI(robots, view, batch, resHandler);
+	}
+	
+	/**
+	 * Applies given x scale to the batch.
+	 * 
+	 * @param scaleX scaleX [0,X]
+	 */
+	private void applyScaleX(float scaleX) {
+		Matrix4 proj = batch.getProjectionMatrix();
+		float oldScale = proj.getScaleX();
+		batch.getProjectionMatrix().scale(1f/oldScale, 1f, 1f);
+		batch.getProjectionMatrix().scale(scaleX*oldScale, 1f, 1f);
+	}
+
+	/**
+	 * Applies given y scale to the batch.
+	 * 
+	 * @param scaleY scaleY [0,X]
+	 */
+	private void applyScaleY(float scaleY) {
+		Matrix4 proj = batch.getProjectionMatrix();
+		float oldScale = proj.getScaleY();
+		batch.getProjectionMatrix().scale(1f, 1f/oldScale, 1f);
+		batch.getProjectionMatrix().scale(1f, oldScale*scaleY, 1f);
+	}
+	
+	/**
+	 * Convenience method, which basically just calls {@link #applyScaleX(float)} and {@link #applyScaleY(float)} 
+	 * with the given value.
+	 * 
+	 * @param scaleX scale in x direction
+	 * @param scaleY scale in y direction
+	 */
+	private void applyScale(float scaleX, float scaleY) {
+		applyScaleX(scaleX);
+		applyScaleY(scaleY);
+	}
+	
+	/**
+	 * Called when the  glViewport have to be updated.
+	 *  
+	 * @param viewWidth new width of the viewport
+	 */
+	private void updateViewWidth(float viewWidth) {
+		view.setWorldWidth(viewWidth);
+		view.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
+		batch.setProjectionMatrix(view.getCamera().combined);
+		pp.onViewUpdate(view);
+		ui.onResize(view);
+		applyScale(prefs.getFloat(PrefKey.X_SCALE), prefs.getFloat(PrefKey.Y_SCALE));
+	}
+
+	/**
+	 * Called when the  glViewport have to be updated.
+	 *  
+	 * @param viewHeight new height of the viewport
+	 */
+	private void updateViewHeight(float viewHeight) {
+		view.setWorldHeight(viewHeight);
+		view.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
+		batch.setProjectionMatrix(view.getCamera().combined);
+		pp.onViewUpdate(view);
+		ui.onResize(view);
+		applyScale(prefs.getFloat(PrefKey.X_SCALE), prefs.getFloat(PrefKey.Y_SCALE));
 	}
 
 	/**
@@ -110,7 +186,7 @@ public class RobotGameHandler extends GameHandler {
 	public IRobot getRobot(String id) {
 		return game.getRobots().get(id);
 	}
-
+	
 	@Override
 	public void update() {
 		for (int i = 0; i < entityList.size(); ++i) {
@@ -121,13 +197,6 @@ public class RobotGameHandler extends GameHandler {
 
 	@Override
 	public void render() {
-
-		if (Gdx.input.isKeyPressed(Keys.LEFT))
-			resHandler.loadTexturePack("default");
-		if (Gdx.input.isKeyPressed(Keys.RIGHT))
-			resHandler.loadTexturePack("earth");
-		if (Gdx.input.isKeyPressed(Keys.UP))
-			resHandler.loadTexturePack("home");
 
 		if (!game.isRunning()) {
 
@@ -233,28 +302,35 @@ public class RobotGameHandler extends GameHandler {
 		switch (updatedKey) {
 
 		case VIEW_WIDTH:
-			view.setWorldWidth((float) value);
-			view.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
-			batch.setProjectionMatrix(view.getCamera().combined);
-			pp.onViewUpdate(view);
-			ui.onResize(view);
+			updateViewWidth((float) value);
 			break;
 
 		case VIEW_HEIGHT:
-			view.setWorldHeight((float) value);
-			view.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
-			batch.setProjectionMatrix(view.getCamera().combined);
-			pp.onViewUpdate(view);
-			ui.onResize(view);
+			updateViewHeight((float) value);
 			break;
 
 		case X_OFFSET:
-		case X_SCALE:
-		case Y_OFFSET:
-		case Y_SCALE:
-			// TODO implement
+			view.setOffsetX((int) ((float) value));
+			resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 			break;
-
+			
+		case Y_OFFSET:
+			view.setOffsetY((int) ((float) value));
+			resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+			break;
+			
+		case X_SCALE:
+			applyScaleX((float) value);
+			break;
+			
+		case Y_SCALE:
+			applyScaleY((float) value);
+			break;
+			
+		case CYCLE_TEXTURE_PACK:
+			currentTheme++;
+			resHandler.loadTexturePack(themes.get(currentTheme % themes.size()));
+			
 		default:
 			break;
 
