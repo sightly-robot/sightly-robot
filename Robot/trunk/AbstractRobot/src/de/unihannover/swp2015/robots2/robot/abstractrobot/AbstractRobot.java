@@ -43,13 +43,13 @@ public abstract class AbstractRobot {
 	 * Initializes the AbstractRobot instance by initializing the robot
 	 * controller and AI.
 	 */
-	public AbstractRobot(boolean isHardware, String brokerIP, boolean useYetAnotherAi) {
+	public AbstractRobot(boolean isHardware, String brokerURL, boolean useYetAnotherAi) {
 
 		robotController = new RobotMainController(isHardware);
 
 		LOGGER.info("My ID: " + robotController.getMyself().getId());
 
-		if (brokerIP == null) {
+		if (brokerURL == null) {
 			LOGGER.info("Try loading BrokerIP from Properties");
 			// read broker IP from properties
 			Properties properties = new Properties();
@@ -64,14 +64,14 @@ public abstract class AbstractRobot {
 			} catch (IOException ioe) {
 				LOGGER.error("IOException during loading config file", ioe);
 			}
-			brokerIP = properties.getProperty("brokerIP");
+			brokerURL = properties.getProperty("brokerIP");
 		}
-		LOGGER.info("Loaded IP: " + brokerIP);
+		LOGGER.info("Loaded IP: " + brokerURL);
 
 		LOGGER.info("Starting MQTT-Client");
 		while (!robotController.getGame().isSynced()) {
 			try {
-				robotController.startMqtt("tcp://" + brokerIP);
+				robotController.startMqtt(brokerURL);
 			} catch (Exception e) {
 				LOGGER.error("Start MQTT", e);
 			}
