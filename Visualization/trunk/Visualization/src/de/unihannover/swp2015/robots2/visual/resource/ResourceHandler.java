@@ -323,7 +323,7 @@ public class ResourceHandler implements IResourceHandler {
 		
 		for (final String theme : themes) {
 			if (!theme.isEmpty())
-				result.add(theme);
+				result.add(theme.trim());
 		}
 		return result;
 	}
@@ -333,7 +333,7 @@ public class ResourceHandler implements IResourceHandler {
 	 */
 	public static int getDefaultThemeIndex(List<String> themes) {
 		for (int i = 0; i < themes.size(); ++i) {
-			if (themes.get(i).trim().equals(ResConst.DEFAULT_THEME.toString()))
+			if (themes.get(i).equals(ResConst.DEFAULT_THEME.toString()))
 				return i;
 		}
 		throw new IllegalStateException("Default theme is missing!");
