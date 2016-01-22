@@ -38,6 +38,11 @@ public class RobotGameHandler extends GameHandler {
 
 	/** SpriteBatch for rendering textures. */
 	protected SpriteBatch batch;
+	
+	/** Constant scaleX of the current batch*/
+	private float batchScaleX;
+	/** Constant scaleY of the current batch*/
+	private float batchScaleY;
 
 	/** Overview of robots for ranking */
 	private final List<IRobot> robots;
@@ -75,6 +80,8 @@ public class RobotGameHandler extends GameHandler {
 		this.pp = new PostProcessHandler((int) view.getWorldWidth(), (int) view.getWorldHeight());
 		this.themes = ResourceHandler.themeKeys();
 		this.currentTheme = ResourceHandler.getDefaultThemeIndex();
+		this.batchScaleX = batch.getProjectionMatrix().getScaleX();
+		this.batchScaleY = batch.getProjectionMatrix().getScaleY();
 		
 		this.init();
 	}
@@ -106,7 +113,7 @@ public class RobotGameHandler extends GameHandler {
 		Matrix4 proj = batch.getProjectionMatrix();
 		float oldScale = proj.getScaleX();
 		batch.getProjectionMatrix().scale(1f/oldScale, 1f, 1f);
-		batch.getProjectionMatrix().scale(scaleX*oldScale, 1f, 1f);
+		batch.getProjectionMatrix().scale(scaleX*batchScaleX, 1f, 1f);
 	}
 
 	/**
@@ -118,7 +125,7 @@ public class RobotGameHandler extends GameHandler {
 		Matrix4 proj = batch.getProjectionMatrix();
 		float oldScale = proj.getScaleY();
 		batch.getProjectionMatrix().scale(1f, 1f/oldScale, 1f);
-		batch.getProjectionMatrix().scale(1f, oldScale*scaleY, 1f);
+		batch.getProjectionMatrix().scale(1f, batchScaleY*scaleY, 1f);
 	}
 	
 	/**
@@ -144,6 +151,8 @@ public class RobotGameHandler extends GameHandler {
 		batch.setProjectionMatrix(view.getCamera().combined);
 		pp.onViewUpdate(view);
 		ui.onResize(view);
+		batchScaleY = batch.getProjectionMatrix().getScaleY();
+		batchScaleX = batch.getProjectionMatrix().getScaleX();
 		applyScale(prefs.getFloat(PrefKey.X_SCALE), prefs.getFloat(PrefKey.Y_SCALE));
 	}
 
@@ -158,6 +167,8 @@ public class RobotGameHandler extends GameHandler {
 		batch.setProjectionMatrix(view.getCamera().combined);
 		pp.onViewUpdate(view);
 		ui.onResize(view);
+		batchScaleY = batch.getProjectionMatrix().getScaleY();
+		batchScaleX = batch.getProjectionMatrix().getScaleX();
 		applyScale(prefs.getFloat(PrefKey.X_SCALE), prefs.getFloat(PrefKey.Y_SCALE));
 	}
 
@@ -295,6 +306,7 @@ public class RobotGameHandler extends GameHandler {
 		view.update(width, height);
 
 		pp.onResize(view);
+		System.out.println(batch.getProjectionMatrix().getScaleX());
 	}
 
 	@Override
