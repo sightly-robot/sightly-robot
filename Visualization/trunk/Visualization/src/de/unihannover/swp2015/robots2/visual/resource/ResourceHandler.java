@@ -317,7 +317,7 @@ public class ResourceHandler implements IResourceHandler {
 	 */
 	public static List<String> themeKeys() {
 		FileHandle themeList = Gdx.files.internal(ResConst.THEME_LIST.toString());
-		String[] themes = themeList.readString().split("\n");
+		String[] themes = themeList.readString().split(",");
 
 		List<String> result = new ArrayList<>(themes.length);
 		
