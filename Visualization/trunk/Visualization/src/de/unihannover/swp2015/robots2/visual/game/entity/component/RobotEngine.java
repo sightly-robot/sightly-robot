@@ -107,13 +107,14 @@ public class RobotEngine extends Component {
 	 */
 	private void calcInterval() {
 		float realInterval = (System.nanoTime() - lastEvent) / 1000000000f;
-		if (realInterval > 0.2 || realInterval < 0.05) {
+		if (realInterval > interval * 2 || realInterval < interval/2) {
 			LOGGER.debug("Progress-event: time out of row {} (s)", realInterval);
 		}
 
 		if (!firstEvent) {
 			firstEvent = true;
-		} else {
+		} 
+		else {
 			intervalHistory[currentEnd] = (System.nanoTime() - lastEvent) / 1000000000f;
 			currentEnd = (currentEnd + 1) % INTERVAL_COUNT;
 			for (final float value : intervalHistory) {

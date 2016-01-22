@@ -166,6 +166,7 @@ public class RobotGameHandler extends GameHandler {
 		view.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
 		batch.setProjectionMatrix(view.getCamera().combined);
 		pp.onViewUpdate(view);
+		pp.setBloomEnabled(!game.isRunning());
 		ui.onResize(view);
 		batchScaleY = batch.getProjectionMatrix().getScaleY();
 		batchScaleX = batch.getProjectionMatrix().getScaleX();
@@ -260,7 +261,13 @@ public class RobotGameHandler extends GameHandler {
 
 		switch (event.getType()) {
 
+		case GAME_RESET:
+			pp.setBloomEnabled(false);
+			ui.setVisible(false);
+			break;
+			
 		case GAME_STATE:
+			System.out.println("game is running : "+ game.isRunning());
 			pp.setBloomEnabled(!game.isRunning());
 			ui.setVisible(true);
 			break;
