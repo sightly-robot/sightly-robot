@@ -234,7 +234,7 @@ public class RobotGameHandler extends GameHandler {
 
 				pp.renderFxaa();
 			} else {
-				//pp.captureFxaa();
+				pp.captureFxaa();
 
 				batch.begin();
 				for (int i = 0; i < entityList.size(); ++i) {
@@ -244,7 +244,7 @@ public class RobotGameHandler extends GameHandler {
 
 				ui.render();
 
-				//pp.renderFxaa();
+				pp.renderFxaa();
 			}
 		} else {
 			pp.captureFxaa();
