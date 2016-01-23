@@ -25,8 +25,8 @@ public enum PrefKey implements IPreferencesKey {
 	RENDER_WALL("renderWalls", true),
 	RENDER_RESOURCES("renderResources", true), 
 	RENDER_LOCK("renderLockState", false),
-	RENDER_VIRTUAL_BUBBLE("renderBubble", true), 
-	RENDER_HARDWARE_BUBBLE("renderVirtualBubble", true), 
+	RENDER_VIRTUAL_BUBBLE("renderVirtualBubble", true), 
+	RENDER_HARDWARE_BUBBLE("renderBubble", true), 
 	RENDER_ROBOTS("renderRobots", true),
 	RENDER_VIRTUAL_ROBOTS("renderVirtualRobots", true);
 	
