@@ -12,6 +12,7 @@ import de.unihannover.swp2015.robots2.visual.core.PrefKey;
 import de.unihannover.swp2015.robots2.visual.core.entity.Component;
 import de.unihannover.swp2015.robots2.visual.core.entity.IEntity;
 import de.unihannover.swp2015.robots2.visual.core.entity.IEntityModifier;
+import de.unihannover.swp2015.robots2.visual.game.entity.modifier.AlphaModifier;
 import de.unihannover.swp2015.robots2.visual.game.entity.modifier.MoveModifierX;
 import de.unihannover.swp2015.robots2.visual.game.entity.modifier.MoveModifierY;
 import de.unihannover.swp2015.robots2.visual.game.entity.modifier.RotationModifier;
@@ -135,13 +136,21 @@ public class RobotEngine extends Component {
 	 */
 	private void updateRobot(final IRobot robo, final float rawProgress) {
 
-		entity.clearModifier();
+		entity.clearModifier(MoveModifierX.class);
+		entity.clearModifier(MoveModifierY.class);
+		entity.clearModifier(RotationModifier.class);
 
 		final Orientation orientation = robo.getPosition().getOrientation();
-		final IEntityModifier rotationModifier = new RotationModifier(entity, interval, entity.getRotation(),
-				ModelUtil.calculateRotation(orientation));
 
-		entity.registerModifier(rotationModifier);
+		if (entity.getPositionX() > -1 && entity.getPositionY() > -1) {
+			final IEntityModifier rotationModifier = new RotationModifier(entity, interval, entity.getRotation(),
+				ModelUtil.calculateRotation(orientation));
+			
+			entity.registerModifier(rotationModifier);
+		}
+		else {
+			entity.setRotation(ModelUtil.calculateRotation(orientation));
+		}
 
 		final float factorX = calcFactorX(orientation);
 		final float factorY = calcFactorY(orientation);
@@ -157,8 +166,14 @@ public class RobotEngine extends Component {
 		final float fieldYNew = (robo.getPosition().getY() + factorY) * fieldHeight + offsetY;
 		final float newRenderY = fieldYOld + calcFactorY(orientation) * Math.abs(fieldYOld - fieldYNew) * progress;
 
-		entity.registerModifier(new MoveModifierX(entity, interval, entity.getPositionX(), newRenderX));
-		entity.registerModifier(new MoveModifierY(entity, interval, entity.getPositionY(), newRenderY));
+		if (entity.getPositionX() > -1 && entity.getPositionY() > -1) {
+			entity.registerModifier(new MoveModifierX(entity, interval, entity.getPositionX(), newRenderX));
+			entity.registerModifier(new MoveModifierY(entity, interval, entity.getPositionY(), newRenderY));
+		}
+		else {
+			entity.setPosition(newRenderX, newRenderY);
+			entity.registerModifier(new AlphaModifier(entity, 1, 0f, 1f));
+		}
 	}
 
 	/**

@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 
 import de.unihannover.swp2015.robots2.model.interfaces.IAbstractModel;
@@ -54,7 +55,10 @@ public abstract class Entity implements IEntity {
 
 	/** Rotation of the entity in degrees. */
 	protected float rotation = 0;
-
+	
+	/** Color of the entity, default is Color.WHITE */
+	protected Color color = new Color(1f, 1f, 1f, 1f);
+	
 	/** ResourceHandler, which should be used to obtain resources. */
 	protected final IResourceHandler resHandler;
 
@@ -109,6 +113,8 @@ public abstract class Entity implements IEntity {
 
 	@Override
 	public void draw(final Batch batch) {
+		batch.setColor(color);
+		
 		for (int i = 0; i < componentList.size(); ++i) {
 			final IComponent comp = componentList.get(i);
 			comp.draw(batch);
@@ -126,6 +132,15 @@ public abstract class Entity implements IEntity {
 		modList.clear();
 	}
 
+	@Override
+	public void clearModifier(Class<? extends IEntityModifier> type) {
+		for (int i = 0; i < modList.size() ; ++i) {
+			if (modList.get(i).getClass().isAssignableFrom(type)) {
+				modList.remove(i);
+			}
+		}
+	}
+	
 	@Override
 	public void registerComponent(final IComponent component) {
 		componentList.add(component);
@@ -211,6 +226,16 @@ public abstract class Entity implements IEntity {
 	@Override
 	public IAbstractModel getModel() {
 		return model;
+	}
+	
+	@Override
+	public void setColor(Color color) {
+		this.color = color;
+	}
+	
+	@Override
+	public Color getColor() {
+		return color;
 	}
 
 	/**

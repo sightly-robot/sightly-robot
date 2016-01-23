@@ -1,5 +1,7 @@
 package de.unihannover.swp2015.robots2.visual.core.entity;
 
+import com.badlogic.gdx.graphics.Color;
+
 import de.unihannover.swp2015.robots2.model.externalInterfaces.IModelObserver;
 import de.unihannover.swp2015.robots2.model.interfaces.IAbstractModel;
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
@@ -100,6 +102,13 @@ public interface IEntity
 	 * Removes all modifiers.
 	 */
 	void clearModifier();
+	
+	/**
+	 * Removes all modifier of the given type.
+	 * 
+	 * @param type class of the modifier you want to clear 
+	 */
+	void clearModifier(Class<? extends IEntityModifier> type);
 
 	/**
 	 * Clears all references, hold by observables, to this entity.
@@ -122,4 +131,16 @@ public interface IEntity
 	 *            {@link IComponent}
 	 */
 	void unregisterComponent(IComponent component);
+	
+	/**
+	 * Set the color for this entity.
+	 * 
+	 * @param color color
+	 */
+	void setColor(Color color);
+	
+	/**
+	 * @return current color of the entity
+	 */
+	Color getColor();
 }

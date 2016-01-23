@@ -178,10 +178,10 @@ public class RobotBubble extends Entity {
 		final float finalX = parent.getPositionX() + x;
 		final float finalY = parent.getPositionY() + y;
 
-		batch.setColor(color);
+		batch.setColor(color.r, color.g, color.b, color.a * parent.getColor().a);
 		tex.draw(batch, finalX, finalY, width, height);
 		batch.setColor(Color.WHITE);
-
+		
 		final float fontX = finalX + width * GameConst.BUBBLE_PADDING_LEFT_REL;
 
 		fontSmall.draw(batch, id, fontX, finalY + height * GameConst.BUBBLE_FONT_NAME_Y_REL, width, Align.left, false);
