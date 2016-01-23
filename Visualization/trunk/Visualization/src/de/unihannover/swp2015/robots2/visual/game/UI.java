@@ -16,6 +16,7 @@ import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
 import de.unihannover.swp2015.robots2.visual.core.IRenderable;
 import de.unihannover.swp2015.robots2.visual.core.IResizable;
 import de.unihannover.swp2015.robots2.visual.core.IUpdateable;
+import de.unihannover.swp2015.robots2.visual.game.ui.HudStage;
 import de.unihannover.swp2015.robots2.visual.game.ui.RobotList;
 import de.unihannover.swp2015.robots2.visual.resource.IResourceHandler;
 import de.unihannover.swp2015.robots2.visual.resource.ResConst;
@@ -53,7 +54,7 @@ public class UI implements IRenderable, IUpdateable, Disposable, IResizable {
 	 *            resource container
 	 */
 	public UI(List<IRobot> robots, Viewport view, Batch batch, IResourceHandler res) {
-		this.stage = new Stage(view, batch);
+		this.stage = new HudStage(view, batch);
 		this.ranking = new RobotList(res.createSkin(), robots);
 		this.title = new Label("Ranking", res.createSkin(), ResConst.SKIN_TITLE_FONT.toString(), Color.WHITE);
 		this.panel = new Container<>(ranking);

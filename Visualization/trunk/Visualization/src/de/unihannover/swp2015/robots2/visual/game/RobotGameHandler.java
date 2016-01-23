@@ -226,14 +226,15 @@ public class RobotGameHandler extends GameHandler {
 				pp.captureFxaa();
 
 				batch.begin();
-				batch.draw(pp.getBufferTexture(), 0, 0);
+				batch.draw(pp.getBufferTexture(), 0, 0, 0, 0, pp.getBufferTexture().getRegionWidth(), pp.getBufferTexture().getRegionHeight(), 
+						1f/prefs.getFloat(PrefKey.X_SCALE), 1f/prefs.getFloat(PrefKey.Y_SCALE), 0);
 				batch.end();
 
 				ui.render();
 
 				pp.renderFxaa();
 			} else {
-				pp.captureFxaa();
+				//pp.captureFxaa();
 
 				batch.begin();
 				for (int i = 0; i < entityList.size(); ++i) {
@@ -243,7 +244,7 @@ public class RobotGameHandler extends GameHandler {
 
 				ui.render();
 
-				pp.renderFxaa();
+				//pp.renderFxaa();
 			}
 		} else {
 			pp.captureFxaa();
