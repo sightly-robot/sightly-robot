@@ -5,6 +5,7 @@ import java.util.Locale;
 
 import org.apache.pivot.beans.BXML;
 import org.apache.pivot.beans.Bindable;
+import org.apache.pivot.collections.ArrayList;
 import org.apache.pivot.collections.Map;
 import org.apache.pivot.collections.Sequence;
 import org.apache.pivot.util.Resources;
@@ -35,11 +36,11 @@ import org.apache.pivot.wtk.validation.IntRangeValidator;
 import org.apache.pivot.wtk.validation.IntValidator;
 
 import de.unihannover.swp2015.robots2.application.models.GeneralOptions;
+import de.unihannover.swp2015.robots2.application.models.VisualizationOptions;
 import de.unihannover.swp2015.robots2.application.models.VisualizationRegister;
 import de.unihannover.swp2015.robots2.application.util.CheckboxStateConverter;
 import de.unihannover.swp2015.robots2.controller.externalInterfaces.IVisualizationControl;
 import de.unihannover.swp2015.robots2.controller.main.GuiMainController;
-import de.unihannover.swp2015.robots2.utils.VisualizationOptions;
 
 /**
  * Controller for Configuration Window.
@@ -162,6 +163,8 @@ public class Configurator extends Window implements Bindable, IVisualizationCont
 	 * xOffsetValueChanged, says it all.
 	 */
 	private TextInputContentListener.Adapter TextInputValueListener = new TextInputContentListener.Adapter() {
+		// must listen for inserted and removed instead of changed, so a slider change does not trigger this as well.
+		
 		@Override
 		public void textInserted(TextInput textInput, int index, int count) {
 			if (!textInput.isTextValid())
@@ -429,6 +432,7 @@ public class Configurator extends Window implements Bindable, IVisualizationCont
 	private ButtonPressListener updateVisualizationListAction = new ButtonPressListener() {
 		@Override
 		public void buttonPressed(Button button) {
+			visualizationList.setListData(new ArrayList<String>());
 			visualizations.clear();
 			controller.getVisualizationSettings();
 		}
@@ -443,7 +447,7 @@ public class Configurator extends Window implements Bindable, IVisualizationCont
 		public void selectedIndexChanged(ListButton listButton, int index) { /* not used */ }
 
 		@Override
-		public void selectedItemChanged(ListButton listButton, Object item) { 
+		public void selectedItemChanged(ListButton listButton, Object previous) { 
 			if (listButton.getSelectedItem() != null) {
 				visualizations.setSelection((String)listButton.getSelectedItem());
 				loadSelectedVisualization();
@@ -459,6 +463,9 @@ public class Configurator extends Window implements Bindable, IVisualizationCont
 		decomissionSliderListeners();
 		
 		VisualizationOptions visu = visualizations.getSelected();
+		if (visu == null)
+			return;
+		
 		visu.leftMerge(VisualizationOptions.createDefault(""));
 
 		xOffset.setValue(visu.getAbscissaOffset().get().intValue());

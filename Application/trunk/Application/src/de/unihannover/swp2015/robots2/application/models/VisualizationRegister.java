@@ -7,7 +7,6 @@ import org.apache.pivot.collections.ArrayList;
 import org.apache.pivot.collections.List;
 
 import de.unihannover.swp2015.robots2.controller.main.GuiMainController;
-import de.unihannover.swp2015.robots2.utils.VisualizationOptions;
 
 /**
  * Model holding all Visualizations for the control panel (visualization options).
