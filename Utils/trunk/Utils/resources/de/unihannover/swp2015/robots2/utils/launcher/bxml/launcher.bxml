@@ -1,0 +1,29 @@
+<window:Launcher title="Sightly-Robot" maximized="true" width="300" xmlns:bxml="http://pivot.apache.org/bxml" xmlns:window="de.unihannover.swp2015.robots2.utils.launcher" xmlns="org.apache.pivot.wtk">
+	<FillPane orientation="vertical" styles="{padding:50, spacing:30, backgroundColor:'#505050'}">
+		<BoxPane orientation="horizontal" styles="{spacing:20}">
+			 <Label text="Host:" styles="{font:{size:20}, color:'#ffffff'}"/>
+			<TextInput bxml:id="hostInput" text="tcp://localhost" styles="{font:{size:20}}"/>
+		</BoxPane>
+		
+		<Label text="Gameserver" styles="{font:{size:20}, color:'#ffffff'}"/>
+		<FillPane orientation="horizontal" styles="{spacing:20}">
+			<ImageView bxml:id="imageServerStopped" image="/de/unihannover/swp2015/robots2/utils/launcher/images/stopped.svg" preferredWidth="64" preferredHeight="64" styles="{fill:true}"/>
+			<ImageView bxml:id="imageServerRunning" image="/de/unihannover/swp2015/robots2/utils/launcher/images/running.svg" preferredWidth="64" preferredHeight="64" styles="{fill:true}" visible="false"/>
+			<PushButton bxml:id="startGameserver" buttonData="Start" styles="{font:{size:16},backgroundColor:'#505050', color:'#ffffff'}"/>
+			<PushButton bxml:id="stopGameserver" enabled="false" buttonData="Stop" styles="{font:{size:16},backgroundColor:'#505050', color:'#ffffff'}"/>
+			<PushButton bxml:id="openGameserverConsole" buttonData="Console" styles="{font:{size:16},backgroundColor:'#505050', color:'#ffffff'}"/>
+		</FillPane>
+		
+		<PushButton bxml:id="startControlpanel" buttonData="Start Control-Panel" styles="{font:{size:16},backgroundColor:'#505050', color:'#ffffff'}"/>
+		<PushButton bxml:id="startVisualization" buttonData="Start Visualization" styles="{font:{size:16},backgroundColor:'#505050', color:'#ffffff'}"/>
+		
+		<Label text="Software-Robot" styles="{font:{size:20}, color:'#ffffff'}"/>
+		<FillPane orientation="horizontal" styles="{spacing:20}">
+			<ImageView bxml:id="imageRobotStopped" image="/de/unihannover/swp2015/robots2/utils/launcher/images/stopped.svg" preferredWidth="64" preferredHeight="64" styles="{fill:true}"/>
+			<ImageView bxml:id="imageRobotRunning" image="/de/unihannover/swp2015/robots2/utils/launcher/images/running.svg" preferredWidth="64" preferredHeight="64" styles="{fill:true}" visible="false"/>
+			<PushButton bxml:id="startRobot" buttonData="Start" styles="{font:{size:16},backgroundColor:'#505050', color:'#ffffff'}"/>
+			<PushButton bxml:id="stopRobot" enabled="false" buttonData="Stop" styles="{font:{size:16},backgroundColor:'#505050', color:'#ffffff'}"/>
+			<PushButton bxml:id="openRobotConsole" buttonData="Console" styles="{font:{size:16},backgroundColor:'#505050', color:'#ffffff'}"/>
+		</FillPane>
+	</FillPane>
+</window:Launcher>
