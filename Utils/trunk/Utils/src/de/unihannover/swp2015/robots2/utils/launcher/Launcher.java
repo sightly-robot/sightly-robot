@@ -5,8 +5,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
 
-import javax.swing.UIDefaults.LazyInputMap;
-
 import org.apache.pivot.beans.BXML;
 import org.apache.pivot.beans.BXMLSerializer;
 import org.apache.pivot.beans.Bindable;
@@ -121,7 +119,7 @@ public class Launcher extends Window implements Bindable {
 	private ButtonPressListener startGameserverAction = new ButtonPressListener() {
 		@Override
 		public void buttonPressed(Button arg0) {
-			if (gameserver == null || !gameserver.isAlive()) {
+			if (gameserver == null || !checkIfAlive(gameserver)) {
 				String cmd = String.format("%s -cp %s -jar SightlyRobot_Server.jar %s", javaExecutable, classPath,
 						hostInput.getText());
 
@@ -151,7 +149,7 @@ public class Launcher extends Window implements Bindable {
 	private ButtonPressListener stopGameserverAction = new ButtonPressListener() {
 		@Override
 		public void buttonPressed(Button arg0) {
-			if (gameserver.isAlive()) {
+			if (checkIfAlive(gameserver)) {
 				gameserver.destroy();
 			}
 
@@ -205,7 +203,7 @@ public class Launcher extends Window implements Bindable {
 	private ButtonPressListener startRobotAction = new ButtonPressListener() {
 		@Override
 		public void buttonPressed(Button arg0) {
-			if (robot == null || !robot.isAlive()) {
+			if (robot == null || !checkIfAlive(robot)) {
 				String cmd = String.format("%s -cp %s -jar SightlyRobot_SoftwareRobot.jar %s true", javaExecutable,
 						classPath, hostInput.getText());
 
@@ -235,7 +233,7 @@ public class Launcher extends Window implements Bindable {
 	private ButtonPressListener stopRobotAction = new ButtonPressListener() {
 		@Override
 		public void buttonPressed(Button arg0) {
-			if (robot.isAlive()) {
+			if (checkIfAlive(robot)) {
 				robot.destroy();
 			}
 
@@ -256,5 +254,15 @@ public class Launcher extends Window implements Bindable {
 					new ConsoleListener(robotConsole));
 		}
 	};
+	
+	private static boolean checkIfAlive(Process p) {
+		try {
+			p.exitValue();
+			return false;
+		}
+		catch (IllegalThreadStateException e) {
+			return true;
+		}
+	}
 
 }
