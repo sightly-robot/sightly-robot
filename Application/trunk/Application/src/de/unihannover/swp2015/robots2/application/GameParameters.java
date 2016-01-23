@@ -7,7 +7,7 @@ package de.unihannover.swp2015.robots2.application;
  */
 public class GameParameters {
 	private double movementSpeed = 0.; // in ?
-	private int maxStayTime = 0; // in milliseconds
+	private int rotationSpeed = 0; // in milliseconds
 	
 	/**
 	 * Constructor for default state.
@@ -20,9 +20,9 @@ public class GameParameters {
 	 * @param movementSpeed Maximum movement speed of virtual robots.
 	 * @param maxStayTime Maximum stay time for roboters.
 	 */
-	GameParameters(double movementSpeed, int maxStayTime) {
+	GameParameters(double movementSpeed, int rotationSpeed) {
 		this.movementSpeed = movementSpeed;
-		this.maxStayTime = maxStayTime;
+		this.rotationSpeed = rotationSpeed;
 	}
 	
 	/**
@@ -45,16 +45,16 @@ public class GameParameters {
 	 * Getter for maximum stay time on a field for any robot in milliseconds.
 	 * @return Returns the maximum stay time on a field for any robot in milliseconds.
 	 */
-	public int getMaxStayTime() {
-		return maxStayTime;
+	public int getRotationSpeed() {
+		return rotationSpeed;
 	}
 	
 	/**
 	 * Setter for maximum stay time on a field for any robot in milliseconds.
 	 * @param maxStayTime maximum stay time on a field for any robot in milliseconds.
 	 */
-	public void setMaxStayTime(int maxStayTime) {
-		this.maxStayTime = maxStayTime;
+	public void setRotationSpeed(int rotationSpeed) {
+		this.rotationSpeed = rotationSpeed;
 	}
 	
 	

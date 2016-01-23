@@ -61,7 +61,7 @@ public class MapLoader {
 		// load game parameters, which are map dependent.
 		this.gameParameters = new GameParameters (
 			mapObject.getJSONObject("gameParameters").getDouble("movementSpeed"),
-			mapObject.getJSONObject("gameParameters").getInt("maxStayTime")
+			mapObject.getJSONObject("gameParameters").getInt("rotationSpeed")
 		);
 		
 		List<List<Integer>> food = new ArrayList<>();
@@ -124,7 +124,9 @@ public class MapLoader {
 		walls = fixBorders(walls);
 
 		controller.sendWalls(walls);
-		controller.sendGameParameters((float)gameParameters.getMovementSpeed(), gameParameters.getMaxStayTime());
+		//Deprecated
+		//controller.sendGameParameters((float)gameParameters.getMovementSpeed(), gameParameters.getMaxStayTime());
+		controller.sendVRobotSpeed((float)gameParameters.getMovementSpeed(), (float)gameParameters.getRotationSpeed());
 		controller.sendStartPositions(startPositions);
 		controller.sendFood(food);
 		controller.sendGrowingRates(growingRates);
