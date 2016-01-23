@@ -126,8 +126,8 @@ public class Configurator extends Window implements Bindable, IVisualizationCont
 		// Validation:
 		xOffsetValue.setValidator(new IntRangeValidator(Locale.US, xOffset.getStart(), xOffset.getEnd()));
 		yOffsetValue.setValidator(new IntRangeValidator(Locale.US, yOffset.getStart(), yOffset.getEnd()));
-		xScaleValue.setValidator(new DoubleRangeValidator(Locale.US, 0., 1.));
-		yScaleValue.setValidator(new DoubleRangeValidator(Locale.US, 0., 1.));
+		xScaleValue.setValidator(new DoubleRangeValidator(Locale.US, 0.001, 1.));
+		yScaleValue.setValidator(new DoubleRangeValidator(Locale.US, 0.001, 1.));
 		transformationValue.setValidator(new DoubleRangeValidator(Locale.US, -1., 1.));
 		
 		xOffsetValue.getTextInputContentListeners().add(TextInputValueListener);
@@ -164,6 +164,9 @@ public class Configurator extends Window implements Bindable, IVisualizationCont
 	private TextInputContentListener.Adapter TextInputValueListener = new TextInputContentListener.Adapter() {
 		@Override
 		public void textInserted(TextInput textInput, int index, int count) {
+			if (!textInput.isTextValid())
+				return;
+			
 			decomissionSliderListeners();
 			float value = Float.parseFloat(textInput.getText());
 			
