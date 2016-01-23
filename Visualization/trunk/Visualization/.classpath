@@ -6,14 +6,7 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="libs/commons-cli-1.3.1.jar"/>
-	<classpathentry kind="lib" path="libs/gdx-1.7.1.jar" sourcepath="libs/src/gdx-1.7.1-sources.jar"/>
-	<classpathentry kind="lib" path="libs/gdx-backend-gwt-1.7.1.jar"/>
-	<classpathentry kind="lib" path="libs/gdx-backend-lwjgl-1.7.1.jar"/>
-	<classpathentry kind="lib" path="libs/gdx-freetype-natives.jar"/>
-	<classpathentry kind="lib" path="libs/gdx-freetype.jar"/>
-	<classpathentry kind="lib" path="libs/gdx-platform-1.7.1-natives-desktop.jar"/>
 	<classpathentry kind="lib" path="libs/gdx-pp.jar"/>
-	<classpathentry kind="lib" path="libs/gdx-tools-1.7.2.jar"/>
 	<classpathentry kind="lib" path="libs/jinput-2.0.5.jar"/>
 	<classpathentry kind="lib" path="libs/jinput-platform-2.0.5-natives-linux.jar"/>
 	<classpathentry kind="lib" path="libs/jinput-platform-2.0.5-natives-osx.jar"/>
@@ -26,12 +19,18 @@
 	<classpathentry kind="lib" path="libs/log4j-core-2.5.jar"/>
 	<classpathentry kind="lib" path="libs/log4j-iostreams-2.5.jar"/>
 	<classpathentry kind="lib" path="libs/lwjgl_util-2.9.2.jar"/>
+	<classpathentry kind="lib" path="libs"/>
+	<classpathentry kind="lib" path="libs/mockito-all-1.10.19.jar" sourcepath="libs/src/mockito-all-1.10.19-sources.jar"/>
+	<classpathentry kind="lib" path="internal"/>
+	<classpathentry kind="lib" path="libs/gdx-1.8.0.jar" sourcepath="libs/src/gdx-1.8.0-sources.jar"/>
+	<classpathentry kind="lib" path="libs/gdx-freetype-1.8.0.jar"/>
+	<classpathentry kind="lib" path="libs/gdx-freetype-platform-1.8.0-natives-desktop.jar"/>
+	<classpathentry kind="lib" path="libs/gdx-platform-1.8.0-natives-desktop.jar"/>
+	<classpathentry kind="lib" path="libs/gdx-tools-1.8.0.jar"/>
+	<classpathentry kind="lib" path="libs/gdx-backend-lwjgl-1.8.0.jar"/>
 	<classpathentry kind="lib" path="libs/lwjgl-2.9.2.jar"/>
 	<classpathentry kind="lib" path="libs/lwjgl-platform-2.9.2-natives-linux.jar"/>
 	<classpathentry kind="lib" path="libs/lwjgl-platform-2.9.2-natives-osx.jar"/>
 	<classpathentry kind="lib" path="libs/lwjgl-platform-2.9.2-natives-windows.jar"/>
-	<classpathentry kind="lib" path="libs"/>
-	<classpathentry kind="lib" path="libs/mockito-all-1.10.19.jar" sourcepath="libs/src/mockito-all-1.10.19-sources.jar"/>
-	<classpathentry kind="lib" path="internal"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

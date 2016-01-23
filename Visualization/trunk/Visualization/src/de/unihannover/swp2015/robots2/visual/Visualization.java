@@ -9,6 +9,8 @@ import org.apache.logging.log4j.Logger;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Graphics.DisplayMode;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 
@@ -87,7 +89,7 @@ public class Visualization extends ApplicationAdapter {
 
 	@Override
 	public void create() {
-
+		
 		LOGGER.debug("Id of the visualization: {}", id);
 		
 		prefs = new FlexPreferences<PrefKey>("prefs");
@@ -130,6 +132,16 @@ public class Visualization extends ApplicationAdapter {
 	@Override
 	public void render() {
 
+		if (Gdx.input.isKeyPressed(Keys.F)) {
+			DisplayMode mode = Gdx.graphics.getDisplayMode();
+			if (Gdx.graphics.isFullscreen()) {
+				Gdx.graphics.setWindowedMode(mode.width / 2, mode.height / 2);
+			}
+			else {
+				Gdx.graphics.setFullscreenMode(mode);
+			}
+		}
+		
 		Gdx.gl.glClearColor(0f, 0f, 0f, 0f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 

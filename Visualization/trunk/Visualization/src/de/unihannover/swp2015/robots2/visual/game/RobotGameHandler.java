@@ -201,6 +201,7 @@ public class RobotGameHandler extends GameHandler {
 	
 	@Override
 	public void update() {
+
 		for (int i = 0; i < entityList.size(); ++i) {
 			entityList.get(i).update();
 		}
@@ -209,7 +210,7 @@ public class RobotGameHandler extends GameHandler {
 
 	@Override
 	public void render() {
-
+		
 		if (!game.isRunning()) {
 
 			if (pp.isBloomEnabled()) {

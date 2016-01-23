@@ -92,9 +92,9 @@ public class DesktopLauncher {
 		config.width = dm.getWidth();
 		config.height = dm.getHeight();
 		config.foregroundFPS = 120;
-		config.backgroundFPS = 60;
+		config.backgroundFPS = 120;
 		config.vSyncEnabled = false;
-		config.fullscreen = false;
+		config.fullscreen = true;
 		config.addIcon("assets/icon/rIcon.png", FileType.Internal);
 		config.addIcon("assets/icon/rIcon_32.png", FileType.Internal);
 		config.addIcon("assets/icon/rIcon_128.png", FileType.Internal);
