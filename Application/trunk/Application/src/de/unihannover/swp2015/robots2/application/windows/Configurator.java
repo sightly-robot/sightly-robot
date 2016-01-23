@@ -88,7 +88,8 @@ public class Configurator extends Window implements Bindable, IVisualizationCont
 	@BXML private Checkbox showVirtuals;
 	@BXML private Checkbox showReals;
 	@BXML private Checkbox showResources;
-	@BXML private Checkbox showScore;
+	@BXML private Checkbox showBubble;
+	@BXML private Checkbox showVirtualBubble;
 	@BXML private Checkbox showLockStates;
 	
 	@BXML private PushButton nextTexturepack;
@@ -141,7 +142,8 @@ public class Configurator extends Window implements Bindable, IVisualizationCont
 		showReals.getButtonPressListeners().add(showFlagChanged);
 		showVirtuals.getButtonPressListeners().add(showFlagChanged);
 		showWalls.getButtonPressListeners().add(showFlagChanged);
-		showScore.getButtonPressListeners().add(showFlagChanged);
+		showBubble.getButtonPressListeners().add(showFlagChanged);
+		showVirtualBubble.getButtonPressListeners().add(showFlagChanged);
 		showResources.getButtonPressListeners().add(showFlagChanged);
 		
 		nextTexturepack.getButtonPressListeners().add(nextTexturepackAction);
@@ -254,7 +256,8 @@ public class Configurator extends Window implements Bindable, IVisualizationCont
 			temp.setRenderRobots(CheckboxStateConverter.isChecked(showReals));
 			temp.setRenderVirtualRobots(CheckboxStateConverter.isChecked(showVirtuals));
 			temp.setRenderResources(CheckboxStateConverter.isChecked(showResources));
-			temp.setRenderScore(CheckboxStateConverter.isChecked(showScore));
+			temp.setRenderBubble(CheckboxStateConverter.isChecked(showBubble));
+			temp.setRenderVirtualBubble(CheckboxStateConverter.isChecked(showVirtualBubble));
 			temp.setRenderWalls(CheckboxStateConverter.isChecked(showWalls));
 			visualizations.performMergeOnSelected(temp);
 		}		
@@ -460,7 +463,8 @@ public class Configurator extends Window implements Bindable, IVisualizationCont
 		CheckboxStateConverter.setChecked(showVirtuals, visu.doesRenderVirtualRobots().get());
 		CheckboxStateConverter.setChecked(showReals, visu.doesRenderRobots().get());
 		CheckboxStateConverter.setChecked(showResources, visu.doesRenderResources().get());
-		CheckboxStateConverter.setChecked(showScore, visu.doesRenderScore().get());
+		CheckboxStateConverter.setChecked(showBubble, visu.doesRenderBubble().get());
+		CheckboxStateConverter.setChecked(showVirtualBubble, visu.doesRenderVirtualBubble().get());
 		CheckboxStateConverter.setChecked(showLockStates, visu.doesRenderLockStates().get());
 		
 		finalChangeCommit(false);
@@ -495,7 +499,8 @@ public class Configurator extends Window implements Bindable, IVisualizationCont
 		showVirtuals.setEnabled(true);
 		showReals.setEnabled(true);
 		showResources.setEnabled(true);
-		showScore.setEnabled(true);
+		showVirtualBubble.setEnabled(true);
+		showBubble.setEnabled(true);
 		showLockStates.setEnabled(true);
 		
 		nextTexturepack.setEnabled(true);
