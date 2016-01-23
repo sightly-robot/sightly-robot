@@ -193,6 +193,11 @@ public class Configurator extends Window implements Bindable, IVisualizationCont
 			
 			reinstateSliderListeners();
 		}
+		
+		@Override
+		public void textRemoved(TextInput textInput, int index, int count) {
+			textInserted(textInput, 0, 0);
+		}
 	};
 	
 	/**
