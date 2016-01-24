@@ -72,7 +72,7 @@ public class Robot extends Entity {
 		
 		this.renderRobot = robot.isHardwareRobot() ? prefs.getBoolean(PrefKey.RENDER_ROBOTS)
 				: prefs.getBoolean(PrefKey.RENDER_VIRTUAL_ROBOTS);
-		this.renderBubble = (robot.isHardwareRobot()) ? prefs.getBoolean(PrefKey.RENDER_HARDWARE_BUBBLE) 
+		this.renderBubble = robot.isHardwareRobot() ? prefs.getBoolean(PrefKey.RENDER_HARDWARE_BUBBLE) 
 				: prefs.getBoolean(PrefKey.RENDER_VIRTUAL_BUBBLE);
 
 		this.updateWidth(robot);
@@ -117,7 +117,7 @@ public class Robot extends Entity {
 		} 
 		else {
 			if (renderRobot) {
-			robo.draw(batch, renderX, renderY, width, height, width / 2f, height / 2f, 1f, 1f, rotation);
+				robo.draw(batch, renderX, renderY, width, height, width / 2f, height / 2f, 1f, 1f, rotation);
 			}
 			if (renderBubble) {
 				bubble.draw(batch);

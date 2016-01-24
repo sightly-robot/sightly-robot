@@ -54,6 +54,7 @@ public class PreferenceHandler implements IVisualization {
 	@Override
 	public void setSettings(final String settings) {
 		Gdx.app.postRunnable(new Runnable() {
+			@Override
 			public void run() {
 				setManagedSettings(settings);
 			}

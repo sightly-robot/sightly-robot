@@ -45,7 +45,8 @@ public class HudStage extends Stage {
 
 	@Override
 	public void draw() {
-		if (!getRoot().isVisible()) return;
+		if (!getRoot().isVisible()) 
+			return;
 
 		Batch batch = getBatch();
 		if (batch != null) {

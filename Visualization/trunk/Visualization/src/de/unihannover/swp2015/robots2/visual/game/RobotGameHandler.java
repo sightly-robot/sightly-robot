@@ -349,6 +349,7 @@ public class RobotGameHandler extends GameHandler {
 		case CYCLE_TEXTURE_PACK:
 			currentTheme++;
 			resHandler.loadTexturePack(themes.get(currentTheme % themes.size()));
+			break;
 			
 		default:
 			break;
