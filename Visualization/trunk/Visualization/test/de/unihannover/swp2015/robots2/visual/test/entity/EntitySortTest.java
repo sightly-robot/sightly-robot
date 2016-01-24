@@ -31,21 +31,25 @@ public class EntitySortTest {
 		}
 
 		public void draw(Batch b) {
+			
 		}
 
 		public void onModelUpdate(IEvent event) {
+			
 		}
 
 		public void onUpdatePreferences(PrefKey updatedKey, Object value) {
+			
 		}
 
 		public void onManagedModelUpdate(IEvent event) {
+			
 		}
 
 	}
 
-	@SuppressWarnings("unchecked")
 	@Test
+	@SuppressWarnings("unchecked")
 	public void testSortEntities() {
 		final IGameHandler mockGameHandler = mock(IGameHandler.class);
 		when(mockGameHandler.getPreferences()).thenReturn(mock(IPreferences.class));
