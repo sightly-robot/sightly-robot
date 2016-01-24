@@ -4,17 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Simple implementation of {@link IPreferencesObservable}.
+ * Simple implementation of {@link IPreferencesObservable}
  * 
  * @author Rico Schrage
  *
  * @param <T>
- *            class, which has been used by the preference object to map to the
- *            values.
+ *            class which has been used by the preference object for mapping
  */
-public class PreferencesObservable<T extends IPreferencesKey> implements IPreferencesObservable<T> {
+public class PreferencesObservable<T extends IPreferencesKey> implements
+		IPreferencesObservable<T> {
 
-	/** Contains all observers. */
+	/** Contains all observers */
 	private final List<IPreferencesObserver<T>> observerList = new ArrayList<>();
 
 	@Override

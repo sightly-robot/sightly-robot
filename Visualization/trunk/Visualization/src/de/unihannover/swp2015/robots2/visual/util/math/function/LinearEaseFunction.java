@@ -1,9 +1,9 @@
 package de.unihannover.swp2015.robots2.visual.util.math.function;
 
 /**
- * Linear ease function (<code>currentDuration/duration</code>).
+ * Linear easing function (<code>currentDuration/duration</code>)
  * 
- * @author Rico Schrages
+ * @author Rico Schrage
  */
 public class LinearEaseFunction implements IEaseFunction {
 
@@ -14,7 +14,7 @@ public class LinearEaseFunction implements IEaseFunction {
 	}
 
 	/**
-	 * @return the static instance of the function.
+	 * @return the static instance of the function
 	 */
 	public static LinearEaseFunction getInstance() {
 		return instance;

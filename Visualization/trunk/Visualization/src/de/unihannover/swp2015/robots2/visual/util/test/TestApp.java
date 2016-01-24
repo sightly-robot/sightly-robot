@@ -26,8 +26,11 @@ import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
 import de.unihannover.swp2015.robots2.model.interfaces.IRobot.RobotState;
 
 /**
- * One-class swing app to test the reaction of the visualization when making
- * changes to the IGame object.
+ * Application for further testing
+ * 
+ * One-class swing application to test the reaction of the visualization to
+ * changes of the IGame object. Such can be starting or stopping the game,
+ * addition of new robots, changing robot positions, walls, food and stage size.
  * 
  * @author Rico Schrage
  */
@@ -45,7 +48,7 @@ public class TestApp extends JFrame implements ActionListener {
 	private final JButton startstop;
 
 	/**
-	 * Constructs the test app.
+	 * Construction of the application window
 	 * 
 	 * @param debugGame
 	 *            game instance
@@ -101,18 +104,22 @@ public class TestApp extends JFrame implements ActionListener {
 			for (IRobot ro : s) {
 				final Robot rob = (Robot) ro;
 				rob.setPosition(rand.nextInt(game.getStage().getWidth()),
-						(int) (Math.random() * game.getStage().getHeight()), randomOrientation());
+						(int) (Math.random() * game.getStage().getHeight()),
+						randomOrientation());
 				rob.emitEvent(UpdateType.ROBOT_POSITION);
 				rob.setRobotState(RobotState.ROBOTICS_ERROR);
 				rob.emitEvent(UpdateType.ROBOT_STATE);
 			}
 		} else if (e.getSource() == changeRobots) {
 			final Game g = (Game) game;
-			final Robot robo = new Robot(UUID.randomUUID().toString(), true, true);
+			final Robot robo = new Robot(UUID.randomUUID().toString(), true,
+					true);
 			if (!game.getStage().getStartPositions().isEmpty()) {
-				final List<IPosition> startposition = game.getStage().getStartPositions();
+				final List<IPosition> startposition = game.getStage()
+						.getStartPositions();
 				for (IPosition pos : startposition) {
-					robo.setPosition(pos.getX(), pos.getY(), pos.getOrientation());
+					robo.setPosition(pos.getX(), pos.getY(),
+							pos.getOrientation());
 					break;
 				}
 			} else {
@@ -122,7 +129,7 @@ public class TestApp extends JFrame implements ActionListener {
 			g.emitEvent(UpdateType.ROBOT_ADD, robo);
 		} else if (e.getSource() == changeSize) {
 			final Stage g = (Stage) game.getStage();
-			g.changeSize(8, 6);
+			g.changeSize((int)(Math.random() * 10)+2, (int)(Math.random() * 10)+2);
 			g.addStartPosition(2, 2, Orientation.EAST);
 			g.emitEvent(UpdateType.STAGE_SIZE);
 		} else if (e.getSource() == startstop) {
@@ -130,6 +137,9 @@ public class TestApp extends JFrame implements ActionListener {
 		}
 	}
 
+/**
+ * 	Creation of food in random places and in random growing stages
+ */
 	private void changeFood() {
 		final IStage stage = game.getStage();
 		for (int x = 0; x < stage.getWidth(); ++x) {
@@ -144,21 +154,27 @@ public class TestApp extends JFrame implements ActionListener {
 		}
 	}
 
+	/**
+	 * Creation of randomly placed walls
+	 */
 	private void changeWalls() {
 		final Stage stage = (Stage) game.getStage();
 		for (int x = 0; x < stage.getWidth(); ++x) {
 			for (int y = 0; y < stage.getHeight(); ++y) {
 				final Field f = (Field) stage.getField(x, y);
-				f.setWall(Orientation.NORTH, TestApp.rb());
-				f.setWall(Orientation.SOUTH, TestApp.rb());
-				f.setWall(Orientation.EAST, TestApp.rb());
-				f.setWall(Orientation.WEST, TestApp.rb());
+				f.setWall(Orientation.NORTH, TestApp.randomSolidWall());
+				f.setWall(Orientation.SOUTH, TestApp.randomSolidWall());
+				f.setWall(Orientation.EAST, TestApp.randomSolidWall());
+				f.setWall(Orientation.WEST, TestApp.randomSolidWall());
 				f.emitEvent(UpdateType.FIELD_FOOD);
 			}
 		}
 		stage.emitEvent(UpdateType.STAGE_WALL);
 	}
 
+	/**
+	 * Starting or pausing the game depending on current running state
+	 */
 	private void startStop() {
 		final Game g = (Game) game;
 		Gdx.app.postRunnable(new Runnable() {
@@ -172,6 +188,11 @@ public class TestApp extends JFrame implements ActionListener {
 		});
 	}
 
+	/**
+	 * Helper method to generate a random rotation
+	 * 
+	 * @return randomly chosen rotation
+	 */
 	private Orientation randomOrientation() {
 		int rd = rand.nextInt(4);
 		switch (rd) {
@@ -186,7 +207,14 @@ public class TestApp extends JFrame implements ActionListener {
 		}
 	}
 
-	private static boolean rb() {
+/**
+ * Helper method to create a random boolean
+ * 
+ * Used to determine if a randomly created wall will be a one-way road.
+ * 
+ * @return true, if it's a solid wall - false, if it's a one-way road
+ */
+	private static boolean randomSolidWall() {
 		final int des = rand.nextInt(10);
 		if (des == 9)
 			return true;

@@ -1,15 +1,16 @@
 package de.unihannover.swp2015.robots2.visual.util.math.function;
 
 /**
- * Describes a mathematical ease function.
+ * Description of a mathematical easing function
  * 
  * @author Rico Schrage
  */
 public interface IEaseFunction {
 
 	/**
-	 * Returns the currently reached percentage of <code>duration</code>. The
-	 * value is based on a mathematical function.
+	 * Returns the currently reached percentage of <code>duration</code>.
+	 * 
+	 * The value is based on a mathematical function.
 	 * 
 	 * @param currentDuration
 	 *            current duration

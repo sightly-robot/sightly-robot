@@ -1,12 +1,12 @@
 package de.unihannover.swp2015.robots2.visual.util.pref;
 
 /**
- * Describes an observer of a preference object.
+ * Description of an observer of a preference object.
  * 
  * @author Rico Schrage
  *
  * @param <T>
- *            type of the key, which will be used for the preference object.
+ *            type of the key which will be used for the preference object
  */
 public interface IPreferencesObserver<T extends IPreferencesKey> {
 
@@ -14,7 +14,7 @@ public interface IPreferencesObserver<T extends IPreferencesKey> {
 	 * Will be called when a value has changed
 	 * 
 	 * @param updatedKey
-	 *            key, whose value has changed
+	 *            key of which the value has been changed
 	 * @param value
 	 *            new value
 	 */

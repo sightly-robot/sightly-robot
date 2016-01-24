@@ -7,43 +7,44 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 
 /**
- * It's an observable implementation of {@link IPreferences}.
+ * This is an observable implementation of {@link IPreferences}.
  * 
  * @param <T>
- *            type of the key, which will be used for the preference object.
+ *            type of the key, which will be used for the preference object
  * @see {@link IPreferences}
  * @author Rico Schrage
  */
-public class FlexPreferences<T extends IPreferencesKey> extends PreferencesObservable<T> implements IPreferences<T> {
+public class FlexPreferences<T extends IPreferencesKey> extends
+		PreferencesObservable<T> implements IPreferences<T> {
 
 	/**
-	 * Handler for saving data persistent.
+	 * Handler for saving data persistent
 	 */
 	protected final Preferences persistentDataHandler;
 
 	/**
-	 * Map for string values.
+	 * Map for string values
 	 */
 	protected final Map<T, String> stringMap;
 
 	/**
-	 * Map for boolean values.
+	 * Map for boolean values
 	 */
 	protected final Map<T, Boolean> booleanMap;
 
 	/**
-	 * Map for integer values.
+	 * Map for integer values
 	 */
 	protected final Map<T, Integer> integerMap;
 
 	/**
-	 * Map for float values.
+	 * Map for float values
 	 */
 	protected final Map<T, Float> floatMap;
 
 	/**
-	 * Constructs a {@link FlexPreferences}, <code>name</code> will be used as
-	 * filename to store persistent data.
+	 * Constructs a {@link FlexPreferences}. <br>
+	 * <code>name</code> will be used as filename to store persistent data.
 	 * 
 	 * @see {@link com.badlogic.gdx.Preferences}
 	 * @param name
@@ -57,8 +58,14 @@ public class FlexPreferences<T extends IPreferencesKey> extends PreferencesObser
 		this.persistentDataHandler = Gdx.app.getPreferences(name);
 	}
 
+	/**
+	 * Exception for the case the key has already been used.
+	 * 
+	 * @return exception message
+	 */
 	private static IllegalArgumentException createPersistentException() {
-		return new IllegalArgumentException("The key already exists for storing data in a persistent way!");
+		return new IllegalArgumentException(
+				"The key already exists for storing data in a persistent way!");
 	}
 
 	@Override
@@ -71,7 +78,8 @@ public class FlexPreferences<T extends IPreferencesKey> extends PreferencesObser
 		final Boolean result = booleanMap.get(key);
 		if (result == null) {
 			if (persistentDataHandler.contains(key.getKey())) {
-				final boolean pResult = persistentDataHandler.getBoolean(key.getKey());
+				final boolean pResult = persistentDataHandler.getBoolean(key
+						.getKey());
 				booleanMap.put(key, pResult);
 				return pResult;
 			}
@@ -90,7 +98,8 @@ public class FlexPreferences<T extends IPreferencesKey> extends PreferencesObser
 		final Float result = floatMap.get(key);
 		if (result == null) {
 			if (persistentDataHandler.contains(key.getKey())) {
-				final Float pResult = persistentDataHandler.getFloat(key.getKey());
+				final Float pResult = persistentDataHandler.getFloat(key
+						.getKey());
 				floatMap.put(key, pResult);
 				return pResult;
 			}
@@ -109,7 +118,8 @@ public class FlexPreferences<T extends IPreferencesKey> extends PreferencesObser
 		final Integer result = integerMap.get(key);
 		if (result == null) {
 			if (persistentDataHandler.contains(key.getKey())) {
-				final Integer pResult = persistentDataHandler.getInteger(key.getKey());
+				final Integer pResult = persistentDataHandler.getInteger(key
+						.getKey());
 				integerMap.put(key, pResult);
 				return pResult;
 			}
@@ -128,7 +138,8 @@ public class FlexPreferences<T extends IPreferencesKey> extends PreferencesObser
 		final String result = stringMap.get(key);
 		if (result == null) {
 			if (persistentDataHandler.contains(key.getKey())) {
-				final String pResult = persistentDataHandler.getString(key.getKey());
+				final String pResult = persistentDataHandler.getString(key
+						.getKey());
 				stringMap.put(key, pResult);
 				return pResult;
 			}
