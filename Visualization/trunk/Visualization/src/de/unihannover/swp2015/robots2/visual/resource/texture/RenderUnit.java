@@ -3,6 +3,7 @@ package de.unihannover.swp2015.robots2.visual.resource.texture;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 
@@ -38,7 +39,7 @@ public class RenderUnit {
 	 * @param frames
 	 *            frames for the animation
 	 */
-	public void initAsAnimation(final Array<TextureRegion> frames, final Animation.PlayMode playMode,
+	public void initAsAnimation(final Array<AtlasRegion> frames, final Animation.PlayMode playMode,
 			final float duration) {
 		this.tex = null;
 		this.animation = new Animation(duration, frames, playMode);

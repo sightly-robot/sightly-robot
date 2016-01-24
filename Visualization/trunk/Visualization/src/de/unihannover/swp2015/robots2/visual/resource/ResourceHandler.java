@@ -70,7 +70,7 @@ public class ResourceHandler implements IResourceHandler {
 	 * 
 	 * @see {@link ResConst} for available keys
 	 */
-	private final Map<ResConst, Array<TextureRegion>> frameSetMap;
+	private final Map<ResConst, Array<AtlasRegion>> frameSetMap;
 
 	/**
 	 * Map key->map(size->font).
@@ -117,15 +117,21 @@ public class ResourceHandler implements IResourceHandler {
 		frameSetMap.clear();
 		texAtlas = new TextureAtlas(Gdx.files.internal(getPathToTheme()), true);
 
-		// TODO support animations
 		final ResConst[] resConsts = ResConst.values();
 		for (final ResConst res : resConsts) {
 			if (res.getType() == ResType.TEX) {
-				AtlasRegion region = texAtlas.findRegion(res.getName());
-				region.getTexture().setFilter(res.getFilter(), res.getFilter());
-				texMap.put(res, region);
-				if (renderUnitMap.containsKey(res)) {
-					renderUnitMap.get(res).initAsTexture(region);
+				Array<AtlasRegion> regions = texAtlas.findRegions(res.getName());
+				if (regions.size == 1) {
+					texMap.put(res, regions.get(0));
+					if (renderUnitMap.containsKey(res)) {
+						renderUnitMap.get(res).initAsTexture(regions.get(0));
+					}
+				}
+				else {
+					frameSetMap.put(res, regions);
+					if (renderUnitMap.containsKey(res)) {
+						renderUnitMap.get(res).initAsAnimation(regions, PlayMode.LOOP, 0.1f);
+					}
 				}
 			}
 		}
