@@ -29,6 +29,7 @@ import de.unihannover.swp2015.robots2.visual.util.pref.IPreferences;
  */
 public class RobotEngine extends Component {
 
+	/** Logger (log4j) */
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	/**
