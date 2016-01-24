@@ -11,6 +11,9 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
  */
 public class GapShader extends ShaderProgram {
 
+	/**
+	 * Constructs a {@link ShaderProgram} with the gap vertex and fragment shader.
+	 */
 	public GapShader() {
 		super(Gdx.files.internal("assets/shader/gap.vertex"), Gdx.files.internal("assets/shader/gap.fragment"));
 	}

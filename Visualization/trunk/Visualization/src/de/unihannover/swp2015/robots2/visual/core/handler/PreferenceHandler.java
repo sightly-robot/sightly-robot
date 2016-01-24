@@ -61,7 +61,13 @@ public class PreferenceHandler implements IVisualization {
 		});
 	}
 	
-	public void setManagedSettings(String settings) {
+	/**
+	 * Call will be initiated when {@link #setSettings(String)} will be called by the protocol.
+	 * In difference to {@link #setSettings(String)} the method will be called in the render thread of libGDX.
+	 * 
+	 * @param settings settings as JSON
+	 */
+	protected void setManagedSettings(String settings) {
 		InputStream stream = new ByteArrayInputStream(settings.getBytes(StandardCharsets.UTF_8));
 		JSONTokener tokenizer = new JSONTokener(stream);
 		JSONObject options = new JSONObject(tokenizer).getJSONObject(ROOT_NAME);

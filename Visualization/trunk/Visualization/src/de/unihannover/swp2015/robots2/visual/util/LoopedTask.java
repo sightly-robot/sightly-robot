@@ -32,6 +32,10 @@ public class LoopedTask {
 		this.task = job;
 	}
 
+	/**
+	 * Updates internal state of the task. If you want the task to work as expected you have to 
+	 * call this every tick.
+	 */
 	public void update() {
 		progress -= Gdx.graphics.getDeltaTime();
 		if (progress <= 0) {
