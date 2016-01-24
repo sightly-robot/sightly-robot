@@ -28,7 +28,7 @@ import de.unihannover.swp2015.robots2.visual.resource.ResConst;
 public class DesktopLauncher {
 
 	/** Logger (log4j) */
-	private static final Logger log = LogManager.getLogger();
+	private static final Logger LOGGER = LogManager.getLogger();
 	/** Path to the shaders of the PP-library */
 	private static final String SHADER_PATH = "resources/shaders/";
 
@@ -68,7 +68,7 @@ public class DesktopLauncher {
 		if (debug) {
 			// packs all textures of the default theme in a texture atlas
 			// name of the theme "default"
-			log.info("TexturePacker has been started:");
+			LOGGER.info("TexturePacker has been started:");
 			final Settings packSettings = new Settings();
 			packSettings.maxWidth = 1024 * 4;
 			packSettings.maxHeight = 1024 * 4;
