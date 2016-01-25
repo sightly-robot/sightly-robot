@@ -230,10 +230,11 @@ public class RobotGameHandler extends GameHandler {
 				batch.draw(pp.getBufferTexture(), 0, 0, 0, 0, pp.getBufferTexture().getRegionWidth(), pp.getBufferTexture().getRegionHeight(), 
 						1f/prefs.getFloat(PrefKey.X_SCALE), 1f/prefs.getFloat(PrefKey.Y_SCALE), 0);
 				batch.end();
-
+				
 				ui.render();
 
 				pp.renderFxaa();
+
 			} else {
 				pp.captureFxaa();
 
@@ -242,7 +243,7 @@ public class RobotGameHandler extends GameHandler {
 					entityList.get(i).draw(batch);
 				}
 				batch.end();
-
+				
 				ui.render();
 
 				pp.renderFxaa();

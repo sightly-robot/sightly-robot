@@ -61,8 +61,8 @@ public class Wall extends Entity<RobotGameHandler, IField> {
 		this.parent = parentStage;
 
 		this.texWall = new TransformedRenderUnit[4];
-		this.fieldWidth = prefs.getFloat(PrefKey.FIELD_WIDTH_KEY, 50);
-		this.fieldHeight = prefs.getFloat(PrefKey.FIELD_HEIGHT_KEY, 50);
+		this.fieldWidth = prefs.getFloat(PrefKey.FIELD_WIDTH_KEY);
+		this.fieldHeight = prefs.getFloat(PrefKey.FIELD_HEIGHT_KEY);
 
 		this.renderX = model.getX() * fieldWidth;
 		this.renderY = model.getY() * fieldHeight;

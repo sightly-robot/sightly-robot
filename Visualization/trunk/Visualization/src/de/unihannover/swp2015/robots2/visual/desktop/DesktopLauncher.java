@@ -49,8 +49,9 @@ public class DesktopLauncher {
 		if (clh.parse(args)) {
 			return;
 		}
-
-		startApp(clh.getFlag(FlagKey.DEBUG), clh.getOption(OptionKey.IP), clh.getOption(OptionKey.PROTOCOL));
+		
+		startApp(clh.getFlag(FlagKey.DEBUG), clh.getOption(OptionKey.IP), 
+				 clh.getOption(OptionKey.PROTOCOL), clh.getFlag(FlagKey.WINDOWED));
 	}
 
 	/**
@@ -61,7 +62,7 @@ public class DesktopLauncher {
 	 * @param brokerIp
 	 *            ip of the MQTT broker
 	 */
-	private static void startApp(final boolean debug, final String brokerIp, final String protocol) {
+	private static void startApp(boolean debug, String brokerIp, String protocol, boolean windowedFullscreen) {
 
 		ShaderLoader.BasePath = SHADER_PATH;
 
@@ -94,10 +95,18 @@ public class DesktopLauncher {
 		config.foregroundFPS = 120;
 		config.backgroundFPS = 120;
 		config.vSyncEnabled = false;
-		config.fullscreen = true;
 		config.addIcon("assets/icon/rIcon.png", FileType.Internal);
 		config.addIcon("assets/icon/rIcon_32.png", FileType.Internal);
 		config.addIcon("assets/icon/rIcon_128.png", FileType.Internal);
+		config.fullscreen = false;
+		
+		if (windowedFullscreen) {
+			System.setProperty("org.lwjgl.opengl.Window.undecorated", "true");
+		}
+		else {
+			config.fullscreen = true;
+		}
+		
 		new LwjglApplication(new Visualization(debug, brokerIp, protocol), config).setLogLevel(Application.LOG_NONE);
 	}
 

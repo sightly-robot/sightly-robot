@@ -89,7 +89,7 @@ public class Visualization extends ApplicationAdapter {
 
 	@Override
 	public void create() {
-		
+
 		LOGGER.debug("Id of the visualization: {}", id);
 		
 		prefs = new FlexPreferences<PrefKey>("prefs");

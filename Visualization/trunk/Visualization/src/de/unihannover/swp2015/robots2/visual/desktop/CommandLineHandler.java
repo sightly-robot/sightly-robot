@@ -27,6 +27,11 @@ public class CommandLineHandler {
 	private static final Logger log = LogManager.getLogger();
 
 	/** Short console argument to enable the debug mode */
+	private static final String WINDOW_SHORT = "w";
+	/** Long console argument to enable the debug mode */
+	private static final String WINDOW_LONG = "window";
+	
+	/** Short console argument to enable the debug mode */
 	private static final String DEBUG_SHORT = "d";
 	/** Long console argument to enable the debug mode */
 	private static final String DEBUG_LONG = "debug";
@@ -100,6 +105,11 @@ public class CommandLineHandler {
 				return true;
 			}
 
+			// set windowed flag
+			boolean windowedArg = cl.hasOption(WINDOW_SHORT);
+			flags.put(FlagKey.WINDOWED, windowedArg);
+			log.info("Windowed: {}", String.valueOf(windowedArg));
+			
 			// sets debug to true if the debug flag has been set, default: false
 			boolean debugArg = cl.hasOption(DEBUG_SHORT);
 			flags.put(FlagKey.DEBUG, debugArg);
@@ -116,6 +126,7 @@ public class CommandLineHandler {
 
 			log.info("Broker ip: {}", brokerIp);
 			
+			// validate and set protocol type
 			String proto = cl.getOptionValue(PROTO_SHORT, DEFAULT_PROTO);
 			MqttProtocol[] protoValues = MqttProtocol.values();
 			boolean protoValid = false;
@@ -142,14 +153,20 @@ public class CommandLineHandler {
 	private static Options createOptions() {
 		Option help = Option.builder(HELP_SHORT).required(false).longOpt(HELP_LONG).desc("Prints usage information.")
 				.build();
+		
 		Option debug = Option.builder(DEBUG_SHORT).required(false).longOpt(DEBUG_LONG)
 				.desc("Indicates if you want to enable the debug features, also affects the log level.").build();
+		
 		Option ip = Option.builder(IP_SHORT).required(false).longOpt(IP_LONG).type(String.class).hasArg()
 				.desc("The broker ip you want to use. Only works without debug flag").build();
+		
 		Option proto = Option.builder(PROTO_SHORT).required(false).longOpt(PROTO_LONG).type(String.class).hasArg()
 				.desc("The transfer protocol of the mqtt connection.").build();
 		
-		return new Options().addOption(help).addOption(debug).addOption(ip).addOption(proto);
+		Option windowed = Option.builder(WINDOW_SHORT).required(false).longOpt(WINDOW_LONG)
+				.desc("Indicates that you want to start without decoration.").build();
+		
+		return new Options().addOption(help).addOption(debug).addOption(ip).addOption(proto).addOption(windowed);
 	}
 
 	/**
@@ -176,7 +193,7 @@ public class CommandLineHandler {
 	 * @author Rico Schrage
 	 */
 	public enum FlagKey {
-		HELP, DEBUG
+		HELP, DEBUG, WINDOWED
 	}
 
 	/**
