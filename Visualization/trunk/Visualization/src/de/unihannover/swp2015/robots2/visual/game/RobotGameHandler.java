@@ -58,7 +58,7 @@ public class RobotGameHandler extends GameHandler {
 	
 	/** Current theme */
 	private int currentTheme;
-	
+
 	/**
 	 * Construct a new RobotGameHandler and connects this handler (means it will
 	 * directly observe the model) to the given model <code>game</code>

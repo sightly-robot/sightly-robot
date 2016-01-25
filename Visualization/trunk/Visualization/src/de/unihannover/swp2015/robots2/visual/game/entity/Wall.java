@@ -100,7 +100,7 @@ public class Wall extends Entity<RobotGameHandler, IField> {
 			isOneway[i] = StageUtil.checkDriveDirectionAndNotNeighbours(model, parent, orientations[i]);
 		}
 	}
-
+	
 	@Override
 	public void draw(final Batch batch) {
 		super.draw(batch);

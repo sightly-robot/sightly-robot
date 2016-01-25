@@ -1,5 +1,7 @@
 package de.unihannover.swp2015.robots2.visual.game.entity;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
@@ -12,7 +14,10 @@ import de.unihannover.swp2015.robots2.visual.game.RobotGameHandler;
 import de.unihannover.swp2015.robots2.visual.game.entity.component.RobotEngine;
 import de.unihannover.swp2015.robots2.visual.resource.ResConst;
 import de.unihannover.swp2015.robots2.visual.resource.texture.RenderUnit;
+import de.unihannover.swp2015.robots2.visual.util.ColorUtil;
+import de.unihannover.swp2015.robots2.visual.util.DelayedTask;
 import de.unihannover.swp2015.robots2.visual.util.ModelUtil;
+import de.unihannover.swp2015.robots2.visual.util.Task;
 
 /**
  * An entity used for the visualization of robots
@@ -21,7 +26,7 @@ import de.unihannover.swp2015.robots2.visual.util.ModelUtil;
  * @author Daphne Schössow
  */
 public class Robot extends Entity<RobotGameHandler, IRobot> {
-
+	
 	/** Visual representation of the entity. */
 	private final RenderUnit robo;
 
@@ -40,8 +45,14 @@ public class Robot extends Entity<RobotGameHandler, IRobot> {
 	/** Bubble of the robot, which displays some information about the robot */
 	private RobotBubble bubble;
 
+	/** Performs task to let the robot blink after reset */
+	private DelayedTask blinkTask;
+	
 	/** True if the robot should get rendered */
 	private boolean renderRobot;
+	
+	/** Color of the robot */
+	private Color robotColor;
 
 	/**
 	 * True if the bubble should get rendered (if renderRobot == false this has
@@ -66,7 +77,8 @@ public class Robot extends Entity<RobotGameHandler, IRobot> {
 		this.startPositionTexture = resHandler.createRenderUnit(ResConst.DEFAULT_STARTPOS);
 		this.drawStartPosition = robot.getState() == RobotState.SETUPSTATE;
 		this.rotation = ModelUtil.calculateRotation(robot.getPosition().getOrientation());
-
+		this.robotColor = ColorUtil.fromAwtColor(robot.getColor());
+		
 		this.fieldWidth = prefs.getFloat(PrefKey.FIELD_WIDTH_KEY);
 		this.fieldHeight = prefs.getFloat(PrefKey.FIELD_HEIGHT_KEY);
 		
@@ -80,6 +92,14 @@ public class Robot extends Entity<RobotGameHandler, IRobot> {
 		this.bubble = new RobotBubble(gameHandler, this);
 
 		this.registerComponent(new RobotEngine(prefs));
+		
+		this.blinkTask = new DelayedTask(1f, new Task() {
+			@Override
+			public void work() {
+				color.set(1f, 1f, 1f, color.a);
+			}
+		});
+		this.blinkTask.kill();
 	}
 
 	/**
@@ -102,6 +122,13 @@ public class Robot extends Entity<RobotGameHandler, IRobot> {
 	private void updateHeight() {
 		this.height = fieldHeight * GameConst.ROBOT_SCALE;
 		this.renderY = model.getPosition().getY() * fieldHeight + fieldHeight / 2 - height / 2;
+	}
+	
+	@Override
+	public void update() {
+		super.update();
+		
+		blinkTask.update(Gdx.graphics.getDeltaTime());
 	}
 
 	@Override
@@ -129,7 +156,9 @@ public class Robot extends Entity<RobotGameHandler, IRobot> {
 
 		switch (event.getType()) {
 
-		case ROBOT_ADD:
+		case ROBOT_BLINK:
+			color.set(robotColor.r, robotColor.g, robotColor.b, color.a);
+			blinkTask.reset();
 			break;
 
 		case ROBOT_STATE:
