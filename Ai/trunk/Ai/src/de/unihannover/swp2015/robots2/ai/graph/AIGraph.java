@@ -296,6 +296,7 @@ public class AIGraph extends Thread implements Runnable {
 								return tmpEdge.getDirection();
 							}
 						}
+						sleep(10);
 					}
 				}
 			}
