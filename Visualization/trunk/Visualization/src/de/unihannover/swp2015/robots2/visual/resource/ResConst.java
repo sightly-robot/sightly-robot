@@ -6,8 +6,9 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 
 /**
- * All available keys for resources in {@link IResourceHandler}. The names of
- * the enums are the same as the filenames of the packed textures.
+ * All available keys for resources in {@link IResourceHandler}.
+ * 
+ * The names of the enums are the same as the filenames of the packed textures.
  * 
  * @author Rico Schrage
  */
@@ -49,7 +50,7 @@ public enum ResConst {
 	SKIN_DEFAULT_FONT("default-font", ResType.SKIN), 
 	SKIN_RANKING_FONT("ranking-font", ResType.SKIN);
 
-	/** Name of the resource, should be equal to the real file */
+	/** Name of the resource, which should be equal to the real file */
 	private final String name;
 	/** {@link ResType} */
 	private final ResType type;
@@ -61,7 +62,7 @@ public enum ResConst {
 	 * 
 	 * @param fileName
 	 *            name of the file, which should be loaded when loading this
-	 *            constant.
+	 *            constant
 	 * @param resType
 	 *            type of resource
 	 */
@@ -69,7 +70,8 @@ public enum ResConst {
 		this(fileName, resType, TextureFilter.Nearest);
 	}
 
-	private ResConst(final String fileName, final ResType resType, TextureFilter filter) {
+	private ResConst(final String fileName, final ResType resType,
+			TextureFilter filter) {
 		this.name = fileName;
 		this.type = resType;
 		this.filter = filter;
@@ -90,8 +92,8 @@ public enum ResConst {
 	}
 
 	/**
-	 * @return filter of the resource, only relevant when type TEX or FONT, null
-	 *         otherwise.
+	 * @return filter of the resource (only relevant when the type is TEX or
+	 *         FONT, null otherwise)
 	 */
 	public Texture.TextureFilter getFilter() {
 		return filter;
@@ -103,9 +105,7 @@ public enum ResConst {
 	}
 
 	/**
-	 * Available resources types.
-	 * 
-	 * @author Rico Schrage
+	 * available resources types
 	 */
 	public enum ResType {
 		PATH, TEX, FONT, AUDIO, SKIN;

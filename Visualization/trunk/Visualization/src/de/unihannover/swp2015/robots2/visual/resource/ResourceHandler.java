@@ -27,69 +27,72 @@ import de.unihannover.swp2015.robots2.visual.resource.ResConst.ResType;
 import de.unihannover.swp2015.robots2.visual.resource.texture.RenderUnit;
 
 /**
- * Default implementation of {@link IResourceHandler}.
+ * default implementation of {@link IResourceHandler}
  * 
  * @author Rico Schrage
  */
 public class ResourceHandler implements IResourceHandler {
 
-	/** Will be returned if texMap.get(key) == null */
+	/** will be returned if texMap.get(key) == null */
 	private static final ResConst PLACEHOLDER = ResConst.DEFAULT_FIELD;
 
-	/** All chars (as char-array), which will be used by the visualization. */
+	/** all characters (as char-array) which will be used by the visualization. */
 	public static final String NECESSARY_CHARS = "abcdefghijklmnopqrstuvxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789()";
 
-	/** Base path to the texture themes. */
+	/** base path to the texture themes */
 	private final String themePath;
 
-	/** Main textureAtlas. */
+	/** main textureAtlas */
 	private TextureAtlas texAtlas;
 
-	/** Font-generator */
+	/** font-generator */
 	private FreeTypeFontGenerator fontGenerator;
 
-	/** Current texture pack. */
+	/** current texture pack */
 	private String texPack = ResConst.DEFAULT_THEME.getName();
 
-	/** Current skin for the UI */
+	/** current skin for the UI */
 	private Skin uiSkin;
 
 	/**
-	 * Map key->textureRegion. <br>
+	 * map key->textureRegion
+	 * 
 	 * Hint:
-	 * <code>frameSetMap.keySet() intersection texMap.keySet() = { }</code>.
+	 * <code>frameSetMap.keySet() intersection texMap.keySet() = { }</code>
 	 * 
 	 * @see {@link ResConst} for available keys
 	 */
 	private final Map<ResConst, TextureRegion> texMap;
 
 	/**
-	 * Map key->Array of TextureRegion's. <br>
+	 * map key->array of TextureRegions
+	 * 
 	 * Hint:
-	 * <code>frameSetMap.keySet() intersection texMap.keySet() = { }</code>.
+	 * <code>frameSetMap.keySet() intersection texMap.keySet() = { }</code>
 	 * 
 	 * @see {@link ResConst} for available keys
 	 */
 	private final Map<ResConst, Array<AtlasRegion>> frameSetMap;
 
 	/**
-	 * Map key->map(size->font).
+	 * map key->map(size->font)
 	 * 
 	 * @see {@link ResConst} for available keys
 	 */
 	private final Map<ResConst, Map<Integer, BitmapFont>> fontMap;
 
 	/**
-	 * Map key->RendeUnit <br>
+	 * map key->RendeUnit
+	 * 
 	 * Hint:
 	 * <code>renderUnitMap.keySet() subset of (frameSetMap.keySet() union texMap.keySet())</code>
-	 * .
 	 */
 	private final Map<ResConst, RenderUnit> renderUnitMap;
 
 	/**
-	 * ResConst -> TextureRegionDrawable This map will store drawables for
-	 * scene2d elements.
+	 * ResConst -> TextureRegionDrawable
+	 * 
+	 * This map will store drawables for scene2d elements.
 	 */
 	private final Map<ResConst, TextureRegionDrawable> textureRegionDrawableMap;
 
@@ -120,17 +123,18 @@ public class ResourceHandler implements IResourceHandler {
 		final ResConst[] resConsts = ResConst.values();
 		for (final ResConst res : resConsts) {
 			if (res.getType() == ResType.TEX) {
-				Array<AtlasRegion> regions = texAtlas.findRegions(res.getName());
+				Array<AtlasRegion> regions = texAtlas
+						.findRegions(res.getName());
 				if (regions.size == 1) {
 					texMap.put(res, regions.get(0));
 					if (renderUnitMap.containsKey(res)) {
 						renderUnitMap.get(res).initAsTexture(regions.get(0));
 					}
-				}
-				else {
+				} else {
 					frameSetMap.put(res, regions);
 					if (renderUnitMap.containsKey(res)) {
-						renderUnitMap.get(res).initAsAnimation(regions, PlayMode.LOOP, 0.1f);
+						renderUnitMap.get(res).initAsAnimation(regions,
+								PlayMode.LOOP, 0.1f);
 					}
 				}
 			}
@@ -143,7 +147,8 @@ public class ResourceHandler implements IResourceHandler {
 		uiSkin.addRegions(texAtlas);
 		for (final ResConst res : resConsts) {
 			if (res.getType() == ResType.TEX) {
-				final TextureRegionDrawable drawable = textureRegionDrawableMap.get(res);
+				final TextureRegionDrawable drawable = textureRegionDrawableMap
+						.get(res);
 				if (drawable != null) {
 					drawable.setRegion(uiSkin.getRegion(res.toString()));
 				}
@@ -151,17 +156,71 @@ public class ResourceHandler implements IResourceHandler {
 		}
 	}
 
+	/**
+	 * Gets the file path to the current theme as string.
+	 * 
+	 * @return the path to the current theme as string
+	 */
 	private String getPathToTheme() {
-		return themePath + File.separator + texPack + File.separator + ResConst.ATLAS_NAME.getName() + ".atlas";
+		return themePath + File.separator + texPack + File.separator
+				+ ResConst.ATLAS_NAME.getName() + ".atlas";
 	}
 
 	/**
 	 * Creates all fonts, that can be used.
 	 */
 	private void createFonts() {
-		fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("assets/font/Roboto-Regular.ttf"));
+		fontGenerator = new FreeTypeFontGenerator(
+				Gdx.files.internal("assets/font/Roboto-Regular.ttf"));
 		fontMap.put(ResConst.DEFAULT_FONT, new HashMap<Integer, BitmapFont>());
-		fontMap.get(ResConst.DEFAULT_FONT).put(15, createFont(15, NECESSARY_CHARS, true, 1, Color.BLACK, Color.WHITE));
+		fontMap.get(ResConst.DEFAULT_FONT).put(
+				15,
+				createFont(15, NECESSARY_CHARS, true, 1, Color.BLACK,
+						Color.WHITE));
+	}
+
+	/**
+	 * Loads a texture-pack and updates all renderUnits managed by this handler.
+	 * 
+	 * @param name
+	 *            name of the theme
+	 */
+	public void loadTexturePack(final String name) {
+		texPack = name;
+		createRegions();
+	}
+
+	/**
+	 * Gets the keys of all available themes.
+	 * 
+	 * @return all keys of the available themes
+	 */
+	public static List<String> themeKeys() {
+		FileHandle themeList = Gdx.files.internal(ResConst.THEME_LIST
+				.toString());
+		String[] themes = themeList.readString().split(",");
+
+		List<String> result = new ArrayList<>(themes.length);
+
+		for (final String theme : themes) {
+			if (!theme.isEmpty())
+				result.add(theme.trim());
+		}
+		return result;
+	}
+	
+	/**
+	 * Gets the index of the default theme referring to the list, which was
+	 * created when {@link #themeKeys()} was called.
+	 * 
+	 * @return index of the default theme
+	 */
+	public static int getDefaultThemeIndex(List<String> themes) {
+		for (int i = 0; i < themes.size(); ++i) {
+			if (themes.get(i).equals(ResConst.DEFAULT_THEME.toString()))
+				return i;
+		}
+		throw new IllegalStateException("Default theme is missing!");
 	}
 
 	@Override
@@ -170,8 +229,8 @@ public class ResourceHandler implements IResourceHandler {
 	}
 
 	@Override
-	public BitmapFont createFont(int size, String loadChars, boolean flip, int borderWidth, Color borderColor,
-			Color fontColor) {
+	public BitmapFont createFont(int size, String loadChars, boolean flip,
+			int borderWidth, Color borderColor, Color fontColor) {
 		if (fontMap.get(ResConst.DEFAULT_FONT).containsKey(size)) {
 			return fontMap.get(ResConst.DEFAULT_FONT).get(size);
 		}
@@ -188,18 +247,6 @@ public class ResourceHandler implements IResourceHandler {
 		return fontGenerator.generateFont(para);
 	}
 
-	/**
-	 * Load a texture-pack. This updates all renderUnits managed by this
-	 * handler.
-	 * 
-	 * @param name
-	 *            name of the theme
-	 */
-	public void loadTexturePack(final String name) {
-		texPack = name;
-		createRegions();
-	}
-
 	@Override
 	public RenderUnit createRenderUnit(final ResConst key) {
 		if (renderUnitMap.containsKey(key))
@@ -211,7 +258,8 @@ public class ResourceHandler implements IResourceHandler {
 		} else if (frameSetMap.containsKey(key)) {
 			result.initAsAnimation(frameSetMap.get(key), PlayMode.LOOP, 1);
 		} else {
-			throw new IllegalArgumentException("No map contains the key: " + key + ".");
+			throw new IllegalArgumentException("No map contains the key: "
+					+ key + ".");
 		}
 		renderUnitMap.put(key, result);
 		return result;
@@ -230,9 +278,11 @@ public class ResourceHandler implements IResourceHandler {
 			if (texMap.containsKey(keys[i])) {
 				result.initAsTexture(texMap.get(keys[i]));
 			} else if (frameSetMap.containsKey(keys[i])) {
-				result.initAsAnimation(frameSetMap.get(keys[i]), PlayMode.LOOP, 1);
+				result.initAsAnimation(frameSetMap.get(keys[i]), PlayMode.LOOP,
+						1);
 			} else {
-				throw new IllegalArgumentException("No map contains the key: " + keys[i] + ".");
+				throw new IllegalArgumentException("No map contains the key: "
+						+ keys[i] + ".");
 			}
 
 			renderUnits[i] = result;
@@ -285,21 +335,30 @@ public class ResourceHandler implements IResourceHandler {
 		}
 
 		uiSkin = new Skin();
-		uiSkin.add(ResConst.SKIN_DEFAULT_FONT.toString(),
-				createFont(50, NECESSARY_CHARS, true, 10, Color.BLACK, Color.WHITE));
-		uiSkin.add(ResConst.SKIN_TITLE_FONT.toString(),
-				createFont(50, NECESSARY_CHARS, true, 10, Color.BLACK, Color.WHITE));
-		uiSkin.add(ResConst.SKIN_RANKING_FONT.toString(),
-				createFont(50, NECESSARY_CHARS, true, 10, Color.BLACK, Color.WHITE));
-		uiSkin.getFont(ResConst.SKIN_DEFAULT_FONT.toString()).getRegion().getTexture().setFilter(TextureFilter.Linear,
-				TextureFilter.Linear);
-		uiSkin.getFont(ResConst.SKIN_TITLE_FONT.toString()).getRegion().getTexture().setFilter(TextureFilter.Linear,
-				TextureFilter.Linear);
-		uiSkin.getFont(ResConst.SKIN_RANKING_FONT.toString()).getRegion().getTexture().setFilter(TextureFilter.Linear,
-				TextureFilter.Linear);
+		uiSkin.add(
+				ResConst.SKIN_DEFAULT_FONT.toString(),
+				createFont(50, NECESSARY_CHARS, true, 10, Color.BLACK,
+						Color.WHITE));
+		uiSkin.add(
+				ResConst.SKIN_TITLE_FONT.toString(),
+				createFont(50, NECESSARY_CHARS, true, 10, Color.BLACK,
+						Color.WHITE));
+		uiSkin.add(
+				ResConst.SKIN_RANKING_FONT.toString(),
+				createFont(50, NECESSARY_CHARS, true, 10, Color.BLACK,
+						Color.WHITE));
+		uiSkin.getFont(ResConst.SKIN_DEFAULT_FONT.toString()).getRegion()
+				.getTexture()
+				.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+		uiSkin.getFont(ResConst.SKIN_TITLE_FONT.toString()).getRegion()
+				.getTexture()
+				.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+		uiSkin.getFont(ResConst.SKIN_RANKING_FONT.toString()).getRegion()
+				.getTexture()
+				.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		uiSkin.addRegions(texAtlas);
-		uiSkin.load(Gdx.files
-				.internal(ResConst.ATLAS_PATH.toString() + ResConst.DEFAULT_THEME + File.separator + "skin.json"));
+		uiSkin.load(Gdx.files.internal(ResConst.ATLAS_PATH.toString()
+				+ ResConst.DEFAULT_THEME + File.separator + "skin.json"));
 		return uiSkin;
 	}
 
@@ -316,33 +375,6 @@ public class ResourceHandler implements IResourceHandler {
 			return new TextureRegionDrawable(region);
 		}
 		return null;
-	}
-	
-	/**
-	 * @return all keys of the available themes.
-	 */
-	public static List<String> themeKeys() {
-		FileHandle themeList = Gdx.files.internal(ResConst.THEME_LIST.toString());
-		String[] themes = themeList.readString().split(",");
-
-		List<String> result = new ArrayList<>(themes.length);
-		
-		for (final String theme : themes) {
-			if (!theme.isEmpty())
-				result.add(theme.trim());
-		}
-		return result;
-	}
-	
-	/**
-	 * @return index of the default theme (referred to the list created when calling {@link #themeKeys()})
-	 */
-	public static int getDefaultThemeIndex(List<String> themes) {
-		for (int i = 0; i < themes.size(); ++i) {
-			if (themes.get(i).equals(ResConst.DEFAULT_THEME.toString()))
-				return i;
-		}
-		throw new IllegalStateException("Default theme is missing!");
 	}
 
 }

@@ -8,8 +8,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 
 /**
- * Abstracts renderable data like animations, compund of {@link TextureRegion}
- * 's, and single {@link TextureRegion}'s. <br>
+ * Abstracts renderable data like animations, compounds of {@link TextureRegion}
+ * s, and single {@link TextureRegion}s. <br>
  * It can be used as common representation of {@link TextureRegion} and
  * {@link Animation} (technically it's not a common base class).
  * 
@@ -30,17 +30,17 @@ public class RenderUnit {
 	 * Creates an uninitialized instance of {@link RenderUnit}.
 	 */
 	public RenderUnit() {
-		// have to be initialized
+		// has to be initialized
 	}
 
 	/**
-	 * Initializes the textureUnit as animation with the given frames.
+	 * Initializes the textureUnit as an animation with the given frames.
 	 * 
 	 * @param frames
 	 *            frames for the animation
 	 */
-	public void initAsAnimation(final Array<AtlasRegion> frames, final Animation.PlayMode playMode,
-			final float duration) {
+	public void initAsAnimation(final Array<AtlasRegion> frames,
+			final Animation.PlayMode playMode, final float duration) {
 		this.tex = null;
 		this.animation = new Animation(duration, frames, playMode);
 		this.stateTime = 0;
@@ -63,7 +63,7 @@ public class RenderUnit {
 	 * 
 	 * @see {@link SpriteBatch#draw(TextureRegion, float, float)}
 	 * @param batch
-	 *            batch, which will be used for drawing
+	 *            batch which will be used for drawing
 	 * @param x
 	 *            x coordinate
 	 * @param y
@@ -80,7 +80,8 @@ public class RenderUnit {
 			if (stateTime > animation.getAnimationDuration())
 				stateTime -= animation.getAnimationDuration();
 		} else {
-			throw new IllegalStateException("The TextureUnit is not initialized!");
+			throw new IllegalStateException(
+					"The TextureUnit is not initialized!");
 		}
 	}
 
@@ -89,7 +90,7 @@ public class RenderUnit {
 	 * 
 	 * @see {@link SpriteBatch#draw(TextureRegion, float, float, float, float)}
 	 * @param batch
-	 *            batch, which will be used for drawing
+	 *            batch which will be used for drawing
 	 * @param x
 	 *            x coordinate
 	 * @param y
@@ -99,7 +100,8 @@ public class RenderUnit {
 	 * @param height
 	 *            height
 	 */
-	public void draw(final Batch batch, final float x, final float y, final float width, final float height) {
+	public void draw(final Batch batch, final float x, final float y,
+			final float width, final float height) {
 		if (isTexture()) {
 			batch.draw(tex, x, y, width, height);
 		} else if (isAnimation()) {
@@ -110,7 +112,8 @@ public class RenderUnit {
 			if (stateTime > animation.getAnimationDuration())
 				stateTime = 0;
 		} else {
-			throw new IllegalStateException("The TextureUnit is not initialized!");
+			throw new IllegalStateException(
+					"The TextureUnit is not initialized!");
 		}
 	}
 
@@ -119,68 +122,74 @@ public class RenderUnit {
 	 * 
 	 * @see {@link SpriteBatch#draw(TextureRegion, float, float, float, float)}
 	 * @param batch
-	 *            batch, which will be used for drawing
+	 *            batch which will be used for drawing
 	 * @param x
-	 *            x-coordinate
+	 *            x coordinate
 	 * @param y
-	 *            y-coordinate
+	 *            y coordinate
 	 * @param width
 	 *            width
 	 * @param height
 	 *            height
-	 * @param originY
-	 *            the x-coordinate of the scaling and rotation origin relative
-	 *            to the screen space coordinates
 	 * @param originX
-	 *            the x-coordinate of the scaling and rotation origin relative
-	 *            to the screen space coordinates
+	 *            x coordinate of scaling and rotation center relative to the
+	 *            screen space coordinates
+	 * @param originY
+	 *            y coordinate of scaling and rotation center relative to the
+	 *            screen space coordinates
 	 * @param scaleX
-	 *            the scale of the rectangle around originX/originY in x
+	 *            scaling factor in x direction
 	 * @param scaleY
-	 *            the scale of the rectangle around originX/originY in y
+	 *            scaling factor in y direction
 	 * @param rotation
 	 *            rotation in degrees
 	 */
-	public void draw(final Batch batch, final float x, final float y, final float width, final float height,
-			final float originX, final float originY, final float scaleX, final float scaleY, final float rotation) {
+	public void draw(final Batch batch, final float x, final float y,
+			final float width, final float height, final float originX,
+			final float originY, final float scaleX, final float scaleY,
+			final float rotation) {
 
 		if (isTexture()) {
-			batch.draw(tex, x, y, originX, originY, width, height, scaleX, scaleY, rotation);
+			batch.draw(tex, x, y, originX, originY, width, height, scaleX,
+					scaleY, rotation);
 		} else if (isAnimation()) {
 			stateTime += Gdx.graphics.getDeltaTime();
 
-			batch.draw(animation.getKeyFrame(stateTime), x, y, originX, originY, width, height, scaleX, scaleY,
-					rotation);
+			batch.draw(animation.getKeyFrame(stateTime), x, y, originX,
+					originY, width, height, scaleX, scaleY, rotation);
 
 			if (stateTime > animation.getAnimationDuration())
 				stateTime = 0;
 		} else {
-			throw new IllegalStateException("The TextureUnit is not initialized!");
+			throw new IllegalStateException(
+					"The TextureUnit is not initialized!");
 		}
 	}
 
 	/**
-	 * Returns whether the unit represents an {@link Animation}.
+	 * Returns if the unit represents an {@link Animation}.
 	 *
-	 * @return true if it represents an {@link Animation}, false otherwise
+	 * @return true, if it represents an {@link Animation}, false otherwise
 	 */
 	public boolean isAnimation() {
 		return animation != null;
 	}
 
 	/**
-	 * Returns whether the unit represents a {@link TextureRegion}. Hint: It's
-	 * not possible, that {@link RenderUnit.isTexture} and
+	 * Returns if the unit represents a {@link TextureRegion}.
+	 * 
+	 * 
+	 * Hint: It's not possible, that {@link RenderUnit.isTexture} and
 	 * {@link RenderUnit#isAnimation()} are true.
 	 *
-	 * @return true if it represents a {@link TextureRegion}, false otherwise
+	 * @return true, if it represents a {@link TextureRegion}, false otherwise
 	 */
 	public boolean isTexture() {
 		return tex != null;
 	}
 
 	/**
-	 * @return width of the render-unit
+	 * @return width of the render unit
 	 */
 	public float getWidth() {
 		if (isTexture()) {

@@ -10,7 +10,9 @@ import com.badlogic.gdx.utils.Disposable;
 import de.unihannover.swp2015.robots2.visual.resource.texture.RenderUnit;
 
 /**
- * Handles all resources. Supports the usage of multi-texture-packages.
+ * Handles all resources.
+ * 
+ * Supports the usage of multi-texture-packages.
  * 
  * @author Rico Schrage
  */
@@ -20,20 +22,21 @@ public interface IResourceHandler extends Disposable {
 	 * Returns texture region from an internal map.
 	 * 
 	 * @param key
-	 *            key of the texture-region
+	 *            key of the texture region
 	 * @return placeholder if there is no region mapped to the <code>key</code>
 	 */
 	public TextureRegion getRegion(final ResConst key);
 
 	/**
-	 * Returns texture regions from an internal map. Key order defines the order
-	 * of the resulting texture-regions. E.g. input: "a", "b"; Result: Region
-	 * mapped to "a", Region mapped to "b".
+	 * Returns texture regions from an internal map.
+	 * 
+	 * The key order defines the order of the resulting texture regions. <br>
+	 * E.g. input: "a", "b"; Result: Region mapped to "a", Region mapped to "b".
 	 * 
 	 * @param key
-	 *            keys of the texture-regions
-	 * @return result[i] = null if there is no region mapped to
-	 *         <code>key[i]</code>
+	 *            keys of the texture regions
+	 * @return collection of texture regions (result[i] = null if there is no
+	 *         region mapped to <code>key[i]</code>)
 	 */
 	public TextureRegion[] getRegion(final ResConst... keys);
 
@@ -48,23 +51,27 @@ public interface IResourceHandler extends Disposable {
 	public BitmapFont getFont(int size, ResConst key);
 
 	/**
-	 * Returns the fonts, which are mapped to the given key's with the given
-	 * size. Key order defines the order of the resulting texture-regions. E.g.
-	 * input "a", "b"; Result: Font mapped to "a", Font mapped to "b".
+	 * Returns the fonts, which are mapped to the given keys with the given
+	 * size.
+	 * 
+	 * Key order defines the order of the resulting fonts. <br>
+	 * E.g. input "a", "b"; Result: Font mapped to "a", Font mapped to "b".
 	 * 
 	 * @param keys
 	 *            {@link ResConst}
-	 * @return array of fonts.
+	 * @return array of fonts
 	 */
 	public BitmapFont[] getFont(int size, final ResConst... keys);
 
 	/**
-	 * Creates render unit, created with the texture region(s), which are mapped
-	 * to <code>key</code>. The resulting {@link RenderUnit} will be put into an
-	 * internal map to avoid redundancy. <br>
-	 * So it just allocates memory when there is no a appropriate
-	 * {@link RenderUnit} for the given key. If you wan't to use the texture
-	 * package system you have to use this method, because the renderUnit will
+	 * Creates render unit which is created with the texture region(s) that are
+	 * mapped to <code>key</code>.
+	 * 
+	 * The resulting {@link RenderUnit} will be put into an internal map to
+	 * avoid redundancy. <br>
+	 * This way it just allocates memory when there is no appropriate
+	 * {@link RenderUnit} for the given key. If you want to use the texture
+	 * package system, you have to use this method, so the render unit will
 	 * get updated automatically.
 	 * 
 	 * @param key
@@ -90,39 +97,43 @@ public interface IResourceHandler extends Disposable {
 	public void loadTexturePack(final String name);
 
 	/**
-	 * Creates a new bitmap font using an internal generator with the give
-	 * parameters. If you create a font with this method, the resource handler
-	 * manages them, so you must not call dispose yourself.
+	 * Creates a new bitmap font using an internal generator with the given
+	 * parameters.
+	 * 
+	 * If you create a font with this method the resource handler'll manage it,
+	 * which means you must not call dispose yourself.
 	 * 
 	 * @param size
 	 *            size of the font
 	 * @param loadChars
-	 *            chars you want to display
+	 *            characters you want to display
 	 * @param flip
-	 *            inverts y-axes
+	 *            inverts y axis
 	 * @return font
 	 */
 	public BitmapFont createFont(int size, String loadChars, boolean flip);
 
 	/**
-	 * Creates a new bitmap font using an internal generator with the give
-	 * parameters. If you create a font with this method, the resource handler
-	 * manages them, so you must not call dispose yourself.
+	 * Creates a new bitmap font using an internal generator with the given
+	 * parameters.
+	 * 
+	 * If you create a font with this method the resource handler'll manage it,
+	 * which means you must not call dispose yourself.
 	 * 
 	 * @param size
 	 *            size of the font
 	 * @param loadChars
-	 *            chars you want to display
+	 *            characters you want to display
 	 * @param flip
-	 *            inverts y-axes
+	 *            inverts y axis
 	 * @param width
-	 *            of the stroke
+	 *            width of the stroke
 	 * @param color
-	 *            of the stroke
-	 * @return font
+	 *            color of the stroke
+	 * @return resulting font
 	 */
-	public BitmapFont createFont(int size, String loadChars, boolean flip, int borderWidth, Color borderColor,
-			Color fontColor);
+	public BitmapFont createFont(int size, String loadChars, boolean flip,
+			int borderWidth, Color borderColor, Color fontColor);
 
 	/**
 	 * Creates a new skin object with resources managed by this handler.
@@ -132,9 +143,10 @@ public interface IResourceHandler extends Disposable {
 	public Skin createSkin();
 
 	/**
-	 * Creates a new self updating drawable object. Only skin resources will be
-	 * considered as keys. The created drawables are managed by the
-	 * resource-handler.
+	 * Creates a new self updating drawable object.
+	 * 
+	 * Only skin resources will be considered as keys. <br>
+	 * The created drawables are managed by the resource-handler.
 	 * 
 	 * @param key
 	 *            key of the region you want to obtain as drawable
