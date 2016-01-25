@@ -288,8 +288,11 @@ public class RobotGameHandler extends GameHandler {
 			robots.remove(event.getObject());
 			ui.onRobotChange();
 			for (int i = entityList.size() - 1; i >= 0; i--) {
-				if (entityList.get(i).getModel() == event.getObject()) {
-					entityList.remove(i).clearReferences();
+				if (entityList.get(i) instanceof Robot) {
+					Robot robot = (Robot) entityList.get(i);
+					if (robot.getModel() == event.getObject()) {
+						entityList.remove(i).clearReferences();
+					}
 				}
 			}
 			break;
@@ -298,15 +301,6 @@ public class RobotGameHandler extends GameHandler {
 			break;
 
 		}
-	}
-
-	@Override
-	public void dispose() {
-		super.dispose();
-
-		batch.dispose();
-		pp.dispose();
-		ui.dispose();
 	}
 
 	@Override
@@ -355,6 +349,15 @@ public class RobotGameHandler extends GameHandler {
 			break;
 
 		}
+	}
+
+	@Override
+	public void dispose() {
+		super.dispose();
+
+		batch.dispose();
+		pp.dispose();
+		ui.dispose();
 	}
 
 }

@@ -21,7 +21,7 @@ import de.unihannover.swp2015.robots2.visual.util.ColorUtil;
  * 
  * @author Rico Schrage
  */
-public class RobotBubble extends Entity {
+public class RobotBubble extends Entity<RobotGameHandler, IRobot> {
 
 	/** Texture of the bubble. */
 	protected RenderUnit tex;

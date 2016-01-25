@@ -10,8 +10,8 @@ import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
 import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
 import de.unihannover.swp2015.robots2.visual.core.PrefKey;
 import de.unihannover.swp2015.robots2.visual.core.entity.Component;
-import de.unihannover.swp2015.robots2.visual.core.entity.IEntity;
 import de.unihannover.swp2015.robots2.visual.core.entity.IEntityModifier;
+import de.unihannover.swp2015.robots2.visual.game.entity.Robot;
 import de.unihannover.swp2015.robots2.visual.game.entity.modifier.AlphaModifier;
 import de.unihannover.swp2015.robots2.visual.game.entity.modifier.MoveModifierX;
 import de.unihannover.swp2015.robots2.visual.game.entity.modifier.MoveModifierY;
@@ -28,7 +28,7 @@ import de.unihannover.swp2015.robots2.visual.util.pref.IPreferences;
  * 
  * @author Rico Schrage
  */
-public class RobotEngine extends Component {
+public class RobotEngine extends Component<Robot> {
 
 	/** Logger (log4j) */
 	private static final Logger LOGGER = LogManager.getLogger();
@@ -73,7 +73,7 @@ public class RobotEngine extends Component {
 	}
 
 	@Override
-	public void onRegister(final IEntity entity) {
+	public void onRegister(final Robot entity) {
 		super.onRegister(entity);
 
 		intervalHistory = new float[INTERVAL_COUNT];

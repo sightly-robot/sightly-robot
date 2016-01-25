@@ -16,7 +16,7 @@ import de.unihannover.swp2015.robots2.visual.resource.texture.RenderUnit;
  * @version 1.0
  * @author Daphne Schössow
  */
-public class Resource extends Entity {
+public class Resource extends Entity<RobotGameHandler, IField> {
 
 	/** Visual representation of the different stages of the food. */
 	private final RenderUnit[] tex;
@@ -49,15 +49,13 @@ public class Resource extends Entity {
 	public void draw(final Batch batch) {
 		super.draw(batch);
 
-		final IField field = (IField) model;
-
-		if (field.getFood() == 0)
+		if (model.getFood() == 0)
 			return;
 
 		final float fieldWidth = prefs.getFloat(PrefKey.FIELD_WIDTH_KEY, 50);
 		final float fieldHeight = prefs.getFloat(PrefKey.FIELD_HEIGHT_KEY, 50);
 
-		tex[field.getFood() - 1].draw(batch, renderX + (fieldWidth * 0.15f) / 2, renderY + (fieldHeight * 0.15f) / 2,
+		tex[model.getFood() - 1].draw(batch, renderX + (fieldWidth * 0.15f) / 2, renderY + (fieldHeight * 0.15f) / 2,
 				fieldWidth * 0.85f, fieldHeight * 0.85f);
 	}
 

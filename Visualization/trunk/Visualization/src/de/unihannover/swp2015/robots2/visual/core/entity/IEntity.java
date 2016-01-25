@@ -2,13 +2,9 @@ package de.unihannover.swp2015.robots2.visual.core.entity;
 
 import com.badlogic.gdx.graphics.Color;
 
-import de.unihannover.swp2015.robots2.model.externalInterfaces.IModelObserver;
-import de.unihannover.swp2015.robots2.model.interfaces.IAbstractModel;
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
 import de.unihannover.swp2015.robots2.visual.core.IDrawable;
 import de.unihannover.swp2015.robots2.visual.core.IUpdateable;
-import de.unihannover.swp2015.robots2.visual.core.PrefKey;
-import de.unihannover.swp2015.robots2.visual.util.pref.IPreferencesObserver;
 
 /**
  * Describes a self updating/drawing entity, which will be based on a model
@@ -16,8 +12,7 @@ import de.unihannover.swp2015.robots2.visual.util.pref.IPreferencesObserver;
  * 
  * @author Rico Schrage
  */
-public interface IEntity
-		extends IDrawable, IModelObserver, Comparable<IEntity>, IPreferencesObserver<PrefKey>, IUpdateable {
+public interface IEntity extends IDrawable, Comparable<IEntity>, IUpdateable {
 
 	/**
 	 * @return the position on the z-axis.
@@ -76,11 +71,6 @@ public interface IEntity
 	float getRotation();
 
 	/**
-	 * @return the model, which will be renderer by the entity.
-	 */
-	IAbstractModel getModel();
-
-	/**
 	 * Will be called when an event happens in the model. In opposite to
 	 * {@link #onModelUpdate(IEvent)} this method will be called in the
 	 * render-thread.
@@ -122,7 +112,7 @@ public interface IEntity
 	 * @param component
 	 *            {@link IComponent}
 	 */
-	void registerComponent(IComponent component);
+	<T extends IEntity> void registerComponent(IComponent<T> component);
 
 	/**
 	 * Unregisters a component.
@@ -130,7 +120,7 @@ public interface IEntity
 	 * @param component
 	 *            {@link IComponent}
 	 */
-	void unregisterComponent(IComponent component);
+	<T extends IEntity> void unregisterComponent(IComponent<T> component);
 	
 	/**
 	 * Set the color for this entity.

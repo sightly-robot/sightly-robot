@@ -14,6 +14,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import de.unihannover.swp2015.robots2.model.implementation.Field;
 import de.unihannover.swp2015.robots2.model.implementation.Robot;
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
+import de.unihannover.swp2015.robots2.model.interfaces.IField;
 import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
 import de.unihannover.swp2015.robots2.visual.core.PrefKey;
 import de.unihannover.swp2015.robots2.visual.core.entity.Entity;
@@ -24,7 +25,7 @@ import de.unihannover.swp2015.robots2.visual.util.pref.IPreferences;
 
 public class EntitySortTest {
 
-	public static class TestEntity extends Entity {
+	public static class TestEntity extends Entity<IGameHandler, IField> {
 
 		public TestEntity(IGameHandler gameHandler) {
 			super(new Field(0, 0), gameHandler);

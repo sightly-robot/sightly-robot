@@ -9,10 +9,10 @@ import de.unihannover.swp2015.robots2.visual.util.pref.IPreferencesObserver;
  * 
  * @author Rico Schrage
  */
-public abstract class Component implements IComponent, IPreferencesObserver<PrefKey> {
+public abstract class Component<T extends IEntity> implements IComponent<T>, IPreferencesObserver<PrefKey> {
 
 	/** Registered entity */
-	protected IEntity entity;
+	protected T entity;
 
 	/**
 	 * Construct a component with the given {@link IPreferences}
@@ -24,7 +24,7 @@ public abstract class Component implements IComponent, IPreferencesObserver<Pref
 	}
 
 	@Override
-	public void onRegister(IEntity entity) {
+	public void onRegister(T entity) {
 		this.entity = entity;
 	}
 

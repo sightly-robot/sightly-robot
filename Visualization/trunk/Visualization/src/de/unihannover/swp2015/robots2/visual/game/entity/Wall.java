@@ -20,7 +20,7 @@ import de.unihannover.swp2015.robots2.visual.util.StageUtil;
  * 
  * @author Rico Schrage
  */
-public class Wall extends Entity {
+public class Wall extends Entity<RobotGameHandler, IField> {
 
 	/** Stage, the field belongs to. */
 	private final IStage parent;
@@ -67,7 +67,7 @@ public class Wall extends Entity {
 		this.renderX = model.getX() * fieldWidth;
 		this.renderY = model.getY() * fieldHeight;
 
-		this.determineOneway(model);
+		this.determineOneway();
 		this.createRenderUnits();
 	}
 
@@ -94,7 +94,7 @@ public class Wall extends Entity {
 				renderY + fieldHeight / 2, fieldWidth, fieldHeight, fieldWidth / 2, fieldHeight / 2, -90);
 	}
 
-	private void determineOneway(IField model) {
+	private void determineOneway() {
 		// updates informations about the type of the walls.
 		for (int i = 0; i < orientations.length; ++i) {
 			isOneway[i] = StageUtil.checkDriveDirectionAndNotNeighbours(model, parent, orientations[i]);
@@ -116,10 +116,8 @@ public class Wall extends Entity {
 
 	@Override
 	public void onManagedModelUpdate(IEvent event) {
-		final IField field = (IField) model;
-
 		if (event.getType() == UpdateType.STAGE_WALL) {
-			determineOneway(field);
+			determineOneway();
 			createRenderUnits();
 		}
 	}

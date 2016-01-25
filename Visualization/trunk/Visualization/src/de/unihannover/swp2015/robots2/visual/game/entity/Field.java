@@ -22,7 +22,7 @@ import de.unihannover.swp2015.robots2.model.interfaces.IField.State;
  * @version 1.0
  * @author Daphne Schössow
  */
-public class Field extends Entity {
+public class Field extends Entity<RobotGameHandler, IField> {
 	
 	/**
 	 * Lookup table for the ground texture, which depends on the placement of
@@ -87,7 +87,7 @@ public class Field extends Entity {
 		this.renderX = model.getX() * fieldWidth;
 		this.renderY = model.getY() * fieldHeight;
 
-		this.determineFieldTexture(model);
+		this.determineFieldTexture();
 	}
 
 	/**
@@ -96,7 +96,7 @@ public class Field extends Entity {
 	 * @param model
 	 *            data model of the field.
 	 */
-	private void determineFieldTexture(IField model) {
+	private void determineFieldTexture() {
 
 		// 3:SOUTH 2:NORTH 1:WEST 0:EAST
 		final boolean[] dir = new boolean[4];
@@ -117,14 +117,14 @@ public class Field extends Entity {
 	 * 
 	 * @param field model
 	 */
-	private void updateLockState(IField field, RobotGameHandler robotHandler) {
-		if (field.getState() == State.LOCKED) {
-			robotColor = ColorUtil.fromAwtColor(robotHandler.getRobot(field.getLockedBy()).getColor());
+	private void updateLockState() {
+		if (model.getState() == State.LOCKED) {
+			robotColor = ColorUtil.fromAwtColor(gameHandler.getRobot(model.getLockedBy()).getColor());
 			robotColor.r = Math.min(robotColor.r+0.3f, 1);
 			robotColor.g = Math.min(robotColor.g+0.3f, 1);
 			robotColor.b = Math.min(robotColor.b+0.3f, 1);
 		}
-		else if (field.getState() == State.FREE) {
+		else if (model.getState() == State.FREE) {
 			robotColor = null;
 		}
 	}
@@ -165,16 +165,15 @@ public class Field extends Entity {
 
 	@Override
 	public void onManagedModelUpdate(IEvent event) {
-		final IField field = (IField) model;
-		final RobotGameHandler robotHandler = (RobotGameHandler) gameHandler;
+
 		switch (event.getType()) {
 		
 		case STAGE_WALL:
-			determineFieldTexture(field);
+			determineFieldTexture();
 			break;
 			
 		case FIELD_STATE:
-			updateLockState(field, robotHandler);
+			updateLockState();
 			break;
 			
 		default:

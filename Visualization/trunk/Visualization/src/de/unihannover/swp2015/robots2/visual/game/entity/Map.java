@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 
-import de.unihannover.swp2015.robots2.model.interfaces.IAbstractModel;
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
 import de.unihannover.swp2015.robots2.model.interfaces.IField;
 import de.unihannover.swp2015.robots2.model.interfaces.IStage;
@@ -21,7 +20,7 @@ import de.unihannover.swp2015.robots2.visual.game.RobotGameHandler;
  * @version 1.0
  * @author Daphne Schössow
  */
-public class Map extends Entity {
+public class Map extends Entity<RobotGameHandler, IStage> {
 
 	/** True if walls should get rendered */
 	protected boolean renderWalls;
@@ -67,7 +66,7 @@ public class Map extends Entity {
 	 * @param model
 	 *            data model of the map
 	 */
-	private void init(final IStage model) {
+	private void init() {
 		for (int x = 0; x < model.getWidth(); ++x) {
 			for (int y = 0; y < model.getHeight(); ++y) {
 				final IField field = model.getField(x, y);
@@ -89,7 +88,6 @@ public class Map extends Entity {
 	}
 
 	private void resize() {
-		final IStage stageModel = (IStage) model;
 
 		for (int i = 0; i < fieldList.size(); ++i) {
 			fieldList.get(i).clearReferences();
@@ -101,16 +99,16 @@ public class Map extends Entity {
 		wallList.clear();
 		foodList.clear();
 
-		final float fieldSize = prefs.getFloat(PrefKey.DEVICE_HEIGHT) * GameConst.HEIGHT_SCALE / stageModel.getHeight();
-		final float viewWidth = fieldSize * stageModel.getWidth();
-		final float viewHeight = fieldSize * stageModel.getHeight();
+		final float fieldSize = prefs.getFloat(PrefKey.DEVICE_HEIGHT) * GameConst.HEIGHT_SCALE / model.getHeight();
+		final float viewWidth = fieldSize * model.getWidth();
+		final float viewHeight = fieldSize * model.getHeight();
 
 		prefs.putFloat(PrefKey.FIELD_WIDTH_KEY, fieldSize);
 		prefs.putFloat(PrefKey.FIELD_HEIGHT_KEY, fieldSize);
 		prefs.putFloat(PrefKey.VIEW_WIDTH, viewWidth);
 		prefs.putFloat(PrefKey.VIEW_HEIGHT, viewHeight);
 
-		init(stageModel);
+		init();
 	}
 
 	@Override
@@ -161,19 +159,22 @@ public class Map extends Entity {
 	@Override
 	public void onUpdatePreferences(PrefKey updatedKey, Object value) {
 		switch (updatedKey) {
+		
 		case RENDER_WALL:
 			renderWalls = (boolean) value;
 			break;
+			
 		case RENDER_RESOURCES:
 			renderResources = (boolean) value;
 			break;
+			
 		default:
 			break;
 		}
 	}
 
 	@Override
-	public IAbstractModel getModel() {
+	public IStage getModel() {
 		return model;
 	}
 

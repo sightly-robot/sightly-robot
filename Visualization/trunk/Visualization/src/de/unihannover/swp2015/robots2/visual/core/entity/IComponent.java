@@ -11,7 +11,7 @@ import de.unihannover.swp2015.robots2.visual.core.IUpdateable;
  * 
  * @author Rico Schrage
  */
-public interface IComponent extends IUpdateable, IDrawable {
+public interface IComponent<T extends IEntity> extends IUpdateable, IDrawable {
 
 	/**
 	 * Will be called when the component gets registered.
@@ -19,7 +19,7 @@ public interface IComponent extends IUpdateable, IDrawable {
 	 * @param entity
 	 *            entity, which registered the component
 	 */
-	void onRegister(IEntity entity);
+	void onRegister(T entity);
 
 	/**
 	 * Will be called when the parent receives an event.

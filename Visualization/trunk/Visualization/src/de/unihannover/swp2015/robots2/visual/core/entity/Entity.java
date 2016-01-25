@@ -8,6 +8,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 
+import de.unihannover.swp2015.robots2.model.externalInterfaces.IModelObserver;
 import de.unihannover.swp2015.robots2.model.interfaces.IAbstractModel;
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
 import de.unihannover.swp2015.robots2.visual.core.PrefKey;
@@ -16,6 +17,7 @@ import de.unihannover.swp2015.robots2.visual.game.RobotGameHandler;
 import de.unihannover.swp2015.robots2.visual.resource.IResourceHandler;
 import de.unihannover.swp2015.robots2.visual.util.SortUtil;
 import de.unihannover.swp2015.robots2.visual.util.pref.IPreferences;
+import de.unihannover.swp2015.robots2.visual.util.pref.IPreferencesObserver;
 
 /**
  * The base class of all objects displayed at the (beamer) visualization
@@ -26,17 +28,20 @@ import de.unihannover.swp2015.robots2.visual.util.pref.IPreferences;
  * 
  * @version 1.0
  * @author Daphne Schössow
+ * 
+ * @param <G> the game-handler type the entity should belong to
+ * @param <M> the model type of the entity
  */
-public abstract class Entity implements IEntity {
+public abstract class Entity<G extends IGameHandler, M extends IAbstractModel> implements IEntity, IPreferencesObserver<PrefKey>, IModelObserver {
 
 	/** List of all modifiers created for the entity. */
 	protected final List<IEntityModifier> modList;
 
 	/** List of all components registered by the entity. */
-	protected final List<IComponent> componentList;
+	protected final List<IComponent<? extends IEntity>> componentList;
 
 	/** Data model of the entity. */
-	protected final IAbstractModel model;
+	protected final M model;
 
 	/** X-coordinate of the entity on the (virtual) screen. */
 	protected float renderX;
@@ -44,10 +49,10 @@ public abstract class Entity implements IEntity {
 	/** Y-coordinate of the entity on the (virtual) screen. */
 	protected float renderY;
 
-	/** X-coordinate of the entity on the (virtual) screen. */
+	/** Width of the entity on the (virtual) screen. */
 	protected float width;
 
-	/** Y-coordinate of the entity on the (virtual) screen. */
+	/** Height of the entity on the (virtual) screen. */
 	protected float height;
 
 	/** Z-coordinate of the entity on the (virtual) screen. */
@@ -66,7 +71,7 @@ public abstract class Entity implements IEntity {
 	protected final IPreferences<PrefKey> prefs;
 
 	/** GameHandler, which owns the entity. */
-	protected final IGameHandler gameHandler;
+	protected final G gameHandler;
 
 	/**
 	 * Constructs an entity. The constructor will make the entity observe the
@@ -80,7 +85,7 @@ public abstract class Entity implements IEntity {
 	 * @param gameHandler
 	 *            parent
 	 */
-	public Entity(final IAbstractModel model, final IGameHandler gameHandler) {
+	public Entity(M model, G gameHandler) {
 		this.modList = new ArrayList<>();
 		this.componentList = new ArrayList<>();
 
@@ -92,6 +97,20 @@ public abstract class Entity implements IEntity {
 
 		this.model = model;
 		this.model.observe(this);
+	}
+	
+	/**
+	 * @return model of the entity
+	 */
+	public M getModel() {
+		return model;
+	}
+	
+	/**
+	 * @return owner of the entity
+	 */
+	public G getHandler() {
+		return gameHandler;
 	}
 
 	@Override
@@ -106,23 +125,23 @@ public abstract class Entity implements IEntity {
 			mod.update();
 		}
 		for (int i = 0; i < componentList.size(); ++i) {
-			final IComponent comp = componentList.get(i);
+			final IComponent<? extends IEntity> comp = componentList.get(i);
 			comp.update();
 		}
 	}
 
 	@Override
-	public void draw(final Batch batch) {
+	public void draw(Batch batch) {
 		batch.setColor(color);
 		
 		for (int i = 0; i < componentList.size(); ++i) {
-			final IComponent comp = componentList.get(i);
+			final IComponent<? extends IEntity> comp = componentList.get(i);
 			comp.draw(batch);
 		}
 	}
 
 	@Override
-	public void registerModifier(final IEntityModifier mod) {
+	public void registerModifier(IEntityModifier mod) {
 		modList.add(mod);
 		mod.onInit();
 	}
@@ -142,13 +161,14 @@ public abstract class Entity implements IEntity {
 	}
 	
 	@Override
-	public void registerComponent(final IComponent component) {
+	@SuppressWarnings("unchecked")
+	public <T extends IEntity> void registerComponent(IComponent<T> component) {
 		componentList.add(component);
-		component.onRegister(this);
+		component.onRegister((T) this);
 	}
 
 	@Override
-	public void unregisterComponent(final IComponent component) {
+	public <T extends IEntity> void unregisterComponent(IComponent<T> component) {
 		componentList.remove(component);
 	}
 
@@ -178,7 +198,7 @@ public abstract class Entity implements IEntity {
 	}
 
 	@Override
-	public void setZIndex(final int zIndex) {
+	public void setZIndex(int zIndex) {
 		this.zIndex = zIndex;
 	}
 
@@ -219,13 +239,8 @@ public abstract class Entity implements IEntity {
 	}
 
 	@Override
-	public void setRotation(final float rot) {
+	public void setRotation(float rot) {
 		this.rotation = rot;
-	}
-
-	@Override
-	public IAbstractModel getModel() {
-		return model;
 	}
 	
 	@Override
@@ -243,7 +258,7 @@ public abstract class Entity implements IEntity {
 	 * {@link RobotGameHandler}. As alternative you can call
 	 * {@link EntityUtil#addEntitySorted(IEntity, List)d} to add a new entity.
 	 */
-	public static void sortEntities(final List<IEntity> entityList) {
+	public static void sortEntities(List<IEntity> entityList) {
 		Collections.sort(entityList);
 	}
 
@@ -256,7 +271,7 @@ public abstract class Entity implements IEntity {
 	 * @param entityList
 	 *            target list
 	 */
-	public static void addEntitySorted(final IEntity entity, final List<IEntity> entityList) {
+	public static void addEntitySorted(IEntity entity, List<IEntity> entityList) {
 		for (int i = 0; i < entityList.size() + 1; ++i) {
 			if (i == entityList.size()) {
 				entityList.add(entity);
@@ -267,6 +282,6 @@ public abstract class Entity implements IEntity {
 				return;
 			}
 		}
-	}
+	}	
 
 }

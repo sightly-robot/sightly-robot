@@ -20,7 +20,7 @@ import de.unihannover.swp2015.robots2.visual.util.ModelUtil;
  * @version 1.0
  * @author Daphne Schössow
  */
-public class Robot extends Entity {
+public class Robot extends Entity<RobotGameHandler, IRobot> {
 
 	/** Visual representation of the entity. */
 	private final RenderUnit robo;
@@ -75,8 +75,8 @@ public class Robot extends Entity {
 		this.renderBubble = robot.isHardwareRobot() ? prefs.getBoolean(PrefKey.RENDER_HARDWARE_BUBBLE) 
 				: prefs.getBoolean(PrefKey.RENDER_VIRTUAL_BUBBLE);
 
-		this.updateWidth(robot);
-		this.updateHeight(robot);
+		this.updateWidth();
+		this.updateHeight();
 		this.bubble = new RobotBubble(gameHandler, this);
 
 		this.registerComponent(new RobotEngine(prefs));
@@ -88,9 +88,9 @@ public class Robot extends Entity {
 	 * @param robot
 	 *            robot model
 	 */
-	private void updateWidth(final IRobot robot) {
+	private void updateWidth() {
 		this.width = fieldWidth * GameConst.ROBOT_SCALE;
-		this.renderX = robot.getPosition().getX() * fieldWidth + fieldWidth / 2 - width / 2;
+		this.renderX = model.getPosition().getX() * fieldWidth + fieldWidth / 2 - width / 2;
 	}
 
 	/**
@@ -99,20 +99,18 @@ public class Robot extends Entity {
 	 * @param robot
 	 *            robot model
 	 */
-	private void updateHeight(final IRobot robot) {
+	private void updateHeight() {
 		this.height = fieldHeight * GameConst.ROBOT_SCALE;
-		this.renderY = robot.getPosition().getY() * fieldHeight + fieldHeight / 2 - height / 2;
+		this.renderY = model.getPosition().getY() * fieldHeight + fieldHeight / 2 - height / 2;
 	}
 
 	@Override
 	public void draw(final Batch batch) {
 		super.draw(batch);
-
-		final IRobot robot = (IRobot) model;
 		
 		if (drawStartPosition && renderRobot) {
-			startPositionTexture.draw(batch, fieldWidth * robot.getPosition().getX(),
-					fieldHeight * robot.getPosition().getY(), fieldWidth, fieldHeight, fieldWidth / 2f,
+			startPositionTexture.draw(batch, fieldWidth * model.getPosition().getX(),
+					fieldHeight * model.getPosition().getY(), fieldWidth, fieldHeight, fieldWidth / 2f,
 					fieldHeight / 2f, 1f, 1f, rotation);
 		} 
 		else {
@@ -139,7 +137,6 @@ public class Robot extends Entity {
 			break;
 
 		default:
-			// other events won't be handled
 			break;
 		}
 	}
@@ -153,13 +150,13 @@ public class Robot extends Entity {
 		case FIELD_HEIGHT_KEY:
 			modList.clear();
 			fieldHeight = (float) value;
-			updateHeight(robot);
+			updateHeight();
 			break;
 
 		case FIELD_WIDTH_KEY:
 			modList.clear();
 			fieldWidth = (float) value;
-			updateWidth(robot);
+			updateWidth();
 			break;
 
 		case RENDER_ROBOTS:
