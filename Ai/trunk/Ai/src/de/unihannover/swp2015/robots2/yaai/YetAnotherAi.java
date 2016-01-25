@@ -19,16 +19,18 @@ import de.unihannover.swp2015.robots2.yaai.compute.CalculationWorker;
  * 
  * @author Michael Thies
  */
-public class YetAnotherAi extends AbstractAI implements IModelObserver {
+public class YetAnotherAi extends AbstractAI implements IModelObserver,
+		IComputedFieldHandler {
 	private enum AiState {
 		STANDING, DRIVING, WATING_FOR_OURS, WAITING_FOR_FREE, WAITING_FOR_GAME,
 	}
 
 	private IField currentField, nextField;
 	private AiState state;
-	private CalculationWorker worker;
+	private IYaaiCalculator calculator;
 
-	private static final Logger LOGGER = LogManager.getLogger(YetAnotherAi.class.getName());
+	private static final Logger LOGGER = LogManager
+			.getLogger(YetAnotherAi.class.getName());
 
 	/**
 	 * Constructs new YAAI, working with the given controller and using it's
@@ -46,10 +48,12 @@ public class YetAnotherAi extends AbstractAI implements IModelObserver {
 		this.iRobotController.getMyself().observe(this);
 		this.iRobotController.getGame().observe(this);
 
-		this.worker = new CalculationWorker(iRobotController, this);
+		CalculationWorker worker = new CalculationWorker(iRobotController);
+		worker.setHandler(this);
+		this.calculator = worker;
 
 		// Start calculation worker
-		Thread thread = new Thread(this.worker);
+		Thread thread = new Thread(worker);
 		thread.start();
 	}
 
@@ -80,7 +84,7 @@ public class YetAnotherAi extends AbstractAI implements IModelObserver {
 			IRobot r = (IRobot) event.getObject();
 			IField field = this.iRobotController.getGame().getStage()
 					.getField(r.getPosition().getX(), r.getPosition().getY());
-			this.onReachField(field);
+			this.onReachField(field, r.getPosition().getOrientation());
 			break;
 
 		default:
@@ -90,20 +94,21 @@ public class YetAnotherAi extends AbstractAI implements IModelObserver {
 	}
 
 	/**
-	 * Event handler do be called when the Worker thread calculated a new next
-	 * field.
+	 * {@inheritDoc}
 	 * 
 	 * If the new field is actually different from current nextField, try to
 	 * initiate driving there.
 	 */
+	@Override
 	public void onNewFieldComputed() {
-		if (this.worker.getNextField() != this.nextField) {
-			this.requestNewField(this.worker.getNextField());
+		if (this.calculator.getNextField() != this.nextField) {
+			this.requestNewField(this.calculator.getNextField());
 
 			// If currently driving let robot know about next direction
 			if (this.state == AiState.DRIVING) {
 				try {
-					Orientation o = calcOrientation(this.nextField, this.worker.getNextField());
+					Orientation o = calcOrientation(this.nextField,
+							this.calculator.getNextField());
 					this.fireNextButOneOrientationEvent(o);
 				} catch (IllegalArgumentException e) {
 					// Do nothing. No dramatical situation if robot can't
@@ -125,7 +130,8 @@ public class YetAnotherAi extends AbstractAI implements IModelObserver {
 	 */
 	private void requestNewField(IField field) {
 		// Skip if already busy
-		if (this.state == AiState.DRIVING || this.state == AiState.WATING_FOR_OURS) {
+		if (this.state == AiState.DRIVING
+				|| this.state == AiState.WATING_FOR_OURS) {
 			LOGGER.trace(
 					"New target field {}-{} was refused because we are busy.",
 					field.getX(), field.getY());
@@ -251,21 +257,25 @@ public class YetAnotherAi extends AbstractAI implements IModelObserver {
 		// Wait if game not started
 		if (!this.isReadyToDrive()) {
 			this.state = AiState.WAITING_FOR_GAME;
-			this.iRobotController.releaseField(this.nextField.getX(),this.nextField.getY());
+			this.iRobotController.releaseField(this.nextField.getX(),
+					this.nextField.getY());
 			LOGGER.debug("but we should wait until game and robot state allow us to.");
 			return;
 		}
 
 		try {
 			Orientation o = calcOrientation(this.currentField, this.nextField);
-			LOGGER.debug("Direction is {} from our current field {}-{}. And ... go!", o.name());
+			LOGGER.debug(
+					"Direction is {} from our current field {}-{}. And ... go!",
+					o.name());
 
 			// Fire orientation
 			this.fireNextOrientationEvent(o);
 			this.state = AiState.DRIVING;
-			this.worker.setCurrentPosition(this.nextField);
+			this.calculator.setCurrentPosition(this.nextField, o);
 		} catch (IllegalArgumentException e) {
-			LOGGER.debug("The field is not a neighbor of current field {}-{}. Aborting drive.",
+			LOGGER.debug(
+					"The field is not a neighbor of current field {}-{}. Aborting drive.",
 					this.currentField.getX(), this.currentField.getY());
 		}
 	}
@@ -276,11 +286,12 @@ public class YetAnotherAi extends AbstractAI implements IModelObserver {
 	 * This method releases the old field and initiates targeting the next
 	 * calculated field.
 	 */
-	private void onReachField(IField field) {
+	private void onReachField(IField field, Orientation orientation) {
 		if (field == currentField)
 			return;
 
-		LOGGER.debug("We reached a new Field: {}-{}", field.getX(), field.getY());
+		LOGGER.debug("We reached a new Field: {}-{}", field.getX(),
+				field.getY());
 
 		// Release current field (if any)
 		if (this.currentField != null)
@@ -292,10 +303,10 @@ public class YetAnotherAi extends AbstractAI implements IModelObserver {
 			this.nextField = null;
 		}
 		this.state = AiState.STANDING;
-		this.worker.setCurrentPosition(field);
+		this.calculator.setCurrentPosition(field, orientation);
 
 		// If new field was calculated, drive there
-		this.requestNewField(this.worker.getNextField());
+		this.requestNewField(this.calculator.getNextField());
 	}
 
 	/**
@@ -320,7 +331,8 @@ public class YetAnotherAi extends AbstractAI implements IModelObserver {
 	 * @throws IllegalArgumentException
 	 *             if the two fields are not neighbouring
 	 */
-	private static Orientation calcOrientation(IField start, IField destination) throws IllegalArgumentException {
+	private static Orientation calcOrientation(IField start, IField destination)
+			throws IllegalArgumentException {
 		int dx = destination.getX() - start.getX();
 		int dy = destination.getY() - start.getY();
 		Orientation o = null;

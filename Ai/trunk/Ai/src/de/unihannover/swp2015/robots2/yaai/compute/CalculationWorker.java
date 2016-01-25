@@ -5,6 +5,9 @@ import org.apache.logging.log4j.Logger;
 
 import de.unihannover.swp2015.robots2.controller.interfaces.IRobotController;
 import de.unihannover.swp2015.robots2.model.interfaces.IField;
+import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
+import de.unihannover.swp2015.robots2.yaai.IComputedFieldHandler;
+import de.unihannover.swp2015.robots2.yaai.IYaaiCalculator;
 import de.unihannover.swp2015.robots2.yaai.YetAnotherAi;
 import de.unihannover.swp2015.robots2.yaai.model.Graph;
 import de.unihannover.swp2015.robots2.yaai.model.Node;
@@ -19,8 +22,8 @@ import de.unihannover.swp2015.robots2.yaai.model.Node;
  * 
  * @author Michael Thies
  */
-public class CalculationWorker implements Runnable {
-	private final YetAnotherAi ai;
+public class CalculationWorker implements Runnable, IYaaiCalculator {
+	private IComputedFieldHandler computedFieldHandler;
 	private final WeightCalculator weightCalculator;
 	private final PathCalculator pathCalculator;
 	private final Graph graph;
@@ -41,9 +44,8 @@ public class CalculationWorker implements Runnable {
 	 * @param ai
 	 *            AI main class to be informed about each new calculation
 	 */
-	public CalculationWorker(IRobotController controller, YetAnotherAi ai) {
+	public CalculationWorker(IRobotController controller) {
 		this.graph = new Graph(controller.getGame().getStage());
-		this.ai = ai;
 
 		this.weightCalculator = new WeightCalculator(graph, controller);
 		this.pathCalculator = new PathCalculator();
@@ -82,26 +84,21 @@ public class CalculationWorker implements Runnable {
 		}
 	}
 
-	/**
-	 * Get the latest next field calculated by this worker thread.
-	 * 
-	 * @return Next targeted field, as computed by latest calculation
-	 */
+	@Override
 	public IField getNextField() {
 		return this.nextField;
 	}
 
-	/**
-	 * Set the current robot position to be used as start field for next path
-	 * calculation.
-	 * 
-	 * @param field
-	 *            The field the robot is currently placed on (or driving to)
-	 */
-	public void setCurrentPosition(IField field) {
+	@Override
+	public void setCurrentPosition(IField field, Orientation orientation) {
 		this.startPosition = field;
 		LOGGER.debug("New start position for Ai Worker: {}-{}", field.getX(),
 				field.getY());
+	}
+	
+	@Override
+	public void setHandler(IComputedFieldHandler handler) {
+		this.computedFieldHandler = handler;
 	}
 	
 	/**
@@ -132,7 +129,7 @@ public class CalculationWorker implements Runnable {
 					this.nextField.getX(), this.nextField.getY());
 
 			// Inform AI about new calculated field
-			this.ai.onNewFieldComputed();
+			this.computedFieldHandler.onNewFieldComputed();
 		} catch (IndexOutOfBoundsException e) {
 			LOGGER.info(
 					"Path could not be calculated because start node is out of range",
