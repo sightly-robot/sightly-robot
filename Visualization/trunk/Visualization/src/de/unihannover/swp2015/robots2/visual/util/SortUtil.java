@@ -7,9 +7,11 @@ import java.util.List;
 import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
 
 /**
- * All utility methods related to {@IEntity}.
+ * Sort robots by score
  * 
- * @author Rico Schrage
+ * All utility methods are related to {@IEntity}.
+ * 
+ * @author Daphne Schössow
  */
 public class SortUtil {
 
@@ -18,10 +20,10 @@ public class SortUtil {
 	}
 
 	/**
-	 * Sort robots on basis of the score (descending).
+	 * Sort robots descending based on the score.
 	 *
 	 * @param robots
-	 *            list of robots you want to sort
+	 *            list of robots to sort
 	 */
 	public static void sortRobots(final List<IRobot> robots) {
 		Collections.sort(robots, new Comparator<IRobot>() {
@@ -33,16 +35,18 @@ public class SortUtil {
 	}
 
 	/**
-	 * Adds a new robot to <code>roboList</code>. The method uses insertion
-	 * sort, so you don't have to sort the list after every insertion. It sorts
-	 * via {@link IRobot#getScore()}.
+	 * Adds a new robot to <code>roboList</code>.
+	 * 
+	 * The method uses insertion sort, thus the list doesn't have to be sorted
+	 * after every insertion. It sorts according to {@link IRobot#getScore()}.
 	 * 
 	 * @param robot
 	 *            robot to be added
 	 * @param roboList
 	 *            target list
 	 */
-	public static void addRobotSorted(final IRobot robot, final List<IRobot> roboList) {
+	public static void addRobotSorted(final IRobot robot,
+			final List<IRobot> roboList) {
 		for (int i = 0; i < roboList.size() + 1; ++i) {
 			if (i == roboList.size()) {
 				roboList.add(robot);

@@ -3,6 +3,8 @@ package de.unihannover.swp2015.robots2.visual.util;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
 
 /**
+ * Translate orientation to rotation
+ * 
  * Utility methods for working with the model provided by the protocol.
  * 
  * @author Rico Schrage
@@ -14,8 +16,8 @@ public class ModelUtil {
 	}
 
 	/**
-	 * Maps the orientation to the rotation libgdx expects. Assumes that north
-	 * equals 0�. <br>
+	 * Maps the orientation to the rotation libgdx expects assuming north equals
+	 * 0°. <br>
 	 * <br>
 	 * NORTH -> 0 <br>
 	 * SOUTH -> 180 <br>
@@ -23,8 +25,8 @@ public class ModelUtil {
 	 * EAST -> 90 <br>
 	 * 
 	 * @param direction
-	 *            orientation, which should get mapped
-	 * @return Appropriate rotation to the given direction
+	 *            orientation to be mapped
+	 * @return rotation of the given direction
 	 */
 	public static float calculateRotation(final Orientation direction) {
 		switch (direction) {

@@ -3,19 +3,19 @@ package de.unihannover.swp2015.robots2.visual.util;
 import com.badlogic.gdx.Gdx;
 
 /**
- * Will perform a task with a given interval.
+ * Will perform a task with a given time interval.
  * 
  * @author Rico Schrage
  *
  */
 public class LoopedTask {
 
-	/** Task, which will be executed */
+	/** Task which will be executed */
 	private final Task task;
 	/** Interval between the executions */
 	private final float interval;
 
-	/** Time, which passed after last execution */
+	/** Time that has passed after the last execution */
 	private float progress;
 
 	/**
@@ -24,7 +24,7 @@ public class LoopedTask {
 	 * @param fullInterval
 	 *            interval between executions
 	 * @param job
-	 *            task, which should get excuted
+	 *            task that is supposed to be executed
 	 */
 	public LoopedTask(float fullInterval, Task job) {
 		this.interval = fullInterval;
@@ -33,8 +33,9 @@ public class LoopedTask {
 	}
 
 	/**
-	 * Updates internal state of the task. If you want the task to work as expected you have to 
-	 * call this every tick.
+	 * Updates internal state of the task.
+	 * 
+	 * Important: You have to call this every tick.
 	 */
 	public void update() {
 		progress -= Gdx.graphics.getDeltaTime();
