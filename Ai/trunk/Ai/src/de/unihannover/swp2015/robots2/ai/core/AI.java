@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 import de.unihannover.swp2015.robots2.ai.exceptions.InvalidStageException;
 import de.unihannover.swp2015.robots2.ai.exceptions.NoValidOrientationException;
 import de.unihannover.swp2015.robots2.ai.graph.AIGraph;
+import de.unihannover.swp2015.robots2.ai.graph.Edge;
 import de.unihannover.swp2015.robots2.ai.graph.Node;
 import de.unihannover.swp2015.robots2.controller.interfaces.IRobotController;
 import de.unihannover.swp2015.robots2.model.externalInterfaces.IModelObserver;
@@ -406,12 +407,28 @@ public class AI extends AbstractAI implements IModelObserver {
 			default:
 				break;
 			}
+			while(!isFieldAvailable(x, y)) {
+				//logger.debug("field unavalable");
+				for(Edge e : this.myself.getPosition().getNeighbors()) {
+					x = e.getTarget().getX();
+					y = e.getTarget().getY();
+					if(isFieldAvailable(x, y)) {
+						return new Tuple<>(new Point(x, y), e.getDirection());
+					}
+				}
+			}
 			//logger.debug("New node is ({},{})", x, y);
 			return new Tuple<>(new Point(x, y), orientation);
 		} catch (NoValidOrientationException e) {
 			logger.error("getNewNode: no valid orientation was found!", e);
 			return null; // TODO make sure no invalid value is returned
 		}
+	}
+	
+	private boolean isFieldAvailable(int x, int y) {
+		return !(this.game.getStage().getField(x, y).getState() == State.OCCUPIED ||
+				this.game.getStage().getField(x, y).getState() == State.LOCKED ||
+				this.game.getStage().getField(x, y).getState() == State.RANDOM_WAIT);
 	}
 
 	@Override
