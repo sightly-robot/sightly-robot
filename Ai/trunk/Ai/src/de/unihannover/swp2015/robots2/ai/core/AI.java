@@ -239,9 +239,8 @@ public class AI extends AbstractAI implements IModelObserver {
 						 * Only keep going if the game is running
 						 */
 						boolean requested = false;
-						while (!requested) {
-							if (this.game.isRunning()
-									&& iRobotController.getMyself().getState() == RobotState.ENABLED) {
+						while (!requested && iRobotController.getMyself().getState() == RobotState.ENABLED) {
+							if (this.game.isRunning()) {
 								Tuple<Point, Orientation> tuple = this.getNewNode();
 								Point point = tuple.x;
 								int x = (int) point.getX();
