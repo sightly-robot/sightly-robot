@@ -49,6 +49,8 @@ public class RobotMainController extends AbstractMainController implements
 
 			MqttTopic[] extendedTopics = { MqttTopic.ROBOT_DISCOVER,
 					MqttTopic.ROBOT_NEW, MqttTopic.ROBOT_SETPOSITION,
+					MqttTopic.ROBOT_REMOTE_ENABLE,
+					MqttTopic.ROBOT_REMOTE_ORIENTATION,
 					MqttTopic.CONTROL_VIRTUALSPEED };
 			String[] subscribeTopics = this.getSubscribeTopcis(extendedTopics);
 
