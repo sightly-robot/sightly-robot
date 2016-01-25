@@ -7,6 +7,7 @@ import java.util.UUID;
 import org.eclipse.paho.client.mqttv3.MqttException;
 
 import de.unihannover.swp2015.robots2.controller.externalInterfaces.IHardwareRobot;
+import de.unihannover.swp2015.robots2.controller.externalInterfaces.IRemoteAi;
 import de.unihannover.swp2015.robots2.controller.interfaces.IRobotController;
 import de.unihannover.swp2015.robots2.controller.interfaces.ProtocolException;
 import de.unihannover.swp2015.robots2.controller.mqtt.MqttController;
@@ -31,6 +32,7 @@ public class RobotMainController extends AbstractMainController implements
 
 	private IRobotWriteable myself;
 	private IHardwareRobot hardwareRobot;
+	private IRemoteAi remoteAi;
 
 	public RobotMainController(boolean hardwareRobot) {
 		super();
@@ -109,6 +111,18 @@ public class RobotMainController extends AbstractMainController implements
 				}
 			}
 			this.robotModelController.mqttBlink(key);
+			break;
+
+		case ROBOT_REMOTE_ENABLE:
+			if (key.equals(this.myself.getId()) && this.remoteAi != null) {
+				this.remoteAi.onEnableMessage(!"".equals(message));
+			}
+			break;
+
+		case ROBOT_REMOTE_ORIENTATION:
+			if (key.equals(this.myself.getId()) && this.remoteAi != null) {
+				this.remoteAi.onOrientationMessage(Orientation.getBy(message));
+			}
 			break;
 
 		case CONTROL_VIRTUALSPEED:
@@ -331,6 +345,11 @@ public class RobotMainController extends AbstractMainController implements
 	@Override
 	public void registerHardwareRobot(IHardwareRobot hardwareRobot) {
 		this.hardwareRobot = hardwareRobot;
+	}
+
+	@Override
+	public void registerRemoteAi(IRemoteAi remoteAi) {
+		this.remoteAi = remoteAi;
 	}
 
 	/**

@@ -33,6 +33,10 @@ public enum MqttTopic {
 	ROBOT_BLINK("robot/blink/+", false),
 	
 	ROBOT_STATE("extension/2/robot/state/+", true),
+	
+	ROBOT_REMOTE_ENABLE("extension/2/robot/remote/enable/+",true),
+	
+	ROBOT_REMOTE_ORIENTATION("extension/2/robot/orientation/+",false),
 
 	MAP_WALLS("map/walls", true),
 
