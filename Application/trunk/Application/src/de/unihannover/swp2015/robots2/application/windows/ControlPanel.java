@@ -124,7 +124,7 @@ public class ControlPanel extends Window implements Bindable, IVisualizationClic
 		@Override
 		public void buttonPressed(Button arg0) {
 			togglePlacementMode();
-			if (tableController.getSelected() == null) {
+			if (tableController.getSelected() == null && placementMode) {
 				Alert.alert("Please select a robot to place now and click on an arrow.", ControlPanel.this);
 			}
 		}
@@ -271,7 +271,6 @@ public class ControlPanel extends Window implements Bindable, IVisualizationClic
 		@Override
 		public void buttonPressed(Button button) {
 			try {
-				startAutoUpdateOnce();
 				controller.startMqtt(/*"tcp://" + */configurator.getGeneralOptions().getRemoteUrl());
 				startAutoUpdateOnce();
 				loadMap.setEnabled(true);

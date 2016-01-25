@@ -432,6 +432,7 @@ public class Configurator extends Window implements Bindable, IVisualizationCont
 	private ButtonPressListener updateVisualizationListAction = new ButtonPressListener() {
 		@Override
 		public void buttonPressed(Button button) {
+			setVisualizationSettingsControlsEnabled(false);
 			visualizationList.setListData(new ArrayList<String>());
 			visualizations.clear();
 			controller.getVisualizationSettings();
@@ -451,7 +452,7 @@ public class Configurator extends Window implements Bindable, IVisualizationCont
 			if (listButton.getSelectedItem() != null) {
 				visualizations.setSelection((String)listButton.getSelectedItem());
 				loadSelectedVisualization();
-				enableVisualizationSettingsControls();
+				setVisualizationSettingsControlsEnabled(true);
 			}
 		}		
 	};
@@ -489,36 +490,36 @@ public class Configurator extends Window implements Bindable, IVisualizationCont
 	/** 
 	 * Enables all visualization settings controls.
 	 */
-	private void enableVisualizationSettingsControls() {
-		xOffsetLabel.setEnabled(true);
-		xOffset.setEnabled(true);
-		xOffsetValue.setEnabled(true);
+	private void setVisualizationSettingsControlsEnabled(boolean enabled) {
+		xOffsetLabel.setEnabled(enabled);
+		xOffset.setEnabled(enabled);
+		xOffsetValue.setEnabled(enabled);
 
-		yOffsetLabel.setEnabled(true);
-		yOffset.setEnabled(true);
-		yOffsetValue.setEnabled(true);
+		yOffsetLabel.setEnabled(enabled);
+		yOffset.setEnabled(enabled);
+		yOffsetValue.setEnabled(enabled);
 		
-		xScaleLabel.setEnabled(true);
-		xScale.setEnabled(true);
-		xScaleValue.setEnabled(true);
+		xScaleLabel.setEnabled(enabled);
+		xScale.setEnabled(enabled);
+		xScaleValue.setEnabled(enabled);
 
-		yScaleLabel.setEnabled(true);
-		yScale.setEnabled(true);
-		yScaleValue.setEnabled(true);
+		yScaleLabel.setEnabled(enabled);
+		yScale.setEnabled(enabled);
+		yScaleValue.setEnabled(enabled);
 		
-		transformationLabel.setEnabled(true);
-		transformation.setEnabled(true);
-		transformationValue.setEnabled(true);
+		transformationLabel.setEnabled(enabled);
+		transformation.setEnabled(enabled);
+		transformationValue.setEnabled(enabled);
 		
-		showWalls.setEnabled(true);
-		showVirtuals.setEnabled(true);
-		showReals.setEnabled(true);
-		showResources.setEnabled(true);
-		showVirtualBubble.setEnabled(true);
-		showBubble.setEnabled(true);
-		showLockStates.setEnabled(true);
+		showWalls.setEnabled(enabled);
+		showVirtuals.setEnabled(enabled);
+		showReals.setEnabled(enabled);
+		showResources.setEnabled(enabled);
+		showVirtualBubble.setEnabled(enabled);
+		showBubble.setEnabled(enabled);
+		showLockStates.setEnabled(enabled);
 		
-		nextTexturepack.setEnabled(true);
+		nextTexturepack.setEnabled(enabled);
 	}
 
 	/**
