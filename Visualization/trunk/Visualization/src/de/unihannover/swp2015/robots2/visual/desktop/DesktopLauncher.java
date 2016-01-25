@@ -102,6 +102,7 @@ public class DesktopLauncher {
 		
 		if (windowedFullscreen) {
 			System.setProperty("org.lwjgl.opengl.Window.undecorated", "true");
+			config.resizable = false;
 		}
 		else {
 			config.fullscreen = true;
