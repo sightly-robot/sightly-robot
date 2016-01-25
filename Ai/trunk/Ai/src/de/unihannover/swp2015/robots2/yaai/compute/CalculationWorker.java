@@ -8,7 +8,6 @@ import de.unihannover.swp2015.robots2.model.interfaces.IField;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
 import de.unihannover.swp2015.robots2.yaai.IComputedFieldHandler;
 import de.unihannover.swp2015.robots2.yaai.IYaaiCalculator;
-import de.unihannover.swp2015.robots2.yaai.YetAnotherAi;
 import de.unihannover.swp2015.robots2.yaai.model.Graph;
 import de.unihannover.swp2015.robots2.yaai.model.Node;
 
@@ -129,7 +128,8 @@ public class CalculationWorker implements Runnable, IYaaiCalculator {
 					this.nextField.getX(), this.nextField.getY());
 
 			// Inform AI about new calculated field
-			this.computedFieldHandler.onNewFieldComputed();
+			if (this.computedFieldHandler != null)
+				this.computedFieldHandler.onNewFieldComputed();
 		} catch (IndexOutOfBoundsException e) {
 			LOGGER.info(
 					"Path could not be calculated because start node is out of range",

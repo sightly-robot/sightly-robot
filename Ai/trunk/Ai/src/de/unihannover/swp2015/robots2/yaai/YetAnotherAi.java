@@ -39,18 +39,19 @@ public class YetAnotherAi extends AbstractAI implements IModelObserver,
 	 * This constructor instantly starts a calculation thread periodically
 	 * recalculating a path to drive.
 	 * 
-	 * @param iRobotController
+	 * @param controller
 	 *            The main controller to be used by this AI
 	 */
-	public YetAnotherAi(IRobotController iRobotController) {
-		super(iRobotController);
+	public YetAnotherAi(IRobotController controller) {
+		super(controller);
 		LOGGER.debug("Constructing YAAI Ai...");
 		this.iRobotController.getMyself().observe(this);
 		this.iRobotController.getGame().observe(this);
 
-		CalculationWorker worker = new CalculationWorker(iRobotController);
-		worker.setHandler(this);
-		this.calculator = worker;
+		// Init calculation worker and remote adapter
+		CalculationWorker worker = new CalculationWorker(controller);
+		this.calculator = new YaaiRemoteAdapter(worker,controller);
+		this.calculator.setHandler(this);
 
 		// Start calculation worker
 		Thread thread = new Thread(worker);
