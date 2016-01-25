@@ -36,7 +36,7 @@ public enum MqttTopic {
 	
 	ROBOT_REMOTE_ENABLE("extension/2/robot/remote/enable/+",true),
 	
-	ROBOT_REMOTE_ORIENTATION("extension/2/robot/orientation/+",false),
+	ROBOT_REMOTE_ORIENTATION("extension/2/robot/remote/orientation/+",false),
 
 	MAP_WALLS("map/walls", true),
 
