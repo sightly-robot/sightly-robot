@@ -118,7 +118,7 @@ public class Field extends Entity<RobotGameHandler, IField> {
 	 * @param field model
 	 */
 	private void updateLockState() {
-		if (model.getState() == State.LOCKED) {
+		if (model.getState() == State.LOCKED || model.getState() == State.OCCUPIED) {
 			robotColor = ColorUtil.fromAwtColor(gameHandler.getRobot(model.getLockedBy()).getColor());
 			robotColor.r = Math.min(robotColor.r+0.3f, 1);
 			robotColor.g = Math.min(robotColor.g+0.3f, 1);
