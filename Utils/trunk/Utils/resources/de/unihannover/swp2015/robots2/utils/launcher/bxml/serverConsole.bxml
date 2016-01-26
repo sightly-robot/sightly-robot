@@ -1,5 +1,0 @@
-<window:ServerConsole title="Console" maximized="true" xmlns:bxml="http://pivot.apache.org/bxml" xmlns:window="de.unihannover.swp2015.robots2.utils.launcher" xmlns="org.apache.pivot.wtk">
-	<FillPane orientation="vertical" styles="{padding:50, spacing:30}">
-		<TextArea bxml:id="consoleServerOutput"/>
-	</FillPane>
-</window:ServerConsole>
