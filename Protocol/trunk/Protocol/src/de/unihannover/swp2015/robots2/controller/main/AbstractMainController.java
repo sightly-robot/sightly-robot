@@ -117,6 +117,8 @@ public abstract class AbstractMainController implements IController,
 
 		case ROBOT_TYPE:
 			this.gameModelController.mqttAddRobot(key, message);
+			if ("".equals(message))
+				this.fieldStateModelController.releaseFieldsOfRobot(key);
 			break;
 
 		case ROBOT_STATE:
