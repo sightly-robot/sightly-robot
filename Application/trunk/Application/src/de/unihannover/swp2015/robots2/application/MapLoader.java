@@ -87,8 +87,8 @@ public class MapLoader {
 				
 				if (fieldObject.has("growthRate")) {
 					Integer gr = new Integer(fieldObject.getInt("growthRate"));
-					if (gr <= 0)
-						throw new InvalidMapFile("The growth rate must be larger than 0");
+					if (gr < 0)
+						throw new InvalidMapFile("The growth rate must be larger than or equal to 0");
 					growingRates.get(growingRates.size() - 1).add(gr);
 				}
 				if (fieldObject.has("initialResources")) {
