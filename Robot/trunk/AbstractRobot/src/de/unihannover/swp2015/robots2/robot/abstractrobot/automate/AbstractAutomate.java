@@ -40,15 +40,17 @@ public abstract class AbstractAutomate implements AiEventObserver, Runnable, ISt
 	private Point nextPosition = new Point(0, 0);
 
 	// progress
-	private static final long PROGRESS_UPDATE_DURATION = 100;
+	private static final long PROGRESS_UPDATE_DURATION = 200;
 	private long nextUpdateTime;
 	private int lastProgress = 0;
 
 	protected double[] progressMeasurements = new double[] { 1000, 1000, 1000, 1000 };
 	private Direction currentDirection = Direction.FORWARDS;
 	private long lastWaitTime;
-	
-	private IState disableState;
+
+	private IState DISABLE_ISTATE;
+	private IState SETUP_ISTATE;
+	private IState CONNECTED_ISTATE;
 
 	/**
 	 * Constructs a new AbstractAutomate.
@@ -65,8 +67,10 @@ public abstract class AbstractAutomate implements AiEventObserver, Runnable, ISt
 
 		state = connectedState;
 
-		this.disableState = disableState;
-		
+		this.DISABLE_ISTATE = disableState;
+		this.CONNECTED_ISTATE = connectedState;
+		this.SETUP_ISTATE = setupState;
+
 		robotController.getMyself().observe(new IModelObserver() {
 			@Override
 			public void onModelUpdate(IEvent event) {
@@ -93,6 +97,8 @@ public abstract class AbstractAutomate implements AiEventObserver, Runnable, ISt
 
 			}
 		});
+
+		state.setIStateEventObserver(this);
 	}
 
 	/**
@@ -123,6 +129,20 @@ public abstract class AbstractAutomate implements AiEventObserver, Runnable, ISt
 								+ progressMeasurements[currentDirection.ordinal()]);
 						// update position only
 						updatePostition(nextPosition.x, nextPosition.y);
+						// Set State if updated:
+						switch (AbstractAutomate.this.robotController.getMyself().getState()) {
+						case ENABLED:
+							break;
+						case SETUPSTATE:
+							setState(SETUP_ISTATE);
+							break;
+						case CONNECTED:
+							setState(CONNECTED_ISTATE);
+							break;
+						default:
+							setState(DISABLE_ISTATE);
+							break;
+						}
 					}
 				}
 
@@ -228,19 +248,22 @@ public abstract class AbstractAutomate implements AiEventObserver, Runnable, ISt
 
 	protected boolean setState(IState iState) {
 		synchronized (state) {
-			if (state.isDriving())
-				LOGGER.warn("State changes to "+iState+" while driving!!!");
-			// set new state
-			state = iState;
-			state.start();
+			if (!state.isDriving()) {
+				// set new state
+				state = iState;
+				state.start();
 
-			// measurements
-			lastWaitTime = System.currentTimeMillis();
+				// measurements
+				lastWaitTime = System.currentTimeMillis();
 
-			synchronized (automation) {
-				automation.notify();
+				synchronized (automation) {
+					automation.notify();
+				}
+				return true;
+			} else {
+				LOGGER.warn("State changes to " + iState + " while driving!!!");
+				return false;
 			}
-			return true;
 		}
 	}
 
