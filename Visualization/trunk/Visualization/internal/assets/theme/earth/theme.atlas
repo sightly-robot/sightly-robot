@@ -6,86 +6,72 @@ filter: MipMapNearestNearest,MipMapNearestNearest
 repeat: none
 default-rect
   rotate: false
-  xy: 506, 533
+  xy: 3830, 2045
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
   index: -1
-default-round-large
-  rotate: false
-  xy: 506, 1622
-  size: 20, 20
-  orig: 20, 20
-  offset: 0, 0
-  index: -1
-default-scroll
-  rotate: false
-  xy: 3830, 2006
-  size: 40, 40
-  orig: 40, 40
-  offset: 0, 0
-  index: -1
 default_bubble
   rotate: false
-  xy: 2, 1646
+  xy: 506, 1646
   size: 800, 400
   orig: 800, 400
   offset: 0, 0
   index: -1
 default_connection
   rotate: false
-  xy: 2, 2
+  xy: 506, 2
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 default_field
   rotate: false
-  xy: 2, 1142
+  xy: 506, 1142
   size: 500, 500
   orig: 500, 500
   offset: 0, 0
   index: -1
 default_field_2_c
   rotate: false
-  xy: 2, 638
+  xy: 506, 638
   size: 500, 500
   orig: 500, 500
   offset: 0, 0
   index: -1
 default_field_four
   rotate: false
-  xy: 2, 134
+  xy: 506, 134
   size: 500, 500
   orig: 500, 500
   offset: 0, 0
   index: -1
 default_field_one
   rotate: false
-  xy: 806, 1546
+  xy: 1310, 1546
   size: 500, 500
   orig: 500, 500
   offset: 0, 0
   index: -1
 default_field_three
   rotate: false
-  xy: 1310, 1546
+  xy: 1814, 1546
   size: 500, 500
   orig: 500, 500
   offset: 0, 0
   index: -1
 default_field_two
   rotate: false
-  xy: 1814, 1546
+  xy: 2318, 1546
   size: 500, 500
   orig: 500, 500
   offset: 0, 0
   index: -1
 default_oneway
   rotate: false
-  xy: 2318, 1546
-  size: 500, 500
-  orig: 500, 500
+  xy: 2, 1046
+  size: 500, 1000
+  orig: 500, 1000
   offset: 0, 0
   index: -1
 default_res_eight
@@ -104,91 +90,91 @@ default_res_five
   index: -1
 default_res_four
   rotate: false
-  xy: 506, 1042
+  xy: 1010, 1042
   size: 500, 500
   orig: 500, 500
   offset: 0, 0
   index: -1
 default_res_nine
   rotate: false
-  xy: 506, 538
+  xy: 1010, 538
   size: 500, 500
   orig: 500, 500
   offset: 0, 0
   index: -1
 default_res_one
   rotate: false
-  xy: 1010, 1042
+  xy: 1514, 1042
   size: 500, 500
   orig: 500, 500
   offset: 0, 0
   index: -1
 default_res_seven
   rotate: false
-  xy: 1010, 538
+  xy: 1514, 538
   size: 500, 500
   orig: 500, 500
   offset: 0, 0
   index: -1
 default_res_six
   rotate: false
-  xy: 1514, 1042
+  xy: 2018, 1042
   size: 500, 500
   orig: 500, 500
   offset: 0, 0
   index: -1
 default_res_ten
   rotate: false
-  xy: 1514, 538
+  xy: 2018, 538
   size: 500, 500
   orig: 500, 500
   offset: 0, 0
   index: -1
 default_res_three
   rotate: false
-  xy: 2018, 1042
+  xy: 2522, 1042
   size: 500, 500
   orig: 500, 500
   offset: 0, 0
   index: -1
 default_res_two
   rotate: false
-  xy: 2018, 538
+  xy: 2522, 538
   size: 500, 500
   orig: 500, 500
   offset: 0, 0
   index: -1
 default_robo
   rotate: false
-  xy: 2522, 1042
+  xy: 3026, 1042
   size: 500, 500
   orig: 500, 500
   offset: 0, 0
   index: -1
 default_startpos
   rotate: false
-  xy: 2522, 538
+  xy: 3026, 538
   size: 500, 500
   orig: 500, 500
   offset: 0, 0
   index: -1
 default_virtual_robo
   rotate: false
-  xy: 3026, 1042
+  xy: 1010, 34
   size: 500, 500
   orig: 500, 500
   offset: 0, 0
   index: -1
 default_wall
   rotate: false
-  xy: 3026, 538
-  size: 500, 500
-  orig: 500, 500
+  xy: 2, 42
+  size: 500, 1000
+  orig: 500, 1000
   offset: 0, 0
   index: -1
 default_warning
   rotate: false
-  xy: 134, 2
+  xy: 638, 2
   size: 128, 128
   orig: 128, 128
   offset: 0, 0

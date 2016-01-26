@@ -76,9 +76,6 @@ public class RenderUnit {
 			stateTime += Gdx.graphics.getDeltaTime();
 
 			batch.draw(animation.getKeyFrame(stateTime), x, y);
-
-			if (stateTime > animation.getAnimationDuration())
-				stateTime -= animation.getAnimationDuration();
 		} else {
 			throw new IllegalStateException(
 					"The TextureUnit is not initialized!");
@@ -108,9 +105,6 @@ public class RenderUnit {
 			stateTime += Gdx.graphics.getDeltaTime();
 
 			batch.draw(animation.getKeyFrame(stateTime), x, y, width, height);
-
-			if (stateTime > animation.getAnimationDuration())
-				stateTime = 0;
 		} else {
 			throw new IllegalStateException(
 					"The TextureUnit is not initialized!");
@@ -157,9 +151,6 @@ public class RenderUnit {
 
 			batch.draw(animation.getKeyFrame(stateTime), x, y, originX,
 					originY, width, height, scaleX, scaleY, rotation);
-
-			if (stateTime > animation.getAnimationDuration())
-				stateTime = 0;
 		} else {
 			throw new IllegalStateException(
 					"The TextureUnit is not initialized!");

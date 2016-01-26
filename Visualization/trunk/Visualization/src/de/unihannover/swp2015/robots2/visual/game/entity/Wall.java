@@ -81,17 +81,17 @@ public class Wall extends Entity<RobotGameHandler, IField> {
 		final RenderUnit wallTexture = resHandler.createRenderUnit(ResConst.DEFAULT_WALL);
 		final RenderUnit onewayTexture = resHandler.createRenderUnit(ResConst.DEFAULT_ONEWAY);
 
-		texWall[0] = new TransformedRenderUnit(isOneway[0] ? onewayTexture : wallTexture, renderX + fieldWidth / 2,
-				renderY, fieldWidth, fieldHeight, fieldWidth / 2, fieldHeight / 2, 180);
+		texWall[0] = new TransformedRenderUnit(isOneway[0] ? onewayTexture : wallTexture, renderX + fieldWidth / 2f,
+				renderY - fieldHeight / 2f, fieldWidth, fieldHeight * 2f, fieldWidth / 2f, fieldHeight, 180f);
 
-		texWall[1] = new TransformedRenderUnit(isOneway[1] ? onewayTexture : wallTexture, renderX - fieldWidth / 2,
-				renderY, fieldWidth, fieldHeight, fieldWidth / 2, fieldHeight / 2, 0);
+		texWall[1] = new TransformedRenderUnit(isOneway[1] ? onewayTexture : wallTexture, renderX - fieldWidth / 2f,
+				renderY - fieldHeight / 2f, fieldWidth, fieldHeight * 2f, fieldWidth / 2f, fieldHeight, 0f);
 
 		texWall[2] = new TransformedRenderUnit(isOneway[2] ? onewayTexture : wallTexture, renderX,
-				renderY - fieldHeight / 2, fieldWidth, fieldHeight, fieldWidth / 2, fieldHeight / 2, 90);
+				renderY - fieldHeight, fieldWidth, fieldHeight * 2, fieldWidth / 2f, fieldHeight, 90f);
 
 		texWall[3] = new TransformedRenderUnit(isOneway[3] ? onewayTexture : wallTexture, renderX,
-				renderY + fieldHeight / 2, fieldWidth, fieldHeight, fieldWidth / 2, fieldHeight / 2, -90);
+				renderY, fieldWidth, fieldHeight * 2, fieldWidth / 2f, fieldHeight, -90f);
 	}
 
 	private void determineOneway() {

@@ -123,8 +123,7 @@ public class ResourceHandler implements IResourceHandler {
 		final ResConst[] resConsts = ResConst.values();
 		for (final ResConst res : resConsts) {
 			if (res.getType() == ResType.TEX) {
-				Array<AtlasRegion> regions = texAtlas
-						.findRegions(res.getName());
+				Array<AtlasRegion> regions = texAtlas.findRegions(res.getName());
 				if (regions.size == 1) {
 					texMap.put(res, regions.get(0));
 					if (renderUnitMap.containsKey(res)) {
@@ -133,8 +132,7 @@ public class ResourceHandler implements IResourceHandler {
 				} else {
 					frameSetMap.put(res, regions);
 					if (renderUnitMap.containsKey(res)) {
-						renderUnitMap.get(res).initAsAnimation(regions,
-								PlayMode.LOOP, 0.1f);
+						renderUnitMap.get(res).initAsAnimation(regions, PlayMode.LOOP, 0.1f);
 					}
 				}
 			}
@@ -173,10 +171,8 @@ public class ResourceHandler implements IResourceHandler {
 		fontGenerator = new FreeTypeFontGenerator(
 				Gdx.files.internal("assets/font/Roboto-Regular.ttf"));
 		fontMap.put(ResConst.DEFAULT_FONT, new HashMap<Integer, BitmapFont>());
-		fontMap.get(ResConst.DEFAULT_FONT).put(
-				15,
-				createFont(15, NECESSARY_CHARS, true, 1, Color.BLACK,
-						Color.WHITE));
+		fontMap.get(ResConst.DEFAULT_FONT).put(15, createFont(15, NECESSARY_CHARS, 
+				true, 1, Color.BLACK, Color.WHITE));
 	}
 
 	/**
@@ -335,18 +331,16 @@ public class ResourceHandler implements IResourceHandler {
 		}
 
 		uiSkin = new Skin();
-		uiSkin.add(
-				ResConst.SKIN_DEFAULT_FONT.toString(),
+		uiSkin.add(ResConst.SKIN_DEFAULT_FONT.toString(),
 				createFont(50, NECESSARY_CHARS, true, 10, Color.BLACK,
 						Color.WHITE));
-		uiSkin.add(
-				ResConst.SKIN_TITLE_FONT.toString(),
+		uiSkin.add(ResConst.SKIN_TITLE_FONT.toString(),
 				createFont(50, NECESSARY_CHARS, true, 10, Color.BLACK,
 						Color.WHITE));
-		uiSkin.add(
-				ResConst.SKIN_RANKING_FONT.toString(),
+		uiSkin.add(ResConst.SKIN_RANKING_FONT.toString(),
 				createFont(50, NECESSARY_CHARS, true, 10, Color.BLACK,
 						Color.WHITE));
+		
 		uiSkin.getFont(ResConst.SKIN_DEFAULT_FONT.toString()).getRegion()
 				.getTexture()
 				.setFilter(TextureFilter.Linear, TextureFilter.Linear);
@@ -357,6 +351,7 @@ public class ResourceHandler implements IResourceHandler {
 				.getTexture()
 				.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		uiSkin.addRegions(texAtlas);
+		
 		uiSkin.load(Gdx.files.internal(ResConst.ATLAS_PATH.toString()
 				+ ResConst.DEFAULT_THEME + File.separator + "skin.json"));
 		return uiSkin;
