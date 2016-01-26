@@ -144,7 +144,7 @@ public class AI extends AbstractAI implements IModelObserver {
 			//Node node = myself.getPosition();
 			IPosition myPos = iRobotController.getMyself().getPosition();
 			if(!this.game.isRunning() && field.getX() != myPos.getX() && field.getY() != myPos.getY()) {
-				logger.debug("Field State: Field ({},{}) OURS when game is not running.", field.getX(), field.getY());
+				logger.debug("Field State: release Field ({},{}) because game is not running.", field.getX(), field.getY());
 				this.iRobotController.releaseField(field.getX(), field.getY());
 			}
 			
@@ -292,31 +292,31 @@ public class AI extends AbstractAI implements IModelObserver {
 			/*
 			 * Case robot is not myself
 			 */
-			else {
-				/*
-				 * Get intern graph-robot object if it already exists, else
-				 * create new one and set position
-				 */
-				if (!this.graph.getRobots().containsKey(robot.getId())) {
-					Robot newRobot = new Robot(robot.getId());
-					this.graph.getRobots().put(robot.getId(), newRobot);
-					this.graph.setRobotPosition(newRobot, pos);
-				} else {
-					Robot otherRobot = this.graph.getRobots().get(robot.getId());
-					int x = otherRobot.getPosition().getX();
-					int y = otherRobot.getPosition().getY();
-					/*
-					 * Check if position was actually updated
-					 */
-					if (x == pos.getX() && y == pos.getY()) {
-						logger.warn("Other robot's position is the same as the old one!");
-						return;
-					} else {
-						logger.trace("Setting other robots position");
-						this.graph.setRobotPosition(otherRobot, pos);
-					}
-				}
-			}
+//			else {
+//				/*
+//				 * Get intern graph-robot object if it already exists, else
+//				 * create new one and set position
+//				 */
+//				if (!this.graph.getRobots().containsKey(robot.getId())) {
+//					Robot newRobot = new Robot(robot.getId());
+//					this.graph.getRobots().put(robot.getId(), newRobot);
+//					this.graph.setRobotPosition(newRobot, pos);
+//				} else {
+//					Robot otherRobot = this.graph.getRobots().get(robot.getId());
+//					int x = otherRobot.getPosition().getX();
+//					int y = otherRobot.getPosition().getY();
+//					/*
+//					 * Check if position was actually updated
+//					 */
+//					if (x == pos.getX() && y == pos.getY()) {
+//						logger.warn("Other robot's position is the same as the old one!");
+//						return;
+//					} else {
+//						logger.trace("Setting other robots position");
+//						this.graph.setRobotPosition(otherRobot, pos);
+//					}
+//				}
+//			}
 		}
 	}
 
@@ -331,7 +331,7 @@ public class AI extends AbstractAI implements IModelObserver {
 				&& iRobotController.getMyself().getState() == RobotState.ENABLED) {
 			Tuple<Point, Orientation> tuple = this.getNewNode();
 			Point point = tuple.x;
-			int x = (int) point.getX();
+			int x = (int) point.getX();		
 			int y = (int) point.getY();
 
 			logger.debug("Requesting field ({},{})", x, y);
