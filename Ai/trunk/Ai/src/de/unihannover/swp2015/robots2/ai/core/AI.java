@@ -54,7 +54,14 @@ public class AI extends AbstractAI implements IModelObserver {
 		myself = new Robot(iRobotController.getMyself().getId());
 		initialize();
 	}
-
+	
+	/**
+	 * Helper class that stores two values. Used to return Node and Orientation in 
+	 * getNewNode().
+	 *
+	 * @param <X> First value of the Tuple.
+	 * @param <Y> Second value of the Tuple.
+	 */
 	private class Tuple<X, Y> {
 		public final X x;
 		public final Y y;
@@ -84,7 +91,7 @@ public class AI extends AbstractAI implements IModelObserver {
 	}
 
 	/**
-	 * React on given events
+	 * React to given events
 	 */
 	@Override
 	public void onModelUpdate(IEvent event) {
@@ -136,7 +143,12 @@ public class AI extends AbstractAI implements IModelObserver {
 		}
 
 	}
-
+		
+	/**
+	 * Reacts to Events of type FIELD_STATE.
+	 * 
+	 * @param event The FIELD_STATE Event that is to be handled.
+	 */
 	private void handleFieldStateEvent(IEvent event) {
 		logger.trace("Calling handleFieldStateEvent");
 		if (graph != null) {
@@ -194,7 +206,12 @@ public class AI extends AbstractAI implements IModelObserver {
 			}
 		}
 	}
-
+	
+	/**
+	 * Reacts to Events of type ROBOT_POSITION
+	 * 
+	 * @param event The ROBOT_POSITION Event that is to be handled.
+	 */
 	private void handleRobotPositionEvent(IEvent event) {
 		logger.trace("Calling handleRobotPositionEvent");
 		if (graph != null) {
@@ -319,7 +336,12 @@ public class AI extends AbstractAI implements IModelObserver {
 //			}
 		}
 	}
-
+	
+	/**
+	 * Reacts to Events of type GAME_STATE.
+	 * 
+	 * @param event The GAME_STATE Event that is to be handled.
+	 */
 	private void handleGameStateEvent(IEvent event) {
 		logger.trace("Calling handleGameStateEvent");
 		// TODO check hasStarted state!!
@@ -344,7 +366,12 @@ public class AI extends AbstractAI implements IModelObserver {
 			iRobotController.releaseField(this.nextField.getX(), this.nextField.getY());
 		}
 	}
-
+	
+	/**
+	 * Reacts to Events of type ROBOT_STATE.
+	 * 
+	 * @param event The ROBOT_STATE Event that is to be handled.
+	 */
 	private void handleRobotStateEvent(IEvent event) {
 		logger.trace("Calling handleRobotStateEvent");
 		IRobot robot = (IRobot) event.getObject();
@@ -383,6 +410,14 @@ public class AI extends AbstractAI implements IModelObserver {
 		}
 	}
 
+	/**
+	 * Gets next Node which should be requested by either getting the calculated next Node from 
+	 * the graph or, if that Node is occupied, a random valid Node. Additionally retrieves the
+	 * Orientation the robot needs to drive in to reach the Node.
+	 * 
+	 * @return A tuple of the next Node to request and the Orientation the robot needs to drive in
+	 * 			to reach it. 
+	 */
 	private Tuple<Point, Orientation> getNewNode() {
 		int x = this.myself.getPosition().getX();
 		int y = this.myself.getPosition().getY();
@@ -424,7 +459,15 @@ public class AI extends AbstractAI implements IModelObserver {
 			return null; // TODO make sure no invalid value is returned
 		}
 	}
-	
+	/**
+	 * Checks, whether field on given location is available by checking, if it is occupied,
+	 * locked or in random_wait.
+	 * 
+	 * @param x The x coordinate of the field for which availability should be checked.
+	 * @param y The y coordinate of the field for which availability should be checked.
+	 * @return true if the field is not occupied, locked or in random_wait and 
+	 * 			false otherwise
+	 */
 	private boolean isFieldAvailable(int x, int y) {
 		return !(this.game.getStage().getField(x, y).getState() == State.OCCUPIED ||
 				this.game.getStage().getField(x, y).getState() == State.LOCKED ||
@@ -438,7 +481,8 @@ public class AI extends AbstractAI implements IModelObserver {
 	}
 
 	/**
-	 * Returns the next Orientation, the robot is supposed to move in.
+	 * Returns the next Orientation, the robot is supposed to move in by getting the calculated
+	 * orientation from the graph.
 	 * 
 	 * @return Orientation, the robot is supposed to move in next.
 	 */

@@ -43,7 +43,16 @@ public class AIGraph extends Thread implements Runnable {
 
 	private int dimX;
 	private int dimY;
-
+	
+	/**
+	 * Constructor for AIGraph. Creates an AIGraph object with information from 
+	 * given stage object and with given Robot object resembling "myself": 
+	 * The robot, from whichs perspective the graph is generated.
+	 * 
+	 * @param stage The stage which the graph should resemble.
+	 * @param myself The robot object, from whichs perspective the graph is generated.
+	 * @throws InvalidStageException Exception, which is thrown if the stage is invalid.
+	 */
 	public AIGraph(IStage stage, Robot myself) throws InvalidStageException {
 		super();
 		logger.debug("Initializing AIGraph from stage");
@@ -56,10 +65,10 @@ public class AIGraph extends Thread implements Runnable {
 	}
 
 	/**
-	 * Creates Graph of size x * y without Walls.
+	 * Creates empty Graph of size x * y without Walls.
 	 * 
-	 * @param x
-	 * @param y
+	 * @param x The width of the created graph.
+	 * @param y The height of the created graph.
 	 */
 	public AIGraph(int x, int y) {
 		super();
@@ -109,11 +118,10 @@ public class AIGraph extends Thread implements Runnable {
 	}
 
 	/**
-	 * Loads map data into Graph object
+	 * Loads map data into Graph object.
 	 * 
-	 * @param stage
-	 *            IStage data object
-	 * @throws InvalidStageException
+	 * @param stage Stage which the graph should resemble.
+	 * @throws InvalidStageException Exception which is thrown if the stage is invalid.
 	 */
 	public void loadFromStage(IStage stage) throws InvalidStageException {
 		logger.debug("Loading AIGraph from stage");
@@ -236,7 +244,7 @@ public class AIGraph extends Thread implements Runnable {
 	 * 
 	 * @param target
 	 *            Node, the robot is supposed to drive to.
-	 * @return
+	 * @return Shortest path to target Node in form of a List of nodes.
 	 */
 	public List<Node> getBFSPath(Node target) {
 		logger.trace("Calling getBFSPath");
@@ -277,9 +285,10 @@ public class AIGraph extends Thread implements Runnable {
 	 * Gets next Orientation to drive in from given path. Used, to find
 	 * Orientation from path determined by getBFSPath().
 	 * 
-	 * @param path
-	 * @return
-	 * @throws Exception
+	 * @param path The path from which the next Orientation to drive in should
+	 * 			be determined.
+	 * @return The Orientation the robot should drive in next.
+	 * @throws Exception //TODO
 	 */
 	public Orientation getOrientationFromPath(List<Node> path) throws Exception {
 		logger.trace("Calling getOrientationFromPath");
@@ -310,8 +319,8 @@ public class AIGraph extends Thread implements Runnable {
 	 * not taking into account walls or other obstacles). Used to find target
 	 * node to drive towards.
 	 * 
-	 * @param range
-	 * @return
+	 * @param range The range in which the robot should look for fields.
+	 * @return The best Node in range. 
 	 */
 	public Node findBestNode(int range) { // TODO better way to determine best
 											// node via bfs
@@ -341,7 +350,14 @@ public class AIGraph extends Thread implements Runnable {
 		}
 		return curr;
 	}
-
+	
+	/**
+	 * Helper class that stores two values. Used to return Node and Orientation in 
+	 * findBestNodeBFS().
+	 *
+	 * @param <X> First value of the Tuple.
+	 * @param <Y> Second value of the Tuple.
+	 */
 	private class Tuple<X, Y> {
 		public final X x;
 		public final Y y;
@@ -356,8 +372,9 @@ public class AIGraph extends Thread implements Runnable {
 	 * Finds node with highest amount of resources in given distance via breadth
 	 * first search. Used to find target node to drive towards.
 	 * 
-	 * @param range
-	 * @return
+	 * @param range The range in which the robot should look for the best (currently: highest
+	 * amount of food) node.
+	 * @return The best Node (currently: highest amount of food) in given range.
 	 */
 	public Node findBestNodeBFS(int range) {
 		logger.trace("Calling findBestNodeBFS");
@@ -394,8 +411,8 @@ public class AIGraph extends Thread implements Runnable {
 	/**
 	 * Sets food value on a specific Field.
 	 * 
-	 * @param x
-	 * @param y
+	 * @param x The x coordinate of the field.
+	 * @param y The y coordinate of the field.
 	 * @param food
 	 */
 	public void setFood(int x, int y, int food) {
@@ -405,12 +422,10 @@ public class AIGraph extends Thread implements Runnable {
 
 	/**
 	 * Sets the new position of a robot in the graph and also sets it for the
-	 * robot itself
+	 * robot itself.
 	 * 
-	 * @param robot
-	 *            Robot to be set
-	 * @param newPosition
-	 *            new position
+	 * @param robot Robot whichs position should be set.
+	 * @param newPosition Position, the robot should be put on.
 	 */
 	public void setRobotPosition(Robot robot, IPosition newPosition) {
 		logger.trace("Calling setRobotPosition");
@@ -431,11 +446,24 @@ public class AIGraph extends Thread implements Runnable {
 			robot.setPosition(this.nodes[newPosition.getX()][newPosition.getY()]);
 		}
 	}
-
+	
+	/**
+	 * Returns the robots stored in a hash map with their ids as values.
+	 * 
+	 * @return The current HashMap storing the robots.
+	 */
 	public HashMap<String, Robot> getRobots() {
 		return robots;
 	}
-
+	
+	/**
+	 * Sets myNextNode, the position the robot is driving to currently. Then calculates the
+	 * next Orientation, the robot should drive in, when he reaches his the field he is 
+	 * driving towards. Called, when the robot starts driving. 
+	 * 
+	 * @param x The x coordinate of the robots next Position.
+	 * @param y The y coordinate of the robots next Position.
+	 */
 	public void calculateNextOrientation(int x, int y) {
 		this.myNextNode = this.nodes[x][y];
 		logger.debug("My next node is ({},{})", x, y);
@@ -448,7 +476,12 @@ public class AIGraph extends Thread implements Runnable {
 			logger.error("calculateNextOrientation: no valid orientation was found!", e);
 		}
 	}
-
+	
+	/**
+	 * Returns the calculated next Orientation, the robot should drive in.
+	 * 
+	 * @return The calculated nextOrientation, the robot should drive in.
+	 */
 	public Orientation getNextOrientation() {
 		return this.nextOrientation;
 	}
