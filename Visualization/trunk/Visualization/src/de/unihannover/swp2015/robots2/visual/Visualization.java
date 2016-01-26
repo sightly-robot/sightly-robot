@@ -91,7 +91,7 @@ public class Visualization extends ApplicationAdapter {
 	public void create() {
 
 		LOGGER.debug("Id of the visualization: {}", id);
-		
+
 		prefs = new FlexPreferences<PrefKey>("prefs");
 		mqttHandler = new MqttHandler(MqttProtocol.searchMatching(protocol), ip, new PreferenceHandler(prefs, id));
 
@@ -106,8 +106,8 @@ public class Visualization extends ApplicationAdapter {
 		prefs.putFloat(PrefKey.VIEW_WIDTH, appWidth);
 		prefs.putFloat(PrefKey.VIEW_HEIGHT, appHeight);
 
-		prefs.putFloat(PrefKey.DEVICE_WIDTH, appWidth);
-		prefs.putFloat(PrefKey.DEVICE_HEIGHT, appHeight);
+		prefs.putFloat(PrefKey.DEVICE_WIDTH, Gdx.graphics.getDisplayMode().width);
+		prefs.putFloat(PrefKey.DEVICE_HEIGHT, Gdx.graphics.getDisplayMode().height);
 		
 		LOGGER.debug("Native resolution is set to: {}x{}", appWidth, appHeight);
 
