@@ -95,17 +95,7 @@ public abstract class AbstractRobot {
 			}
 		});
 
-		// IModelObserver mo = new IModelObserver() {
-		// @Override
-		// public void onModelUpdate(IEvent event) {
-		// System.out.println(event.getType().name());
-		// }
-		// };
-		//
-		// robotController.getGame().observe(mo);
-		// robotController.getGame().getStage().observe(mo);
-
-		// TODO Init AbstractAI
+		// init AI
 		if(useYetAnotherAi)
 			ai = new YetAnotherAi(robotController);
 		else

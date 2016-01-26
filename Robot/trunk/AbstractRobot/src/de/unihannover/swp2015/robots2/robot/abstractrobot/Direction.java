@@ -6,6 +6,7 @@ import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
  * An enumeration for the moving directions of a robot.
  * 
  * @author Lenard Spiecker
+ * @author Philipp Rohde
  */
 public enum Direction {
 
@@ -59,7 +60,7 @@ public enum Direction {
 		case NORTH:
 			return FORWARDS;
 		default:
-			throw new IllegalArgumentException("unknown orientation: " + robotOrientation.name());
+			throw new UnknownOrientationException(robotOrientation);
 		}
 	}
 
@@ -81,7 +82,7 @@ public enum Direction {
 		case EAST:
 			return FORWARDS;
 		default:
-			throw new IllegalArgumentException("unknown orientation: " + robotOrientation.name());
+			throw new UnknownOrientationException(robotOrientation);
 		}
 	}
 
@@ -103,7 +104,7 @@ public enum Direction {
 		case SOUTH:
 			return FORWARDS;
 		default:
-			throw new IllegalArgumentException("unknown orientation: " + robotOrientation.name());
+			throw new UnknownOrientationException(robotOrientation);
 		}
 	}
 
@@ -125,7 +126,28 @@ public enum Direction {
 		case WEST:
 			return FORWARDS;
 		default:
-			throw new IllegalArgumentException("unknown orientation: " + robotOrientation.name());
+			throw new UnknownOrientationException(robotOrientation);
+		}
+	}
+
+	/**
+	 * A dedicated {@link IllegalArgumentException} for a wrong
+	 * {@code Orientation} of the robot.
+	 * 
+	 * @author Philipp Rohde
+	 */
+	@SuppressWarnings("serial")
+	private static class UnknownOrientationException extends IllegalArgumentException {
+
+		/**
+		 * Constructs a new {@code UnknownOrientationException} with the
+		 * specified {@code Orientation} of the robot.
+		 * 
+		 * @param robotOrientation
+		 *            the robot's orientation
+		 */
+		public UnknownOrientationException(Orientation robotOrientation) {
+			super("unknown orientation: " + robotOrientation.name());
 		}
 	}
 }
