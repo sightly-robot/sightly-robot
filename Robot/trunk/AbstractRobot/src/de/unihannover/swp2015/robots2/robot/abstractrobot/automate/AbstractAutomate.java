@@ -22,8 +22,9 @@ import de.unihannover.swp2015.robots2.robot.interfaces.AiEventObserver;
  */
 public abstract class AbstractAutomate implements AiEventObserver, Runnable, IStateEvent {
 
-	// LOGGER:
-	private static Logger LOGGER = LogManager.getLogger(AbstractAutomate.class.getName());
+	/** logger */
+	private static final Logger LOGGER = LogManager.getLogger(AbstractAutomate.class.getName());
+
 	// model
 	protected IRobotController robotController;
 	protected IRobot robot;
@@ -47,7 +48,7 @@ public abstract class AbstractAutomate implements AiEventObserver, Runnable, ISt
 	private Direction currentDirection = Direction.FORWARDS;
 	private long lastWaitTime;
 	
-	private IState DISABLE_STATE;
+	private IState disableState;
 
 	/**
 	 * Constructs a new AbstractAutomate.
@@ -64,7 +65,7 @@ public abstract class AbstractAutomate implements AiEventObserver, Runnable, ISt
 
 		state = connectedState;
 
-		this.DISABLE_STATE = disableState;
+		this.disableState = disableState;
 		
 		robotController.getMyself().observe(new IModelObserver() {
 			@Override
@@ -146,6 +147,7 @@ public abstract class AbstractAutomate implements AiEventObserver, Runnable, ISt
 
 	private void updatePostition(final int x, final int y) {
 		new Thread() {
+			@Override
 			public void run() {
 				robotController.updatePosition(x, y, robot.getPosition().getOrientation());
 			};
@@ -154,6 +156,7 @@ public abstract class AbstractAutomate implements AiEventObserver, Runnable, ISt
 
 	private void updateOrientation(final Orientation orientation) {
 		new Thread() {
+			@Override
 			public void run() {
 				robotController.updatePosition(robot.getPosition().getX(), robot.getPosition().getY(), orientation);
 			};
@@ -162,6 +165,7 @@ public abstract class AbstractAutomate implements AiEventObserver, Runnable, ISt
 
 	private void updateProgress(final int progress) {
 		new Thread() {
+			@Override
 			public void run() {
 				robotController.updatePositionProgress(progress);
 			};

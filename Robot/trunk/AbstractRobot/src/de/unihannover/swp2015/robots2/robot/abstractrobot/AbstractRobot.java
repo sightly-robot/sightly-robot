@@ -14,6 +14,7 @@ import de.unihannover.swp2015.robots2.controller.interfaces.IRobotController;
 import de.unihannover.swp2015.robots2.controller.main.RobotMainController;
 import de.unihannover.swp2015.robots2.model.externalInterfaces.IModelObserver;
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
+import de.unihannover.swp2015.robots2.model.interfaces.IEvent.UpdateType;
 import de.unihannover.swp2015.robots2.robot.abstractrobot.automate.AbstractAutomate;
 import de.unihannover.swp2015.robots2.robot.interfaces.AbstractAI;
 import de.unihannover.swp2015.robots2.yaai.YetAnotherAi;
@@ -27,8 +28,8 @@ import de.unihannover.swp2015.robots2.yaai.YetAnotherAi;
  */
 public abstract class AbstractRobot {
 
-	/** LOGGER: */
-	private static Logger LOGGER = LogManager.getLogger(AbstractRobot.class.getName());
+	/** The logger. */
+	private static final Logger LOGGER = LogManager.getLogger(AbstractRobot.class.getName());
 
 	/** The controller of the robot. */
 	protected IRobotController robotController;
@@ -81,22 +82,17 @@ public abstract class AbstractRobot {
 		robotController.getGame().observe(new IModelObserver() {
 			@Override
 			public void onModelUpdate(IEvent event) {
-				switch (event.getType()) {
-				case ROBOT_DELETE:
-					if (event.getObject() == robotController.getMyself()) {
-						LOGGER.info("ROBOT_DELETE event received");
-						LOGGER.warn("Shutt down JVM NOW!");
-						System.exit(0);
-					}
-					break;
-				default:
-					break;
+				if (event.getType().equals(UpdateType.ROBOT_DELETE)
+						&& event.getObject() == robotController.getMyself()) {
+					LOGGER.info("ROBOT_DELETE event received");
+					LOGGER.warn("Shut down JVM now!");
+					System.exit(0);
 				}
 			}
 		});
 
 		// init AI
-		if(useYetAnotherAi)
+		if (useYetAnotherAi)
 			ai = new YetAnotherAi(robotController);
 		else
 			ai = new AI(robotController);
