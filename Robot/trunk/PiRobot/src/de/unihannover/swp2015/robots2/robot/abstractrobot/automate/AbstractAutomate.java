@@ -22,8 +22,9 @@ import de.unihannover.swp2015.robots2.robot.interfaces.AiEventObserver;
  */
 public abstract class AbstractAutomate implements AiEventObserver, Runnable, IStateEvent {
 
-	// LOGGER:
-	private static Logger LOGGER = LogManager.getLogger(AbstractAutomate.class.getName());
+	/** logger */
+	private static final Logger LOGGER = LogManager.getLogger(AbstractAutomate.class.getName());
+
 	// model
 	protected IRobotController robotController;
 	protected IRobot robot;
@@ -114,7 +115,7 @@ public abstract class AbstractAutomate implements AiEventObserver, Runnable, ISt
 	@Override
 	public void run() {
 		IState tempState = state;
-		while (!Thread.interrupted()) {
+		while (!automation.isInterrupted()) {
 			synchronized (state) {
 				tempState = state.execute();
 
@@ -166,6 +167,7 @@ public abstract class AbstractAutomate implements AiEventObserver, Runnable, ISt
 
 	private void updatePostition(final int x, final int y) {
 		new Thread() {
+			@Override
 			public void run() {
 				robotController.updatePosition(x, y, robot.getPosition().getOrientation());
 			};
@@ -174,6 +176,7 @@ public abstract class AbstractAutomate implements AiEventObserver, Runnable, ISt
 
 	private void updateOrientation(final Orientation orientation) {
 		new Thread() {
+			@Override
 			public void run() {
 				robotController.updatePosition(robot.getPosition().getX(), robot.getPosition().getY(), orientation);
 			};
@@ -182,6 +185,7 @@ public abstract class AbstractAutomate implements AiEventObserver, Runnable, ISt
 
 	private void updateProgress(final int progress) {
 		new Thread() {
+			@Override
 			public void run() {
 				robotController.updatePositionProgress(progress);
 			};
@@ -276,5 +280,16 @@ public abstract class AbstractAutomate implements AiEventObserver, Runnable, ISt
 	@Override
 	public void iStateErrorOccured() {
 		robotController.reportRoboticsError();
+	}
+	
+	/**
+	 * To shutdown the main AutomationThread.
+	 */
+	public void shutdown()
+	{
+		if(automation != null && !automation.isInterrupted())
+		{
+			automation.interrupt();
+		}
 	}
 }
