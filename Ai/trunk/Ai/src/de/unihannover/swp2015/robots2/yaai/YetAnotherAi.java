@@ -50,7 +50,7 @@ public class YetAnotherAi extends AbstractAI implements IModelObserver,
 
 		// Init calculation worker and remote adapter
 		CalculationWorker worker = new CalculationWorker(controller);
-		this.calculator = new YaaiRemoteAdapter(worker,controller);
+		this.calculator = new YaaiRemoteAdapter(worker, controller);
 		this.calculator.setHandler(this);
 
 		// Start calculation worker
@@ -154,7 +154,7 @@ public class YetAnotherAi extends AbstractAI implements IModelObserver,
 		// Check if field is reachable from current position.
 		int dx = this.currentField.getX() - field.getX();
 		int dy = this.currentField.getY() - field.getY();
-		if (Math.abs(dx) > 1 || Math.abs(dy) > 1) {
+		if (Math.abs(dx) + Math.abs(dy) != 1) {
 			LOGGER.debug(
 					"but the field seems not neighboured to current field {}-{}.",
 					this.currentField.getX(), this.currentField.getY());
@@ -168,14 +168,6 @@ public class YetAnotherAi extends AbstractAI implements IModelObserver,
 			field.observe(this);
 			this.nextField = field;
 		}
-
-		// Wait if field not free
-		if (field.getState() != IField.State.FREE) {
-			this.state = AiState.WAITING_FOR_FREE;
-			LOGGER.debug("but its {} by {}. So we will wait.", field.getState()
-					.name(), field.getLockedBy());
-			return;
-		}
 		// Wait if game not started
 		if (!this.isReadyToDrive()) {
 			this.state = AiState.WAITING_FOR_GAME;
@@ -183,10 +175,29 @@ public class YetAnotherAi extends AbstractAI implements IModelObserver,
 			return;
 		}
 
-		LOGGER.debug("so, request it!");
-		this.iRobotController.requestField(this.nextField.getX(),
-				this.nextField.getY());
-		this.state = AiState.WATING_FOR_OURS;
+		// If field is FREE: Request field
+		switch (field.getState()) {
+		case FREE:
+			// Request field
+			LOGGER.debug("so, request it!");
+			this.iRobotController.requestField(this.nextField.getX(),
+					this.nextField.getY());
+			this.state = AiState.WATING_FOR_OURS;
+			break;
+		
+		case OURS:
+			// Should not happpen, but if the field is ours
+			LOGGER.debug("The field seems to be already ours.");
+			this.driveToNextField();
+			break;
+				
+		default:
+			// Wait for field getting free
+			this.state = AiState.WAITING_FOR_FREE;
+			LOGGER.debug("but its {} by {}. So we will wait.", field.getState()
+					.name(), field.getLockedBy());
+			break;
+		}
 	}
 
 	/**
@@ -268,6 +279,7 @@ public class YetAnotherAi extends AbstractAI implements IModelObserver,
 			Orientation o = calcOrientation(this.currentField, this.nextField);
 			LOGGER.debug(
 					"Direction is {} from our current field {}-{}. And ... go!",
+					this.currentField.getX(), this.currentField.getY(),
 					o.name());
 
 			// Fire orientation
@@ -288,6 +300,7 @@ public class YetAnotherAi extends AbstractAI implements IModelObserver,
 	 * calculated field.
 	 */
 	private void onReachField(IField field, Orientation orientation) {
+		// Skip event if the field didn't actually change
 		if (field == currentField)
 			return;
 
