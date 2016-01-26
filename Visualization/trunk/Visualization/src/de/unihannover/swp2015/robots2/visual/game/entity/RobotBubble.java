@@ -103,6 +103,7 @@ public class RobotBubble extends Entity<RobotGameHandler, IRobot> {
 		this.updateWidth(model);
 		this.updateHeight(model);
 		this.updateFonts(fieldWidth);
+		this.updateState();
 	}
 
 	/**

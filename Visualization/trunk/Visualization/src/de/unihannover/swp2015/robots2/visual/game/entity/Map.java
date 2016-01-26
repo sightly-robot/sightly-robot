@@ -119,15 +119,15 @@ public class Map extends Entity<RobotGameHandler, IStage> {
 			fieldList.get(i).draw(batch);
 		}
 
-		if (renderResources) {
-			for (int i = 0; i < wallList.size(); ++i) {
-				foodList.get(i).draw(batch);
-			}
-		}
-
 		if (renderWalls) {
 			for (int i = 0; i < wallList.size(); ++i) {
 				wallList.get(i).draw(batch);
+			}
+		}
+		
+		if (renderResources) {
+			for (int i = 0; i < wallList.size(); ++i) {
+				foodList.get(i).draw(batch);
 			}
 		}
 

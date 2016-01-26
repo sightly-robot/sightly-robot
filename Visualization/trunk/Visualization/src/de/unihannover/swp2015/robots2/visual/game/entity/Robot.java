@@ -136,7 +136,7 @@ public class Robot extends Entity<RobotGameHandler, IRobot> {
 	public void draw(final Batch batch) {
 		super.draw(batch);
 		
-		if (drawStartPosition && renderRobot) {
+		if (drawStartPosition) {
 			startPositionTexture.draw(batch, fieldWidth * model.getPosition().getX(),
 					fieldHeight * model.getPosition().getY(), fieldWidth, fieldHeight, fieldWidth / 2f,
 					fieldHeight / 2f, 1f, 1f, rotation);

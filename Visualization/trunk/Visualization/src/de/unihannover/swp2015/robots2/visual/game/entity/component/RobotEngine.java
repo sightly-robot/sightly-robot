@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
 import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
+import de.unihannover.swp2015.robots2.model.interfaces.IRobot.RobotState;
 import de.unihannover.swp2015.robots2.visual.core.PrefKey;
 import de.unihannover.swp2015.robots2.visual.core.entity.Component;
 import de.unihannover.swp2015.robots2.visual.core.entity.IEntityModifier;
@@ -90,12 +91,20 @@ public class RobotEngine extends Component<Robot> {
 		case ROBOT_PROGRESS:
 			calcInterval();
 			final IRobot robot = (IRobot) event.getObject();
-			updateRobot(robot, robot.getPosition().getProgress());
+			if (robot.getState() != RobotState.SETUPSTATE) {
+				updateRobot(robot, robot.getPosition().getProgress(), true);
+			}
 			break;
 
 		case ROBOT_POSITION:
-			if (!firstEvent) {
-				updateRobot((IRobot) event.getObject(), 0);
+			final IRobot robotPos = (IRobot) event.getObject();
+			if (robotPos.getState() == RobotState.SETUPSTATE) {
+				updateRobot(robotPos, 0, false);
+			}
+			else {
+				if (!firstEvent) {
+					updateRobot((IRobot) event.getObject(), 0, true);
+				}
 			}
 			break;
 
@@ -136,7 +145,7 @@ public class RobotEngine extends Component<Robot> {
 	 * @param robo
 	 *            data model of the robot
 	 */
-	private void updateRobot(final IRobot robo, final float rawProgress) {
+	private void updateRobot(final IRobot robo, final float rawProgress, boolean smooth) {
 
 		entity.clearModifier(MoveModifierX.class);
 		entity.clearModifier(MoveModifierY.class);
@@ -153,12 +162,17 @@ public class RobotEngine extends Component<Robot> {
 			return;
 		}
 		
-		IEntityModifier rotationModifier = new RotationModifier(entity, interval, entity.getRotation(),
-				TransformUtil.calculateShortestRotation(entity.getRotation(), ModelUtil.calculateRotation(orientation)));
-		entity.registerModifier(rotationModifier);
-		
-		entity.registerModifier(new MoveModifierX(entity, interval, entity.getPositionX(), newRenderX));
-		entity.registerModifier(new MoveModifierY(entity, interval, entity.getPositionY(), newRenderY));
+		if (smooth) {
+			IEntityModifier rotationModifier = new RotationModifier(entity, interval, entity.getRotation(),
+					TransformUtil.calculateShortestRotation(entity.getRotation(), ModelUtil.calculateRotation(orientation)));
+			entity.registerModifier(rotationModifier);	
+			entity.registerModifier(new MoveModifierX(entity, interval, entity.getPositionX(), newRenderX));
+			entity.registerModifier(new MoveModifierY(entity, interval, entity.getPositionY(), newRenderY));
+		}
+		else {
+			entity.setPosition(newRenderX, newRenderY);
+			entity.setRotation(ModelUtil.calculateRotation(orientation));
+		}
 	}
 
 	/**
