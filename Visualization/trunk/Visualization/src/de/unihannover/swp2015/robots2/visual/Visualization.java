@@ -134,12 +134,25 @@ public class Visualization extends ApplicationAdapter {
 
 		if (Gdx.input.isKeyPressed(Keys.F)) {
 			DisplayMode mode = Gdx.graphics.getDisplayMode();
-			if (Gdx.graphics.isFullscreen()) {
-				Gdx.graphics.setWindowedMode(mode.width / 2, mode.height / 2);
+			String undecorated = "org.lwjgl.opengl.Window.undecorated";
+			if (System.getProperty(undecorated) != null && Boolean.parseBoolean(undecorated)) {
+				int deviceWidth = (int) prefs.getFloat(PrefKey.DEVICE_WIDTH);
+				int deviceHeight = (int) prefs.getFloat(PrefKey.DEVICE_HEIGHT);
+				if (mode.width == deviceWidth && mode.height == deviceHeight) {
+					Gdx.graphics.setWindowedMode(mode.width/2, mode.height/2);
+				}
+				else {
+					Gdx.graphics.setWindowedMode(deviceWidth, deviceHeight);
+				}
 			}
-			else {
-				Gdx.graphics.setFullscreenMode(mode);
-			}
+			else {	
+				if (Gdx.graphics.isFullscreen()) {
+					Gdx.graphics.setWindowedMode(mode.width / 2, mode.height / 2);
+				}
+				else {
+					Gdx.graphics.setFullscreenMode(mode);
+				}
+			} 
 		}
 		
 		Gdx.gl.glClearColor(0f, 0f, 0f, 0f);

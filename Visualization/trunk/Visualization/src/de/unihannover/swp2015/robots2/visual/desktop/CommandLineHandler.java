@@ -26,10 +26,15 @@ public class CommandLineHandler {
 	/** Logger (log4j) */
 	private static final Logger log = LogManager.getLogger();
 
-	/** Short console argument to enable the debug mode */
-	private static final String WINDOW_SHORT = "w";
-	/** Long console argument to enable the debug mode */
-	private static final String WINDOW_LONG = "window";
+	/** Short console argument to disable the decoration of the window */
+	private static final String WINDOW_SHORT = "nodec";
+	/** Long console argument to disable the decoration of the window */
+	private static final String WINDOW_LONG = "nodecoration";
+
+	/** Short console argument to enable fullscreen on startup */
+	private static final String FULLSCREEN_SHORT = "f";
+	/** Long console argument to enable fullscreen on startup */
+	private static final String FULLSCREEN_LONG = "fullscreen";
 	
 	/** Short console argument to enable the debug mode */
 	private static final String DEBUG_SHORT = "d";
@@ -105,6 +110,11 @@ public class CommandLineHandler {
 				return true;
 			}
 
+			// set fullscreen flag
+			boolean fullscreenArg = cl.hasOption(FULLSCREEN_SHORT);
+			flags.put(FlagKey.FULLSCREEN, fullscreenArg);
+			log.info("Fullscreen: {}", String.valueOf(fullscreenArg));
+			
 			// set windowed flag
 			boolean windowedArg = cl.hasOption(WINDOW_SHORT);
 			flags.put(FlagKey.WINDOWED, windowedArg);
@@ -166,7 +176,11 @@ public class CommandLineHandler {
 		Option windowed = Option.builder(WINDOW_SHORT).required(false).longOpt(WINDOW_LONG)
 				.desc("Indicates that you want to start without decoration.").build();
 		
-		return new Options().addOption(help).addOption(debug).addOption(ip).addOption(proto).addOption(windowed);
+		Option fullscreen = Option.builder(FULLSCREEN_SHORT).required(false).longOpt(FULLSCREEN_LONG).hasArg()
+				.desc("Enables fullscreen on startup").build();
+		
+		return new Options().addOption(help).addOption(debug).addOption(ip).addOption(proto).addOption(windowed)
+				.addOption(fullscreen);
 	}
 
 	/**
@@ -193,7 +207,7 @@ public class CommandLineHandler {
 	 * @author Rico Schrage
 	 */
 	public enum FlagKey {
-		HELP, DEBUG, WINDOWED
+		HELP, DEBUG, WINDOWED, FULLSCREEN
 	}
 
 	/**
@@ -203,7 +217,7 @@ public class CommandLineHandler {
 	 *
 	 */
 	public enum OptionKey {
-		IP, PROTOCOL
+		IP, PROTOCOL,
 	}
 
 }

@@ -1,12 +1,11 @@
 package de.unihannover.swp2015.robots2.visual.desktop;
 
-import java.awt.GraphicsEnvironment;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Files.FileType;
+import com.badlogic.gdx.Graphics.DisplayMode;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
@@ -51,7 +50,7 @@ public class DesktopLauncher {
 		}
 		
 		startApp(clh.getFlag(FlagKey.DEBUG), clh.getOption(OptionKey.IP), 
-				 clh.getOption(OptionKey.PROTOCOL), clh.getFlag(FlagKey.WINDOWED));
+				 clh.getOption(OptionKey.PROTOCOL), clh.getFlag(FlagKey.WINDOWED), clh.getFlag(FlagKey.FULLSCREEN));
 	}
 
 	/**
@@ -62,7 +61,7 @@ public class DesktopLauncher {
 	 * @param brokerIp
 	 *            ip of the MQTT broker
 	 */
-	private static void startApp(boolean debug, String brokerIp, String protocol, boolean windowedFullscreen) {
+	private static void startApp(boolean debug, String brokerIp, String protocol, boolean windowed, boolean fullscreen) {
 
 		ShaderLoader.BasePath = SHADER_PATH;
 
@@ -86,26 +85,22 @@ public class DesktopLauncher {
 			TexturePacker.process(packSettings, "internal/assets/tex/home_theme_src", "internal/" + ResConst.ATLAS_PATH.getName() + "/home",
 					ResConst.ATLAS_NAME.getName());
 		}
-
-		final java.awt.DisplayMode dm = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice()
-				.getDisplayMode();
+		
+		final DisplayMode dm = LwjglApplicationConfiguration.getDesktopDisplayMode();
 		final LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		config.width = dm.getWidth();
-		config.height = dm.getHeight();
+		config.width = dm.width/2;
+		config.height = dm.height/2;
 		config.foregroundFPS = 120;
 		config.backgroundFPS = 120;
 		config.vSyncEnabled = false;
 		config.addIcon("assets/icon/rIcon.png", FileType.Internal);
 		config.addIcon("assets/icon/rIcon_32.png", FileType.Internal);
 		config.addIcon("assets/icon/rIcon_128.png", FileType.Internal);
-		config.fullscreen = false;
+		config.fullscreen = fullscreen;
 		
-		if (windowedFullscreen) {
+		if (windowed) {
 			System.setProperty("org.lwjgl.opengl.Window.undecorated", "true");
 			config.resizable = false;
-		}
-		else {
-			config.fullscreen = true;
 		}
 		
 		new LwjglApplication(new Visualization(debug, brokerIp, protocol), config).setLogLevel(Application.LOG_NONE);
