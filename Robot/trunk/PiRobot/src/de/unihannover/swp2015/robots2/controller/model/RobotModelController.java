@@ -148,4 +148,20 @@ public class RobotModelController {
 		r.setRobotConnectionState(connected);
 		r.emitEvent(UpdateType.ROBOT_STATE);
 	}
+
+	/**
+	 * Handle a robot blink message.
+	 * 
+	 * This method emits a ROBOT_BLINK event from the robot.
+	 * 
+	 * @param key
+	 *            Robot id extracted from MQTT topic
+	 */
+	public void mqttBlink(String key) {
+		IRobotWriteable r = this.robots.get(key);
+
+		// Break if invalid parameters received
+		if (r != null)
+			r.emitEvent(UpdateType.ROBOT_BLINK);
+	}
 }

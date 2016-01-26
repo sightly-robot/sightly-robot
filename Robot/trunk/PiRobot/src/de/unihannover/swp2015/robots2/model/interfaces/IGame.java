@@ -44,11 +44,11 @@ public interface IGame extends IAbstractModel {
 	public float getVRobotSpeed();
 
 	/**
-	 * Set the maximum hesitation time of robots on a field without moving.
+	 * Returns the maximum rotation speed for virtual robots.
 	 * 
-	 * @return The hesitation time in milliseconds.
+	 * @return The rotation speed in seconds per 360°. 
 	 */
-	public int getHesitationTime();
+	public float getVRobotRotationSpeed();
 
 	/**
 	 * Returns a map of all Robots in the Game. The map links the robot-id to

@@ -195,7 +195,7 @@ public class Field extends AbstractModel implements IField, IFieldWriteable {
 	@Override
 	public void cancelStateTimer() {
 		if (this.stateTimerFuture != null) {
-			this.stateTimerFuture.cancel(true);
+			this.stateTimerFuture.cancel(false);
 			this.stateTimerFuture = null;
 		}
 	}

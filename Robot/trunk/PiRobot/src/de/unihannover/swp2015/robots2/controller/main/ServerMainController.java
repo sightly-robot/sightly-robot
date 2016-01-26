@@ -22,8 +22,6 @@ public class ServerMainController extends AbstractMainController implements
 	public ServerMainController() {
 		super();
 
-		this.infoComponent = "server";
-
 		try {
 			String clientId = "server";
 

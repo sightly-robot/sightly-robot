@@ -33,7 +33,6 @@ public class GuiMainController extends AbstractMainController implements
 
 	public GuiMainController() {
 		super();
-		this.infoComponent = "gui";
 
 		// Start MQTTController
 		try {
@@ -144,19 +143,31 @@ public class GuiMainController extends AbstractMainController implements
 	}
 
 	@Override
+	@Deprecated
 	public void sendGameParameters(float robotSpeed, int hesitationTime) {
 		this.sendMqttMessage(MqttTopic.CONTROL_VIRTUALSPEED, null,
 				Float.toString(robotSpeed));
-		this.sendMqttMessage(MqttTopic.CONTROL_HESITATIONTIME, null,
-				Integer.toString(hesitationTime));
+	}
+	
+	@Override
+	public void sendVRobotSpeed(float robotSpeed, float robotRotationSpeed) {
+		this.sendMqttMessage(MqttTopic.CONTROL_VIRTUALSPEED, null,
+				Float.toString(robotSpeed) + "," + Float.toString(robotRotationSpeed));
+	}
+
+	@Override
+	@Deprecated
+	public void setRobotPosition(int x, int y, Orientation orientation,
+			IRobot robot) {
+		this.setRobotPosition(x, y, orientation, robot.getId());
 	}
 
 	@Override
 	public void setRobotPosition(int x, int y, Orientation orientation,
-			IRobot robot) {
+			String robot) {
 		String message = Integer.toString(x) + "," + Integer.toString(y) + ","
 				+ orientation.toString();
-		this.sendMqttMessage(MqttTopic.ROBOT_SETPOSITION, robot.getId(),
+		this.sendMqttMessage(MqttTopic.ROBOT_SETPOSITION, robot,
 				message);
 	}
 

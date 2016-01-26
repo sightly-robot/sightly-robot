@@ -84,12 +84,47 @@ public interface IGuiController extends IController {
 	/**
 	 * Send game parameters to the MQTT network.
 	 * 
+	 * The hesitation time is not used anymore. Please use
+	 * {@link #sendVRobotSpeed(float, float)} instead, which sends the new
+	 * rotation speed instead of hesitation time.
+	 * 
+	 * @deprecated
 	 * @param robotSpeed
 	 *            maximum movement speed of virtual robots in seconds per field
 	 * @param hesitationTime
-	 *            (deprecated) will be replaced soon by float rotationSpeed
+	 *            (deprecated and not used)
 	 */
+	@Deprecated
 	public void sendGameParameters(float robotSpeed, int hesitationTime);
+
+	/**
+	 * Send game maximum speeds for virtual robots to the MQTT network.
+	 * 
+	 * @param robotSpeed
+	 *            maximum movement speed of virtual robots in seconds per field
+	 * @param robotRotationSpeed
+	 *            maximum rotation speed of virtual robots in seconds per 360°
+	 */
+	public void sendVRobotSpeed(float robotSpeed, float robotRotationSpeed);
+
+	/**
+	 * Set the position of a robot.
+	 * 
+	 * Please use the new version of this method that takes the robot's id as
+	 * last argument.
+	 * 
+	 * @deprecated
+	 * @param x
+	 *            x coordinate of the field the robot is located on
+	 * @param y
+	 *            y coordinate of the field the robot is located on
+	 * @param orientation
+	 *            Orientation of the robot
+	 * @param robot
+	 *            The robot that should be repositioned
+	 */
+	@Deprecated
+	public void setRobotPosition(int x, int y, IPosition.Orientation orientation, IRobot robot);
 
 	/**
 	 * Set the position of a robot.
@@ -106,10 +141,9 @@ public interface IGuiController extends IController {
 	 * @param orientation
 	 *            Orientation of the robot
 	 * @param robot
-	 *            The robot that should be repositioned
+	 *            ID of the robot that should be repositioned
 	 */
-	public void setRobotPosition(int x, int y,
-			IPosition.Orientation orientation, IRobot robot);
+	public void setRobotPosition(int x, int y, IPosition.Orientation orientation, String robot);
 
 	/**
 	 * Start the game.

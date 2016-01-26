@@ -33,8 +33,8 @@ public class Game extends AbstractModel implements IGame, IGameWriteable {
 	private volatile boolean synced;
 	/** Maximum speed of virtual robots in seconds / field. */
 	private volatile float vRobotSpeed;
-	/** Maximum allowed hesitation time of a robot on a field. */
-	private volatile int hesitationTime;
+	/** Maximum rotation speed of virtual robots in seconds / 360° */
+	private volatile float vRobotRotationSpeed;
 
 	/**
 	 * Constructs a new game.
@@ -104,8 +104,8 @@ public class Game extends AbstractModel implements IGame, IGameWriteable {
 	}
 
 	@Override
-	public void setHesitationTime(int hesitationTime) {
-		this.hesitationTime = hesitationTime;
+	public void setVRobotRotationSpeed(float vRobotRotationSpeed) {
+		this.vRobotRotationSpeed = vRobotRotationSpeed;
 	}
 
 	@Override
@@ -114,8 +114,8 @@ public class Game extends AbstractModel implements IGame, IGameWriteable {
 	}
 
 	@Override
-	public int getHesitationTime() {
-		return this.hesitationTime;
+	public float getVRobotRotationSpeed() {
+		return this.vRobotRotationSpeed;
 	}
 
 }

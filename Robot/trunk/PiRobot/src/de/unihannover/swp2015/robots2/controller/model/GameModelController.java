@@ -56,23 +56,28 @@ public class GameModelController {
 	 * 
 	 * @param speed
 	 */
-	public void mqttSetRobotVirtualspeed(float speed) {
-		this.game.setVRobotSpeed(speed);
-		this.game.emitEvent(UpdateType.GAME_PARAMETER);
-	}
-
-	/**
-	 * Update game parameter "Robot hesitation time" when published via MQTT
-	 * topic CONTROL_HESITATIONTIME.
-	 * 
-	 * @param message
-	 */
-	public void mqttSetRobotHesitationTime(String message) {
+	public void mqttSetRobotVirtualspeed(String message) {
+		String[] parts = message.split(",");
+		
 		try {
-			this.game.setHesitationTime(Integer.parseInt(message));
+		switch (parts.length) {
+			case 1:
+				// legacy support for old protocol
+				this.game.setVRobotSpeed(Float.parseFloat(parts[0]));			
+				break;
+			
+			case 2:
+				this.game.setVRobotSpeed(Float.parseFloat(parts[0]));
+				this.game.setVRobotRotationSpeed(Float.parseFloat(parts[1]));
+				break;
+				
+			default:
+				// Invalid format. Skip message
+				return;
+			}
 			this.game.emitEvent(UpdateType.GAME_PARAMETER);
 		} catch (NumberFormatException e) {
-			// Skip message if invalid number format
+			// Skip message if number format invalid
 		}
 	}
 }

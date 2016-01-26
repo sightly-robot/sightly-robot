@@ -66,12 +66,12 @@ public interface IGameWriteable extends IGame, IAbstractModelWriteable {
 	public void setVRobotSpeed(float vRobotSpeed);
 
 	/**
-	 * Set the maximum hesitation time of robots on a field without moving.
+	 * Set the maximum rotation speed of virtual robots in this game.
 	 * 
-	 * @param hesitationTime
-	 *            The new maximum hesitation time in milliseconds.
+	 * @param vRobotRotationSpeed
+	 *            The new maximum rotation speed in seconds per 360°.
 	 */
-	public void setHesitationTime(int hesitationTime);
+	public void setVRobotRotationSpeed(float vRobotRotationSpeed);
 
 	/**
 	 * Get a writable reference to all the Robots.

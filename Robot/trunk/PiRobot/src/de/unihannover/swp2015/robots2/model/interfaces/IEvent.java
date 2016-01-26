@@ -103,7 +103,12 @@ public interface IEvent {
 		 * A robot was deleted from the game by user interaction. Emitted from
 		 * Game, object reference addresses the deleted Robot!
 		 */
-		ROBOT_DELETE
+		ROBOT_DELETE,
+		
+		/**
+		 * A Robot should blink. Everywhere!
+		 */
+		ROBOT_BLINK
 	}
 
 	/**
