@@ -50,7 +50,7 @@ public enum HardwareStateV2 implements IState {
 			if (System.currentTimeMillis() - startTime > 5000) {
 				if(iStateEvent != null)
 					iStateEvent.iStateErrorOccured();
-				return DISABLED;
+				return WAIT;
 			}
 			boolean left = GPIO.isLineLeft();
 			boolean right = GPIO.isLineRight();
@@ -63,10 +63,10 @@ public enum HardwareStateV2 implements IState {
 				MOTORS.go(calcProgress() < 0.7 ? FASTER : NORMAL);
 			} else if (right) {
 				setServo(20);
-				MOTORS.go(FAST, SLOW);
+				MOTORS.go(NORMAL, SLOW); 
 			} else if (left) {
 				setServo(-20);
-				MOTORS.go(SLOW, FAST);
+				MOTORS.go(SLOW, NORMAL); 
 			}
 			return this;
 		}
@@ -76,7 +76,7 @@ public enum HardwareStateV2 implements IState {
 	 */
 	DRIVE_ON_CELL {
 
-		private static final double DRIVE_DURATION = 310.0;
+		private static final double DRIVE_DURATION = 300.0;
 
 		@Override
 		public void start() {
@@ -116,10 +116,10 @@ public enum HardwareStateV2 implements IState {
 				MOTORS.go(FAST);
 				setServo(0);
 			} else if (right) {
-				MOTORS.go(FAST, SLOW);
+				MOTORS.go(NORMAL, SLOW);
 				setServo(20);
 			} else if (left) {
-				MOTORS.go(SLOW, FAST);
+				MOTORS.go(SLOW, NORMAL);
 				setServo(-20);
 			}
 			return this;
@@ -142,7 +142,7 @@ public enum HardwareStateV2 implements IState {
 			double y1 = Math.max(0,1 - Math.pow((x-600)/600, 2));
 			double y2 = Math.max(0,1 - Math.pow((x-1600)/600, 2));
 			double y3 = Math.max(0,1 - Math.pow((x-2600)/600, 2));
-			double y4 = Math.max(0,1 - Math.pow((x-3600)/600, 2) - Math.pow((x+400)/600, 2));
+			double y4 = Math.max(0,1 - Math.pow((x-3600)/600, 2))+Math.max(0,1 - Math.pow((x+400)/600, 2)); //TODO NOT WORKING!!!
 			LEDS.setLED(LEDS_FRONT,new Color((int) (LEDS.getAccentColor().getRed() * y1),
 					(int) (LEDS.getAccentColor().getGreen() * y1), (int) (LEDS.getAccentColor().getBlue() * y1)));
 			LEDS.setLED(LEDS_RIGHT,new Color((int) (LEDS.getAccentColor().getRed() * y2),
@@ -168,8 +168,8 @@ public enum HardwareStateV2 implements IState {
 		@Override
 		public IState execute() {
 			double x = (System.currentTimeMillis()-HardwareStateV2.startTime)%4000;
-			double y1 = Math.max(0,1 - Math.pow((x-3000)/300, 2));
-			double y2 = Math.max(0,1 - Math.pow((x-3600)/300, 2));
+			double y1 = Math.max(0,1 - Math.pow((x-300)/300, 2));
+			double y2 = Math.max(0,1 - Math.pow((x-600)/300, 2));
 			LEDS.setLED(LEDS_LEFT,new Color((int) (LEDS.getAccentColor().getRed() * y1),
 					(int) (LEDS.getAccentColor().getGreen() * y1), (int) (LEDS.getAccentColor().getBlue() * y1)));
 			LEDS.setLED(LEDS_RIGHT,new Color((int) (LEDS.getAccentColor().getRed() * y1),
@@ -212,7 +212,7 @@ public enum HardwareStateV2 implements IState {
 		@Override
 		public IState execute() {
 			double x = (System.currentTimeMillis()-HardwareStateV2.startTime)%8000;
-			double i = Math.max(0,1 - Math.pow((x-6000)/700, 2));
+			double i = Math.max(0,1 - Math.pow((x-700)/700, 2));
 			
 			LEDS.setAllLEDs(new Color((int) (LEDS.getAccentColor().getRed() * i),
 					(int) (LEDS.getAccentColor().getGreen() * i), (int) (LEDS.getAccentColor().getBlue() * i)));
@@ -235,7 +235,7 @@ public enum HardwareStateV2 implements IState {
 		public IState execute() {
 			if (GPIO.isLineLeft()) {
 				setServo(-50);
-				MOTORS.spinRight(TURN);
+				MOTORS.spinRight(FASTER);
 				return this;
 			} else {
 				return TURN_LEFT_2;
@@ -257,7 +257,7 @@ public enum HardwareStateV2 implements IState {
 		public IState execute() {
 			if (!GPIO.isLineLeft()) {
 				setServo(-50);
-				MOTORS.spinRight(TURN);
+				MOTORS.spinRight(calcProgress() < 0.7 ? FAST : SLOW);
 				return this;
 			} else {
 				return FOLLOW_LINE;
@@ -279,7 +279,7 @@ public enum HardwareStateV2 implements IState {
 		public IState execute() {
 			if (GPIO.isLineRight()) {
 				setServo(50);
-				MOTORS.spinLeft(TURN);
+				MOTORS.spinLeft(FASTER);
 				return this;
 			} else {
 				return TURN_RIGHT_2;
@@ -301,7 +301,7 @@ public enum HardwareStateV2 implements IState {
 		public IState execute() {
 			if (!GPIO.isLineRight()) {
 				setServo(50);
-				MOTORS.spinLeft(TURN);
+				MOTORS.spinLeft(calcProgress() < 0.7 ? FAST : SLOW);
 				return this;
 			} else {
 				return FOLLOW_LINE;
@@ -323,7 +323,7 @@ public enum HardwareStateV2 implements IState {
 		public IState execute() {
 			if (GPIO.isLineLeft()) {
 				setServo(-50);
-				MOTORS.spinRight(TURN);
+				MOTORS.spinRight(FASTER);
 				return this;
 			} else {
 				return TURN_180_2;
@@ -345,7 +345,7 @@ public enum HardwareStateV2 implements IState {
 		public IState execute() {
 			if (!GPIO.isLineLeft()) {
 				setServo(-50);
-				MOTORS.spinRight(TURN);
+				MOTORS.spinRight(calcProgress() < 0.7 ? FAST : SLOW);
 				return this;
 			} else {
 				return TURN_180_3;
@@ -389,7 +389,7 @@ public enum HardwareStateV2 implements IState {
 		public IState execute() {
 			if (!GPIO.isLineLeft()) {
 				setServo(-50);
-				MOTORS.spinRight(TURN);
+				MOTORS.spinRight(calcProgress() < 0.7 ? (calcProgress() < 0.5?FASTER:FAST) : SLOW);
 				return this;
 			} else {
 				return FOLLOW_LINE;
@@ -402,8 +402,8 @@ public enum HardwareStateV2 implements IState {
 	// speed configuration
 	private static final int FASTER = 60;
 	private static final int FAST = 40;
-	private static final int NORMAL = 35;
-	private static final int TURN = 30;
+	private static final int NORMAL = 30;
+	private static final int TURN = 20;
 	private static final int SLOW = 20;
 	private static final int STOP = 0;
 

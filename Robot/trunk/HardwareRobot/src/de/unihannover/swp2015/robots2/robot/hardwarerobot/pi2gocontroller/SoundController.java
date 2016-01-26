@@ -1,9 +1,7 @@
 package de.unihannover.swp2015.robots2.robot.hardwarerobot.pi2gocontroller;
 
-import java.applet.Applet;
 import java.applet.AudioClip;
 import java.io.IOException;
-import java.net.URL;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -11,8 +9,6 @@ import org.apache.logging.log4j.Logger;
 import de.unihannover.swp2015.robots2.controller.interfaces.IRobotController;
 import de.unihannover.swp2015.robots2.model.externalInterfaces.IModelObserver;
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
-import de.unihannover.swp2015.robots2.robot.abstractrobot.automate.AbstractAutomate;
-import de.unihannover.swp2015.robots2.robot.hardwarerobot.automate.HardwareStateV2;
 
 /**
  * Controller for hard-coded sound effects.<br>
@@ -40,8 +36,8 @@ public class SoundController implements IModelObserver {
 	 */
 	private SoundController() {
 		try {
-			gameMusic = Applet.newAudioClip(new URL("file:/home/pi/pacman.wav"));
-			startSound = Applet.newAudioClip(new URL("file:/home/pi/simson.wav"));
+			//gameMusic = Applet.newAudioClip(new URL("file:/home/pi/pacman.wav"));
+			//startSound = Applet.newAudioClip(new URL("file:/home/pi/simson.wav"));
 		} catch (Exception e) {
 			LOGGER.error("Sounds could not be initialized",e);
 		}
