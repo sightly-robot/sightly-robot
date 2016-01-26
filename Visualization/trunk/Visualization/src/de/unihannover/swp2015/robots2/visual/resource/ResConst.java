@@ -38,6 +38,7 @@ public enum ResConst {
 	DEFAULT_RES_9("default_res_nine", ResType.TEX), 
 	DEFAULT_RES_10("default_res_ten", ResType.TEX), 
 	DEFAULT_ROBO("default_robo", ResType.TEX), 
+	DEFAULT_VIRTUAL_ROBO("default_virtual_robo", ResType.TEX),
 	DEFAULT_BUBBLE("default_bubble", ResType.TEX), 
 	DEFAULT_STARTPOS("default_startpos", ResType.TEX, TextureFilter.Linear), 
 	DEFAULT_WARNING("default_warning", ResType.TEX),
@@ -46,8 +47,8 @@ public enum ResConst {
 
 	DEFAULT_FONT("default_font", ResType.FONT),
 
-	SKIN_TITLE_FONT("title-font", ResType.SKIN), 
-	SKIN_DEFAULT_FONT("default-font", ResType.SKIN), 
+	SKIN_TITLE_FONT("title-font", ResType.SKIN),
+	SKIN_DEFAULT_FONT("default-font", ResType.SKIN),
 	SKIN_RANKING_FONT("ranking-font", ResType.SKIN);
 
 	/** Name of the resource, which should be equal to the real file */

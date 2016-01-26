@@ -172,9 +172,16 @@ default_startpos
   orig: 500, 500
   offset: 0, 0
   index: -1
-default_wall
+default_virtual_robo
   rotate: false
   xy: 3026, 1042
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: -1
+default_wall
+  rotate: false
+  xy: 3026, 538
   size: 500, 500
   orig: 500, 500
   offset: 0, 0

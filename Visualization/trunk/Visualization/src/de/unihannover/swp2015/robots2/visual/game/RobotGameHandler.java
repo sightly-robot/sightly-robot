@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.Matrix4;
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
 import de.unihannover.swp2015.robots2.model.interfaces.IGame;
 import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
+import de.unihannover.swp2015.robots2.model.interfaces.IRobot.RobotState;
 import de.unihannover.swp2015.robots2.model.interfaces.IStage;
 import de.unihannover.swp2015.robots2.visual.core.PrefKey;
 import de.unihannover.swp2015.robots2.visual.core.entity.Entity;
@@ -58,6 +59,8 @@ public class RobotGameHandler extends GameHandler {
 	
 	/** Current theme */
 	private int currentTheme;
+	
+	private boolean reseted = false;
 
 	/**
 	 * Construct a new RobotGameHandler and connects this handler (means it will
@@ -147,13 +150,7 @@ public class RobotGameHandler extends GameHandler {
 	 */
 	private void updateViewWidth(float viewWidth) {
 		view.setWorldWidth(viewWidth);
-		view.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
-		batch.setProjectionMatrix(view.getCamera().combined);
-		pp.onViewUpdate(view);
-		ui.onResize(view);
-		batchScaleY = batch.getProjectionMatrix().getScaleY();
-		batchScaleX = batch.getProjectionMatrix().getScaleX();
-		applyScale(prefs.getFloat(PrefKey.X_SCALE), prefs.getFloat(PrefKey.Y_SCALE));
+		onUpdateView();
 	}
 
 	/**
@@ -163,16 +160,68 @@ public class RobotGameHandler extends GameHandler {
 	 */
 	private void updateViewHeight(float viewHeight) {
 		view.setWorldHeight(viewHeight);
+		onUpdateView();
+	}
+	
+	private void onUpdateView() {
 		view.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
 		batch.setProjectionMatrix(view.getCamera().combined);
 		pp.onViewUpdate(view);
-		pp.setBloomEnabled(!game.isRunning());
 		ui.onResize(view);
 		batchScaleY = batch.getProjectionMatrix().getScaleY();
 		batchScaleX = batch.getProjectionMatrix().getScaleX();
 		applyScale(prefs.getFloat(PrefKey.X_SCALE), prefs.getFloat(PrefKey.Y_SCALE));
+		onStateChange();
+	}
+	
+	/**
+	 * Called when a robot has been added.
+	 * 
+	 * @param robot robot which has been added
+	 */
+	private void addRobot(IRobot robot) {
+		robot.observe(this);
+		final Robot roboEntity = new Robot(robot, this);
+		roboEntity.setZIndex(1);
+		Entity.addEntitySorted(roboEntity, entityList);
+		SortUtil.addRobotSorted(robot, robots);
+		ui.onRobotChange();
 	}
 
+	/**
+	 * Called when a robot has been removed.
+	 * 
+	 * @param robot robot which has been removed
+	 */
+	private void removeRobot(IRobot robot) {
+		robot.unobserve(this);
+		robots.remove(robot);
+		ui.onRobotChange();
+		for (int i = entityList.size() - 1; i >= 0; i--) {
+			if (entityList.get(i) instanceof Robot) {
+				Robot robotEntity = (Robot) entityList.get(i);
+				if (robotEntity.getModel() == robot) {
+					entityList.remove(i).clearReferences();
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Called when the state of one of the robot changes.
+	 */
+	private void onStateChange() {
+		boolean gameSetup = false;
+		for (int i = 0; i < robots.size(); ++i) {
+			if (robots.get(i).getState() == RobotState.SETUPSTATE) {
+				gameSetup = true;
+			}
+		}
+		boolean condition = (!gameSetup && !reseted) || (!game.isRunning() && !reseted);
+		pp.setBloomEnabled(condition);
+		ui.setVisible(condition);
+	}
+	
 	/**
 	 * Returns the current ranking of the given robot
 	 * 
@@ -267,35 +316,25 @@ public class RobotGameHandler extends GameHandler {
 		case GAME_RESET:
 			pp.setBloomEnabled(false);
 			ui.setVisible(false);
+			reseted = true;
 			break;
-			
+
+		case ROBOT_STATE:
 		case GAME_STATE:
-			pp.setBloomEnabled(!game.isRunning());
-			ui.setVisible(true);
+			if (game.isRunning()) {
+				reseted = false;
+			}
+			onStateChange();
 			break;
 
 		case ROBOT_ADD:
 			if (event.getObject() instanceof IRobot) {
-				final IRobot robot = (IRobot) event.getObject();
-				final Robot roboEntity = new Robot(robot, this);
-				roboEntity.setZIndex(1);
-				Entity.addEntitySorted(roboEntity, entityList);
-				SortUtil.addRobotSorted(robot, robots);
-				ui.onRobotChange();
+				addRobot((IRobot) event.getObject());
 			}
 			break;
 
 		case ROBOT_DELETE:
-			robots.remove(event.getObject());
-			ui.onRobotChange();
-			for (int i = entityList.size() - 1; i >= 0; i--) {
-				if (entityList.get(i) instanceof Robot) {
-					Robot robot = (Robot) entityList.get(i);
-					if (robot.getModel() == event.getObject()) {
-						entityList.remove(i).clearReferences();
-					}
-				}
-			}
+			removeRobot((IRobot) event.getObject());
 			break;
 
 		default:

@@ -73,7 +73,8 @@ public class Robot extends Entity<RobotGameHandler, IRobot> {
 	public Robot(IRobot robot, RobotGameHandler gameHandler) {
 		super(robot, gameHandler);
 
-		this.robo = resHandler.createRenderUnit(ResConst.DEFAULT_ROBO);
+		this.robo = robot.isHardwareRobot() ? resHandler.createRenderUnit(ResConst.DEFAULT_ROBO) 
+				: resHandler.createRenderUnit(ResConst.DEFAULT_VIRTUAL_ROBO);
 		this.startPositionTexture = resHandler.createRenderUnit(ResConst.DEFAULT_STARTPOS);
 		this.drawStartPosition = robot.getState() == RobotState.SETUPSTATE;
 		this.rotation = ModelUtil.calculateRotation(robot.getPosition().getOrientation());
