@@ -115,7 +115,7 @@ public abstract class AbstractAutomate implements AiEventObserver, Runnable, ISt
 	@Override
 	public void run() {
 		IState tempState = state;
-		while (!Thread.interrupted()) {
+		while (!automation.isInterrupted()) {
 			synchronized (state) {
 				tempState = state.execute();
 
@@ -280,5 +280,16 @@ public abstract class AbstractAutomate implements AiEventObserver, Runnable, ISt
 	@Override
 	public void iStateErrorOccured() {
 		robotController.reportRoboticsError();
+	}
+	
+	/**
+	 * To shutdown the main AutomationThread.
+	 */
+	public void shutdown()
+	{
+		if(automation != null && !automation.isInterrupted())
+		{
+			automation.interrupt();
+		}
 	}
 }
