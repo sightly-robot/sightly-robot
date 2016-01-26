@@ -22,7 +22,7 @@ public enum MqttTopic {
 	
 	ROBOT_SCORE("robot/score/+", true),
 	
-	ROBOT_PROGRESS("extension/2/robot/progress/+", true),
+	ROBOT_PROGRESS("extension/2/robot/progress/+", false),
 	
 	/**
 	 * Let Robot with given ID (+) blink in given color.
