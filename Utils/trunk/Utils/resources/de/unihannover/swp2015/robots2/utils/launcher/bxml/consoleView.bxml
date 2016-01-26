@@ -1,6 +1,6 @@
 <window:ConsoleView title="Sightly-Robot" maximized="true" width="400" height="300"
 xmlns:bxml="http://pivot.apache.org/bxml" xmlns:window="de.unihannover.swp2015.robots2.utils.launcher" xmlns="org.apache.pivot.wtk">
-	<FillPane orientation="vertical" styles="{padding:50, spacing:30, backgroundColor:'#505050'}">
+	<FillPane orientation="vertical" styles="{backgroundColor:'#505050'}">
         <ScrollPane horizontalScrollBarPolicy="fill"
                             verticalScrollBarPolicy="fill_to_capacity">
         	<TextArea bxml:id="out" preferredHeight="400"></TextArea>		
