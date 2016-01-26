@@ -140,11 +140,11 @@ public class HardwareRobot extends AbstractRobot implements IHardwareRobot {
 		Pi2GoGPIOController.getInstance().getLineRight().addListener(((HardwareAutomate) automate));
 	}
 	
-	@Override
-	protected void finalize() throws Throwable {
+	protected void shutdown()
+	{
 		BlinkLEDAndServoController.getInstance().shutdown();
 		Pi2GoGPIOController.getInstance().shutdown();
 		MotorController.getInstance().shutdown();
-		super.finalize();
+		super.shutdown();
 	}
 }
