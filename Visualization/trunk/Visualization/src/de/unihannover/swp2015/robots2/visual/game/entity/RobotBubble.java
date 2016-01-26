@@ -183,17 +183,17 @@ public class RobotBubble extends Entity<RobotGameHandler, IRobot> {
 		tex.draw(batch, finalX, finalY, width, height);
 		batch.setColor(Color.WHITE);
 		
-		final float fontX = finalX + width * GameConst.BUBBLE_PADDING_LEFT_REL;
-
-		fontSmall.draw(batch, id, fontX, finalY + height * GameConst.BUBBLE_FONT_NAME_Y_REL, width, Align.left, false);
-		fontBig.draw(batch, points, fontX, finalY + height * GameConst.BUBBLE_FONT_POINTS_Y_REL, width, Align.left,
-				false);
-
 		if (renderIcon) {
 			currentIcon.draw(batch, finalX + width * GameConst.BUBBLE_ICON_X_REL,
 					finalY + height * GameConst.BUBBLE_ICON_Y_REL, width * GameConst.BUBBLE_ICON_WIDTH_REL,
 					width * GameConst.BUBBLE_ICON_HEIGHT_REL);
 		}
+		
+		final float fontX = finalX + width * GameConst.BUBBLE_PADDING_LEFT_REL;
+
+		fontSmall.draw(batch, id, fontX, finalY + height * GameConst.BUBBLE_FONT_NAME_Y_REL, width, Align.left, false);
+		fontBig.draw(batch, points, fontX, finalY + height * GameConst.BUBBLE_FONT_POINTS_Y_REL, width, Align.left,
+				false);
 	}
 
 	@Override
