@@ -67,11 +67,12 @@ public class SoundController implements IModelObserver {
 	}
 
 	public void speak(String message) {
+		/*
 		try {
 			Runtime.getRuntime().exec("echo '" + message + "' | festival --tts");
 		} catch (IOException e) {
 			LOGGER.error("Speak "+message+" not worked",e);
-		}
+		}*/
 	}
 
 	/**
