@@ -252,7 +252,7 @@ public class StageModelController {
 	 * @param y
 	 *            The y-coordinate.
 	 */
-	private void resizeStage(int x, int y) {
+	public void resizeStage(int x, int y) {
 		if (x >= this.stage.getWidth() || y >= this.stage.getHeight()) {
 			this.stage.changeSize(Math.max(x + 1, this.stage.getWidth()),
 					Math.max(y + 1, this.stage.getHeight()));

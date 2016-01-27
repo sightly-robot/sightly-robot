@@ -194,9 +194,12 @@ public class RobotMainController extends AbstractMainController implements
 		}
 
 		this.myself.setRobotConnectionState(connected);
-		this.sendMqttMessage(MqttTopic.EVENT_ERROR_ROBOT_CONNECTION,
-				this.myself.getId(), null);
-
+		if (connected) {
+			this.sendMqttMessage(MqttTopic.EVENT_ERROR_ROBOT_CONNECTION,
+					this.myself.getId(), null);
+			this.sendMqttMessage(MqttTopic.ROBOT_DISCOVER,null, "discover");
+		}
+		
 		// Emit correct model events
 		this.game.emitEvent(UpdateType.MODEL_SYNC_STATE);
 		this.myself.emitEvent(UpdateType.ROBOT_STATE);
@@ -219,6 +222,8 @@ public class RobotMainController extends AbstractMainController implements
 		int y = Integer.parseInt(positionParts[1]);
 		Orientation o = Orientation.getBy(positionParts[2]);
 
+		this.stageModelController.resizeStage(x, y);
+		
 		// Don't do anything if the target field is occupied by another
 		// robot
 		IField.State state = this.game.getStage().getField(x, y).getState();
