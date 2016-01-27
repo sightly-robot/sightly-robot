@@ -19,16 +19,18 @@ import de.unihannover.swp2015.robots2.visual.desktop.CommandLineHandler.OptionKe
 import de.unihannover.swp2015.robots2.visual.resource.ResConst;
 
 /**
- * Starter class for desktop systems. Accepts three different arguments, use -h
- * | --help for usage information.
+ * starter class for desktop systems
+ * 
+ * Accepts three different arguments, use -h | --help for usage information or
+ * see {@link CommandLineHandler}.
  * 
  * @author Rico Schrage
  */
 public class DesktopLauncher {
 
-	/** Logger (log4j) */
+	/** logger (log4j) */
 	private static final Logger LOGGER = LogManager.getLogger();
-	/** Path to the shaders of the PP-library */
+	/** path to the shaders of the PP-library */
 	private static final String SHADER_PATH = "resources/shaders/";
 
 	private DesktopLauncher() {
@@ -36,7 +38,7 @@ public class DesktopLauncher {
 	}
 
 	/**
-	 * Main entry point.
+	 * main entry point
 	 * 
 	 * @param args
 	 */
@@ -48,9 +50,10 @@ public class DesktopLauncher {
 		if (clh.parse(args)) {
 			return;
 		}
-		
-		startApp(clh.getFlag(FlagKey.DEBUG), clh.getOption(OptionKey.IP), 
-				 clh.getOption(OptionKey.PROTOCOL), clh.getFlag(FlagKey.WINDOWED), clh.getFlag(FlagKey.FULLSCREEN));
+
+		startApp(clh.getFlag(FlagKey.DEBUG), clh.getOption(OptionKey.IP),
+				clh.getOption(OptionKey.PROTOCOL),
+				clh.getFlag(FlagKey.WINDOWED), clh.getFlag(FlagKey.FULLSCREEN));
 	}
 
 	/**
@@ -59,9 +62,16 @@ public class DesktopLauncher {
 	 * @param debug
 	 *            debug flag
 	 * @param brokerIp
-	 *            ip of the MQTT broker
+	 *            IP of the MQTT broker
+	 * @param protocol
+	 *            used protocol
+	 * @param windowed
+	 *            true if application starts in windowed mode
+	 * @param fullscreen
+	 *            true if application starts in fullscreen mode
 	 */
-	private static void startApp(boolean debug, String brokerIp, String protocol, boolean windowed, boolean fullscreen) {
+	private static void startApp(boolean debug, String brokerIp,
+			String protocol, boolean windowed, boolean fullscreen) {
 
 		ShaderLoader.BasePath = SHADER_PATH;
 
@@ -78,22 +88,33 @@ public class DesktopLauncher {
 			packSettings.paddingY = 4;
 			packSettings.filterMag = TextureFilter.MipMapNearestNearest;
 			packSettings.filterMin = TextureFilter.MipMapNearestNearest;
-			TexturePacker.process(packSettings, "internal/assets/tex/default_theme_src",
-					"internal/" + ResConst.ATLAS_PATH.getName() + "/default", ResConst.ATLAS_NAME.getName());
-			TexturePacker.process(packSettings, "internal/assets/tex/earth_theme_src", "internal/" + ResConst.ATLAS_PATH.getName() + "/earth",
+			TexturePacker.process(packSettings,
+					"internal/assets/tex/default_theme_src", "internal/"
+							+ ResConst.ATLAS_PATH.getName() + "/default",
 					ResConst.ATLAS_NAME.getName());
-			TexturePacker.process(packSettings, "internal/assets/tex/home_theme_src", "internal/" + ResConst.ATLAS_PATH.getName() + "/home",
+			TexturePacker.process(packSettings,
+					"internal/assets/tex/earth_theme_src", "internal/"
+							+ ResConst.ATLAS_PATH.getName() + "/earth",
 					ResConst.ATLAS_NAME.getName());
-			TexturePacker.process(packSettings, "internal/assets/tex/one_theme_src", "internal/" + ResConst.ATLAS_PATH.getName() + "/one",
+			TexturePacker.process(packSettings,
+					"internal/assets/tex/home_theme_src", "internal/"
+							+ ResConst.ATLAS_PATH.getName() + "/home",
 					ResConst.ATLAS_NAME.getName());
-			TexturePacker.process(packSettings, "internal/assets/tex/glow_theme_src", "internal/" + ResConst.ATLAS_PATH.getName() + "/glow",
+			TexturePacker.process(packSettings,
+					"internal/assets/tex/one_theme_src", "internal/"
+							+ ResConst.ATLAS_PATH.getName() + "/one",
+					ResConst.ATLAS_NAME.getName());
+			TexturePacker.process(packSettings,
+					"internal/assets/tex/glow_theme_src", "internal/"
+							+ ResConst.ATLAS_PATH.getName() + "/glow",
 					ResConst.ATLAS_NAME.getName());
 		}
-		
-		final DisplayMode dm = LwjglApplicationConfiguration.getDesktopDisplayMode();
+
+		final DisplayMode dm = LwjglApplicationConfiguration
+				.getDesktopDisplayMode();
 		final LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		config.width = dm.width/2;
-		config.height = dm.height/2;
+		config.width = dm.width / 2;
+		config.height = dm.height / 2;
 		config.foregroundFPS = 120;
 		config.backgroundFPS = 120;
 		config.vSyncEnabled = false;
@@ -101,13 +122,14 @@ public class DesktopLauncher {
 		config.addIcon("assets/icon/rIcon_32.png", FileType.Internal);
 		config.addIcon("assets/icon/rIcon_128.png", FileType.Internal);
 		config.fullscreen = fullscreen;
-		
+
 		if (windowed) {
 			System.setProperty("org.lwjgl.opengl.Window.undecorated", "true");
 			config.resizable = false;
 		}
-		
-		new LwjglApplication(new Visualization(debug, brokerIp, protocol), config).setLogLevel(Application.LOG_NONE);
+
+		new LwjglApplication(new Visualization(debug, brokerIp, protocol),
+				config).setLogLevel(Application.LOG_NONE);
 	}
 
 }

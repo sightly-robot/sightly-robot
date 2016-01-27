@@ -67,18 +67,8 @@ public class Map extends Entity<RobotGameHandler, IStage> {
 				final IField field = model.getField(x, y);
 				fieldList.add(new Field(model, field,
 						(RobotGameHandler) gameHandler));
-			}
-		}
-		for (int x = 0; x < model.getWidth(); ++x) {
-			for (int y = 0; y < model.getHeight(); ++y) {
-				final IField field = model.getField(x, y);
 				wallList.add(new Wall(model, field,
 						(RobotGameHandler) gameHandler));
-			}
-		}
-		for (int x = 0; x < model.getWidth(); ++x) {
-			for (int y = 0; y < model.getHeight(); ++y) {
-				final IField field = model.getField(x, y);
 				foodList.add(new Resource(field, (RobotGameHandler) gameHandler));
 			}
 		}

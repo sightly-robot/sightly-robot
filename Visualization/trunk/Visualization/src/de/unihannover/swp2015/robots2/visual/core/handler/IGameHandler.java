@@ -12,14 +12,15 @@ import de.unihannover.swp2015.robots2.visual.util.pref.IPreferences;
 import de.unihannover.swp2015.robots2.visual.util.pref.IPreferencesObserver;
 
 /**
- * A GameHandler manages/handles a specific group of entities. Therefore it owns
- * the resources, updates all connected entities and manages necessary data.
- * Additionally it observes the root of the model.
+ * A GameHandler manages/handles a specific group of entities.
+ * 
+ * Therefore it owns the resources, updates all connected entities and manages
+ * necessary data. Additionally it observes the root of the model.
  * 
  * @author Rico Schrage
  */
-public interface IGameHandler
-		extends IUpdateable, IRenderable, Disposable, IModelObserver, IPreferencesObserver<PrefKey> {
+public interface IGameHandler extends IUpdateable, IRenderable, Disposable,
+		IModelObserver, IPreferencesObserver<PrefKey> {
 
 	/**
 	 * Sets the connected {@link IResourceHandler}.
@@ -44,8 +45,9 @@ public interface IGameHandler
 	IPreferences<PrefKey> getPreferences();
 
 	/**
-	 * Defines what happens on resize. Will be called in the
-	 * {@link com.badlogic.gdx.ApplicationListener}/
+	 * Defines what happens on resize.
+	 * 
+	 * Will be called in the {@link com.badlogic.gdx.ApplicationListener}/
 	 * {@link com.badlogic.gdx.ApplicationAdapter} or in a subclass of them.
 	 * 
 	 * @param width
@@ -56,7 +58,7 @@ public interface IGameHandler
 	void resize(final int width, final int height);
 
 	/**
-	 * Will be called from {@link #onModelUpdate(IEvent)}, but runs safley in
+	 * Will be called from {@link #onModelUpdate(IEvent)}, but runs safely in
 	 * the render thread.
 	 * 
 	 * @param event

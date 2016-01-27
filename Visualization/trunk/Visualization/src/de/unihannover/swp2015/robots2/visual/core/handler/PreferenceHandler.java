@@ -25,26 +25,28 @@ import de.unihannover.swp2015.robots2.visual.util.pref.IPreferences;
  */
 public class PreferenceHandler implements IVisualization {
 
-	/** Logger (log4j) */
+	/** logger (log4j) */
 	private static final Logger LOGGER = LogManager.getLogger();
 
-	/** First index of the keys sent by the GUI */
+	/** first index of the keys sent by the GUI */
 	private static final int GO_START_INDEX = 6;
 
-	/** Name of the root element */
+	/** name of the root element */
 	private static final String ROOT_NAME = "options";
 
-	/** Contains local preferences */
+	/** contains local preferences */
 	private final IPreferences<PrefKey> pref;
 
-	/** Id of the visualization */
+	/** ID of the visualization */
 	private final UUID id;
 
 	/**
-	 * Construct handler for the given preference object.
+	 * Constructs handler for the given preference object.
 	 * 
 	 * @param pref
 	 *            preference object to be handled
+	 * @param id
+	 *            ID of the visualization
 	 */
 	public PreferenceHandler(IPreferences<PrefKey> pref, UUID id) {
 		this.pref = pref;
@@ -60,19 +62,25 @@ public class PreferenceHandler implements IVisualization {
 			}
 		});
 	}
-	
+
 	/**
-	 * Call will be initiated when {@link #setSettings(String)} will be called by the protocol.
-	 * In difference to {@link #setSettings(String)} the method will be called in the render thread of libGDX.
+	 * Call will be initiated when {@link #setSettings(String)} will be called
+	 * by the protocol.
 	 * 
-	 * @param settings settings as JSON
+	 * In difference to {@link #setSettings(String)} the method will be called
+	 * in the render thread of libGDX.
+	 * 
+	 * @param settings
+	 *            settings as JSON
 	 */
 	protected void setManagedSettings(String settings) {
-		InputStream stream = new ByteArrayInputStream(settings.getBytes(StandardCharsets.UTF_8));
+		InputStream stream = new ByteArrayInputStream(
+				settings.getBytes(StandardCharsets.UTF_8));
 		JSONTokener tokenizer = new JSONTokener(stream);
 		JSONObject options = new JSONObject(tokenizer).getJSONObject(ROOT_NAME);
 
-		if (!options.has("id") || !options.getString("id").equals(id.toString())) {
+		if (!options.has("id")
+				|| !options.getString("id").equals(id.toString())) {
 			return;
 		}
 
@@ -83,20 +91,19 @@ public class PreferenceHandler implements IVisualization {
 				final Object value = options.get(key.getKey());
 				if (value instanceof Boolean) {
 					pref.putBoolean(key, (boolean) value);
-				} 
-				else if (value instanceof Double) {
+				} else if (value instanceof Double) {
 					final double doubleValue = (double) value;
-					pref.putFloat(key, Double.isNaN(doubleValue) ? 0f : (float) doubleValue);
-				}
-				else if (value instanceof Integer) {
+					pref.putFloat(key, Double.isNaN(doubleValue) ? 0f
+							: (float) doubleValue);
+				} else if (value instanceof Integer) {
 					final int intValue = (int) value;
 					pref.putFloat(key, intValue);
-				}
-				else if (value instanceof String) {
+				} else if (value instanceof String) {
 					final String stringValue = (String) value;
 					pref.putString(key, stringValue);
 				}
-				LOGGER.debug("Received option: {}, value: {}", key.getKey(), value);
+				LOGGER.debug("Received option: {}, value: {}", key.getKey(),
+						value);
 			} catch (JSONException e) {
 				LOGGER.trace(e);
 			}
@@ -107,7 +114,7 @@ public class PreferenceHandler implements IVisualization {
 	public String getSettings() {
 		JSONObject options = new JSONObject();
 		options.put("id", id.toString());
-		
+
 		PrefKey[] keys = PrefKey.values();
 		for (int i = GO_START_INDEX; i < keys.length; ++i) {
 			final PrefKey key = keys[i];
@@ -116,8 +123,7 @@ public class PreferenceHandler implements IVisualization {
 				boolean value = pref.getBoolean(key);
 				options.put(key.getKey(), value);
 				LOGGER.debug("Send option: {}, value: {}", key.getKey(), value);
-			} 
-			else if (defaultValue instanceof Float) {
+			} else if (defaultValue instanceof Float) {
 				float value = pref.getFloat(key);
 				options.put(key.getKey(), value);
 				LOGGER.debug("Send option: {}, value: {}", key.getKey(), value);

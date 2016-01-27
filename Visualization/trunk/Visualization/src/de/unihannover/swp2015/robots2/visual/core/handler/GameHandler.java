@@ -17,25 +17,28 @@ import de.unihannover.swp2015.robots2.visual.util.pref.IPreferences;
  */
 public abstract class GameHandler implements IGameHandler {
 
-	/** Contains multiple sets of resources for the game. */
+	/** contains multiple sets of resources for the game */
 	protected IResourceHandler resHandler;
 
-	/** Settings received via MQTT plus internal non-persistent settings. */
+	/** settings received via MQTT and internal non-persistent settings */
 	protected IPreferences<PrefKey> prefs;
 
-	/** Root of the game. */
+	/** root of the game */
 	protected IGame game;
 
 	/**
 	 * Constructs GameHandler.
 	 * 
+	 * @param game
+	 *            root of the game
 	 * @param resHandler
-	 *            handler, which managed <b>all</b> resources the gameHandler
+	 *            handler which manages <b>all</b> resources, the gameHandler
 	 *            will use
 	 * @param prefs
-	 *            hold and manages preferences
+	 *            holds and manages preferences
 	 */
-	public GameHandler(final IGame game, final IResourceHandler resHandler, final IPreferences<PrefKey> prefs) {
+	public GameHandler(final IGame game, final IResourceHandler resHandler,
+			final IPreferences<PrefKey> prefs) {
 		this.resHandler = resHandler;
 		this.game = game;
 		this.game.observe(this);
