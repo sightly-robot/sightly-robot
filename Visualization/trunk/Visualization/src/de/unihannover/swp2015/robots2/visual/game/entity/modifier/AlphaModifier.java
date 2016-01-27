@@ -6,8 +6,9 @@ import de.unihannover.swp2015.robots2.visual.util.math.function.IEaseFunction;
 import de.unihannover.swp2015.robots2.visual.util.math.function.LinearEaseFunction;
 
 /**
- * Specialized modifier for tick-wise alpha modification. {@link IEntityModifier}
- * for more information.
+ * specialized modifier for tick-wise alpha modification
+ * 
+ * See {@link IEntityModifier} for more information.
  * 
  * @author Rico Schrage
  */
@@ -25,12 +26,14 @@ public class AlphaModifier extends SingleValueEntityModifier {
 	 * @param toValue
 	 *            end value
 	 */
-	public AlphaModifier(IEntity target, float duration, float fromValue, float toValue) {
-		this(target, duration, fromValue, toValue, LinearEaseFunction.getInstance());
+	public AlphaModifier(IEntity target, float duration, float fromValue,
+			float toValue) {
+		this(target, duration, fromValue, toValue, LinearEaseFunction
+				.getInstance());
 	}
 
 	/**
-	 * Constructs a MoveModifier.
+	 * Constructs a BlurModifier.
 	 * 
 	 * @param target
 	 *            modifier target
@@ -43,15 +46,15 @@ public class AlphaModifier extends SingleValueEntityModifier {
 	 * @param easeFunction
 	 *            {@link IEaseFunction}
 	 */
-	public AlphaModifier(IEntity target, float duration, float fromValue, float toValue,
-			final IEaseFunction easeFunction) {
+	public AlphaModifier(IEntity target, float duration, float fromValue,
+			float toValue, final IEaseFunction easeFunction) {
 		super(target, duration, fromValue, toValue, easeFunction);
 	}
 
 	@Override
 	protected void onSetInitialValue(float value, IEntity entity) {
 		entity.getColor().a = value;
-		
+
 	}
 
 	@Override

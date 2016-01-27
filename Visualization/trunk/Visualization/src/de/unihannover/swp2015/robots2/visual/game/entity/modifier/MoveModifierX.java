@@ -6,15 +6,17 @@ import de.unihannover.swp2015.robots2.visual.util.math.function.IEaseFunction;
 import de.unihannover.swp2015.robots2.visual.util.math.function.LinearEaseFunction;
 
 /**
- * Specialized modifier for tick-wise move modification. {@link IEntityModifier}
- * for more information.
+ * Specialized modifier for tick-wise move modification.
+ * 
+ * See {@link IEntityModifier} for more information.
  * 
  * @author Rico Schrage
  */
 public class MoveModifierX extends SingleValueEntityModifier {
 
 	/**
-	 * Constructs a MoveModifier using {@link LinearEaseFunction}.
+	 * Constructs a MoveModifier for the x direction using
+	 * {@link LinearEaseFunction}.
 	 * 
 	 * @param target
 	 *            modifier target
@@ -25,12 +27,14 @@ public class MoveModifierX extends SingleValueEntityModifier {
 	 * @param toValue
 	 *            end value
 	 */
-	public MoveModifierX(IEntity target, float duration, float fromValue, float toValue) {
-		this(target, duration, fromValue, toValue, LinearEaseFunction.getInstance());
+	public MoveModifierX(IEntity target, float duration, float fromValue,
+			float toValue) {
+		this(target, duration, fromValue, toValue, LinearEaseFunction
+				.getInstance());
 	}
 
 	/**
-	 * Constructs a MoveModifier.
+	 * Constructs a MoveModifier for the x direction.
 	 * 
 	 * @param target
 	 *            modifier target
@@ -43,8 +47,8 @@ public class MoveModifierX extends SingleValueEntityModifier {
 	 * @param easeFunction
 	 *            {@link IEaseFunction}
 	 */
-	public MoveModifierX(IEntity target, float duration, float fromValue, float toValue,
-			final IEaseFunction easeFunction) {
+	public MoveModifierX(IEntity target, float duration, float fromValue,
+			float toValue, final IEaseFunction easeFunction) {
 		super(target, duration, fromValue, toValue, easeFunction);
 	}
 

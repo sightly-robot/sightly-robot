@@ -17,13 +17,13 @@ import com.badlogic.gdx.utils.Array;
  */
 public class RenderUnit {
 
-	/** Can be null. */
+	/** can be null */
 	protected Animation animation;
 
-	/** State of the animation. */
+	/** state of the animation */
 	protected float stateTime = 0;
 
-	/** Can be null. */
+	/** can be null */
 	protected TextureRegion tex;
 
 	/**
@@ -158,7 +158,7 @@ public class RenderUnit {
 	}
 
 	/**
-	 * Returns if the unit represents an {@link Animation}.
+	 * Checks if the unit represents an {@link Animation}.
 	 *
 	 * @return true, if it represents an {@link Animation}, false otherwise
 	 */
@@ -167,10 +167,9 @@ public class RenderUnit {
 	}
 
 	/**
-	 * Returns if the unit represents a {@link TextureRegion}.
+	 * Checks if the unit represents a {@link TextureRegion}.
 	 * 
-	 * 
-	 * Hint: It's not possible, that {@link RenderUnit.isTexture} and
+	 * Hint: It's not possible that {@link RenderUnit.isTexture} and
 	 * {@link RenderUnit#isAnimation()} are true.
 	 *
 	 * @return true, if it represents a {@link TextureRegion}, false otherwise
