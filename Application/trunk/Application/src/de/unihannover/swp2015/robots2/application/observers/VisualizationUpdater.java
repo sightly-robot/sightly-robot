@@ -70,10 +70,8 @@ public class VisualizationUpdater implements IModelObserver {
 	 * @param event A model update event emitted by the controller.
 	 */
 	@Override
-	public synchronized void onModelUpdate(IEvent event) {		
-		// System.out.println(event.getType().toString());
-		
-		if (event.getType() == IEvent.UpdateType.STAGE_WALL)
+	public synchronized void onModelUpdate(IEvent event) {				
+		if (event.getType() == IEvent.UpdateType.STAGE_SIZE)
 		{
 			// observe to every field
 			for (int x = 0; x != controller.getGame().getStage().getWidth(); ++x) {

@@ -271,8 +271,8 @@ public class ControlPanel extends Window implements Bindable, IVisualizationClic
 		@Override
 		public void buttonPressed(Button button) {
 			try {
-				controller.startMqtt(/*"tcp://" + */configurator.getGeneralOptions().getRemoteUrl());
 				startAutoUpdateOnce();
+				controller.startMqtt(/*"tcp://" + */configurator.getGeneralOptions().getRemoteUrl());
 				loadMap.setEnabled(true);
 			}
 			catch (ProtocolException exc) {
