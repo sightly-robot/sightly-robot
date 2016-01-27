@@ -16,16 +16,16 @@ import de.unihannover.swp2015.robots2.visual.resource.texture.TransformedRenderU
 import de.unihannover.swp2015.robots2.visual.util.StageUtil;
 
 /**
- * Describes the walls of one field.
+ * an entity for the visualization of walls of one field
  * 
- * @author Rico Schrage
+ * @author Daphne Schössow
  */
 public class Wall extends Entity<RobotGameHandler, IField> {
 
-	/** Stage, the field belongs to. */
+	/** stage to which the field belongs */
 	private final IStage parent;
 
-	/** Visual representations of the walls. */
+	/** visual representations of the walls */
 	private final TransformedRenderUnit[] texWall;
 
 	/** width of the field */
@@ -34,28 +34,30 @@ public class Wall extends Entity<RobotGameHandler, IField> {
 	/** height of the field */
 	private float fieldHeight;
 
-	/** Can mark walls as one-way road (0=EAST, 1=WEST, 2=NORTH, 3=SOUTH) */
+	/** marks walls as one-way road (0=EAST, 1=WEST, 2=NORTH, 3=SOUTH) */
 	private boolean[] isOneway = { false, false, false, false };
 
 	/**
-	 * Contains all orientation in a specific order (I do not use Enum.values()
-	 * to be sure that the order is like I'm expecting)
+	 * contains all orientation in a specific order
+	 * 
+	 * (I do not use Enum.values() here to be sure that the order is like I'm
+	 * expecting)
 	 */
-	private Orientation[] orientations = { Orientation.EAST, Orientation.WEST, Orientation.NORTH, Orientation.SOUTH };
+	private Orientation[] orientations = { Orientation.EAST, Orientation.WEST,
+			Orientation.NORTH, Orientation.SOUTH };
 
 	/**
-	 * Constructs a wall-entity, which belongs to <code>parent</code>.
+	 * Construction of a wall-entity which belongs to <code>parent</code>.
 	 * 
 	 * @param parent
-	 *            stage, the <code>model</code> is part of
+	 *            stage of which the <code>model</code> is a part of
 	 * @param model
 	 *            data model of the field
-	 * @param renderer
-	 *            batch, which should be used to render the entity
 	 * @param gameHandler
-	 *            {@link IGameHandler}, which should own this entity.
+	 *            {@link IGameHandler} which owns this entity
 	 */
-	public Wall(final IStage parentStage, final IField model, final RobotGameHandler gameHandler) {
+	public Wall(final IStage parentStage, final IField model,
+			final RobotGameHandler gameHandler) {
 		super(model, gameHandler);
 
 		this.parent = parentStage;
@@ -72,35 +74,43 @@ public class Wall extends Entity<RobotGameHandler, IField> {
 	}
 
 	/**
-	 * Creates all transformed render units.
-	 * 
-	 * @param model
-	 *            field model of this entity
+	 * Creation of all transformed render units.
 	 */
 	private void createRenderUnits() {
-		final RenderUnit wallTexture = resHandler.createRenderUnit(ResConst.DEFAULT_WALL);
-		final RenderUnit onewayTexture = resHandler.createRenderUnit(ResConst.DEFAULT_ONEWAY);
+		final RenderUnit wallTexture = resHandler
+				.createRenderUnit(ResConst.DEFAULT_WALL);
+		final RenderUnit onewayTexture = resHandler
+				.createRenderUnit(ResConst.DEFAULT_ONEWAY);
 
-		texWall[0] = new TransformedRenderUnit(isOneway[0] ? onewayTexture : wallTexture, renderX + fieldWidth / 2f,
-				renderY - fieldHeight / 2f, fieldWidth, fieldHeight * 2f, fieldWidth / 2f, fieldHeight, 180f);
+		texWall[0] = new TransformedRenderUnit(isOneway[0] ? onewayTexture
+				: wallTexture, renderX + fieldWidth / 2f, renderY - fieldHeight
+				/ 2f, fieldWidth, fieldHeight * 2f, fieldWidth / 2f,
+				fieldHeight, 180f);
 
-		texWall[1] = new TransformedRenderUnit(isOneway[1] ? onewayTexture : wallTexture, renderX - fieldWidth / 2f,
-				renderY - fieldHeight / 2f, fieldWidth, fieldHeight * 2f, fieldWidth / 2f, fieldHeight, 0f);
+		texWall[1] = new TransformedRenderUnit(isOneway[1] ? onewayTexture
+				: wallTexture, renderX - fieldWidth / 2f, renderY - fieldHeight
+				/ 2f, fieldWidth, fieldHeight * 2f, fieldWidth / 2f,
+				fieldHeight, 0f);
 
-		texWall[2] = new TransformedRenderUnit(isOneway[2] ? onewayTexture : wallTexture, renderX,
-				renderY - fieldHeight, fieldWidth, fieldHeight * 2, fieldWidth / 2f, fieldHeight, 90f);
+		texWall[2] = new TransformedRenderUnit(isOneway[2] ? onewayTexture
+				: wallTexture, renderX, renderY - fieldHeight, fieldWidth,
+				fieldHeight * 2, fieldWidth / 2f, fieldHeight, 90f);
 
-		texWall[3] = new TransformedRenderUnit(isOneway[3] ? onewayTexture : wallTexture, renderX,
-				renderY, fieldWidth, fieldHeight * 2, fieldWidth / 2f, fieldHeight, -90f);
+		texWall[3] = new TransformedRenderUnit(isOneway[3] ? onewayTexture
+				: wallTexture, renderX, renderY, fieldWidth, fieldHeight * 2,
+				fieldWidth / 2f, fieldHeight, -90f);
 	}
 
+	/**
+	 * Checks all walls of the field if they're one-way roads.
+	 */
 	private void determineOneway() {
-		// updates informations about the type of the walls.
 		for (int i = 0; i < orientations.length; ++i) {
-			isOneway[i] = StageUtil.checkDriveDirectionAndNotNeighbours(model, parent, orientations[i]);
+			isOneway[i] = StageUtil.checkDriveDirectionAndNotNeighbours(model,
+					parent, orientations[i]);
 		}
 	}
-	
+
 	@Override
 	public void draw(final Batch batch) {
 		super.draw(batch);

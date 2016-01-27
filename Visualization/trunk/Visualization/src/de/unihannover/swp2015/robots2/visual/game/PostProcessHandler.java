@@ -13,8 +13,9 @@ import com.bitfire.postprocessing.effects.Fxaa;
 import de.unihannover.swp2015.robots2.visual.core.IResizable;
 
 /**
- * Manages all post processing effects. Can be used to apply a FXAA effect
- * or/and a bloom effect. <br>
+ * Manages all post processing effects and can be used to apply a FXAA effect
+ * and/or a bloom effect.
+ * 
  * Simple usage:<br>
  * <br>
  * <code>
@@ -27,26 +28,36 @@ import de.unihannover.swp2015.robots2.visual.core.IResizable;
  */
 public class PostProcessHandler implements Disposable, IResizable {
 
-	/** Capable to render post-processing effects. Renders bloom effect. */
+	/**
+	 * capable to render post-processing effects
+	 * 
+	 * This one renders bloom effect.
+	 */
 	private PostProcessor pp;
 
-	/** Capable to render post-processing effects. Renders FXAA effect */
+	/**
+	 * capable to render post-processing effects.
+	 * 
+	 * This one renders FXAA effect
+	 */
 	private PostProcessor pp2;
 
-	/** FBO, part of a workaround for a bug in the PP-library. */
+	/** FBO as a part of a workaround for a bug in the PP-library */
 	private FrameBuffer fbo;
 
-	/** Describes the resulting texture of the FBO as texture region. */
+	/** describes the resulting texture of the FBO as texture region */
 	private TextureRegion reg;
 
-	/** Effect, which blurs the screen when game is stopped. */
+	/** effect which blurs the screen when game is stopped */
 	private Bloom bloom;
 
-	/** Effect, which blurs the screen when game is stopped. */
+	/** effect which blurs the screen when game is stopped */
 	private Fxaa fxaa;
 
 	/**
-	 * Manages all pp-api calls. Updates itself when resizing.
+	 * Manages all pp-api calls.
+	 * 
+	 * Updates itself when resizing happens.
 	 * 
 	 * @param worldWidth
 	 *            width of the glViewport
@@ -54,7 +65,8 @@ public class PostProcessHandler implements Disposable, IResizable {
 	 *            height of the glViewport
 	 */
 	public PostProcessHandler(int worldWidth, int worldHeight) {
-		this.fbo = new FrameBuffer(Pixmap.Format.RGBA8888, worldWidth, worldHeight, false);
+		this.fbo = new FrameBuffer(Pixmap.Format.RGBA8888, worldWidth,
+				worldHeight, false);
 		this.reg = new TextureRegion(fbo.getColorBufferTexture());
 		this.pp = new PostProcessor(false, true, true);
 		this.pp2 = new PostProcessor(false, true, true);
@@ -75,7 +87,8 @@ public class PostProcessHandler implements Disposable, IResizable {
 	 * @return resulting bloom effect
 	 */
 	private Bloom createBloom(int worldWidth, int worldHeight) {
-		final Bloom newBloom = new Bloom((int) (worldWidth / 2f), (int) (worldHeight / 2f));
+		final Bloom newBloom = new Bloom((int) (worldWidth / 2f),
+				(int) (worldHeight / 2f));
 		newBloom.setBaseIntesity(0);
 		newBloom.setThreshold(0);
 		newBloom.setBloomSaturation(0.3f);
@@ -97,11 +110,12 @@ public class PostProcessHandler implements Disposable, IResizable {
 	}
 
 	/**
-	 * Have to be called when the viewport changes. Creates new
-	 * {@link PostProcessor}'s and effects.
+	 * Has to be called when the viewport changes.
+	 * 
+	 * Creates new {@link PostProcessor}s and effects.
 	 * 
 	 * @param view
-	 *            viewport, which has been updated
+	 *            viewport which has been updated
 	 */
 	public void onViewUpdate(Viewport view) {
 		final int worldWidth = (int) view.getWorldWidth();
@@ -111,7 +125,8 @@ public class PostProcessHandler implements Disposable, IResizable {
 		pp2.dispose();
 		fbo.dispose();
 
-		fbo = new FrameBuffer(Pixmap.Format.RGBA8888, worldWidth, worldHeight, false);
+		fbo = new FrameBuffer(Pixmap.Format.RGBA8888, worldWidth, worldHeight,
+				false);
 		reg = new TextureRegion(fbo.getColorBufferTexture());
 
 		pp = new PostProcessor(worldWidth, worldHeight, false, true, true);
@@ -125,21 +140,21 @@ public class PostProcessHandler implements Disposable, IResizable {
 	}
 
 	/**
-	 * Render captured screen applying a Bloom effect (on screen).
+	 * Renders captured screen applying a Bloom effect (on screen).
 	 */
 	public void renderBloom() {
 		pp.render();
 	}
 
 	/**
-	 * Render captured screen applying a Bloom effect (to buffer).
+	 * Renders captured screen applying a Bloom effect (to buffer).
 	 */
 	public void renderBloomToInternalBuffer() {
 		pp.render(fbo);
 	}
 
 	/**
-	 * Capture screen to use the captured frame for applying a Bloom effect
+	 * Captures screen to use the captured frame for applying a Bloom effect
 	 * later.
 	 */
 	public void captureBloom() {
@@ -147,21 +162,21 @@ public class PostProcessHandler implements Disposable, IResizable {
 	}
 
 	/**
-	 * Render captured screen applying a FXAA effect (on screen).
+	 * Renders captured screen applying a FXAA effect (on screen).
 	 */
 	public void renderFxaa() {
 		pp2.render();
 	}
 
 	/**
-	 * Render captured screen applying a FXAA effect (to buffer).
+	 * Renders captured screen applying a FXAA effect (to buffer).
 	 */
 	public void renderFxaaToInternalBuffer() {
 		pp2.render(fbo);
 	}
 
 	/**
-	 * Capture screen to use the captured frame for applying a FXAA effect
+	 * Captures screen to use the captured frame for applying a FXAA effect
 	 * later.
 	 */
 	public void captureFxaa() {
@@ -179,7 +194,7 @@ public class PostProcessHandler implements Disposable, IResizable {
 	 * Enables/disables the bloom effect.
 	 * 
 	 * @param enable
-	 *            if true the effect will be enabled, otherwise it will be
+	 *            if true, the effect will be enabled, otherwise it will be
 	 *            disabled
 	 */
 	public void setBloomEnabled(boolean enable) {
@@ -187,7 +202,7 @@ public class PostProcessHandler implements Disposable, IResizable {
 	}
 
 	/**
-	 * @return internal frame buffer as {@link TextureRegion}.
+	 * @return internal frame buffer as {@link TextureRegion}
 	 */
 	public TextureRegion getBufferTexture() {
 		return reg;
@@ -195,10 +210,10 @@ public class PostProcessHandler implements Disposable, IResizable {
 
 	@Override
 	public void onResize(Viewport view) {
-		pp.setViewport(
-				new Rectangle(view.getScreenX(), view.getScreenY(), view.getScreenWidth(), view.getScreenHeight()));
-		pp2.setViewport(
-				new Rectangle(view.getScreenX(), view.getScreenY(), view.getScreenWidth(), view.getScreenHeight()));
+		pp.setViewport(new Rectangle(view.getScreenX(), view.getScreenY(), view
+				.getScreenWidth(), view.getScreenHeight()));
+		pp2.setViewport(new Rectangle(view.getScreenX(), view.getScreenY(),
+				view.getScreenWidth(), view.getScreenHeight()));
 	}
 
 	@Override

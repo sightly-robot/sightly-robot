@@ -17,80 +17,84 @@ import de.unihannover.swp2015.robots2.visual.resource.texture.RenderUnit;
 import de.unihannover.swp2015.robots2.visual.util.ColorUtil;
 
 /**
- * Bubble of a robot. Display points and the id of the robot.
+ * Bubble of a robot which displays the name of the robot, its points, rank, and
+ * connection/error states.
  * 
- * @author Rico Schrage
+ * @author Daphne Schössow
  */
 public class RobotBubble extends Entity<RobotGameHandler, IRobot> {
 
-	/** Texture of the bubble. */
+	/** texture of the bubble */
 	protected RenderUnit tex;
 
-	/** Width of the bubble. */
+	/** width of the bubble */
 	protected float width;
 
-	/** Height of the bubble. */
+	/** height of the bubble */
 	protected float height;
 
-	/** Color of the bubble. This value is based on the model. */
+	/** color of the bubble */
 	protected Color color;
 
-	/** Font of the name. */
+	/** font for the name */
 	protected BitmapFont fontSmall;
 
-	/** Font of the score/rank. */
+	/** font for the score/rank. */
 	protected BitmapFont fontBig;
 
-	/** id as string. */
+	/** id as string */
 	protected CharSequence id;
 
-	/** Points as string. */
+	/** points as string */
 	protected CharSequence points;
 
-	/** X-position on (virtual) screen relative to the robot. */
+	/** x position on screen, relative to the robot */
 	protected float x;
 
-	/** Y-position on (virtual) screen relative to the robot. */
+	/** y position on screen, relative to the robot */
 	protected float y;
 
-	/** Width of a single field */
+	/** width of a field */
 	private float fieldWidth;
 
-	/** Height of a single field */
+	/** height of a field */
 	private float fieldHeight;
 
-	/** Parent of the bubble */
+	/** robot which the bubble belongs to */
 	private Robot parent;
 
-	/** Connection lost icon */
+	/** connection lost icon */
 	private RenderUnit connection;
 
-	/** Warning icon */
+	/** warning icon */
 	private RenderUnit warning;
 
-	/** References the current icon, which should be rendered */
+	/** the current icon which should be rendered */
 	private RenderUnit currentIcon;
 
-	/** True if an icon have to be rendered */
+	/** true if an icon has to be rendered */
 	boolean renderIcon = false;
 
 	/**
 	 * Constructs a bubble for a given robot.
 	 * 
 	 * @param handler
-	 *            game-handler of the robot
+	 *            game handler of the robot
 	 * @param parent
 	 *            robot
 	 */
 	public RobotBubble(RobotGameHandler handler, Robot parent) {
 		super(parent.getModel(), handler);
 
-		this.fieldWidth = gameHandler.getPreferences().getFloat(PrefKey.FIELD_WIDTH_KEY);
-		this.fieldHeight = gameHandler.getPreferences().getFloat(PrefKey.FIELD_HEIGHT_KEY);
+		this.fieldWidth = gameHandler.getPreferences().getFloat(
+				PrefKey.FIELD_WIDTH_KEY);
+		this.fieldHeight = gameHandler.getPreferences().getFloat(
+				PrefKey.FIELD_HEIGHT_KEY);
 
 		final IRobot model = (IRobot) parent.getModel();
 
-		this.connection = resHandler.createRenderUnit(ResConst.DEFAULT_CONNECTION);
+		this.connection = resHandler
+				.createRenderUnit(ResConst.DEFAULT_CONNECTION);
 		this.warning = resHandler.createRenderUnit(ResConst.DEFAULT_WARNING);
 		this.tex = resHandler.createRenderUnit(ResConst.DEFAULT_BUBBLE);
 
@@ -107,26 +111,28 @@ public class RobotBubble extends Entity<RobotGameHandler, IRobot> {
 	}
 
 	/**
-	 * Updates all values, which depend on {@link fieldWidth}
+	 * Updates all values which depend on {@link fieldWidth}.
 	 * 
 	 * @param robot
 	 *            robot model
 	 */
 	private void updateWidth(final IRobot robot) {
-		this.x = robot.getPosition().getX() * fieldWidth - parent.getPositionX();
+		this.x = robot.getPosition().getX() * fieldWidth
+				- parent.getPositionX();
 		this.width = fieldWidth * GameConst.BUBBLE_WIDTH_REL;
 	}
 
 	/**
-	 * Updates all values, which depend on {@link fieldHeight}
+	 * Updates all values which depend on {@link fieldHeight}.
 	 * 
 	 * @param robot
 	 *            robot model
 	 */
 	private void updateHeight(final IRobot robot) {
 		this.height = fieldHeight * GameConst.BUBBLE_HEIGHT_REL;
-		this.y = robot.getPosition().getY() * fieldHeight - parent.getPositionY()
-				- fieldHeight * GameConst.BUBBLE_Y_OFFSET_REL;
+		this.y = robot.getPosition().getY() * fieldHeight
+				- parent.getPositionY() - fieldHeight
+				* GameConst.BUBBLE_Y_OFFSET_REL;
 	}
 
 	/**
@@ -162,16 +168,20 @@ public class RobotBubble extends Entity<RobotGameHandler, IRobot> {
 	}
 
 	/**
-	 * Recreates the fonts.
+	 * Recreates the fonts when the map has been resized.
 	 * 
 	 * @param value
-	 *            new size of the fields.
+	 *            new size of the fields
 	 */
 	private void updateFonts(float value) {
-		fontSmall = resHandler.createFont((int) (value * GameConst.BUBBLE_NAME_FONT_SIZE_REL),
-				ResourceHandler.NECESSARY_CHARS, true, 1, Color.BLACK, Color.WHITE);
-		fontBig = resHandler.createFont((int) (value * GameConst.BUBBLE_NAME_POINTS_SIZE_REL),
-				ResourceHandler.NECESSARY_CHARS, true, 1, Color.BLACK, Color.WHITE);
+		fontSmall = resHandler.createFont(
+				(int) (value * GameConst.BUBBLE_NAME_FONT_SIZE_REL),
+				ResourceHandler.NECESSARY_CHARS, true, 1, Color.BLACK,
+				Color.WHITE);
+		fontBig = resHandler.createFont(
+				(int) (value * GameConst.BUBBLE_NAME_POINTS_SIZE_REL),
+				ResourceHandler.NECESSARY_CHARS, true, 1, Color.BLACK,
+				Color.WHITE);
 	}
 
 	@Override
@@ -182,18 +192,21 @@ public class RobotBubble extends Entity<RobotGameHandler, IRobot> {
 		batch.setColor(color.r, color.g, color.b, color.a * parent.getColor().a);
 		tex.draw(batch, finalX, finalY, width, height);
 		batch.setColor(Color.WHITE);
-		
+
 		if (renderIcon) {
-			currentIcon.draw(batch, finalX + width * GameConst.BUBBLE_ICON_X_REL,
-					finalY + height * GameConst.BUBBLE_ICON_Y_REL, width * GameConst.BUBBLE_ICON_WIDTH_REL,
-					width * GameConst.BUBBLE_ICON_HEIGHT_REL);
+			currentIcon.draw(batch, finalX + width
+					* GameConst.BUBBLE_ICON_X_REL, finalY + height
+					* GameConst.BUBBLE_ICON_Y_REL, width
+					* GameConst.BUBBLE_ICON_WIDTH_REL, width
+					* GameConst.BUBBLE_ICON_HEIGHT_REL);
 		}
-		
+
 		final float fontX = finalX + width * GameConst.BUBBLE_PADDING_LEFT_REL;
 
-		fontSmall.draw(batch, id, fontX, finalY + height * GameConst.BUBBLE_FONT_NAME_Y_REL, width, Align.left, false);
-		fontBig.draw(batch, points, fontX, finalY + height * GameConst.BUBBLE_FONT_POINTS_Y_REL, width, Align.left,
-				false);
+		fontSmall.draw(batch, id, fontX, finalY + height
+				* GameConst.BUBBLE_FONT_NAME_Y_REL, width, Align.left, false);
+		fontBig.draw(batch, points, fontX, finalY + height
+				* GameConst.BUBBLE_FONT_POINTS_Y_REL, width, Align.left, false);
 	}
 
 	@Override
