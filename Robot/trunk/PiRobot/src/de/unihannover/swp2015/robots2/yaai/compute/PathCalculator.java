@@ -7,10 +7,8 @@ import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import de.unihannover.swp2015.robots2.controller.interfaces.IRobotController;
 import de.unihannover.swp2015.robots2.model.interfaces.IField.State;
 import de.unihannover.swp2015.robots2.yaai.YetAnotherAi;
-import de.unihannover.swp2015.robots2.yaai.model.Graph;
 import de.unihannover.swp2015.robots2.yaai.model.Node;
 
 /**
@@ -23,28 +21,12 @@ import de.unihannover.swp2015.robots2.yaai.model.Node;
  * @author Michael Thies
  */
 public class PathCalculator {
-	private final Graph graph;
-	private final IRobotController controller;
 
 	private final int PATH_LENGTH = 10;
 
 	private static final Logger LOGGER = LogManager
 			.getLogger(CalculationWorker.class.getName());
 	private Random random = new Random();
-
-	/**
-	 * Construct a new path calculator to work on a specific graph and a
-	 * specific MainController.
-	 * 
-	 * @param graph
-	 *            The graph model to work on
-	 * @param controller
-	 *            The controller used by the Ai
-	 */
-	public PathCalculator(Graph graph, IRobotController controller) {
-		this.controller = controller;
-		this.graph = graph;
-	}
 
 	/**
 	 * Calculate the best path of a fixed length starting at the given Node.

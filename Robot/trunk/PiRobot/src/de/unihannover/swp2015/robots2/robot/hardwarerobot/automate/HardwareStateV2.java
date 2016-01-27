@@ -42,6 +42,7 @@ public enum HardwareStateV2 implements IState {
 				break;
 			case BACKWARDS:
 				setCarLeds(blink, blink);
+				break;
 			case FORWARDS:
 				setCarLeds(false, false);
 				break;
@@ -97,6 +98,7 @@ public enum HardwareStateV2 implements IState {
 				break;
 			case BACKWARDS:
 				setCarLeds(blink, blink);
+				break;
 			case FORWARDS:
 				setCarLeds(false, false);
 				break;
@@ -401,10 +403,10 @@ public enum HardwareStateV2 implements IState {
 	private static Logger LOGGER = LogManager.getLogger(HardwareStateV2.class.getName());
 	// speed configuration
 	private static final int FASTER = 60;
-	private static final int FAST = 40;
-	private static final int NORMAL = 30;
-	private static final int TURN = 20;
-	private static final int SLOW = 20;
+	private static final int FAST = 50;
+	private static final int NORMAL = 44;
+	private static final int TURN = 25;
+	private static final int SLOW = 25;
 	private static final int STOP = 0;
 
 	// Pi2GO controller
@@ -425,7 +427,7 @@ public enum HardwareStateV2 implements IState {
 	private static final Color COLOR_FRONT_DARKER = Color.WHITE.darker().darker();
 	private static final Color COLOR_BLINK = Color.ORANGE;
 
-	private static long[] measurements = new long[] { 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100 };
+	private static long[] measurements = new long[] { 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100 , 100, 100, 100, 100, 100, 100 };
 	protected static long startTime = 0;
 	protected static Direction nextButOneDirection;
 	private static IStateEvent iStateEvent;

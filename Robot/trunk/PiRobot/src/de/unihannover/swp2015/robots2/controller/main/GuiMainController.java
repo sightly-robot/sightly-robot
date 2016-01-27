@@ -217,17 +217,6 @@ public class GuiMainController extends AbstractMainController implements
 		this.sendMqttMessage(MqttTopic.ROBOT_TYPE, id, null);
 		this.sendMqttMessage(MqttTopic.ROBOT_POSITION, id, null);
 		this.sendMqttMessage(MqttTopic.ROBOT_STATE, id, null);
-
-		// Release all fields occupied by this robot
-		for (int x = 0; x < this.game.getStage().getWidth(); x++) {
-			for (int y = 0; y < this.game.getStage().getHeight(); y++) {
-				IField f = this.game.getStage().getField(x, y);
-				if (f.getState() == State.OCCUPIED
-						&& f.getLockedBy().equals(id))
-					this.sendMqttMessage(MqttTopic.FIELD_OCCUPIED_RELEASE, x
-							+ "-" + y, "");
-			}
-		}
 	}
 
 	@Override

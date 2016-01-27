@@ -5,7 +5,9 @@ import org.apache.logging.log4j.Logger;
 
 import de.unihannover.swp2015.robots2.controller.interfaces.IRobotController;
 import de.unihannover.swp2015.robots2.model.interfaces.IField;
-import de.unihannover.swp2015.robots2.yaai.YetAnotherAi;
+import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
+import de.unihannover.swp2015.robots2.yaai.IComputedFieldHandler;
+import de.unihannover.swp2015.robots2.yaai.IYaaiCalculator;
 import de.unihannover.swp2015.robots2.yaai.model.Graph;
 import de.unihannover.swp2015.robots2.yaai.model.Node;
 
@@ -19,8 +21,8 @@ import de.unihannover.swp2015.robots2.yaai.model.Node;
  * 
  * @author Michael Thies
  */
-public class CalculationWorker implements Runnable {
-	private final YetAnotherAi ai;
+public class CalculationWorker implements Runnable, IYaaiCalculator {
+	private IComputedFieldHandler computedFieldHandler;
 	private final WeightCalculator weightCalculator;
 	private final PathCalculator pathCalculator;
 	private final Graph graph;
@@ -41,12 +43,11 @@ public class CalculationWorker implements Runnable {
 	 * @param ai
 	 *            AI main class to be informed about each new calculation
 	 */
-	public CalculationWorker(IRobotController controller, YetAnotherAi ai) {
+	public CalculationWorker(IRobotController controller) {
 		this.graph = new Graph(controller.getGame().getStage());
-		this.ai = ai;
 
 		this.weightCalculator = new WeightCalculator(graph, controller);
-		this.pathCalculator = new PathCalculator(graph, controller);
+		this.pathCalculator = new PathCalculator();
 	}
 
 	@Override
@@ -60,36 +61,8 @@ public class CalculationWorker implements Runnable {
 			while (true) {
 				long startTime = System.currentTimeMillis();
 
-				if (this.startPosition != null) {
-					try {
-						// Get start node
-						Node startNode = this.graph.getNode(
-								this.startPosition.getX(),
-								this.startPosition.getY());
-
-						// Prevent concurrent modification of the graph.
-						synchronized (this.graph) {
-							// Weight calculation
-							this.weightCalculator.calculate(startNode);
-	
-							// Next field calculation
-							Node n = this.pathCalculator.calculate(startNode);
-							this.nextField = n.getField();
-						}
-
-						LOGGER.trace(
-								"New next field computed by Ai Worker: {}-{}",
-								this.nextField.getX(), this.nextField.getY());
-
-						// Inform AI about new calculated field
-						this.ai.onNewFieldComputed();
-					} catch (IndexOutOfBoundsException e) {
-						LOGGER.info(
-								"Path could not be calculated because start node is out of range",
-								e);
-					}
-				}
-
+				this.calculate();
+				
 				LOGGER.trace("Ai Worker used {}ms for calculation.",
 						System.currentTimeMillis() - startTime);
 
@@ -105,28 +78,62 @@ public class CalculationWorker implements Runnable {
 				}
 			}
 		} catch (InterruptedException e) {
+			LOGGER.info(
+					"Ai Worker stopped by interrupt.");
 		}
 	}
 
-	/**
-	 * Get the latest next field calculated by this worker thread.
-	 * 
-	 * @return Next targeted field, as computed by latest calculation
-	 */
+	@Override
 	public IField getNextField() {
 		return this.nextField;
 	}
 
-	/**
-	 * Set the current robot position to be used as start field for next path
-	 * calculation.
-	 * 
-	 * @param field
-	 *            The field the robot is currently placed on (or driving to)
-	 */
-	public void setCurrentPosition(IField field) {
+	@Override
+	public void setCurrentPosition(IField field, Orientation orientation) {
 		this.startPosition = field;
 		LOGGER.debug("New start position for Ai Worker: {}-{}", field.getX(),
 				field.getY());
+	}
+	
+	@Override
+	public void setHandler(IComputedFieldHandler handler) {
+		this.computedFieldHandler = handler;
+	}
+	
+	/**
+	 * Do the actual calculation.
+	 */
+	private void calculate() {
+		if (this.startPosition == null)
+			return;
+		
+		try {
+			// Get start node
+			Node startNode = this.graph.getNode(
+					this.startPosition.getX(),
+					this.startPosition.getY());
+
+			// Prevent concurrent modification of the graph.
+			synchronized (this.graph) {
+				// Weight calculation
+				this.weightCalculator.calculate(startNode);
+
+				// Next field calculation
+				Node n = this.pathCalculator.calculate(startNode);
+				this.nextField = n.getField();
+			}
+
+			LOGGER.trace(
+					"New next field computed by Ai Worker: {}-{}",
+					this.nextField.getX(), this.nextField.getY());
+
+			// Inform AI about new calculated field
+			if (this.computedFieldHandler != null)
+				this.computedFieldHandler.onNewFieldComputed();
+		} catch (IndexOutOfBoundsException e) {
+			LOGGER.info(
+					"Path could not be calculated because start node is out of range",
+					e);
+		}
 	}
 }

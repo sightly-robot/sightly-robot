@@ -41,14 +41,14 @@ public interface IPosition {
 		 * 
 		 * @param text
 		 *            the representing string of an orientation
-		 * @return the orientation object
+		 * @return the orientation object or {@code null} if string was not a
+		 *         valid representation of an orientation.
 		 */
 		public static Orientation getBy(String text) {
 			if (text.length() > 0)
 				return getBy(text.charAt(0));
 			else
-				throw new IllegalArgumentException(
-						"Orientation may not be empty");
+				return null;
 		}
 
 		/**

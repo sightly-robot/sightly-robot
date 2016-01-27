@@ -9,6 +9,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.unihannover.swp2015.robots2.controller.main.IFieldTimerController;
+import de.unihannover.swp2015.robots2.controller.mqtt.MqttTopic;
+import de.unihannover.swp2015.robots2.model.interfaces.IField;
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent.UpdateType;
 import de.unihannover.swp2015.robots2.model.interfaces.IField.State;
 import de.unihannover.swp2015.robots2.model.writeableInterfaces.IFieldWriteable;
@@ -27,7 +29,8 @@ public class FieldStateModelController {
 	private IFieldTimerController fieldTimerCallback = null;
 	private Random random;
 
-	private static final Logger LOGGER = LogManager.getLogger(FieldStateModelController.class.getName());
+	private static final Logger LOGGER = LogManager
+			.getLogger(FieldStateModelController.class.getName());
 
 	public FieldStateModelController(IStageWriteable stage) {
 		this.stage = stage;
@@ -46,8 +49,7 @@ public class FieldStateModelController {
 	 * @param timerCallback
 	 *            The callback handler for all new timers
 	 */
-	public void setFieldTimerCallback(
-			IFieldTimerController fieldTimerCallback) {
+	public void setFieldTimerCallback(IFieldTimerController fieldTimerCallback) {
 		this.fieldTimerCallback = fieldTimerCallback;
 	}
 
@@ -78,8 +80,8 @@ public class FieldStateModelController {
 			f.setState(State.LOCKED);
 			f.setLockedBy(message);
 
-			Future<Object> newTimer = this.timer.schedule(
-					new FieldTimerTask(f, null), 3000, TimeUnit.MILLISECONDS);
+			Future<Object> newTimer = this.timer.schedule(new FieldTimerTask(f,
+					null), 3000, TimeUnit.MILLISECONDS);
 			f.setStateTimerFuture(newTimer);
 
 			LOGGER.debug("Field " + key + " was locked by robot " + message
@@ -93,9 +95,8 @@ public class FieldStateModelController {
 			f.setState(State.RANDOM_WAIT);
 
 			int waitTime = this.random.nextInt(2700) + 300;
-			Future<Object> newTimer = this.timer.schedule(
-					new FieldTimerTask(f, this.fieldTimerCallback), waitTime,
-					TimeUnit.MILLISECONDS);
+			Future<Object> newTimer = this.timer.schedule(new FieldTimerTask(f,
+					this.fieldTimerCallback), waitTime, TimeUnit.MILLISECONDS);
 			f.setStateTimerFuture(newTimer);
 
 			LOGGER.debug("Field " + key + " was locked by robot " + message
@@ -130,8 +131,8 @@ public class FieldStateModelController {
 		IFieldWriteable f = this.stage.getFieldWriteable(x, y);
 
 		if (f.getState() != State.OURS) {
-			LOGGER.debug(
-					"Field " + key + " was occupied by robot " + message + ".");
+			LOGGER.debug("Field " + key + " was occupied by robot " + message
+					+ ".");
 			f.cancelStateTimer();
 			f.setState(State.OCCUPIED);
 			f.setLockedBy(message);
@@ -189,9 +190,8 @@ public class FieldStateModelController {
 		IFieldWriteable f = this.stage.getFieldWriteable(x, y);
 		f.setState(State.LOCK_WAIT);
 
-		Future<Object> newTimer = this.timer.schedule(
-				new FieldTimerTask(f, this.fieldTimerCallback), 300,
-				TimeUnit.MILLISECONDS);
+		Future<Object> newTimer = this.timer.schedule(new FieldTimerTask(f,
+				this.fieldTimerCallback), 300, TimeUnit.MILLISECONDS);
 		f.setStateTimerFuture(newTimer);
 
 		LOGGER.debug("We lock Field " + x + "-" + y
@@ -214,7 +214,7 @@ public class FieldStateModelController {
 		IFieldWriteable f = this.stage.getFieldWriteable(x, y);
 		f.setState(State.OURS);
 
-		LOGGER.debug("We occupy Field {}-{}.",x,y);
+		LOGGER.debug("We occupy Field {}-{}.", x, y);
 		f.emitEvent(UpdateType.FIELD_STATE);
 
 	}
@@ -241,6 +241,32 @@ public class FieldStateModelController {
 	}
 
 	/**
+	 * Change state of all Fields that are OCCUPIED by the given robot to FREE.
+	 * This should be called when a robot is deleted from model.
+	 * 
+	 * @param robotId
+	 *            ID of the robot whose fields will be released
+	 */
+	public void releaseFieldsOfRobot(String robotId) {
+		LOGGER.debug("Releasing all fields of robot {}.", robotId);
+
+		// Release all fields occupied by this robot
+		for (int x = 0; x < this.stage.getWidth(); x++) {
+			for (int y = 0; y < this.stage.getHeight(); y++) {
+				IFieldWriteable f = this.stage.getFieldWriteable(x, y);
+				if (f.getState() == State.OCCUPIED
+						&& f.getLockedBy().equals(robotId)) {
+					LOGGER.trace(
+							"Releasing field {}-{} cause it was occupied by {}.",
+							x, y, robotId);
+					f.setState(State.FREE);
+					f.emitEvent(UpdateType.FIELD_STATE);
+				}
+			}
+		}
+	}
+
+	/**
 	 * Resize the stage to fit the given coordinates.
 	 * 
 	 * @param x
@@ -250,10 +276,11 @@ public class FieldStateModelController {
 	 */
 	private void resizeStage(int x, int y) {
 		if (x >= this.stage.getWidth() || y >= this.stage.getHeight()) {
-			LOGGER.debug(
-					"Stage will be resized because of field state out of range. Size was "
-							+ this.stage.getWidth() + "x"
-							+ this.stage.getHeight() + ".");
+			LOGGER.debug("Stage will be resized because of field state out of range. Size was "
+					+ this.stage.getWidth()
+					+ "x"
+					+ this.stage.getHeight()
+					+ ".");
 			this.stage.changeSize(Math.max(x + 1, this.stage.getWidth()),
 					Math.max(y + 1, this.stage.getHeight()));
 			this.stage.emitEvent(UpdateType.STAGE_SIZE);

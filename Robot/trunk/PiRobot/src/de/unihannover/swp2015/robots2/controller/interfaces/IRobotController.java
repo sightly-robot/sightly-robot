@@ -1,6 +1,8 @@
 package de.unihannover.swp2015.robots2.controller.interfaces;
 
 import de.unihannover.swp2015.robots2.controller.externalInterfaces.IHardwareRobot;
+import de.unihannover.swp2015.robots2.controller.externalInterfaces.IRemoteAi;
+import de.unihannover.swp2015.robots2.controller.mqtt.MqttTopic;
 import de.unihannover.swp2015.robots2.model.interfaces.*;
 
 /**
@@ -100,4 +102,15 @@ public interface IRobotController extends IController {
 	 *            The hardware robot.
 	 */
 	public void registerHardwareRobot(IHardwareRobot hardwareRobot);
+
+	/**
+	 * Register a remote AI component to be informed about
+	 * {@link MqttTopic#ROBOT_REMOTE_ENABLE} and
+	 * {@link MqttTopic#ROBOT_REMOTE_ORIENTATION} messages via the
+	 * {@link IRemoteAi} interface.
+	 * 
+	 * @param hardwareRobot
+	 *            The remote AI component.
+	 */
+	public void registerRemoteAi(IRemoteAi remoteAi);
 }

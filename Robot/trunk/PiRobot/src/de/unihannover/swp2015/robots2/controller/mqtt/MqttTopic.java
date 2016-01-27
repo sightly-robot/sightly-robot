@@ -22,7 +22,7 @@ public enum MqttTopic {
 	
 	ROBOT_SCORE("robot/score/+", true),
 	
-	ROBOT_PROGRESS("extension/2/robot/progress/+", true),
+	ROBOT_PROGRESS("extension/2/robot/progress/+", false),
 	
 	/**
 	 * Let Robot with given ID (+) blink in given color.
@@ -33,6 +33,10 @@ public enum MqttTopic {
 	ROBOT_BLINK("robot/blink/+", false),
 	
 	ROBOT_STATE("extension/2/robot/state/+", true),
+	
+	ROBOT_REMOTE_ENABLE("extension/2/robot/remote/enable/+",true),
+	
+	ROBOT_REMOTE_ORIENTATION("extension/2/robot/remote/orientation/+",false),
 
 	MAP_WALLS("map/walls", true),
 
@@ -57,8 +61,6 @@ public enum MqttTopic {
 	CONTROL_VIRTUALSPEED("robot/virtualspeed", true),
 	
 	CONTROL_RESET("extension/2/control/reset", false),
-	
-	CONTROL_HESITATIONTIME("extension/2/robot/hesitationtime", true),
 
 	EVENT_ERROR_SERVER_CONNECTION("event/error/server/connection", true),
 

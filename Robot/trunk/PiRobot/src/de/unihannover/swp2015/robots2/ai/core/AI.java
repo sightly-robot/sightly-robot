@@ -8,11 +8,13 @@ import org.apache.logging.log4j.Logger;
 import de.unihannover.swp2015.robots2.ai.exceptions.InvalidStageException;
 import de.unihannover.swp2015.robots2.ai.exceptions.NoValidOrientationException;
 import de.unihannover.swp2015.robots2.ai.graph.AIGraph;
+import de.unihannover.swp2015.robots2.ai.graph.Edge;
 import de.unihannover.swp2015.robots2.ai.graph.Node;
 import de.unihannover.swp2015.robots2.controller.interfaces.IRobotController;
 import de.unihannover.swp2015.robots2.model.externalInterfaces.IModelObserver;
 import de.unihannover.swp2015.robots2.model.interfaces.IEvent;
 import de.unihannover.swp2015.robots2.model.interfaces.IField;
+import de.unihannover.swp2015.robots2.model.interfaces.IField.State;
 import de.unihannover.swp2015.robots2.model.interfaces.IGame;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
@@ -24,7 +26,7 @@ public class AI extends AbstractAI implements IModelObserver {
 
 	private static Logger logger = LogManager.getLogger(AI.class.getName());
 
-	private boolean hasStarted = false;
+	private boolean hasStarted = false; // TODO in constructor
 	private IField nextField;
 	private Orientation nextOrientation;
 	private AIGraph graph; // volatile
@@ -52,7 +54,14 @@ public class AI extends AbstractAI implements IModelObserver {
 		myself = new Robot(iRobotController.getMyself().getId());
 		initialize();
 	}
-
+	
+	/**
+	 * Helper class that stores two values. Used to return Node and Orientation in 
+	 * getNewNode().
+	 *
+	 * @param <X> First value of the Tuple.
+	 * @param <Y> Second value of the Tuple.
+	 */
 	private class Tuple<X, Y> {
 		public final X x;
 		public final Y y;
@@ -70,19 +79,23 @@ public class AI extends AbstractAI implements IModelObserver {
 			try {
 				this.graph = new AIGraph(this.game.getStage(), myself);
 				logger.debug("Positioning myself");
-				this.graph.setRobotPosition(myself, iRobotController.getMyself().getPosition());
+				IPosition myPos = iRobotController.getMyself().getPosition();
+				this.graph.setRobotPosition(myself, myPos);
+				if (myPos.getX() != -1 && myPos.getY() != -1) {
+					this.graph.calculateNextOrientation(myPos.getX(), myPos.getY());
+				}
 			} catch (InvalidStageException e) {
-				e.printStackTrace();
+				logger.error("AI couldn't be initialized, because the stage was invalid", e);
 			}
 		}
 	}
 
 	/**
-	 * React on given events
+	 * React to given events
 	 */
 	@Override
 	public void onModelUpdate(IEvent event) {
-		logger.trace("Received event: {}", event);
+		logger.trace("Received event: {}", event.getType());
 		switch (event.getType()) {
 
 		case FIELD_FOOD:
@@ -93,7 +106,7 @@ public class AI extends AbstractAI implements IModelObserver {
 			}
 			break;
 		case STAGE_WALL:
-			//System.out.println("WALL");
+			// System.out.println("WALL");
 			initialize();
 			break;
 		case STAGE_SIZE:
@@ -130,20 +143,37 @@ public class AI extends AbstractAI implements IModelObserver {
 		}
 
 	}
-
+		
+	/**
+	 * Reacts to Events of type FIELD_STATE.
+	 * 
+	 * @param event The FIELD_STATE Event that is to be handled.
+	 */
 	private void handleFieldStateEvent(IEvent event) {
 		logger.trace("Calling handleFieldStateEvent");
 		if (graph != null) {
 			IField field = (IField) event.getObject();
-			Node node = myself.getPosition();
-
+			//Node node = myself.getPosition();
+			IPosition myPos = iRobotController.getMyself().getPosition();
+			if(!this.game.isRunning() && field.getX() != myPos.getX() && field.getY() != myPos.getY()) {
+				logger.debug("Field State: release Field ({},{}) because game is not running.", field.getX(), field.getY());
+				this.iRobotController.releaseField(field.getX(), field.getY());
+			}
+			
+			if(field.getState() == State.OURS && (field.getX() != nextField.getX() || field.getY() != nextField.getY())) {
+				logger.debug("Releasing field ({},{}), because it should not be ours.", field.getX(), field.getY());
+				this.iRobotController.releaseField(field.getX(), field.getY());
+			}
+			
 			// TODO nullpointerexception possible?
-			if (iRobotController.getMyself().getState() == RobotState.ENABLED && game.isRunning() 
+			if (iRobotController.getMyself().getState() == RobotState.ENABLED && game.isRunning()
 					&& this.nextField == field && this.nextOrientation != null) {
 				switch (field.getState()) {
 				case OURS:
 					logger.debug("Sending new orientation to robot: {}", this.nextOrientation);
-					fireNextOrientationEvent(this.nextOrientation); // or
+					if(fireNextOrientationEvent(this.nextOrientation)) {
+						this.graph.calculateNextOrientation(this.nextField.getX(), this.nextField.getY());
+					} // or
 					break;
 				case FREE:
 					int xCoord = this.nextField.getX();
@@ -176,7 +206,12 @@ public class AI extends AbstractAI implements IModelObserver {
 			}
 		}
 	}
-
+	
+	/**
+	 * Reacts to Events of type ROBOT_POSITION
+	 * 
+	 * @param event The ROBOT_POSITION Event that is to be handled.
+	 */
 	private void handleRobotPositionEvent(IEvent event) {
 		logger.trace("Calling handleRobotPositionEvent");
 		if (graph != null) {
@@ -198,6 +233,7 @@ public class AI extends AbstractAI implements IModelObserver {
 				if (myself.getPosition() == null) {
 					this.graph.setRobotPosition(myself, pos);
 					logger.debug("Set position for the first time for myself");
+					this.graph.calculateNextOrientation(pos.getX(), pos.getY());
 					return;
 				}
 				/*
@@ -221,8 +257,8 @@ public class AI extends AbstractAI implements IModelObserver {
 						 * Only keep going if the game is running
 						 */
 						boolean requested = false;
-						while (!requested) {
-							if (this.game.isRunning() && iRobotController.getMyself().getState() == RobotState.ENABLED ) {
+						while (!requested && iRobotController.getMyself().getState() == RobotState.ENABLED) {
+							if (this.game.isRunning()) {
 								Tuple<Point, Orientation> tuple = this.getNewNode();
 								Point point = tuple.x;
 								int x = (int) point.getX();
@@ -273,43 +309,51 @@ public class AI extends AbstractAI implements IModelObserver {
 			/*
 			 * Case robot is not myself
 			 */
-			else {
-				/*
-				 * Get intern graph-robot object if it already exists, else
-				 * create new one and set position
-				 */
-				if (!this.graph.getRobots().containsKey(robot.getId())) {
-					Robot newRobot = new Robot(robot.getId());
-					this.graph.getRobots().put(robot.getId(), newRobot);
-					this.graph.setRobotPosition(newRobot, pos);
-				} else {
-					Robot otherRobot = this.graph.getRobots().get(robot.getId());
-					int x = otherRobot.getPosition().getX();
-					int y = otherRobot.getPosition().getY();
-					/*
-					 * Check if position was actually updated
-					 */
-					if (x == pos.getX() && y == pos.getY()) {
-						logger.warn("Other robot's position is the same as the old one!");
-						return;
-					} else {
-						logger.trace("Setting other robots position");
-						this.graph.setRobotPosition(otherRobot, pos);
-					}
-				}
-			}
+//			else {
+//				/*
+//				 * Get intern graph-robot object if it already exists, else
+//				 * create new one and set position
+//				 */
+//				if (!this.graph.getRobots().containsKey(robot.getId())) {
+//					Robot newRobot = new Robot(robot.getId());
+//					this.graph.getRobots().put(robot.getId(), newRobot);
+//					this.graph.setRobotPosition(newRobot, pos);
+//				} else {
+//					Robot otherRobot = this.graph.getRobots().get(robot.getId());
+//					int x = otherRobot.getPosition().getX();
+//					int y = otherRobot.getPosition().getY();
+//					/*
+//					 * Check if position was actually updated
+//					 */
+//					if (x == pos.getX() && y == pos.getY()) {
+//						logger.warn("Other robot's position is the same as the old one!");
+//						return;
+//					} else {
+//						logger.trace("Setting other robots position");
+//						this.graph.setRobotPosition(otherRobot, pos);
+//					}
+//				}
+//			}
 		}
 	}
-
+	
+	/**
+	 * Reacts to Events of type GAME_STATE.
+	 * 
+	 * @param event The GAME_STATE Event that is to be handled.
+	 */
 	private void handleGameStateEvent(IEvent event) {
 		logger.trace("Calling handleGameStateEvent");
 		// TODO check hasStarted state!!
 		IGame game = (IGame) event.getObject();
+		if(!game.isRunning()) {
+			logger.debug("Game paused.");
+		}
 		if (game.isRunning() && graph != null && myself.getPosition() != null
-				&& iRobotController.getMyself().getState()== RobotState.ENABLED) {
+				&& iRobotController.getMyself().getState() == RobotState.ENABLED) {
 			Tuple<Point, Orientation> tuple = this.getNewNode();
 			Point point = tuple.x;
-			int x = (int) point.getX();
+			int x = (int) point.getX();		
 			int y = (int) point.getY();
 
 			logger.debug("Requesting field ({},{})", x, y);
@@ -317,17 +361,27 @@ public class AI extends AbstractAI implements IModelObserver {
 			this.nextField = game.getStage().getField(x, y);
 			this.nextOrientation = tuple.y;
 		}
+		if (!game.isRunning() && this.nextField != null) {
+			logger.debug("Releasing field ({}--{}), because game is not running anymore.", this.nextField.getX(), this.nextField.getY());
+			iRobotController.releaseField(this.nextField.getX(), this.nextField.getY());
+		}
 	}
-
+	
+	/**
+	 * Reacts to Events of type ROBOT_STATE.
+	 * 
+	 * @param event The ROBOT_STATE Event that is to be handled.
+	 */
 	private void handleRobotStateEvent(IEvent event) {
 		logger.trace("Calling handleRobotStateEvent");
 		IRobot robot = (IRobot) event.getObject();
+		logger.debug("RobotStateEvent: {}", robot.getState());
 		if (robot.isMyself()) {
 			if (this.hasStarted == false) {
-				if (robot.getState()== RobotState.ENABLED) {
+				if (robot.getState() == RobotState.ENABLED) {
 					this.hasStarted = true;
 					if (getController().getGame().isRunning() && graph != null && myself.getPosition() != null) {
-						//System.out.println("GAMEStart");
+						// System.out.println("GAMEStart");
 						Tuple<Point, Orientation> tuple = this.getNewNode();
 						Point point = tuple.x;
 						int x = (int) point.getX();
@@ -340,10 +394,30 @@ public class AI extends AbstractAI implements IModelObserver {
 					}
 				}
 			}
-			logger.trace("Game has not started!");
+			//logger.trace("Game has not started!");
+			logger.debug("state is not enabled");
+			if (robot.getState() != RobotState.ENABLED) {
+				this.hasStarted = false;
+				if (this.nextField != null) {
+					iRobotController.releaseField(this.nextField.getX(), this.nextField.getY());
+				}
+				
+				if(robot.getState() == RobotState.SETUPSTATE) {
+					iRobotController.setRobotReady();
+					//this.hasStarted = true;
+				}
+			}
 		}
 	}
 
+	/**
+	 * Gets next Node which should be requested by either getting the calculated next Node from 
+	 * the graph or, if that Node is occupied, a random valid Node. Additionally retrieves the
+	 * Orientation the robot needs to drive in to reach the Node.
+	 * 
+	 * @return A tuple of the next Node to request and the Orientation the robot needs to drive in
+	 * 			to reach it. 
+	 */
 	private Tuple<Point, Orientation> getNewNode() {
 		int x = this.myself.getPosition().getX();
 		int y = this.myself.getPosition().getY();
@@ -368,12 +442,36 @@ public class AI extends AbstractAI implements IModelObserver {
 			default:
 				break;
 			}
-			logger.debug("New node is ({},{})", x, y);
+			while(!isFieldAvailable(x, y)) {
+				//logger.debug("field unavalable");
+				for(Edge e : this.myself.getPosition().getNeighbors()) {
+					x = e.getTarget().getX();
+					y = e.getTarget().getY();
+					if(isFieldAvailable(x, y)) {
+						return new Tuple<>(new Point(x, y), e.getDirection());
+					}
+				}
+			}
+			//logger.debug("New node is ({},{})", x, y);
 			return new Tuple<>(new Point(x, y), orientation);
 		} catch (NoValidOrientationException e) {
 			logger.error("getNewNode: no valid orientation was found!", e);
 			return null; // TODO make sure no invalid value is returned
 		}
+	}
+	/**
+	 * Checks, whether field on given location is available by checking, if it is occupied,
+	 * locked or in random_wait.
+	 * 
+	 * @param x The x coordinate of the field for which availability should be checked.
+	 * @param y The y coordinate of the field for which availability should be checked.
+	 * @return true if the field is not occupied, locked or in random_wait and 
+	 * 			false otherwise
+	 */
+	private boolean isFieldAvailable(int x, int y) {
+		return !(this.game.getStage().getField(x, y).getState() == State.OCCUPIED ||
+				this.game.getStage().getField(x, y).getState() == State.LOCKED ||
+				this.game.getStage().getField(x, y).getState() == State.RANDOM_WAIT);
 	}
 
 	@Override
@@ -383,27 +481,13 @@ public class AI extends AbstractAI implements IModelObserver {
 	}
 
 	/**
-	 * Returns the next Orientation, the robot is supposed to move in.
+	 * Returns the next Orientation, the robot is supposed to move in by getting the calculated
+	 * orientation from the graph.
 	 * 
 	 * @return Orientation, the robot is supposed to move in next.
 	 */
 	public Orientation findNextOrientation() throws NoValidOrientationException {
 		logger.trace("Calling findNextOrientation");
-		try {
-			return this.graph.getOrientationFromPath(this.graph.getBFSPath(this.graph.findBestNodeBFS(5)));
-		} catch (Exception e) {
-			logger.error("findNextOrientation: no valid orientation was found!", e);
-		}
-		return null;
-	}
-
-	/**
-	 * Returns currently planned next Orientation to drive in.
-	 * 
-	 * @return nextOrientation, the next Orientation, we plan to drive in
-	 */
-	public Orientation getNextOrientation() {
-		logger.trace("Calling getNextOrientation");
-		return this.nextOrientation;
+		return this.graph.getNextOrientation();
 	}
 }

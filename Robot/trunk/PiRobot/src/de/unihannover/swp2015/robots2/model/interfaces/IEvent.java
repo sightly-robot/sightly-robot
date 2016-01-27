@@ -33,6 +33,12 @@ public interface IEvent {
 		GAME_PARAMETER,
 
 		/**
+		 * The game has been resetted by the user (via a control gui). This
+		 * event does not describe a model update but an actual game event.
+		 */
+		GAME_RESET,
+
+		/**
 		 * The size of the stage (number for Fields) changed. Emitted from
 		 * Stage.
 		 */
@@ -104,9 +110,10 @@ public interface IEvent {
 		 * Game, object reference addresses the deleted Robot!
 		 */
 		ROBOT_DELETE,
-		
+
 		/**
-		 * A Robot should blink. Everywhere!
+		 * A Robot should blink. Everywhere! This event does not describe a
+		 * model update but an actual game event.
 		 */
 		ROBOT_BLINK
 	}

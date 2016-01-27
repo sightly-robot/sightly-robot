@@ -7,6 +7,7 @@ import java.util.UUID;
 import org.eclipse.paho.client.mqttv3.MqttException;
 
 import de.unihannover.swp2015.robots2.controller.externalInterfaces.IHardwareRobot;
+import de.unihannover.swp2015.robots2.controller.externalInterfaces.IRemoteAi;
 import de.unihannover.swp2015.robots2.controller.interfaces.IRobotController;
 import de.unihannover.swp2015.robots2.controller.interfaces.ProtocolException;
 import de.unihannover.swp2015.robots2.controller.mqtt.MqttController;
@@ -31,6 +32,7 @@ public class RobotMainController extends AbstractMainController implements
 
 	private IRobotWriteable myself;
 	private IHardwareRobot hardwareRobot;
+	private IRemoteAi remoteAi;
 
 	public RobotMainController(boolean hardwareRobot) {
 		super();
@@ -47,6 +49,8 @@ public class RobotMainController extends AbstractMainController implements
 
 			MqttTopic[] extendedTopics = { MqttTopic.ROBOT_DISCOVER,
 					MqttTopic.ROBOT_NEW, MqttTopic.ROBOT_SETPOSITION,
+					MqttTopic.ROBOT_REMOTE_ENABLE,
+					MqttTopic.ROBOT_REMOTE_ORIENTATION,
 					MqttTopic.CONTROL_VIRTUALSPEED };
 			String[] subscribeTopics = this.getSubscribeTopcis(extendedTopics);
 
@@ -111,6 +115,18 @@ public class RobotMainController extends AbstractMainController implements
 			this.robotModelController.mqttBlink(key);
 			break;
 
+		case ROBOT_REMOTE_ENABLE:
+			if (key.equals(this.myself.getId()) && this.remoteAi != null) {
+				this.remoteAi.onEnableMessage(!"".equals(message));
+			}
+			break;
+
+		case ROBOT_REMOTE_ORIENTATION:
+			if (key.equals(this.myself.getId()) && this.remoteAi != null) {
+				this.remoteAi.onOrientationMessage(Orientation.getBy(message));
+			}
+			break;
+
 		case CONTROL_VIRTUALSPEED:
 			this.gameModelController.mqttSetRobotVirtualspeed(message);
 			break;
@@ -138,6 +154,13 @@ public class RobotMainController extends AbstractMainController implements
 		case SETTINGS_ROBOT_SET:
 			if (this.hardwareRobot != null)
 				this.hardwareRobot.setSettings(message);
+			break;
+
+		case EVENT_ERROR_SERVER_CONNECTION:
+			// To be compilant with protocol standard we stop when broker
+			// indicates connection loss of the server by disabling ourselves.
+			if (!"".equals(message))
+				this.disableMyself();
 			break;
 
 		default:
@@ -324,6 +347,11 @@ public class RobotMainController extends AbstractMainController implements
 	@Override
 	public void registerHardwareRobot(IHardwareRobot hardwareRobot) {
 		this.hardwareRobot = hardwareRobot;
+	}
+
+	@Override
+	public void registerRemoteAi(IRemoteAi remoteAi) {
+		this.remoteAi = remoteAi;
 	}
 
 	/**
