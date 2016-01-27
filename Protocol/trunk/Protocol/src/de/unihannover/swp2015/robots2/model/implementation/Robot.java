@@ -7,7 +7,6 @@ import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
 import de.unihannover.swp2015.robots2.model.writeableInterfaces.IPositionWritable;
 import de.unihannover.swp2015.robots2.model.writeableInterfaces.IRobotWriteable;
 
-
 /**
  * Basic implementation of the interface IRobotWritable.
  * 
@@ -78,10 +77,11 @@ public class Robot extends AbstractModel implements IRobot, IRobotWriteable {
 		this.connectionState = !myself;
 
 		/*
-		 * The CONNECTED state is the first state any robot enters. (after
-		 * connection. But DISCONNECTED state is managed with the
+		 * For ourselves, CONNECTED is the first state any we enter. For other
+		 * robots we assume they are ENABLED until we receive a converse
+		 * message. (That's important for protocol standard compilance.)
 		 */
-		this.state = RobotState.CONNECTED;
+		this.state = myself ? RobotState.CONNECTED : RobotState.ENABLED;
 	}
 
 	@Override
@@ -164,7 +164,8 @@ public class Robot extends AbstractModel implements IRobot, IRobotWriteable {
 
 	@Override
 	public String getName() {
-		return RobotNames.getName(Integer.parseInt(this.id.substring(2, 6), 16));
+		return RobotNames
+				.getName(Integer.parseInt(this.id.substring(2, 6), 16));
 	}
 
 }
