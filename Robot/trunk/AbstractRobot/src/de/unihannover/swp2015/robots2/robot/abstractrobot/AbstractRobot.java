@@ -85,8 +85,8 @@ public abstract class AbstractRobot {
 				if (event.getType().equals(UpdateType.ROBOT_DELETE)
 						&& event.getObject() == robotController.getMyself()) {
 					LOGGER.info("ROBOT_DELETE event received");
-					LOGGER.warn("Shut down Automation now!");
-					shutdown();
+					//LOGGER.warn("Shut down Automation now!");
+					//shutdown();
 					LOGGER.warn("Shut down JVM now!");
 					System.exit(0); //TODO When all other are deamon threads, this could be outcommented.
 				}
