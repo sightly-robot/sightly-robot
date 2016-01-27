@@ -84,6 +84,10 @@ public class DesktopLauncher {
 					ResConst.ATLAS_NAME.getName());
 			TexturePacker.process(packSettings, "internal/assets/tex/home_theme_src", "internal/" + ResConst.ATLAS_PATH.getName() + "/home",
 					ResConst.ATLAS_NAME.getName());
+			TexturePacker.process(packSettings, "internal/assets/tex/one_theme_src", "internal/" + ResConst.ATLAS_PATH.getName() + "/one",
+					ResConst.ATLAS_NAME.getName());
+			TexturePacker.process(packSettings, "internal/assets/tex/glow_theme_src", "internal/" + ResConst.ATLAS_PATH.getName() + "/glow",
+					ResConst.ATLAS_NAME.getName());
 		}
 		
 		final DisplayMode dm = LwjglApplicationConfiguration.getDesktopDisplayMode();

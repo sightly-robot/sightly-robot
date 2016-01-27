@@ -97,6 +97,8 @@ public class Visualization extends ApplicationAdapter {
 
 		final int appWidth = Gdx.graphics.getWidth();
 		final int appHeight = Gdx.graphics.getHeight();
+		final int nativeWidth = Gdx.graphics.getDisplayMode().width;
+		final int nativeHeight = Gdx.graphics.getDisplayMode().height;
 
 		final OrthographicCamera cam = new OrthographicCamera();
 		cam.setToOrtho(true);
@@ -106,10 +108,10 @@ public class Visualization extends ApplicationAdapter {
 		prefs.putFloat(PrefKey.VIEW_WIDTH, appWidth);
 		prefs.putFloat(PrefKey.VIEW_HEIGHT, appHeight);
 
-		prefs.putFloat(PrefKey.DEVICE_WIDTH, Gdx.graphics.getDisplayMode().width);
-		prefs.putFloat(PrefKey.DEVICE_HEIGHT, Gdx.graphics.getDisplayMode().height);
+		prefs.putFloat(PrefKey.DEVICE_WIDTH, nativeWidth);
+		prefs.putFloat(PrefKey.DEVICE_HEIGHT, nativeHeight);
 		
-		LOGGER.debug("Native resolution is set to: {}x{}", appWidth, appHeight);
+		LOGGER.debug("Native resolution is set to: {}x{}", nativeWidth, nativeHeight);
 
 		final IResourceHandler resHandler = new ResourceHandler(ResConst.ATLAS_PATH.getName());
 		gameHandlerList.add(new RobotGameHandler(mqttHandler.getGame(), fitViewport, resHandler, prefs));
