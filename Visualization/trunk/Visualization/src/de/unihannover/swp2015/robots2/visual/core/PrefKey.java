@@ -3,8 +3,11 @@ package de.unihannover.swp2015.robots2.visual.core;
 import de.unihannover.swp2015.robots2.visual.util.pref.IPreferencesKey;
 
 /**
- * Contains all keys, which will be used for instances of
+ * This contains all keys, which will be used for instances of
  * {@link de.unihannover.swp2015.robots2.visual.util.pref.IPreferences}.
+ * 
+ * Those include keys for using the visualization with a beamer, whether certain
+ * object types should be displayed and which texture pack to use.
  * 
  * @author Rico Schrage
  */
@@ -32,14 +35,14 @@ public enum PrefKey implements IPreferencesKey {
 	
 	/** Key for the hashMap */
 	private final String key;
-	/** Default value of the key */
+	/** default value of the key */
 	private final Object defaultValue;
 
 	/**
 	 * Constructs a PrefKey with the given key.
 	 * 
 	 * @param key
-	 *            key, which will be used to map to the value.
+	 *            key which will be used to map to the value
 	 */
 	private PrefKey(final String key, final Object defaultValue) {
 		this.key = key;
@@ -47,7 +50,7 @@ public enum PrefKey implements IPreferencesKey {
 	}
 
 	/**
-	 * @return Returns the key, which will be used to map the value.
+	 * @return the key which will be used to map the value
 	 */
 	public String getKey() {
 		return key;

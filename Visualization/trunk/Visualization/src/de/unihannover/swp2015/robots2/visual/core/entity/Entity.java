@@ -20,68 +20,69 @@ import de.unihannover.swp2015.robots2.visual.util.pref.IPreferences;
 import de.unihannover.swp2015.robots2.visual.util.pref.IPreferencesObserver;
 
 /**
- * The base class of all objects displayed at the (beamer) visualization
+ * the base class of all objects displayed at the visualization
  *
- * Every object has placement coordinates (3-dimensional, so they get rendered
- * in the right order), a rotation and a model that contains all information
- * about the object.
+ * Every object has placement coordinates, a rotation and a model, that contains
+ * all information about the object, along with a list of modifiers for
+ * rendering. The coordinates have a z-dimension for rendering the objects in
+ * the right order.
  * 
- * @version 1.0
  * @author Daphne Schössow
  * 
- * @param <G> the game-handler type the entity should belong to
- * @param <M> the model type of the entity
+ * @param <G>
+ *            the game handler type to which the entity should belong
+ * @param <M>
+ *            the model type of the entity
  */
-public abstract class Entity<G extends IGameHandler, M extends IAbstractModel> implements IEntity, IPreferencesObserver<PrefKey>, IModelObserver {
+public abstract class Entity<G extends IGameHandler, M extends IAbstractModel>
+		implements IEntity, IPreferencesObserver<PrefKey>, IModelObserver {
 
-	/** List of all modifiers created for the entity. */
+	/** list of all modifiers created for the entity */
 	protected final List<IEntityModifier> modList;
 
-	/** List of all components registered by the entity. */
+	/** list of all components registered by the entity */
 	protected final List<IComponent<? extends IEntity>> componentList;
 
-	/** Data model of the entity. */
+	/** data model of the entity */
 	protected final M model;
 
-	/** X-coordinate of the entity on the (virtual) screen. */
+	/** x-coordinate of the entity on the screen */
 	protected float renderX;
 
-	/** Y-coordinate of the entity on the (virtual) screen. */
+	/** y-coordinate of the entity on the screen */
 	protected float renderY;
 
-	/** Width of the entity on the (virtual) screen. */
+	/** width of the entity on the screen */
 	protected float width;
 
-	/** Height of the entity on the (virtual) screen. */
+	/** height of the entity on the screen */
 	protected float height;
 
-	/** Z-coordinate of the entity on the (virtual) screen. */
+	/** z-coordinate of the entity on the screen */
 	protected int zIndex = 0;
 
-	/** Rotation of the entity in degrees. */
+	/** rotation of the entity in degrees */
 	protected float rotation = 0;
-	
-	/** Color of the entity, default is Color.WHITE */
+
+	/** color of the entity (default is Color.WHITE) */
 	protected Color color = new Color(1f, 1f, 1f, 1f);
-	
-	/** ResourceHandler, which should be used to obtain resources. */
+
+	/** ResourceHandler which should be used to obtain resources */
 	protected final IResourceHandler resHandler;
 
-	/** Preference object, which contains all necessary preferences. */
+	/** preference object which contains all necessary preferences */
 	protected final IPreferences<PrefKey> prefs;
 
-	/** GameHandler, which owns the entity. */
+	/** GameHandler which owns the entity */
 	protected final G gameHandler;
 
 	/**
-	 * Constructs an entity. The constructor will make the entity observe the
+	 * Construction of an entity which will make it observe the
 	 * <code>model</code> and the preference-object of the
 	 * <code>gameHandler</code>
 	 * 
 	 * @param model
 	 *            data model of the entity
-	 * @param batch
-	 *            batch for drawing
 	 * @param gameHandler
 	 *            parent
 	 */
@@ -98,14 +99,14 @@ public abstract class Entity<G extends IGameHandler, M extends IAbstractModel> i
 		this.model = model;
 		this.model.observe(this);
 	}
-	
+
 	/**
 	 * @return model of the entity
 	 */
 	public M getModel() {
 		return model;
 	}
-	
+
 	/**
 	 * @return owner of the entity
 	 */
@@ -133,7 +134,7 @@ public abstract class Entity<G extends IGameHandler, M extends IAbstractModel> i
 	@Override
 	public void draw(Batch batch) {
 		batch.setColor(color);
-		
+
 		for (int i = 0; i < componentList.size(); ++i) {
 			final IComponent<? extends IEntity> comp = componentList.get(i);
 			comp.draw(batch);
@@ -153,13 +154,13 @@ public abstract class Entity<G extends IGameHandler, M extends IAbstractModel> i
 
 	@Override
 	public void clearModifier(Class<? extends IEntityModifier> type) {
-		for (int i = 0; i < modList.size() ; ++i) {
+		for (int i = 0; i < modList.size(); ++i) {
 			if (modList.get(i).getClass().isAssignableFrom(type)) {
 				modList.remove(i);
 			}
 		}
 	}
-	
+
 	@Override
 	@SuppressWarnings("unchecked")
 	public <T extends IEntity> void registerComponent(IComponent<T> component) {
@@ -242,34 +243,41 @@ public abstract class Entity<G extends IGameHandler, M extends IAbstractModel> i
 	public void setRotation(float rot) {
 		this.rotation = rot;
 	}
-	
+
 	@Override
 	public void setColor(Color color) {
 		this.color = color;
 	}
-	
+
 	@Override
 	public Color getColor() {
 		return color;
 	}
 
 	/**
-	 * Should be called, after you have added an entity to the
-	 * {@link RobotGameHandler}. As alternative you can call
+	 * Should be called after you have added an entity to the
+	 * {@link RobotGameHandler}.
+	 * 
+	 * As alternative you can call
 	 * {@link EntityUtil#addEntitySorted(IEntity, List)d} to add a new entity.
+	 * 
+	 * @param entityList
+	 *            list of entities to append
 	 */
 	public static void sortEntities(List<IEntity> entityList) {
 		Collections.sort(entityList);
 	}
 
 	/**
-	 * Adds a new entity to <code>renderUnits</code>. The method uses insertion
-	 * sort, so you don't have to call {@link SortUtil#sortEntities(List)}
+	 * Adds a new entity to <code>renderUnits</code>.
+	 * 
+	 * This method uses insertion sort, so you don't have to call
+	 * {@link SortUtil#sortEntities(List)}
 	 * 
 	 * @param entity
 	 *            new entity
 	 * @param entityList
-	 *            target list
+	 *            list of entities to append
 	 */
 	public static void addEntitySorted(IEntity entity, List<IEntity> entityList) {
 		for (int i = 0; i < entityList.size() + 1; ++i) {
@@ -282,6 +290,6 @@ public abstract class Entity<G extends IGameHandler, M extends IAbstractModel> i
 				return;
 			}
 		}
-	}	
+	}
 
 }

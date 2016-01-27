@@ -5,9 +5,10 @@ import de.unihannover.swp2015.robots2.visual.core.IDrawable;
 import de.unihannover.swp2015.robots2.visual.core.IUpdateable;
 
 /**
- * Describes a component of an entity. Components can handle update processes or
- * event render something. <br>
- * They should be used to extends the functionality of an entity.
+ * Describes a component of an entity.
+ * 
+ * Components can handle update processes or event render something. <br>
+ * They should be used to extend the functionality of an entity.
  * 
  * @author Rico Schrage
  */
@@ -17,7 +18,7 @@ public interface IComponent<T extends IEntity> extends IUpdateable, IDrawable {
 	 * Will be called when the component gets registered.
 	 * 
 	 * @param entity
-	 *            entity, which registered the component
+	 *            entity which registered the component
 	 */
 	void onRegister(T entity);
 

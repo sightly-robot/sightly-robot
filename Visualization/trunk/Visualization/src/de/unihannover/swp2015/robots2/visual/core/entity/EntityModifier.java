@@ -6,26 +6,27 @@ import java.util.List;
 import com.badlogic.gdx.Gdx;
 
 /**
- * Base class for most of the entity-modifier. Contains a standard
- * implementation of {@link IUpdateable#update()}.
+ * base class for most of the entity modifiers
+ * 
+ * Contains a standard implementation of {@link IUpdateable#update()}.
  * 
  * @author Rico Schrage
  */
 public abstract class EntityModifier implements IEntityModifier {
 
-	/** Estimated duration. */
+	/** estimated duration */
 	protected final float duration;
 
-	/** Remaining duration. */
+	/** remaining duration */
 	protected float currentDuration;
 
-	/** Target, which the modifier will affect. */
+	/** target which the modifier will affect */
 	protected final IEntity target;
 
-	/** True if currentDuration <= 0. */
+	/** true if currentDuration <= 0 */
 	protected boolean hasFinished = false;
 
-	/** List of {@link IFinishListener}. */
+	/** list of {@link IFinishListener} */
 	protected List<IFinishListener> finishListenerList;
 
 	/**

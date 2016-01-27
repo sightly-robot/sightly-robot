@@ -5,19 +5,21 @@ import de.unihannover.swp2015.robots2.visual.util.pref.IPreferences;
 import de.unihannover.swp2015.robots2.visual.util.pref.IPreferencesObserver;
 
 /**
- * Provides a very basic skeleton for components.
+ * This provides a very basic skeleton for components.
  * 
  * @author Rico Schrage
  */
-public abstract class Component<T extends IEntity> implements IComponent<T>, IPreferencesObserver<PrefKey> {
+public abstract class Component<T extends IEntity> implements IComponent<T>,
+		IPreferencesObserver<PrefKey> {
 
 	/** Registered entity */
 	protected T entity;
 
 	/**
-	 * Construct a component with the given {@link IPreferences}
+	 * Constructs a component with the given {@link IPreferences}.
 	 * 
 	 * @param pref
+	 *            preferences
 	 */
 	public Component(IPreferences<PrefKey> pref) {
 		pref.addObserver(this);

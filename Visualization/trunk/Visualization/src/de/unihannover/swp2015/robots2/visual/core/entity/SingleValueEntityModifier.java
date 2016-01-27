@@ -4,17 +4,18 @@ import de.unihannover.swp2015.robots2.visual.util.math.function.IEaseFunction;
 import de.unihannover.swp2015.robots2.visual.util.math.function.LinearEaseFunction;
 
 /**
- * Implements an EntityModifier. It should be used when you want to modify
- * exactly one value (stepwise of course).
+ * Implements an EntityModifier.
+ * 
+ * It should be used when you want to modify exactly one value (stepwise).
  * 
  * @author Rico Schrage
  */
 public abstract class SingleValueEntityModifier extends EntityModifier {
 
-	/** Start value */
+	/** starting value */
 	protected final float fromValue;
 
-	/** End value, it will always be the last value the modifier will set. */
+	/** ending value which always will be the last value the modifier will set */
 	protected final float toValue;
 
 	/** {@link IEaseFunction} */
@@ -28,13 +29,14 @@ public abstract class SingleValueEntityModifier extends EntityModifier {
 	 * @param duration
 	 *            estimated duration
 	 * @param fromValue
-	 *            start value
+	 *            starting value
 	 * @param toValue
-	 *            end value
+	 *            ending value
 	 */
-	public SingleValueEntityModifier(final IEntity target, final float duration, final float fromValue,
-			final float toValue) {
-		this(target, duration, fromValue, toValue, LinearEaseFunction.getInstance());
+	public SingleValueEntityModifier(final IEntity target,
+			final float duration, final float fromValue, final float toValue) {
+		this(target, duration, fromValue, toValue, LinearEaseFunction
+				.getInstance());
 	}
 
 	/**
@@ -45,14 +47,15 @@ public abstract class SingleValueEntityModifier extends EntityModifier {
 	 * @param duration
 	 *            estimated duration
 	 * @param fromValue
-	 *            start value
+	 *            starting value
 	 * @param toValue
-	 *            end value
+	 *            ending value
 	 * @param easeFunction
 	 *            {@link IEaseFunction}
 	 */
-	public SingleValueEntityModifier(final IEntity target, final float duration, final float fromValue,
-			final float toValue, final IEaseFunction easeFunction) {
+	public SingleValueEntityModifier(final IEntity target,
+			final float duration, final float fromValue, final float toValue,
+			final IEaseFunction easeFunction) {
 		super(target, duration);
 
 		this.fromValue = fromValue;
@@ -65,11 +68,14 @@ public abstract class SingleValueEntityModifier extends EntityModifier {
 	public void tick() {
 
 		if (fromValue >= toValue) {
-			onSetValue(easeFunction.getPercentage(currentDuration, duration) * Math.abs(toValue - fromValue) + toValue,
-					target);
+			onSetValue(easeFunction.getPercentage(currentDuration, duration)
+					* Math.abs(toValue - fromValue) + toValue, target);
 		} else {
-			onSetValue(easeFunction.getPercentage(duration - currentDuration, duration) * Math.abs(toValue - fromValue)
-					+ fromValue, target);
+			onSetValue(
+					easeFunction.getPercentage(duration - currentDuration,
+							duration)
+							* Math.abs(toValue - fromValue)
+							+ fromValue, target);
 		}
 	}
 
@@ -81,13 +87,14 @@ public abstract class SingleValueEntityModifier extends EntityModifier {
 	 * @param entity
 	 *            target
 	 */
-	protected abstract void onSetInitialValue(final float value, final IEntity entity);
+	protected abstract void onSetInitialValue(final float value,
+			final IEntity entity);
 
 	/**
 	 * Will be called when a value should be set.
 	 * 
 	 * @param value
-	 *            currentValue calculated with the {@link IEaseFunction}
+	 *            current value calculated with the {@link IEaseFunction}
 	 * @param entity
 	 *            target
 	 */

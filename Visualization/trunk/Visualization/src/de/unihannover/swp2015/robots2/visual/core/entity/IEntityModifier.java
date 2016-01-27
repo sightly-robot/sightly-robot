@@ -10,27 +10,27 @@ import de.unihannover.swp2015.robots2.visual.core.IUpdateable;
 public interface IEntityModifier extends IUpdateable {
 
 	/**
-	 * Describes what happens, when an update occurs.
+	 * describes what happens when an update occurs
 	 */
 	public void tick();
 
 	/**
-	 * Returns whether the modifier has finished.
+	 * returns whether the modifier has finished
 	 */
 	public boolean hasFinished();
 
 	/**
-	 * Forces the modifier to stop.
+	 * forces the modifier to stop
 	 */
 	public void kill();
 
 	/**
-	 * Describes what happens on finish (last tick).
+	 * describes what happens on finish (last tick)
 	 */
 	public void onFinish();
 
 	/**
-	 * You can add a {@link IFinishListener}, which will be called in
+	 * You can add a {@link IFinishListener} which will be called in
 	 * {@link IEntityModifier#onFinish()}.
 	 * 
 	 * @param finishListener
@@ -39,7 +39,7 @@ public interface IEntityModifier extends IUpdateable {
 	public void addFinishListener(final IFinishListener finishListener);
 
 	/**
-	 * Describes what happens on init (before first tick).
+	 * Describes what happens on initialization (before first tick).
 	 */
 	public void onInit();
 

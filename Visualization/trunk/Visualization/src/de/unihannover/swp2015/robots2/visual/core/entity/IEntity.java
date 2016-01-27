@@ -15,20 +15,20 @@ import de.unihannover.swp2015.robots2.visual.core.IUpdateable;
 public interface IEntity extends IDrawable, Comparable<IEntity>, IUpdateable {
 
 	/**
-	 * @return the position on the z-axis.
+	 * @return the position on the z axis
 	 */
 	int getZIndex();
 
 	/**
-	 * Sets the position on the z-axis.
+	 * Sets the position on the z axis.
 	 * 
 	 * @param zIndex
-	 *            new position on the z-axis
+	 *            new position on the z axis
 	 */
 	void setZIndex(final int zIndex);
 
 	/**
-	 * Sets the position, where the entity should be rendered.
+	 * Sets the rendering position of the entity.
 	 * 
 	 * @param x
 	 *            x position on the virtual screen
@@ -66,14 +66,15 @@ public interface IEntity extends IDrawable, Comparable<IEntity>, IUpdateable {
 	void setRotation(final float rot);
 
 	/**
-	 * @return rotation in degrees.
+	 * @return rotation in degrees
 	 */
 	float getRotation();
 
 	/**
-	 * Will be called when an event happens in the model. In opposite to
-	 * {@link #onModelUpdate(IEvent)} this method will be called in the
-	 * render-thread.
+	 * Will be called when an event happens in the model.
+	 * 
+	 * In opposite to {@link #onModelUpdate(IEvent)} this method will be called
+	 * in the render thread.
 	 * 
 	 * @param event
 	 *            {@link IEvent}
@@ -92,16 +93,17 @@ public interface IEntity extends IDrawable, Comparable<IEntity>, IUpdateable {
 	 * Removes all modifiers.
 	 */
 	void clearModifier();
-	
+
 	/**
-	 * Removes all modifier of the given type.
+	 * Removes all modifiers of the given type.
 	 * 
-	 * @param type class of the modifier you want to clear 
+	 * @param type
+	 *            class of the modifiers you want to remove
 	 */
 	void clearModifier(Class<? extends IEntityModifier> type);
 
 	/**
-	 * Clears all references, hold by observables, to this entity.
+	 * Clears all references of this entity, which were hold by observables.
 	 */
 	void clearReferences();
 
@@ -121,14 +123,15 @@ public interface IEntity extends IDrawable, Comparable<IEntity>, IUpdateable {
 	 *            {@link IComponent}
 	 */
 	<T extends IEntity> void unregisterComponent(IComponent<T> component);
-	
+
 	/**
 	 * Set the color for this entity.
 	 * 
-	 * @param color color
+	 * @param color
+	 *            color
 	 */
 	void setColor(Color color);
-	
+
 	/**
 	 * @return current color of the entity
 	 */
