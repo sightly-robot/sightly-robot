@@ -110,6 +110,7 @@ public enum HardwareStateV2 implements IState {
 
 			long runningTime = System.currentTimeMillis() - startTime;
 			if (runningTime >= DRIVE_DURATION) {
+				measure();
 				return WAIT;
 			} else if (left && right) {
 				MOTORS.go(FAST);
@@ -240,6 +241,7 @@ public enum HardwareStateV2 implements IState {
 				MOTORS.spinRight(FASTER);
 				return this;
 			} else {
+				measure();
 				return TURN_LEFT_2;
 			}
 		}
@@ -259,9 +261,10 @@ public enum HardwareStateV2 implements IState {
 		public IState execute() {
 			if (!GPIO.isLineLeft()) {
 				setServo(-50);
-				MOTORS.spinRight(calcProgress() < 0.7 ? FAST : SLOW);
+				MOTORS.spinRight(calcProgress() < 0.5 ? NORMAL : SLOW);
 				return this;
 			} else {
+				measure();
 				return FOLLOW_LINE;
 			}
 		}
@@ -284,6 +287,7 @@ public enum HardwareStateV2 implements IState {
 				MOTORS.spinLeft(FASTER);
 				return this;
 			} else {
+				measure();
 				return TURN_RIGHT_2;
 			}
 		}
@@ -303,9 +307,10 @@ public enum HardwareStateV2 implements IState {
 		public IState execute() {
 			if (!GPIO.isLineRight()) {
 				setServo(50);
-				MOTORS.spinLeft(calcProgress() < 0.7 ? FAST : SLOW);
+				MOTORS.spinLeft(calcProgress() < 0.5 ? NORMAL : SLOW);
 				return this;
 			} else {
+				measure();
 				return FOLLOW_LINE;
 			}
 		}
@@ -328,6 +333,7 @@ public enum HardwareStateV2 implements IState {
 				MOTORS.spinRight(FASTER);
 				return this;
 			} else {
+				measure();
 				return TURN_180_2;
 			}
 		}
@@ -347,9 +353,10 @@ public enum HardwareStateV2 implements IState {
 		public IState execute() {
 			if (!GPIO.isLineLeft()) {
 				setServo(-50);
-				MOTORS.spinRight(calcProgress() < 0.7 ? FAST : SLOW);
+				MOTORS.spinRight(calcProgress() < 0.5 ? NORMAL : SLOW);
 				return this;
 			} else {
+				measure();
 				return TURN_180_3;
 			}
 		}
@@ -372,6 +379,7 @@ public enum HardwareStateV2 implements IState {
 				MOTORS.go(-FAST);
 				return this;
 			} else {
+				measure();
 				return TURN_180_4;
 			}
 		}
@@ -391,9 +399,10 @@ public enum HardwareStateV2 implements IState {
 		public IState execute() {
 			if (!GPIO.isLineLeft()) {
 				setServo(-50);
-				MOTORS.spinRight(calcProgress() < 0.7 ? (calcProgress() < 0.5?FASTER:FAST) : SLOW);
+				MOTORS.spinRight(calcProgress() < 0.7 ? (calcProgress() < 0.5?FASTER:NORMAL) : SLOW);
 				return this;
 			} else {
+				measure();
 				return FOLLOW_LINE;
 			}
 		}
@@ -405,7 +414,6 @@ public enum HardwareStateV2 implements IState {
 	private static final int FASTER = 60;
 	private static final int FAST = 50;
 	private static final int NORMAL = 44;
-	private static final int TURN = 25;
 	private static final int SLOW = 25;
 	private static final int STOP = 0;
 
