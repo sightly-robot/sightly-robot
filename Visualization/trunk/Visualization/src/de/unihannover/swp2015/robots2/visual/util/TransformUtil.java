@@ -8,6 +8,10 @@ package de.unihannover.swp2015.robots2.visual.util;
  */
 public class TransformUtil {
 
+	private TransformUtil() {
+		//utility class
+	}
+	
 	/**
 	 * Calculates the smaller rotation between two angles.
 	 * 

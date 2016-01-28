@@ -221,9 +221,8 @@ public class RobotEngine extends Component<Robot> {
 				+ offsetX;
 		final float fieldXNew = (robo.getPosition().getX() + factorX)
 				* fieldWidth + offsetX;
-		final float newRenderX = fieldXOld + factorX
+		return fieldXOld + factorX
 				* Math.abs(fieldXOld - fieldXNew) * progress;
-		return newRenderX;
 	}
 
 	/**
@@ -246,9 +245,8 @@ public class RobotEngine extends Component<Robot> {
 				+ offsetY;
 		final float fieldYNew = (robo.getPosition().getY() + factorY)
 				* fieldHeight + offsetY;
-		final float newRenderY = fieldYOld + factorY
+		return fieldYOld + factorY
 				* Math.abs(fieldYOld - fieldYNew) * progress;
-		return newRenderY;
 	}
 
 	/**

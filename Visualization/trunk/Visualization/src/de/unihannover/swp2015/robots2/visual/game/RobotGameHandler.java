@@ -236,7 +236,7 @@ public class RobotGameHandler extends GameHandler {
 				gameSetup = true;
 			}
 		}
-		boolean condition = (!gameSetup && (!game.isRunning() && !reseted));
+		boolean condition = !gameSetup && (!game.isRunning() && !reseted);
 		pp.setBloomEnabled(condition);
 		ui.setVisible(condition);
 	}
