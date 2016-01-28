@@ -23,109 +23,48 @@ public enum HardwareStateV2 implements IState {
 	 * The robot follows a line until he reaches the next junction.
 	 */
 	FOLLOW_LINE {
-		@Override
-		public void start() {
-			super.start();
-			this.execute();
-		}
 
 		@Override
 		public IState execute() {
-			// LEDS:
-			boolean blink = (System.currentTimeMillis() - startTime) % 800 < 400;
-			switch (nextButOneDirection) {
-			case LEFT:
-				setCarLeds(false, blink);
-				break;
-			case RIGHT:
-				setCarLeds(blink, false);
-				break;
-			case BACKWARDS:
-				setCarLeds(blink, blink);
-				break;
-			case FORWARDS:
-				setCarLeds(false, false);
-				break;
-			}
-
-			if (System.currentTimeMillis() - startTime > 5000) {
-				if(iStateEvent != null)
-					iStateEvent.iStateErrorOccured();
-				return WAIT;
-			}
 			boolean left = GPIO.isLineLeft();
 			boolean right = GPIO.isLineRight();
 
 			if (left && right) {
-				measure();
-				return DRIVE_ON_CELL;
+				return nextState(DRIVE_ON_CELL);
 			} else if (!left && !right) {
-				setServo(0);
 				MOTORS.go(calcProgress() < 0.7 ? FASTER : NORMAL);
 			} else if (right) {
-				setServo(20);
-				MOTORS.go(NORMAL, SLOW); 
+				MOTORS.go(NORMAL, SLOW);
 			} else if (left) {
-				setServo(-20);
-				MOTORS.go(SLOW, NORMAL); 
+				MOTORS.go(SLOW, NORMAL);
 			}
-			return this;
+			setCarLeds(nextButOneDirection);
+			return nextState(this);
 		}
 	},
 	/**
 	 * The robot drives fully onto the cell.
 	 */
 	DRIVE_ON_CELL {
-
-		private static final double DRIVE_DURATION = 300.0;
-
-		@Override
-		public void start() {
-			super.start();
-			this.execute();
-		}
-
+		private static final double DRIVE_DURATION = 280.0;
 		@Override
 		public IState execute() {
-			// LEDS:
-			boolean blink = (System.currentTimeMillis() - startTime) % 800 < 400;
-			switch (nextButOneDirection) {
-			case LEFT:
-				setCarLeds(false, blink);
-				break;
-			case RIGHT:
-				setCarLeds(blink, false);
-				break;
-			case BACKWARDS:
-				setCarLeds(blink, blink);
-				break;
-			case FORWARDS:
-				setCarLeds(false, false);
-				break;
-			}
-
-			// MOTOR:
 			boolean left = GPIO.isLineLeft();
 			boolean right = GPIO.isLineRight();
 
-			long runningTime = System.currentTimeMillis() - startTime;
-			if (runningTime >= DRIVE_DURATION) {
-				measure();
-				return WAIT;
+			if (System.currentTimeMillis() - startTime >= DRIVE_DURATION) {
+				return nextState(WAIT);
 			} else if (left && right) {
-				MOTORS.go(FAST);
-				setServo(0);
+				MOTORS.go(FASTER);
 			} else if (!right && !left) {
-				MOTORS.go(FAST);
-				setServo(0);
+				MOTORS.go(FASTER);
 			} else if (right) {
 				MOTORS.go(NORMAL, SLOW);
-				setServo(20);
 			} else if (left) {
 				MOTORS.go(SLOW, NORMAL);
-				setServo(-20);
 			}
-			return this;
+			setCarLeds(HardwareStateV2.nextButOneDirection);
+			return nextState(this);
 		}
 	},
 	/**
@@ -133,28 +72,23 @@ public enum HardwareStateV2 implements IState {
 	 */
 	SETUP {
 		@Override
-		public void start() {
-			super.start();
-			MOTORS.go(STOP);
-			this.execute();
-		}
-
-		@Override
 		public IState execute() {
-			double x = (System.currentTimeMillis()-HardwareStateV2.startTime)%4000;
-			double y1 = Math.max(0,1 - Math.pow((x-600)/600, 2));
-			double y2 = Math.max(0,1 - Math.pow((x-1600)/600, 2));
-			double y3 = Math.max(0,1 - Math.pow((x-2600)/600, 2));
-			double y4 = Math.max(0,1 - Math.pow((x-3600)/600, 2))+Math.max(0,1 - Math.pow((x+400)/600, 2)); //TODO NOT WORKING!!!
-			LEDS.setLED(LEDS_FRONT,new Color((int) (LEDS.getAccentColor().getRed() * y1),
+			MOTORS.stop();
+			// LEDS:
+			double x = (System.currentTimeMillis() - startTime) % 4000;
+			double y1 = Math.max(0, 1 - Math.pow((x - 600) / 600, 2));
+			double y2 = Math.max(0, 1 - Math.pow((x - 1600) / 600, 2));
+			double y3 = Math.max(0, 1 - Math.pow((x - 2600) / 600, 2));
+			double y4 = Math.max(0, 1 - Math.pow((x - 3600) / 600, 2)) + Math.max(0, 1 - Math.pow((x + 400) / 600, 2)); 
+			LEDS.setLED(LEDS_FRONT, new Color((int) (LEDS.getAccentColor().getRed() * y1),
 					(int) (LEDS.getAccentColor().getGreen() * y1), (int) (LEDS.getAccentColor().getBlue() * y1)));
-			LEDS.setLED(LEDS_RIGHT,new Color((int) (LEDS.getAccentColor().getRed() * y2),
+			LEDS.setLED(LEDS_RIGHT, new Color((int) (LEDS.getAccentColor().getRed() * y2),
 					(int) (LEDS.getAccentColor().getGreen() * y2), (int) (LEDS.getAccentColor().getBlue() * y2)));
-			LEDS.setLED(LEDS_REAR,new Color((int) (LEDS.getAccentColor().getRed() * y3),
+			LEDS.setLED(LEDS_REAR, new Color((int) (LEDS.getAccentColor().getRed() * y3),
 					(int) (LEDS.getAccentColor().getGreen() * y3), (int) (LEDS.getAccentColor().getBlue() * y3)));
-			LEDS.setLED(LEDS_LEFT,new Color((int) (LEDS.getAccentColor().getRed() * y4),
+			LEDS.setLED(LEDS_LEFT, new Color((int) (LEDS.getAccentColor().getRed() * y4),
 					(int) (LEDS.getAccentColor().getGreen() * y4), (int) (LEDS.getAccentColor().getBlue() * y4)));
-			return this;
+			return nextState(this);
 		}
 	},
 	/**
@@ -162,26 +96,21 @@ public enum HardwareStateV2 implements IState {
 	 */
 	DISABLED {
 		@Override
-		public void start() {
-			super.start();
-			MOTORS.go(STOP);
-			this.execute();
-		}
-
-		@Override
 		public IState execute() {
-			double x = (System.currentTimeMillis()-HardwareStateV2.startTime)%4000;
-			double y1 = Math.max(0,1 - Math.pow((x-300)/300, 2));
-			double y2 = Math.max(0,1 - Math.pow((x-600)/300, 2));
-			LEDS.setLED(LEDS_LEFT,new Color((int) (LEDS.getAccentColor().getRed() * y1),
+			MOTORS.stop();
+			// LEDS:
+			double x = (System.currentTimeMillis() - startTime) % 3000;
+			double y1 = Math.max(0, 1 - Math.pow((x - 200) / 200, 2));
+			double y2 = Math.max(0, 1 - Math.pow((x - 400) / 200, 2));
+			LEDS.setLED(LEDS_LEFT, new Color((int) (LEDS.getAccentColor().getRed() * y1),
 					(int) (LEDS.getAccentColor().getGreen() * y1), (int) (LEDS.getAccentColor().getBlue() * y1)));
-			LEDS.setLED(LEDS_RIGHT,new Color((int) (LEDS.getAccentColor().getRed() * y1),
+			LEDS.setLED(LEDS_RIGHT, new Color((int) (LEDS.getAccentColor().getRed() * y1),
 					(int) (LEDS.getAccentColor().getGreen() * y1), (int) (LEDS.getAccentColor().getBlue() * y1)));
-			LEDS.setLED(LEDS_FRONT,new Color((int) (LEDS.getAccentColor().getRed() * y2),
+			LEDS.setLED(LEDS_FRONT, new Color((int) (LEDS.getAccentColor().getRed() * y2),
 					(int) (LEDS.getAccentColor().getGreen() * y2), (int) (LEDS.getAccentColor().getBlue() * y2)));
-			LEDS.setLED(LEDS_REAR,new Color((int) (LEDS.getAccentColor().getRed() * y2),
+			LEDS.setLED(LEDS_REAR, new Color((int) (LEDS.getAccentColor().getRed() * y2),
 					(int) (LEDS.getAccentColor().getGreen() * y2), (int) (LEDS.getAccentColor().getBlue() * y2)));
-			return this;
+			return nextState(this);
 		}
 	},
 	/**
@@ -189,16 +118,13 @@ public enum HardwareStateV2 implements IState {
 	 */
 	WAIT {
 		@Override
-		public void start() {
-			super.start();
-			MOTORS.go(STOP);
-			this.execute();
-		}
-
-		@Override
 		public IState execute() {
-			setCarLeds(false, false);
-			return this;
+			MOTORS.stop();
+			setCarLeds(nextButOneDirection);
+			//RESET NextDirection after a while:
+			if(System.currentTimeMillis()-startTime > 3000)
+				HardwareStateV2.nextButOneDirection = Direction.FORWARDS;
+			return nextState(this);
 		}
 	},
 	/**
@@ -206,20 +132,15 @@ public enum HardwareStateV2 implements IState {
 	 */
 	CONNECTED {
 		@Override
-		public void start() {
-			super.start();
-			MOTORS.go(STOP);
-			this.execute();
-		}
-
-		@Override
 		public IState execute() {
-			double x = (System.currentTimeMillis()-HardwareStateV2.startTime)%8000;
-			double i = Math.max(0,1 - Math.pow((x-700)/700, 2));
-			
+			MOTORS.stop();
+			// LEDs:
+			double x = (System.currentTimeMillis() - startTime) % 8000;
+			double i = Math.max(0, 1 - Math.pow((x - 700) / 700, 2));
+
 			LEDS.setAllLEDs(new Color((int) (LEDS.getAccentColor().getRed() * i),
 					(int) (LEDS.getAccentColor().getGreen() * i), (int) (LEDS.getAccentColor().getBlue() * i)));
-			return this;
+			return nextState(this);
 		}
 	},
 	/**
@@ -227,22 +148,13 @@ public enum HardwareStateV2 implements IState {
 	 */
 	TURN_LEFT_1 {
 		@Override
-		public void start() {
-			super.start();
-			setCarLeds(false, true);
-			LEDS.setLED(LEDS_LEFT, COLOR_BLINK);
-			this.execute();
-		}
-
-		@Override
 		public IState execute() {
 			if (GPIO.isLineLeft()) {
-				setServo(-50);
+				setCarLeds(Direction.LEFT);
 				MOTORS.spinRight(FASTER);
-				return this;
+				return nextState(this);
 			} else {
-				measure();
-				return TURN_LEFT_2;
+				return nextState(TURN_LEFT_2);
 			}
 		}
 	},
@@ -251,21 +163,13 @@ public enum HardwareStateV2 implements IState {
 	 */
 	TURN_LEFT_2 {
 		@Override
-		public void start() {
-			super.start();
-			setCarLeds(false, true);
-			this.execute();
-		}
-
-		@Override
 		public IState execute() {
 			if (!GPIO.isLineLeft()) {
-				setServo(-50);
-				MOTORS.spinRight(calcProgress() < 0.5 ? NORMAL : SLOW);
-				return this;
+				setCarLeds(Direction.LEFT);
+				MOTORS.spinRight(calcProgress() < 0.4 ? NORMAL : SLOW);
+				return nextState(this);
 			} else {
-				measure();
-				return FOLLOW_LINE;
+				return nextState(FOLLOW_LINE);
 			}
 		}
 	},
@@ -274,21 +178,13 @@ public enum HardwareStateV2 implements IState {
 	 */
 	TURN_RIGHT_1 {
 		@Override
-		public void start() {
-			super.start();
-			setCarLeds(true, false);
-			this.execute();
-		}
-
-		@Override
 		public IState execute() {
 			if (GPIO.isLineRight()) {
-				setServo(50);
+				setCarLeds(Direction.RIGHT);
 				MOTORS.spinLeft(FASTER);
-				return this;
+				return nextState(this);
 			} else {
-				measure();
-				return TURN_RIGHT_2;
+				return nextState(TURN_RIGHT_2);
 			}
 		}
 	},
@@ -297,21 +193,13 @@ public enum HardwareStateV2 implements IState {
 	 */
 	TURN_RIGHT_2 {
 		@Override
-		public void start() {
-			super.start();
-			setCarLeds(true, false);
-			this.execute();
-		}
-
-		@Override
 		public IState execute() {
 			if (!GPIO.isLineRight()) {
-				setServo(50);
-				MOTORS.spinLeft(calcProgress() < 0.5 ? NORMAL : SLOW);
-				return this;
+				setCarLeds(Direction.RIGHT);
+				MOTORS.spinLeft(calcProgress() < 0.4 ? NORMAL : SLOW);
+				return nextState(this);
 			} else {
-				measure();
-				return FOLLOW_LINE;
+				return nextState(FOLLOW_LINE);
 			}
 		}
 	},
@@ -320,21 +208,13 @@ public enum HardwareStateV2 implements IState {
 	 */
 	TURN_180_1 {
 		@Override
-		public void start() {
-			super.start();
-			setCarLeds(false, true);
-			this.execute();
-		}
-
-		@Override
 		public IState execute() {
 			if (GPIO.isLineLeft()) {
-				setServo(-50);
+				setCarLeds(Direction.LEFT);
 				MOTORS.spinRight(FASTER);
-				return this;
+				return nextState(this);
 			} else {
-				measure();
-				return TURN_180_2;
+				return nextState(TURN_180_2);
 			}
 		}
 	},
@@ -343,21 +223,13 @@ public enum HardwareStateV2 implements IState {
 	 */
 	TURN_180_2 {
 		@Override
-		public void start() {
-			super.start();
-			setCarLeds(false, true);
-			this.execute();
-		}
-
-		@Override
 		public IState execute() {
 			if (!GPIO.isLineLeft()) {
-				setServo(-50);
-				MOTORS.spinRight(calcProgress() < 0.5 ? NORMAL : SLOW);
-				return this;
+				setCarLeds(Direction.LEFT);
+				MOTORS.spinRight(calcProgress() < 0.4 ? NORMAL : SLOW);
+				return nextState(this);
 			} else {
-				measure();
-				return TURN_180_3;
+				return nextState(TURN_180_3);
 			}
 		}
 	},
@@ -366,21 +238,13 @@ public enum HardwareStateV2 implements IState {
 	 */
 	TURN_180_3 {
 		@Override
-		public void start() {
-			super.start();
-			setCarLeds(true, true);
-			this.execute();
-		}
-
-		@Override
 		public IState execute() {
 			if (!GPIO.isLineRight()) {
-				setServo(0);
-				MOTORS.go(-FAST);
-				return this;
+				setCarLeds(Direction.BACKWARDS);
+				MOTORS.go(-NORMAL);
+				return nextState(this);
 			} else {
-				measure();
-				return TURN_180_4;
+				return nextState(TURN_180_4);
 			}
 		}
 	},
@@ -389,21 +253,13 @@ public enum HardwareStateV2 implements IState {
 	 */
 	TURN_180_4 {
 		@Override
-		public void start() {
-			super.start();
-			setCarLeds(false, true);
-			this.execute();
-		}
-
-		@Override
 		public IState execute() {
 			if (!GPIO.isLineLeft()) {
-				setServo(-50);
-				MOTORS.spinRight(calcProgress() < 0.7 ? (calcProgress() < 0.5?FASTER:NORMAL) : SLOW);
-				return this;
+				setCarLeds(Direction.LEFT);
+				MOTORS.spinRight(calcProgress() < 0.7 ? (calcProgress() < 0.4 ? FASTER : NORMAL) : SLOW);
+				return nextState(this);
 			} else {
-				measure();
-				return FOLLOW_LINE;
+				return nextState(FOLLOW_LINE);
 			}
 		}
 	};
@@ -412,10 +268,8 @@ public enum HardwareStateV2 implements IState {
 	private static Logger LOGGER = LogManager.getLogger(HardwareStateV2.class.getName());
 	// speed configuration
 	private static final int FASTER = 60;
-	private static final int FAST = 50;
 	private static final int NORMAL = 44;
 	private static final int SLOW = 25;
-	private static final int STOP = 0;
 
 	// Pi2GO controller
 	private static final LEDAndServoController LEDS = LEDAndServoController.getInstance();
@@ -435,37 +289,69 @@ public enum HardwareStateV2 implements IState {
 	private static final Color COLOR_FRONT_DARKER = Color.WHITE.darker().darker();
 	private static final Color COLOR_BLINK = Color.ORANGE;
 
-	private static long[] measurements = new long[] { 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100 , 100, 100, 100, 100, 100, 100 };
-	protected static long startTime = 0;
-	protected static Direction nextButOneDirection;
+	private static long[] measurements = new long[] { 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100,
+			100, 100, 100, 100 };
+	protected long startTime = 0;
+	protected static Direction nextButOneDirection = Direction.FORWARDS;
 	private static IStateEvent iStateEvent;
 
 	/**
-	 * Should be called at start to reset the measurements.
+	 * Should be called at start to reset the measurements. The super-start
+	 * should be called in state's start-methods for correct startTime and
+	 * nextButOneDirection.
 	 */
 	@Override
 	public void start() {
-		LOGGER.trace("Start State " + toString());
-		if (!isDriving())
-			nextButOneDirection = Direction.FORWARDS;
-		startTime = System.currentTimeMillis();
+		nextButOneDirection = Direction.FORWARDS;
+		startIntern();
 	}
-
+	
 	/**
-	 * Should be called at end of an State Lifecircle
+	 * Intern start Method. Is not reseting the nextButOneDirection.
 	 */
-	protected void measure() {
-		measurements[this.ordinal()] = (long) (measurements[this.ordinal()] * 0.8
-				+ 0.2 * (System.currentTimeMillis() - startTime));
+	private void startIntern() {
+		LOGGER.trace("Start State " + toString());
+		startTime = System.currentTimeMillis();
+		execute();
 	}
 
 	/**
-	 * Can be called while executing to calculate the current measured Progress.
+	 * Should be called at return of a driving-state lifecicle.</br>
+	 * <b>Measurement:</b> Measures the state-duration and returns the
+	 * nextState.</br>
+	 * <b>Error Detection:</b> Returns next State or WAIT for a robotic error.
+	 * Fires the robotic-error EVENT.
 	 * 
-	 * @return progress double 0 to 1
+	 * @param nextState
+	 * @return nextState or WAIT
+	 */
+	protected HardwareStateV2 nextState(HardwareStateV2 nextState) {
+		// Detect Drive Error:
+		if (isDriving() && System.currentTimeMillis() - startTime > 4000) {
+			if (iStateEvent != null)
+				iStateEvent.iStateErrorOccured();
+			WAIT.startIntern();
+			return WAIT;
+		}
+		//On Stateswitch:
+		if (nextState != this) {
+			//Measure:
+			measurements[this.ordinal()] = (long) (measurements[this.ordinal()] * 0.8
+					+ 0.2 * (System.currentTimeMillis() - startTime));
+			//Start new State:
+			nextState.startIntern();
+		}
+			
+		return nextState;
+	}
+
+	/**
+	 * Can be called while executing to calculate the current measured Progress of a state.
+	 * 
+	 * @return progress double 0 to endless (After learning it should be in range of 1)
 	 */
 	protected double calcProgress() {
-		return Math.min(((double) (System.currentTimeMillis() - startTime)) / measurements[this.ordinal()], 1);
+		return ((double) (System.currentTimeMillis() - startTime)) / measurements[this.ordinal()];
 	}
 
 	/**
@@ -476,7 +362,7 @@ public enum HardwareStateV2 implements IState {
 	 */
 	@Override
 	public boolean isWait() {
-		return this == WAIT; // TODO || this == SETUP || this == DISABLED
+		return this == WAIT;
 	}
 
 	@Override
@@ -485,20 +371,18 @@ public enum HardwareStateV2 implements IState {
 	}
 
 	/**
-	 * Sets the servo to the specified degree.
-	 * 
-	 * @param degree
-	 *            the degrees to set the servo to
+	 * Sets the Car Led style and is blinking in direction.
 	 */
-	protected void setServo(double degree) {
-		LEDS.setServo(LEDAndServoController.S15, degree);
-	}
+	protected void setCarLeds(Direction direction) {
+		boolean right = direction == Direction.RIGHT || direction == Direction.BACKWARDS;
+		boolean left = direction == Direction.LEFT || direction == Direction.BACKWARDS;
 
-	/**
-	 * Sets the Car Led style.
-	 */
-	protected void setCarLeds(boolean right, boolean left) {
-		LEDS.setLED(LEDS_FRONT, this == HardwareStateV2.WAIT?COLOR_FRONT_DARKER:COLOR_FRONT);
+		boolean blink = (System.currentTimeMillis() - FOLLOW_LINE.startTime) % 800 < 400;
+
+		right = blink && right;
+		left = blink && left;
+
+		LEDS.setLED(LEDS_FRONT, this == HardwareStateV2.WAIT ? COLOR_FRONT_DARKER : COLOR_FRONT);
 		LEDS.setLED(LEDS_REAR, this == DRIVE_ON_CELL ? COLOR_BREAK : COLOR_REAR);
 		if (right) {
 			LEDS.setLED(LEDS_RIGHT, COLOR_BLINK);
@@ -537,7 +421,7 @@ public enum HardwareStateV2 implements IState {
 	public void setNextButOneDirection(Direction direction) {
 		HardwareStateV2.nextButOneDirection = direction;
 	}
-	
+
 	public void setIStateEventObserver(IStateEvent iStateEvent) {
 		HardwareStateV2.iStateEvent = iStateEvent;
 	}

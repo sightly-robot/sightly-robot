@@ -30,7 +30,7 @@ public interface IRobot extends IAbstractModel {
 		 * Robot disabled. Cause: The robot initially connected or reconnected
 		 * after connection loss. It must be manually restarted by the user.
 		 */
-		CONNECTED(""),
+		CONNECTED("c"),
 
 		/**
 		 * Robot disabled. Cause: A user manually disabled the robot via it's
@@ -56,7 +56,7 @@ public interface IRobot extends IAbstractModel {
 		SETUPSTATE("s"),
 
 		/** The robot is enabled and therefore ready-to-drive or driving. */
-		ENABLED("e");
+		ENABLED("");
 		
 		private final String mqttEncoding;
 

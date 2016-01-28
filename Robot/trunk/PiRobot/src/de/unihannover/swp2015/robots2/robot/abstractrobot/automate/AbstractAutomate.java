@@ -1,6 +1,7 @@
 package de.unihannover.swp2015.robots2.robot.abstractrobot.automate;
 
 import java.awt.Point;
+import java.util.concurrent.ThreadPoolExecutor;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -44,7 +45,7 @@ public abstract class AbstractAutomate implements AiEventObserver, Runnable, ISt
 	private long nextUpdateTime;
 	private int lastProgress = 0;
 
-	protected double[] progressMeasurements = new double[] { 1000, 1000, 1000, 1000 };
+	protected double[] progressMeasurements = new double[] { 2000, 2000, 2000, 2000 };
 	private Direction currentDirection = Direction.FORWARDS;
 	private long lastWaitTime;
 
@@ -121,7 +122,6 @@ public abstract class AbstractAutomate implements AiEventObserver, Runnable, ISt
 
 				if (state != tempState) {
 					state = tempState;
-					state.start();
 					if (!state.isDriving()) {
 						// measurements
 						progressMeasurements[currentDirection.ordinal()] = System.currentTimeMillis() - lastWaitTime;
@@ -164,7 +164,7 @@ public abstract class AbstractAutomate implements AiEventObserver, Runnable, ISt
 			}
 		}
 	}
-
+	
 	private void updatePostition(final int x, final int y) {
 		new Thread() {
 			@Override

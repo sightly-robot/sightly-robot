@@ -39,6 +39,9 @@ public class MotorController {
 
 	private int rightSpeed;
 	private int leftSpeed;
+	
+	private boolean servoActivated = true;
+	private static final int SERVO = BlinkLEDAndServoController.S15;
 
 	/**
 	 * Initializes the Singleton instance.<br>
@@ -94,8 +97,7 @@ public class MotorController {
 	 *            -100 <= speed <= 100
 	 */
 	public void go(int speed) {
-		setLeftSpeed(speed);
-		setRightSpeed(speed);
+		go(speed,speed);
 	}
 
 	/**
@@ -109,6 +111,7 @@ public class MotorController {
 	public void go(int speedLeft, int speedRight) {
 		setLeftSpeed(speedLeft);
 		setRightSpeed(speedRight);
+		updateServo();
 	}
 
 	/**
@@ -127,8 +130,7 @@ public class MotorController {
 	 *            -100 <= speed <= 100
 	 */
 	public void spinLeft(int speed) {
-		setLeftSpeed(speed);
-		setRightSpeed(-speed);
+		go(speed,-speed);
 	}
 
 	/**
@@ -140,8 +142,7 @@ public class MotorController {
 	 *            -100 <= speed <= 100
 	 */
 	public void spinRight(int speed) {
-		setLeftSpeed(-speed);
-		setRightSpeed(speed);
+		go(-speed,speed);
 	}
 
 	/**
@@ -195,11 +196,28 @@ public class MotorController {
 		rightSpeed = speed;
 		// System.out.println("set right speed to : " + speed);
 	}
+	
+	private void updateServo()
+	{
+		if(servoActivated)
+		{
+			double degree = Math.max(Math.min((leftSpeed-rightSpeed),50),-50);
+			BlinkLEDAndServoController.getInstance().setServo(SERVO, degree);
+		}
+	}
 
 	/**
 	 * Processes a shutdown of the engine controller.
 	 */
 	public void shutdown() {
 		stop();
+	}
+
+	public boolean isServoActivated() {
+		return servoActivated;
+	}
+
+	public void setServoActivated(boolean servoActivated) {
+		this.servoActivated = servoActivated;
 	}
 }

@@ -64,26 +64,13 @@ public class RobotMainController extends AbstractMainController implements
 	}
 
 	@Override
-	public void startMqtt(String brokerUrl) throws ProtocolException {
-		super.startMqtt(brokerUrl);
-
-		String robotType = this.myself.isHardwareRobot() ? "real" : "virtual";
-		this.sendMqttMessage(MqttTopic.EVENT_ERROR_ROBOT_CONNECTION,
-				this.myself.getId(), null);
-		this.sendMqttMessage(MqttTopic.ROBOT_TYPE, this.myself.getId(),
-				robotType);
-		this.sendMqttMessage(MqttTopic.ROBOT_NEW, null, this.myself.getId());
-		this.sendMqttMessage(MqttTopic.ROBOT_DISCOVER, null, "");
-	}
-
-	@Override
 	public void handleMqttMessage(String topic, String message) {
 		MqttTopic mqtttopic = MqttTopic.getBy(topic);
 		String key = mqtttopic.getKey(topic);
 
 		switch (mqtttopic) {
 		case ROBOT_DISCOVER:
-			/* Should be deprecated when using retained messages */
+			// Only for protocol standard compilance
 			String robotType = this.myself.isHardwareRobot() ? "real"
 					: "virtual";
 			this.sendMqttMessage(MqttTopic.ROBOT_TYPE, this.myself.getId(),
@@ -175,9 +162,21 @@ public class RobotMainController extends AbstractMainController implements
 		// First do the same thing as any other main controller
 		this.game.setSynced(connected);
 
-		// then update our robot state and inform other clients about state and
-		// reconnect
+		// Then inform other components about us and ask them to identify (if
+		// they do not support retained messages).
+		if (connected) {
+			String robotType = this.myself.isHardwareRobot() ? "real"
+					: "virtual";
+			this.sendMqttMessage(MqttTopic.EVENT_ERROR_ROBOT_CONNECTION,
+					this.myself.getId(), null);
+			this.sendMqttMessage(MqttTopic.ROBOT_TYPE, this.myself.getId(),
+					robotType);
+			this.sendMqttMessage(MqttTopic.ROBOT_NEW, null, this.myself.getId());
+			this.sendMqttMessage(MqttTopic.ROBOT_DISCOVER, null, "discover");
+		}
 
+		// then update our robot state and inform other clients about state and
+		// connection state
 		switch (this.myself.getState()) {
 		// If we are not disabled for any other cause, we will disable ourself
 		// due to connection loss and reconnect
@@ -194,12 +193,7 @@ public class RobotMainController extends AbstractMainController implements
 		}
 
 		this.myself.setRobotConnectionState(connected);
-		if (connected) {
-			this.sendMqttMessage(MqttTopic.EVENT_ERROR_ROBOT_CONNECTION,
-					this.myself.getId(), null);
-			this.sendMqttMessage(MqttTopic.ROBOT_DISCOVER,null, "discover");
-		}
-		
+
 		// Emit correct model events
 		this.game.emitEvent(UpdateType.MODEL_SYNC_STATE);
 		this.myself.emitEvent(UpdateType.ROBOT_STATE);
@@ -223,7 +217,7 @@ public class RobotMainController extends AbstractMainController implements
 		Orientation o = Orientation.getBy(positionParts[2]);
 
 		this.stageModelController.resizeStage(x, y);
-		
+
 		// Don't do anything if the target field is occupied by another
 		// robot
 		IField.State state = this.game.getStage().getField(x, y).getState();
