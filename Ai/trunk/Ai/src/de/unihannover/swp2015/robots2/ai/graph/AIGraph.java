@@ -297,19 +297,19 @@ public class AIGraph extends Thread implements Runnable {
 
 		for (Edge edge : this.myNextNode.getNeighbors()) {
 			if (edge.getTarget() == path.get(1)) {
-				if(edge.getTarget().getRobot() == null) {
+	
 					return edge.getDirection();
-				} else {
-					while(true) {
-						logger.debug("in while true");
-						for(Edge tmpEdge : myNextNode.getNeighbors()) {
-							if(tmpEdge.getTarget().getRobot() == null && tmpEdge.getDirection() == getRandomOrientation()) {
-								return tmpEdge.getDirection();
-							}
-						}
-						sleep(10);
-					}
-				}
+				//else {
+//					while(true) {
+//						logger.debug("in while true");
+//						for(Edge tmpEdge : myNextNode.getNeighbors()) {
+//							if(tmpEdge.getTarget().getRobot() == null && tmpEdge.getDirection() == getRandomOrientation()) {
+//								return tmpEdge.getDirection();
+//							}
+//						}
+//						sleep(10);
+//					}
+//				}
 			}
 		}
 		logger.error("getOrientationFromPath: No neighbors for current node found!");
@@ -436,7 +436,8 @@ public class AIGraph extends Thread implements Runnable {
 			 * Delete robot from old position in graph
 			 */
 			logger.debug("Deleting robot from old position");
-			robot.getPosition().setRobot(null);
+			Node currPos = robot.getPosition();
+			nodes[currPos.getX()][currPos.getY()].removeRobot();
 		}
 		if (newPosition.getX() != -1) {
 			/*
@@ -471,7 +472,7 @@ public class AIGraph extends Thread implements Runnable {
 		this.myNextNode = this.nodes[x][y];
 		logger.debug("My next node is ({},{})", x, y);
 		try {
-			Node bestNode = findBestNodeBFS(5);
+			Node bestNode = findBestNodeBFS(3);
 			logger.debug("Next target: ({},{})", bestNode.getX(), bestNode.getY());
 			this.nextOrientation = getOrientationFromPath(getBFSPath(bestNode));
 			this.calculated = true;

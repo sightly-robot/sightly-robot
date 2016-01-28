@@ -148,6 +148,14 @@ public class Node {
 		return true;
 	}
 	
+	public void removeRobot() {
+		this.robot = null;
+	}
+	
+	public boolean hasRobot() {
+		return this.robot != null;
+	}
+	
 	/**
 	 * Returns the Robot object which is on the Node (or null, if there is none).
 	 * 
