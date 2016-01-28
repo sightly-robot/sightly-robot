@@ -25,10 +25,11 @@ public class AIGraph extends Thread implements Runnable {
 
 	private static Logger logger = LogManager.getLogger(AIGraph.class.getName());
 
-	private IStage stage;
-
+	private IStage stage;	
 	private Node[][] nodes;
 
+	private boolean calculated = false;
+	
 	/*
 	 * Should be set by the AI class!
 	 */
@@ -213,28 +214,29 @@ public class AIGraph extends Thread implements Runnable {
 	 * @return Orientation, the robot should move in next
 	 */
 	// TODO: Exception if there is no valid Orientation
-	public Orientation getRandomOrientation() throws NoValidOrientationException {
+	public Orientation getRandomOrientation() {
 		logger.trace("Calling getRandomOrientation");
 		List<Orientation> available = new ArrayList<Orientation>();
 		Node myPos = this.myNextNode;
-		int x = myPos.getX();
-		int y = myPos.getY();
-
-		if (!myPos.isWall(Orientation.NORTH)) {
-			available.add(Orientation.NORTH);
+		
+		while(available.isEmpty()) {
+			if (!myPos.isWall(Orientation.NORTH)) {
+				available.add(Orientation.NORTH);
+			}
+			if (!myPos.isWall(Orientation.EAST)) {
+				available.add(Orientation.EAST);
+			}
+			if (!myPos.isWall(Orientation.SOUTH)) {
+				available.add(Orientation.SOUTH);
+			}
+			if (!myPos.isWall(Orientation.WEST)) {
+				available.add(Orientation.WEST);
+			}
+	
+			Collections.shuffle(available);
+			logger.trace("Returning orientation {}", available.get(0));
 		}
-		if (!myPos.isWall(Orientation.EAST)) {
-			available.add(Orientation.EAST);
-		}
-		if (!myPos.isWall(Orientation.SOUTH)) {
-			available.add(Orientation.SOUTH);
-		}
-		if (!myPos.isWall(Orientation.WEST)) {
-			available.add(Orientation.WEST);
-		}
-
-		Collections.shuffle(available);
-		logger.trace("Returning orientation {}", available.get(0));
+		
 		return available.get(0);
 	}
 
@@ -465,12 +467,14 @@ public class AIGraph extends Thread implements Runnable {
 	 * @param y The y coordinate of the robots next Position.
 	 */
 	public void calculateNextOrientation(int x, int y) {
+		this.calculated = false;
 		this.myNextNode = this.nodes[x][y];
 		logger.debug("My next node is ({},{})", x, y);
 		try {
 			Node bestNode = findBestNodeBFS(5);
 			logger.debug("Next target: ({},{})", bestNode.getX(), bestNode.getY());
 			this.nextOrientation = getOrientationFromPath(getBFSPath(bestNode));
+			this.calculated = true;
 			logger.debug("Next calculated orientation is {}", this.nextOrientation.name());
 		} catch (Exception e) {
 			logger.error("calculateNextOrientation: no valid orientation was found!", e);
@@ -483,6 +487,15 @@ public class AIGraph extends Thread implements Runnable {
 	 * @return The calculated nextOrientation, the robot should drive in.
 	 */
 	public Orientation getNextOrientation() {
-		return this.nextOrientation;
+		try {
+			while(!this.calculated) {
+				sleep(10);
+			}
+			return this.nextOrientation;
+		}
+		catch(InterruptedException e) {
+			e.printStackTrace();
+		}
+		return this.getRandomOrientation();
 	}
 }
