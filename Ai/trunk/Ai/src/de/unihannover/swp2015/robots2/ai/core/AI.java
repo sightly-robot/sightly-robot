@@ -1,6 +1,9 @@
 package de.unihannover.swp2015.robots2.ai.core;
 
 import java.awt.Point;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -348,6 +351,9 @@ public class AI extends AbstractAI implements IModelObserver {
 		IGame game = (IGame) event.getObject();
 		if(!game.isRunning()) {
 			logger.debug("Game paused.");
+			this.nextField = null;
+		} else {
+			logger.debug("Game running.");
 		}
 		if (game.isRunning() && graph != null && myself.getPosition() != null
 				&& iRobotController.getMyself().getState() == RobotState.ENABLED) {
@@ -444,13 +450,17 @@ public class AI extends AbstractAI implements IModelObserver {
 			}
 			while(!isFieldAvailable(x, y)) {
 				//logger.debug("field unavalable");
+				List<Edge> avNeighbors = new ArrayList<Edge>();
 				for(Edge e : this.myself.getPosition().getNeighbors()) {
 					x = e.getTarget().getX();
 					y = e.getTarget().getY();
 					if(isFieldAvailable(x, y)) {
-						return new Tuple<>(new Point(x, y), e.getDirection());
+						avNeighbors.add(e);
 					}
 				}
+				Collections.shuffle(avNeighbors);
+				Node tmp = avNeighbors.get(0).getTarget();
+				return new Tuple<>(new Point(tmp.getX(), tmp.getY()), avNeighbors.get(0).getDirection());
 			}
 			//logger.debug("New node is ({},{})", x, y);
 			return new Tuple<>(new Point(x, y), orientation);

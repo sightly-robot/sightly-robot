@@ -497,6 +497,7 @@ public class AIGraph extends Thread implements Runnable {
 		catch(InterruptedException e) {
 			e.printStackTrace();
 		}
+		logger.debug("Returning random Orientation.");
 		return this.getRandomOrientation();
 	}
 }
