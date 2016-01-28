@@ -15,7 +15,7 @@ public class ConsoleView extends Window implements Bindable {
 	
 	@Override
 	public void initialize(Map<String, Object> arg0, URL arg1, Resources arg2) {
-		
+		//annotation does the job
 	}
 
 	public TextArea getOutputArea() {

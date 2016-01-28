@@ -9,10 +9,14 @@ import java.io.OutputStream;
 import javax.swing.SwingUtilities;
 
 import org.apache.commons.exec.ExecuteStreamHandler;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.pivot.wtk.TextArea;
 import org.apache.pivot.wtk.Window;
 
 public class Console implements ExecuteStreamHandler {
+	
+	private static final Logger LOGGER = LogManager.getLogger();
 	
 	private InputStream inputStream;
 	
@@ -92,14 +96,14 @@ public class Console implements ExecuteStreamHandler {
 						});
 					}
 				} catch (IOException e) {
-					
+					LOGGER.debug(e);
 				}			
 			}
 			
 			try {
 				bf.close();
 			} catch (IOException e) {
-				e.printStackTrace();
+				LOGGER.error("Closing the reader failed.", e);
 			}
 		}
 		

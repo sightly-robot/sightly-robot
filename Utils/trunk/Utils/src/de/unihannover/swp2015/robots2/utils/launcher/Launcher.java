@@ -10,6 +10,8 @@ import org.apache.commons.exec.DefaultExecuteResultHandler;
 import org.apache.commons.exec.DefaultExecutor;
 import org.apache.commons.exec.ExecuteWatchdog;
 import org.apache.commons.exec.Executor;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.pivot.beans.BXML;
 import org.apache.pivot.beans.BXMLSerializer;
 import org.apache.pivot.beans.Bindable;
@@ -25,6 +27,8 @@ import org.apache.pivot.wtk.TextInput;
 import org.apache.pivot.wtk.Window;
 
 public class Launcher extends Window implements Bindable {
+
+	private static final Logger LOGGER = LogManager.getLogger();
 
 	@BXML private TextInput hostInput;
 	@BXML private ImageView imageServerRunning;
@@ -122,10 +126,8 @@ public class Launcher extends Window implements Bindable {
 				"/de/unihannover/swp2015/robots2/utils/launcher/bxml/consoleView.bxml"));
 			gameserverConsole = new Console(serverOutput);
 			
-		} catch (SerializationException e1) {
-			e1.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (SerializationException | IOException e) {
+			LOGGER.error("Serialization failed!", e);
 		}
 	}
 
@@ -161,7 +163,7 @@ public class Launcher extends Window implements Bindable {
 					gameserver.execute(CommandLine.parse(cmd), gameserverResult);
 				} 
 				catch (IOException e) {
-					e.printStackTrace();
+					LOGGER.error("Failed to start a gameserver!", e);
 				}
 
 				// toggle buttons
@@ -212,7 +214,7 @@ public class Launcher extends Window implements Bindable {
 				app.execute(CommandLine.parse(cmd), appResult);
 			} 
 			catch (IOException e) {
-				e.printStackTrace();
+				LOGGER.error("Failed to start a controlpanel!", e);
 			}
 		}
 	};
@@ -231,7 +233,7 @@ public class Launcher extends Window implements Bindable {
 				vis.execute(CommandLine.parse(cmd), visResult);
 			} 
 			catch (IOException e) {
-				e.printStackTrace();
+				LOGGER.error("Failed to start a visualization!", e);
 			}
 		}
 	};
@@ -251,7 +253,7 @@ public class Launcher extends Window implements Bindable {
 					robot.execute(CommandLine.parse(cmd), robotResult);
 				} 
 				catch (IOException e) {
-					e.printStackTrace();
+					LOGGER.error("Failed to start a robot!", e);
 				}
 
 				// toggle buttons
