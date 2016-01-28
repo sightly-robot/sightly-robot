@@ -6,6 +6,7 @@ import java.util.Locale;
 import org.apache.pivot.beans.BXML;
 import org.apache.pivot.beans.Bindable;
 import org.apache.pivot.collections.ArrayList;
+import org.apache.pivot.collections.List;
 import org.apache.pivot.collections.Map;
 import org.apache.pivot.collections.Sequence;
 import org.apache.pivot.util.Resources;
@@ -589,13 +590,19 @@ public class Configurator extends Window implements Bindable, IVisualizationCont
 	@Override
 	public void receiveSettings(String settings) {
 		// TODO Auto-generated method stub
-		VisualizationOptions visu = VisualizationOptions.createFromJson(settings);
+		final VisualizationOptions visu = VisualizationOptions.createFromJson(settings);
+		final boolean exists = visualizations.getVisualization(visu.getId()) != null;
 		visualizations.addVisualization(visu.getId(), visu);
 		
 		ApplicationContext.queueCallback(new Runnable() {			
 			@Override
+            @SuppressWarnings("unchecked")
 			public void run() {
-				visualizationList.setListData(visualizations.getIdList());
+				if (!exists) {
+					List<String> list = (List<String>) visualizationList.getListData();
+                    list.add(visu.getId());
+				}
+				//visualizationList.setListData(visualizations.getIdList());
 			}
 		});
 	}
