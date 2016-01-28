@@ -122,7 +122,6 @@ public abstract class AbstractAutomate implements AiEventObserver, Runnable, ISt
 
 				if (state != tempState) {
 					state = tempState;
-					state.start();
 					if (!state.isDriving()) {
 						// measurements
 						progressMeasurements[currentDirection.ordinal()] = System.currentTimeMillis() - lastWaitTime;
