@@ -29,6 +29,9 @@ public class FieldStateModelController {
 	private IFieldTimerController fieldTimerCallback = null;
 	private Random random;
 
+	private final int LOCK_WAIT_TIME = 100;
+	private final int RANDOM_WAIT_MAX = 3000;
+
 	private static final Logger LOGGER = LogManager
 			.getLogger(FieldStateModelController.class.getName());
 
@@ -94,7 +97,8 @@ public class FieldStateModelController {
 			f.cancelStateTimer();
 			f.setState(State.RANDOM_WAIT);
 
-			int waitTime = this.random.nextInt(2700) + 300;
+			int waitTime = this.random
+					.nextInt(RANDOM_WAIT_MAX - LOCK_WAIT_TIME) + LOCK_WAIT_TIME;
 			Future<Object> newTimer = this.timer.schedule(new FieldTimerTask(f,
 					this.fieldTimerCallback), waitTime, TimeUnit.MILLISECONDS);
 			f.setStateTimerFuture(newTimer);
@@ -190,8 +194,9 @@ public class FieldStateModelController {
 		IFieldWriteable f = this.stage.getFieldWriteable(x, y);
 		f.setState(State.LOCK_WAIT);
 
-		Future<Object> newTimer = this.timer.schedule(new FieldTimerTask(f,
-				this.fieldTimerCallback), 300, TimeUnit.MILLISECONDS);
+		Future<Object> newTimer = this.timer
+				.schedule(new FieldTimerTask(f, this.fieldTimerCallback),
+						LOCK_WAIT_TIME, TimeUnit.MILLISECONDS);
 		f.setStateTimerFuture(newTimer);
 
 		LOGGER.debug("We lock Field " + x + "-" + y
