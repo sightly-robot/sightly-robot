@@ -14,8 +14,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.unihannover.swp2015.robots2.ai.core.Robot;
+import de.unihannover.swp2015.robots2.ai.exceptions.InvalidPathException;
 import de.unihannover.swp2015.robots2.ai.exceptions.InvalidStageException;
-import de.unihannover.swp2015.robots2.ai.exceptions.NoValidOrientationException;
 import de.unihannover.swp2015.robots2.model.interfaces.IField;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
@@ -37,15 +37,11 @@ public class AIGraph extends Thread implements Runnable {
 
 	private boolean calculated = false;
 	
-	/*
-	 * Should be set by the AI class!
-	 */
 	private Robot myself;
 	private Node myNextNode; // position this robot will be on next
-	private Orientation nextOrientation; // next Orientation, robot should drive
-											// in
+	private Orientation nextOrientation; // next Orientation, robot should drive in
 	/*
-	 * To identify other robots String is ID of the robot TODO implement
+	 * To identify other robots String is ID of the robot 
 	 */
 	private HashMap<String, Robot> robots;
 
@@ -115,10 +111,9 @@ public class AIGraph extends Thread implements Runnable {
 
 	@Override
 	public void run() {
-		while (true) { // TODO something better than while true?
+		while (true) { 
 			try {
-				sleep(10); // TODO this is supposed to keep the thread alive and
-							// waiting for method calls...
+				sleep(10);	
 			} catch (InterruptedException e) {
 				logger.error("AIGraph: thread was interrupted", e);
 			}
@@ -220,7 +215,6 @@ public class AIGraph extends Thread implements Runnable {
 	 * 
 	 * @return Orientation, the robot should move in next
 	 */
-	// TODO: Exception if there is no valid Orientation
 	public Orientation getRandomOrientation() {
 		logger.trace("Calling getRandomOrientation");
 		List<Orientation> available = new ArrayList<Orientation>();
@@ -297,30 +291,17 @@ public class AIGraph extends Thread implements Runnable {
 	 * @param path The path from which the next Orientation to drive in should
 	 * 			be determined.
 	 * @return The Orientation the robot should drive in next.
-	 * @throws Exception //TODO
+	 * @throws InvalidPathException Thrown if the given path is invalid
 	 */
-	public Orientation getOrientationFromPath(List<Node> path) throws Exception {
+	public Orientation getOrientationFromPath(List<Node> path) throws InvalidPathException {
 		logger.trace("Calling getOrientationFromPath");
 
 		for (Edge edge : this.myNextNode.getNeighbors()) {
 			if (edge.getTarget() == path.get(1)) {
-	
 					return edge.getDirection();
-				//else {
-//					while(true) {
-//						logger.debug("in while true");
-//						for(Edge tmpEdge : myNextNode.getNeighbors()) {
-//							if(tmpEdge.getTarget().getRobot() == null && tmpEdge.getDirection() == getRandomOrientation()) {
-//								return tmpEdge.getDirection();
-//							}
-//						}
-//						sleep(10);
-//					}
-//				}
 			}
 		}
-		logger.error("getOrientationFromPath: No neighbors for current node found!");
-		throw new Exception();
+		throw new InvalidPathException("Node at index 1 is no neighbor of current node.");
 	}
 
 	/**
@@ -331,24 +312,15 @@ public class AIGraph extends Thread implements Runnable {
 	 * @param range The range in which the robot should look for fields.
 	 * @return The best Node in range. 
 	 */
-	public Node findBestNode(int range) { // TODO better way to determine best
-											// node via bfs
+	public Node findBestNode(int range) {
 		logger.trace("Calling findBestNode");
 		int x = this.myNextNode.getX();
 		int y = this.myNextNode.getY();
-		// Set<Node> set = new HashSet<Node>();
 		Node curr;
 		if (x != Math.max(x - range, 0) || y != Math.max(y - range, 0)) {
 			curr = this.nodes[Math.max(x - range, 0)][Math.max(y - range, 0)];
 		} else {
-			curr = this.nodes[Math.max(x - range, 1)][Math.max(y - range, 0)]; // TODO
-																				// make
-																				// sure
-																				// no
-																				// inaccessible
-																				// field
-																				// is
-																				// selected
+			curr = this.nodes[Math.max(x - range, 1)][Math.max(y - range, 0)]; 
 		}
 		for (int i = Math.max(x - range, 0); i < Math.min(x + range + 1, this.nodes.length); i++) {
 			for (int j = Math.max(y - range, 0); j < Math.min(y + range + 1, this.nodes[0].length); j++) {
@@ -393,11 +365,10 @@ public class AIGraph extends Thread implements Runnable {
 		q.add(curr);
 		visited.add(curr.x);
 
-		// initialize with random neighbor
 		List<Edge> myNeighbors = this.myNextNode.getNeighbors();
 		Node best = myNeighbors.get((int) (Math.random() * myNeighbors.size())).getTarget();
 
-		while (curr.y <= range) { // TODO check for empty queue
+		while (curr.y <= range) { 
 			curr = q.remove();
 
 			Set<Node> neighbors = new HashSet<Node>();
