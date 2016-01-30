@@ -20,7 +20,14 @@ import de.unihannover.swp2015.robots2.model.interfaces.IField;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
 import de.unihannover.swp2015.robots2.model.interfaces.IStage;
-
+/**
+ * 
+ * This class represents a model of the Stage of the game. It is used by the AI 
+ * for calculating the next steps. 
+ * 
+ * @author Timon Barlag, Philip Naumann 
+ *
+ */
 public class AIGraph extends Thread implements Runnable {
 
 	private static Logger logger = LogManager.getLogger(AIGraph.class.getName());

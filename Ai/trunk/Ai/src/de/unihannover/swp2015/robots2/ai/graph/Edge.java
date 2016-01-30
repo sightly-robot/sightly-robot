@@ -2,6 +2,12 @@ package de.unihannover.swp2015.robots2.ai.graph;
 
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
 
+/**
+ * A Class used to represent transitions between fields of the stage.
+ * 
+ * @author Timon Barlag, Philip Naumann
+ *
+ */
 public class Edge {
 	private Node source; 
 	private Node target;

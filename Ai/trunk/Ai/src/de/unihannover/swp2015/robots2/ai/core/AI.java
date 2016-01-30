@@ -25,19 +25,31 @@ import de.unihannover.swp2015.robots2.model.interfaces.IRobot;
 import de.unihannover.swp2015.robots2.model.interfaces.IRobot.RobotState;
 import de.unihannover.swp2015.robots2.robot.interfaces.AbstractAI;
 
+/**
+ * A specific instance of the AbstractAI used to handle where a robot should drive.
+ * 
+ * @author Timon Barlag, Philip Naumann
+ *
+ */
 public class AI extends AbstractAI implements IModelObserver {
 
 	private static Logger logger = LogManager.getLogger(AI.class.getName());
 
-	private boolean hasStarted = false; // TODO in constructor
+	private boolean hasStarted = false; 
 	private IField nextField;
 	private Orientation nextOrientation;
-	private AIGraph graph; // volatile
+	private AIGraph graph;
 
 	private IGame game;
 	private Robot myself;
 
-	public AI(IRobotController controller) { // controller from data modell
+	/**
+	 * Constructor for AI objects. Creates an AI object as an instance of AbstractAI
+	 * based on the given IRobotController.
+	 * 
+	 * @param controller The IRobotController the AI should be based on.
+	 */
+	public AI(IRobotController controller) {
 		super(controller);
 
 		logger.debug("Loading map from stage");
@@ -109,7 +121,6 @@ public class AI extends AbstractAI implements IModelObserver {
 			}
 			break;
 		case STAGE_WALL:
-			// System.out.println("WALL");
 			initialize();
 			break;
 		case STAGE_SIZE:
@@ -156,7 +167,6 @@ public class AI extends AbstractAI implements IModelObserver {
 		logger.trace("Calling handleFieldStateEvent");
 		if (graph != null) {
 			IField field = (IField) event.getObject();
-			//Node node = myself.getPosition();
 			IPosition myPos = iRobotController.getMyself().getPosition();
 			if(!this.game.isRunning() && field.getX() != myPos.getX() && field.getY() != myPos.getY()) {
 				logger.debug("Field State: release Field ({},{}) because game is not running.", field.getX(), field.getY());
@@ -168,7 +178,6 @@ public class AI extends AbstractAI implements IModelObserver {
 				this.iRobotController.releaseField(field.getX(), field.getY());
 			}
 			
-			// TODO nullpointerexception possible?
 			if (iRobotController.getMyself().getState() == RobotState.ENABLED && game.isRunning()
 					&& this.nextField == field && this.nextOrientation != null) {
 				switch (field.getState()) {
@@ -187,12 +196,10 @@ public class AI extends AbstractAI implements IModelObserver {
 				case LOCK_WAIT:
 					break;
 				case LOCKED:
-					// break;
+
 				case OCCUPIED:
-					// break;
+
 				case RANDOM_WAIT:
-					// iRobotController.releaseField(nextField.getX(),
-					// nextField.getY());
 
 					Tuple<Point, Orientation> tuple = this.getNewNode();
 					Point point = tuple.x;
@@ -243,7 +250,7 @@ public class AI extends AbstractAI implements IModelObserver {
 				 * If myself has a position, update it if it's not the same as
 				 * the old one
 				 */
-				else { // TODO add request for field etc back in
+				else { 
 					/*
 					 * Check if the new position is different than our old one,
 					 * only keep going if this is true
@@ -279,28 +286,16 @@ public class AI extends AbstractAI implements IModelObserver {
 									this.nextOrientation = tuple.y;
 									requested = true;
 									break;
-								// No need to use LOCKED state at the moment
 								case LOCKED:
 									break;
-								// Calculate new field
 								case OCCUPIED:
 									break;
-								// Drive on field if we have successfully
-								// got it
-								// (locked by us)
-								// Should be triggered by another event!!
-								// TODO
 								case OURS:
-									// fireNextOrientationEvent(nextOrientation);
 									break;
-								// Don't use for now
 								case LOCK_WAIT:
 									break;
-								// Don't use for now
 								case RANDOM_WAIT:
 									break;
-								// Should throw error if a field has no
-								// event
 								default:
 									break;
 								}
@@ -309,34 +304,6 @@ public class AI extends AbstractAI implements IModelObserver {
 					}
 				}
 			}
-			/*
-			 * Case robot is not myself
-			 */
-//			else {
-//				/*
-//				 * Get intern graph-robot object if it already exists, else
-//				 * create new one and set position
-//				 */
-//				if (!this.graph.getRobots().containsKey(robot.getId())) {
-//					Robot newRobot = new Robot(robot.getId());
-//					this.graph.getRobots().put(robot.getId(), newRobot);
-//					this.graph.setRobotPosition(newRobot, pos);
-//				} else {
-//					Robot otherRobot = this.graph.getRobots().get(robot.getId());
-//					int x = otherRobot.getPosition().getX();
-//					int y = otherRobot.getPosition().getY();
-//					/*
-//					 * Check if position was actually updated
-//					 */
-//					if (x == pos.getX() && y == pos.getY()) {
-//						logger.warn("Other robot's position is the same as the old one!");
-//						return;
-//					} else {
-//						logger.trace("Setting other robots position");
-//						this.graph.setRobotPosition(otherRobot, pos);
-//					}
-//				}
-//			}
 		}
 	}
 	
@@ -347,7 +314,6 @@ public class AI extends AbstractAI implements IModelObserver {
 	 */
 	private void handleGameStateEvent(IEvent event) {
 		logger.trace("Calling handleGameStateEvent");
-		// TODO check hasStarted state!!
 		IGame game = (IGame) event.getObject();
 		if(!game.isRunning()) {
 			logger.debug("Game paused.");
@@ -449,7 +415,6 @@ public class AI extends AbstractAI implements IModelObserver {
 				break;
 			}
 			while(!isFieldAvailable(x, y)) {
-				//logger.debug("field unavalable");
 				List<Edge> avNeighbors = new ArrayList<Edge>();
 				for(Edge e : this.myself.getPosition().getNeighbors()) {
 					x = e.getTarget().getX();
@@ -462,11 +427,10 @@ public class AI extends AbstractAI implements IModelObserver {
 				Node tmp = avNeighbors.get(0).getTarget();
 				return new Tuple<>(new Point(tmp.getX(), tmp.getY()), avNeighbors.get(0).getDirection());
 			}
-			//logger.debug("New node is ({},{})", x, y);
 			return new Tuple<>(new Point(x, y), orientation);
 		} catch (NoValidOrientationException e) {
 			logger.error("getNewNode: no valid orientation was found!", e);
-			return null; // TODO make sure no invalid value is returned
+			return null; 
 		}
 	}
 	/**
@@ -486,7 +450,6 @@ public class AI extends AbstractAI implements IModelObserver {
 
 	@Override
 	public void setRelativeSpeed(double foreward, double sideward, double backward) {
-		// TODO Auto-generated method stub
 
 	}
 

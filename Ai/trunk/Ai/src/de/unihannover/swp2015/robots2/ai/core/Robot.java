@@ -3,13 +3,17 @@ package de.unihannover.swp2015.robots2.ai.core;
 import de.unihannover.swp2015.robots2.ai.graph.Node;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
 
+/**
+ * An internal representation of robots of the gane.
+ * 
+ * @author Timon Barlag, Philip Naumann
+ *
+ */
 public class Robot { 
 	private String id;
 	private Node position;
-	//private int score;
-	private Orientation orientation; // enum taken from data modell
-	//private boolean myself;
-	//private boolean isVirtual;
+
+	private Orientation orientation;
 	
 	/**
 	 * Basic constructor for Robot objects. Only sets id.

@@ -7,6 +7,12 @@ import de.unihannover.swp2015.robots2.ai.core.Robot;
 import de.unihannover.swp2015.robots2.model.interfaces.IField;
 import de.unihannover.swp2015.robots2.model.interfaces.IPosition.Orientation;
 
+/**
+ * A class representing fields on the stage.
+ * 
+ * @author Timon Barlag, Philip Naumann
+ *
+ */
 public class Node {
 	private List<Edge> neighbors;
 	private Robot robot;
