@@ -132,8 +132,7 @@ public class GuiMainController extends AbstractMainController implements
 
 	@Override
 	public void sendFood(List<List<Integer>> food) {
-		this.sendMqttMessage(MqttTopic.MAP_INIT_FOOD, null,
-				food2String(food));
+		this.sendMqttMessage(MqttTopic.MAP_INIT_FOOD, null, food2String(food));
 	}
 
 	@Override
@@ -148,9 +147,12 @@ public class GuiMainController extends AbstractMainController implements
 		this.sendMqttMessage(MqttTopic.CONTROL_VIRTUALSPEED, null,
 				Float.toString(robotSpeed));
 	}
-	
+
 	@Override
 	public void sendVRobotSpeed(float robotSpeed, float robotRotationSpeed) {
+		// Send vrobot speed in old format first for legacy purposes
+		this.sendMqttMessage(MqttTopic.CONTROL_VIRTUALSPEED, null,
+				Float.toString(robotSpeed));
 		this.sendMqttMessage(MqttTopic.CONTROL_VIRTUALSPEED, null,
 				Float.toString(robotSpeed) + "," + Float.toString(robotRotationSpeed));
 	}
@@ -167,8 +169,7 @@ public class GuiMainController extends AbstractMainController implements
 			String robot) {
 		String message = Integer.toString(x) + "," + Integer.toString(y) + ","
 				+ orientation.toString();
-		this.sendMqttMessage(MqttTopic.ROBOT_SETPOSITION, robot,
-				message);
+		this.sendMqttMessage(MqttTopic.ROBOT_SETPOSITION, robot, message);
 	}
 
 	@Override
