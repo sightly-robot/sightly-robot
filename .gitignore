@@ -1,0 +1,10 @@
+*.class
+
+# Eclipse project files
+.settings
+.classpath
+.project
+
+# IntelliJ IDEA project files
+.idea
+*.iml
