@@ -1,0 +1,25 @@
+<dialogs:ListDialog bxml:id="dialog" title="Dialog" modal="true"
+    xmlns:bxml="http://pivot.apache.org/bxml"
+    xmlns:dialogs="de.sightly_robot.sightly_robot.application.dialogs"
+    xmlns="org.apache.pivot.wtk"
+	preferredWidth="400"
+	preferredHeight="350"
+>	
+	<TablePane styles="{padding:4, verticalSpacing:4, horizontalSpacing:4}">
+		<columns>
+			<TablePane.Column width="1*"/>
+		</columns>
+		
+		<TablePane.Row height="4*">
+			<ScrollPane
+						horizontalScrollBarPolicy="fill"
+						verticalScrollBarPolicy="fill_to_capacity">
+				<ListView bxml:id="list" selectMode="single"/>
+			</ScrollPane>
+		</TablePane.Row>
+		
+		<TablePane.Row height="1*">
+			<PushButton bxml:id="okButton" styles="{font:{size:16}, color:'#FFFFFF', backgroundColor:'#505050'}" buttonData="Ok"/>
+		</TablePane.Row>
+	</TablePane>	
+</dialogs:ListDialog>

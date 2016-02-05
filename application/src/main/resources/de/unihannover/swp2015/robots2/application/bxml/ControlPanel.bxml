@@ -1,0 +1,94 @@
+<windows:ControlPanel title="Control Panel" maximized="true" icon="/de/unihannover/swp2015/robots2/application/icon/rIcon_alternate.png"
+    xmlns:bxml="http://pivot.apache.org/bxml"
+	xmlns:content="org.apache.pivot.wtk.content"
+    xmlns:windows="de.sightly_robot.sightly_robot.application.windows"
+	xmlns:components="de.sightly_robot.sightly_robot.application.components"
+    xmlns="org.apache.pivot.wtk">
+	<Border
+	styles="{color:'#000000'}">
+		<SplitPane orientation="horizontal" splitRatio="0.6" 
+				   styles="{backgroundColor:'#505050'}">
+			<left>
+				<Border styles="{backgroundColor:'#303030', padding:0}">			
+					<components:StrategicVisualization bxml:id="visualization"/>
+				</Border>
+			</left>
+			<right>
+				<Border styles="{backgroundColor:'#303030', padding:6}">
+					<SplitPane orientation="vertical" splitRatio="0.2" styles="{backgroundColor:'#505050'}">
+						<top> <Border styles="{color:'#303030', backgroundColor:'#303030', padding:0}">
+							<TablePane styles="{verticalSpacing:8, showHorizontalGridLines:false, horizontalSpacing:8, showVerticalGridLines:false}">
+								<columns>
+									<TablePane.Column width="1*"/>
+									<TablePane.Column width="1*"/>
+									<TablePane.Column width="1*"/>							
+								</columns>
+								
+								<TablePane.Row height="24">
+									<PushButton bxml:id="connectButton" buttonData="Connect" styles="{font:{size:16}, color:'#FFFFFF', backgroundColor:'#505050'}"/>
+									<PushButton bxml:id="loadMap" enabled="false" buttonData="Load Map" styles="{font:{size:16}, color:'#FFFFFF', backgroundColor:'#505050'}"/>
+								</TablePane.Row>
+								
+								<TablePane.Row height="24">
+									<PushButton bxml:id="startGame" enabled="false" styles="{font:{size:16}, color:'#FFFFFF', backgroundColor:'#505050'}" buttonData="Start"/>
+									<PushButton bxml:id="pauseGame" enabled="false" styles="{font:{size:16}, color:'#FFFFFF', backgroundColor:'#505050'}" buttonData="Pause"/>
+									<PushButton bxml:id="resetGame" enabled="false" styles="{font:{size:16}, color:'#FFFFFF', backgroundColor:'#505050'}" buttonData="Reset"/>
+								</TablePane.Row>
+								
+							</TablePane>
+						</Border> </top>
+						
+						<bottom> <Border styles="{color:'#303030', backgroundColor:'#303030', padding:0}">
+						
+							<TablePane styles="{verticalSpacing:8, showHorizontalGridLines:false, horizontalSpacing:8, showVerticalGridLines:false}">
+								<columns>
+									<TablePane.Column width="1*"/>									
+								</columns>
+								
+								<TablePane.Row height="32">
+									<FillPane styles="{padding:4}">
+										<PushButton bxml:id="placeButton" enabled="false" styles="{font:{size:16}, color:'#FFFFFF', backgroundColor:'#505050'}" buttonData="Assign Position"/>
+										<PushButton bxml:id="disableRobotButton" enabled="false" styles="{font:{size:16}, color:'#FFFFFF', backgroundColor:'#505050'}" buttonData="Disable Robot"/>
+										<PushButton bxml:id="deleteRobotButton" enabled="false" styles="{font:{size:16}, color:'#FFFFFF', backgroundColor:'#505050'}" buttonData="Delete Robot"/>
+									</FillPane>
+								</TablePane.Row>
+								
+								<TablePane.Row height="1*">
+									<!-- Table of game participants and their points -->
+									<ScrollPane horizontalScrollBarPolicy="fill_to_capacity">
+										<TableView bxml:id="participantTable" x="8" y="192" width="373" height="300"
+												   styles="{font:{size:14}, selectionColor:'#FFFFFF', selectionBackgroundColor:'#0E3AAD', inactiveSelectionBackgroundColor:'#0E3AAD', inactiveSelectionColor:'#FFFFFF', backgroundColor:'#A0A0A0', highlightBackgroundColor:'#A0A0A0', alternateRowBackgroundColor:'#B0B0B0'}">
+											<columns>
+												<TableView.Column name="state" width="28">
+													<cellRenderer>
+														<content:TableViewImageCellRenderer/>
+													</cellRenderer>
+												</TableView.Column>
+												<TableView.Column name="player" width="100" headerData="Player"/>
+												<TableView.Column name="points" width="50" headerData="Points"/>
+												<TableView.Column name="virtual" width="50" headerData="Virtual?"/>
+											</columns>
+										</TableView>
+										<columnHeader>
+											<TableViewHeader tableView="$participantTable" styles="{font:{size:14}, color:'#FFFFFF', backgroundColor:'#505050'}"/>
+										</columnHeader>
+									</ScrollPane>
+								</TablePane.Row>
+								
+								
+								<TablePane.Row height="24">
+									<GridPane columnCount="5" styles="{horizontalSpacing: 8, verticalSpacing: 0}">
+										<GridPane.Row>
+											<PushButton bxml:id="openConfiguration" styles="{font:{size:16}, color:'#FFFFFF', backgroundColor:'#505050'}" buttonData="Configuration"/>
+											<PushButton bxml:id="closeVisualization" styles="{font:{size:16}, color:'#FFFFFF', backgroundColor:'#505050'}" buttonData="Close"/>
+										</GridPane.Row>
+									</GridPane>
+								</TablePane.Row>								
+							</TablePane>
+						</Border> </bottom>
+					</SplitPane>
+				</Border>
+			</right>
+		</SplitPane>
+    </Border>
+</windows:ControlPanel>

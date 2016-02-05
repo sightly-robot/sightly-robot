@@ -1,0 +1,35 @@
+project(":robot:ai") {
+    apply plugin: "java"
+    
+    dependencies {
+        compile project(":protocol")
+    }
+}
+
+project(":robot:abstract") {
+    apply plugin: "java"
+        
+    dependencies {
+        compile project(":robot:ai")
+    }
+}
+
+project(":robot:software") {
+    apply plugin: "java"
+        
+    dependencies {
+        compile project(":robot:abstract")
+    }
+}
+
+project(":robot:hardware") {
+    apply plugin: "java"
+            
+    dependencies {
+        compile project(":robot:abstract")
+        compile 'com.pi4j:pi4j-core:1.0'
+        compile 'com.pi4j:pi4j-gpio-extension:1.0'
+        compile 'com.pi4j:pi4j-device:1.0'
+        compile 'com.pi4j:pi4j-service:1.0'
+    }
+}

@@ -1,0 +1,6 @@
+include 'utils'
+include 'protocol' 
+include 'robot:ai', 'robot:abstract', 'robot:software', 'robot:hardware'
+include 'application' 
+include 'server'
+include 'visualization:core', 'visualization:desktop', 'visualization:android', 'visualization:ios'

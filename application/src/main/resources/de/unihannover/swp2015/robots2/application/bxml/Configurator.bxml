@@ -1,0 +1,29 @@
+<windows:Configurator title="Configurator" maximized="false"
+	xmlns:bxml="http://pivot.apache.org/bxml"    
+	xmlns:content="org.apache.pivot.wtk.content"
+    xmlns:windows="de.sightly_robot.sightly_robot.application.windows"
+    xmlns="org.apache.pivot.wtk">
+	<FillPane>
+		<Border styles="{color:'#000000'}">
+			<TabPane bxml:id="tabs" styles="{backgroundColor:'#505050', borderColor:'#000000', activeTabColor:'#505050', buttonColor:'#FFFFFF'}">			
+				
+				<FillPane styles="{backgroundColor:'#303030'}">
+					<TabPane.tabData styles="{backgroundColor:'#303030'}">
+						<content:ButtonData text="General Options"/>
+					</TabPane.tabData>
+					
+					<bxml:include inline="true" src="GeneralOptions.bxml"/>
+				</FillPane>
+				
+				<FillPane styles="{backgroundColor:'#303030'}">
+					<TabPane.tabData styles="{backgroundColor:'#303030'}">
+						<content:ButtonData text="Visualization Options"/>
+					</TabPane.tabData>
+					
+					<bxml:include inline="true" src="VisualizationOptions.bxml"/>
+				</FillPane>
+				
+			</TabPane>
+		</Border>
+	</FillPane>
+</windows:Configurator>

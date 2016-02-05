@@ -1,0 +1,19 @@
+evaluationDependsOn(":visualization")
+
+sourceCompatibility = '1.7'
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+ext {
+	mainClassName = "de.unihannover.swp2015.robots2.visual.ios.IOSLaucnher"
+}
+
+launchIPhoneSimulator.dependsOn build
+launchIPadSimulator.dependsOn build
+launchIOSDevice.dependsOn build
+createIPA.dependsOn build
+
+
+eclipse.project {
+    name = appName + "-ios"
+    natures 'org.robovm.eclipse.RoboVMNature'
+}

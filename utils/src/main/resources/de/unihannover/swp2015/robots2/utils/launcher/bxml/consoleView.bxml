@@ -1,0 +1,9 @@
+<window:ConsoleView title="Sightly-Robot" maximized="true" width="400" height="300"
+xmlns:bxml="http://pivot.apache.org/bxml" xmlns:window="de.sightly_robot.sightly_robot.utils.launcher" xmlns="org.apache.pivot.wtk">
+	<FillPane orientation="vertical" styles="{backgroundColor:'#505050'}">
+        <ScrollPane horizontalScrollBarPolicy="fill"
+                            verticalScrollBarPolicy="fill_to_capacity">
+        	<TextArea bxml:id="out" preferredHeight="400"></TextArea>		
+		</ScrollPane>
+	</FillPane>
+</window:ConsoleView>

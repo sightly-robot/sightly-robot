@@ -1,0 +1,66 @@
+<FillPane xmlns:bxml="http://pivot.apache.org/bxml"    
+	xmlns:content="org.apache.pivot.wtk.content"
+    xmlns:windows="de.sightly_robot.sightly_robot.application.windows"
+    xmlns="org.apache.pivot.wtk"
+>	
+	<Border styles="{padding:6, backgroundColor:'#303030'}">
+		<TablePane styles="{showHorizontalGridLines:false, showVerticalGridLines:false, verticalSpacing:5, horizontalSpacing:10, padding:5}">
+			<columns>
+				<TablePane.Column width="1*"/>
+			</columns>
+		
+			<TablePane.Row height="40">
+				<TablePane styles="{showHorizontalGridLines:false, showVerticalGridLines:false, verticalSpacing:5, horizontalSpacing:10, padding:5}">
+					<columns>
+						<TablePane.Column width="1*"/>
+						<TablePane.Column width="8*"/>
+					</columns>
+					
+					<!-- IP Box -->
+					<TablePane.Row height="32">
+						<Border styles="{backgroundColor:'#303030', color:'#303030', padding:5}">
+							<Label text="Address" styles="{font:{size:16}, color:'#FFFFFF'}"/>
+						</Border>
+						<Border styles="{color:10}">
+							<TextArea bxml:id="ipTextArea" text="tcp://127.0.0.1" styles="{font:{size:16}, color:'#000000', acceptsEnter:false}"/>
+						</Border>
+					</TablePane.Row>
+					
+					<!-- Port Box -->
+					<!--
+					<TablePane.Row height="32">
+						<Border styles="{backgroundColor:'#303030', color:'#303030', padding:5}">
+							<Label enabled="false" text="Port" styles="{font:{size:16}, color:'#FFFFFF'}"/>
+						</Border>
+						<Border styles="{color:10}">
+							<TextArea bxml:id="portTextArea" enabled="false" text="1883" maximumLength="5" styles="{font:{size:16}, color:'#000000', acceptsEnter:false}"/>
+						</Border>
+					</TablePane.Row>
+					-->
+				</TablePane>
+			</TablePane.Row>
+			<TablePane.Row>
+				<TablePane styles="{showHorizontalGridLines:false, showVerticalGridLines:false, verticalSpacing:5, horizontalSpacing:10, padding:5}">
+					<columns>
+						<TablePane.Column width="1*"/>
+					</columns>
+					
+					<!--
+					<TablePane.Row height="32">
+						<FillPane styles="{backgroundColor:'#303030', color:'#303030', padding:5}">
+							<Checkbox bxml:id="showIdsNotNames" enabled="true" state="UNSELECTED" buttonData="Show ID instead of name in list" styles="{spacing:10, font:{size:16}, color:'#FFFFFF'}"/>
+						</FillPane>
+					</TablePane.Row>
+					-->
+					
+					<TablePane.Row height="32">
+						<!-- Fill Pane fixes alignment-->
+						<FillPane styles="{backgroundColor:'#303030', padding:5}">
+							<Checkbox bxml:id="debugMode" enabled="true" state="UNSELECTED" buttonData="Show Lock states of fields" styles="{spacing:10, font:{size:16}, color:'#FFFFFF'}"/>
+						</FillPane>
+					</TablePane.Row>
+				</TablePane>
+			</TablePane.Row>
+		</TablePane>
+	</Border>
+</FillPane>

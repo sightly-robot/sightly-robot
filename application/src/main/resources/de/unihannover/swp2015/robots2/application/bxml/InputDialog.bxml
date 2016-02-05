@@ -1,0 +1,13 @@
+<dialogs:InputDialog bxml:id="dialog" title="Dialog" modal="true"
+    xmlns:bxml="http://pivot.apache.org/bxml"
+    xmlns:dialogs="de.sightly_robot.sightly_robot.application.dialogs"
+    xmlns="org.apache.pivot.wtk"
+	preferredWidth="350"
+>	
+	<FlowPane styles="{alignToBaseline:true}">
+		<Label text="Roboter Name: " styles="{font:{size:16}, color:'#000000'}"/>
+		<Border styles="{padding:6}">
+			<TextArea bxml:id="textBox" preferredWidth="300" text="" styles="{font:{size:16}, color:'#000000', acceptsEnter:false}"/>		
+		</Border>
+	</FlowPane>	
+</dialogs:InputDialog>
